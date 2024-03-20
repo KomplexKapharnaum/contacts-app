@@ -1,0 +1,231 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTACT</title>
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Used for requesting the node server to generate images -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+</head>
+<body>
+    <!-- Background elements -->
+
+    <canvas id="background-squares"></canvas>
+
+    <!-- Home page -->
+    <div class="page active" data-page-id="home" onclick="PAGES.goto('pseudo')" style="justify-content: start;">
+        <h1>CONTACTS</h1>
+        <h2>Appuie pour créer ton avatar</h2>
+    </div>
+
+    <!-- First questions -->
+    <div class="page" data-page-id="pseudo">
+        <h2>Choisis un pseudo</h2>
+        <input type="text" id="pseudo-input" name="pseudo" placeholder="Entrez un pseudo...">
+        <button id="pseudo-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="photo">
+        <h2>Prenez votre visage en photo !</h2>
+
+        <div class="video-container">
+            <video id="media-stream" src=""></video>
+            <div id="media-reload" style="visibility: hidden;">⟳</div>
+        </div>
+        
+        <button id="media-stream-snapshot">Capturer</button>
+    </div>
+
+    <div class="page" data-page-id="anon">
+        <h2>A quel point souhaites-tu rester anonyme ?</h2>
+
+        <div id="anonymity-container">
+            <img src="./assets/mask_man.png" alt="face" class="center" draggable="false">
+            <img src="./assets/mask.png" alt="face mask" id="anonymity-mask" draggable="false">
+        </div>
+        <input type="range" min="0" max="100" value="0" step="1" id="anonymity-slider" disabled>
+        <button id="anonymity-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="poids_taille">
+        <h2>Quel est ton poids & ta taille ?</h2>
+        <div id="tallfat-container">
+            <div id="tallfat-buddy">
+                <div id="resize-topleft" class="resizable-point"></div>
+                <div id="resize-bottomright" class="resizable-point"></div>
+            </div>
+        </div>
+
+        <div class="flex-between">
+            <span>Taille</span>
+            <input type="range" min="0" max="100" value="0" step="1" id="tallfat-slider-tall" disabled>
+        </div>
+
+        <div class="flex-between">
+            <span>Poids</span>
+            <input type="range" min="0" max="100" value="0" step="1" id="tallfat-slider-weight" disabled>
+        </div>
+
+        <button id="tallfat-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="nature">
+        <h2>Quel est ton désir de détruire la nature ?</h2>
+        <button id="replant-button">Replanter de la verdure</button>
+        <div id="nature-container"></div>
+        <input type="range" min="0" max="50" value="0" step="1" id="slider-forest" disabled>
+        <button id="nature-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="respect_regles">
+        <h2>Respectes-tu souvent les règles ?</h2>
+        
+        <div class="balance-container">
+            <div class="socle">
+                <div class="rode">
+                    <div class="bal1"></div>
+                    <div class="bal2"></div>
+                </div>
+            </div>
+        </div>
+        <input type="range" min="0" max="100" value="0" step="1" id="respect-regles-slider" disabled>
+
+        <button id="respect-regles-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="choix_hybride">
+        <h2>Choisis ton camp</h2>
+
+        <div class="choice-container">
+            <div id="hybride-animal">
+                <span>Animal</span>
+                <img src="./assets/choix_animal.png" alt="Justice yes">
+                <img src="./assets/hand_left.png" class="hand" alt="hand left" style="animation-delay: -0.5s;">
+            </div>
+
+            <div id="hybride-vegetal">
+                <span>Végétal</span>
+                <img src="./assets/choix_plante.png" alt="Justice no">
+                <img src="./assets/hand_right.png" class="hand" alt="hand right">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Questions ROUTE VEGETAL -->
+
+    <div class="page" data-page-id="paranoia">
+        <h2>Es-tu paranoïaque ?</h2>
+        <div id="parano-door">
+            <div id="parano-lockers">
+
+            </div>
+        </div>
+        <input type="range" min="0" max="100" value="0" step="1" id="parano-slider" disabled>
+        <button id="parano-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="visage">
+        <h2>Souhaites-tu retirer des parties du visage ?</h2>
+
+        <div id="head-container">
+            <img src="./assets/face_parts.png" alt="face parts">
+        </div>
+
+        <button id="visage-submit">Suivant</button>
+    </div>
+    
+    <div class="page" id="surgery-body-container" data-page-id="scarifications">
+        <h2>As-tu des scarifications ?</h2>
+        <div id="surgery-body">
+            <img src="./assets/body-full.png" alt="">
+        </div>
+        <button id="scarifications-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="pilosite">
+        <canvas id="cnv-fur"></canvas>
+        <h2>Quel est votre niveau de pilosité ?</h2>
+        <div class="pilosite-slider-container">
+            <input type="range" min="0" max="1000" value="0" step="1" id="slider-fur">
+        </div>
+        <button id="pilosite-submit">Suivant</button>
+    </div>
+
+    <!-- Questions ROUTE ANIMAL -->
+
+    <div class="page" data-page-id="violence">
+        <h2>Es-tu une personne violente ?</h2>
+        <div id="sport-button"></div>
+        <button id="violence-submit" disabled>Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="intellect">
+        <h2>Es-tu intelligent.e ?</h2>
+        <button id="intellect-reset">Dégonfler</button>
+        <div class="pump-container">
+            <div id="pump-handle"></div>
+            <div id="pump-base"></div>
+        </div>
+        <div id="brain-container">
+            <div id="brain"></div>
+        </div>
+        <input type="range" min="0" max="100" value="0" step="1" id="intellect-slider" disabled>
+        <button id="intellect-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="viande">
+        <h2>Consommes-tu beaucoup de viande ?</h2>
+        <button id="cow-reset">Reset</button>
+        <div id="cow-container">
+            <img src="assets/cow_skeleton.png" alt="cow skeleton">
+            <img src="assets/cow.png" alt="cow" id="cow-to-mask" style="display: none;">
+            <canvas id="cow-canvas"></canvas>
+        </div>
+        <input type="range" min="0" max="100" value="0" step="1" id="viande-slider" disabled>
+        <button id="viande-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="drogue">
+        <h2>Consommes-tu des stupéfiants ?</h2>
+        <button id="drug-reset">Reset</button>
+        <div id="drug-container">
+
+            <img id="drug-seringe" src="./assets/seringe.png" alt="seringe" draggable="false">
+
+            <img id="drug-man" src="./assets/man.png" alt="drug man">
+            <img id="drug-pupil" src="./assets/pupil.svg" alt="drug man pupil">
+            
+        </div>
+        
+        <input type="range" min="0" max="100" value="0" step="1" id="drug-slider" disabled>
+
+        <button id="drug-submit">Suivant</button>
+    </div>
+
+    <div class="page" data-page-id="submit">
+        <h2>Voici ton avatar</h2>
+        <div id="avatar-container"></div>
+    </div>
+
+    <!-- Libs -->
+    <script src="./js/libs/perlin.js"></script>
+
+    <!-- Scripts -->
+    <script src="./js/util.js"></script>
+    <script src="./js/graphics.js"></script>
+    <script src="./js/slider.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/questions.js"></script>
+
+    <!-- Image generation -->
+    <script src="./js/requests.js"></script>
+
+    <script> PAGES.goto("intellect"); // Debug purpose </script>
+
+</body>
+</html>
