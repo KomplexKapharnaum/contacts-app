@@ -1,0 +1,480 @@
+{
+  "users": [
+    {
+      "nick": "Rasta1"
+    },
+    {
+      "userid": "xgppf8scc4b1bnh7fiwy82"
+    }
+  ],
+  "requests": [
+    {
+      "uuid": "req_9cex32ipqyipefncp1j3b",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Hello world",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710942610894.jpg",
+        "prompts": {
+          "anon": "0.6",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "pilosite": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://contacts.kxkm.net/uploads/xgppf8scc4b1bnh7fiwy82_1710942610894.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_fftfznl5ip6mp58r122zk",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Hello world",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710942864066.jpg",
+        "prompts": {
+          "anon": "0.5",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "scarifications": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710942864066.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_ahmto8toqoaf5h5q84a4",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Hello world",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710942895331.jpg",
+        "prompts": {
+          "anon": "0.5",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "visage": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710942895331.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_bz74vvqfrf5mf72v4r4r7s",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Hello world",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710942935555.jpg",
+        "prompts": {
+          "anon": "0.5",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "scarifications": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "http://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710942935555.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_orr5zu9b5gpklcs1jccz",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Helo world",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710943309107.jpg",
+        "prompts": {
+          "anon": "0.4",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "pilosite": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710943309107.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_eye9q4zdrvhbgigqfidpcl",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "m;m;4",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710943466611.jpg",
+        "prompts": {
+          "anon": "0.3",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "pilosite": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "http://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710943466611.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_1th6ofgfgmfix04cmupdimf",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710944096743.jpg",
+        "prompts": {}
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710944096743.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_dy25z9wkz3t7klmtd1cw17",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710944100635.jpg",
+        "prompts": {}
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710944100635.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_a3cnc1drmuc4e4kmgq985d",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710944206712.jpg",
+        "prompts": {}
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710944206712.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_6548tmtvdbgk9moskv7s2q",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "eaeaz",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710946558047.jpg",
+        "prompts": {
+          "anon": "0.5",
+          "poids": "gros",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "scarifications": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710946558047.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_ayac4sjvazp9cy5uor4g1h",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "eaeaz",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710946585994.jpg",
+        "prompts": {
+          "anon": "0.5",
+          "poids": "gros",
+          "hybride": "animal",
+          "violence": "faible",
+          "viande": "oui"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710946585994.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_zj9bmi1f79w57ng85dweq",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "Kirby54",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1710956075863.jpg",
+        "prompts": {
+          "anon": "0.4",
+          "poids": "maigre",
+          "hybride": "vegetal",
+          "paranoia": "faible",
+          "pilosite": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1710956075863.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "error"
+    },
+    {
+      "uuid": "req_zo1d7pj2ssej8nforc2uo",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "zeaez",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1711016251987.jpg",
+        "prompts": {
+          "anon": 0.3,
+          "poids": "gros",
+          "hybride": "animal",
+          "violence": "faible",
+          "intelligence": "eleve"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "https://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1711016251987.jpg",
+          "image_to_become": "https://contacts.kxkm.net/models/PIG_00012_.png",
+          "prompt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": 0.5,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "pending"
+    },
+    {
+      "uuid": "req_bljfo20inccrdxckgr1fp",
+      "userid": "xgppf8scc4b1bnh7fiwy82",
+      "data": {
+        "name": "zeaze",
+        "userid": "xgppf8scc4b1bnh7fiwy82",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1711106327796.jpg",
+        "prompts": {
+          "visage": "non"
+        }
+      },
+      "input": {
+        "input": {
+          "image": "http://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1711106327796.jpg",
+          "image_to_become": "http://localhost:4000/models/v2_PIG_00113_.png",
+          "prompt": "a man with a flower in his hair, digital art, by Igor Morski, zbrush central contest winner, portrait of chester bennington, steven klein, orchid, album cover concept art, face covered in dirt, movie promotional image, portrait of karl pilkington, amano and karol bak, displacement, day-light, exhibition, aerochrome eyes",
+          "negative_prompt": "",
+          "number_of_images": 1,
+          "denoising_strength": 1,
+          "prompt_strength": 0.8,
+          "control_depth_strength": 0.3,
+          "instant_id_strength": null,
+          "image_to_become_strength": 0.8,
+          "image_to_become_noise": 0.53,
+          "seed": 9,
+          "disable_safety_checker": true
+        }
+      },
+      "output": [],
+      "status": "pending"
+    }
+  ]
+}
