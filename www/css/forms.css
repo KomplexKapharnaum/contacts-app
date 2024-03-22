@@ -435,33 +435,29 @@
 /*========== Cow meat ==========*/
 
 #cow-container {
-    position: relative;
-    aspect-ratio: 1024/916;
-    height: 0;
-    width: 100%;
-    max-width: 100%;
-    padding-bottom: calc(916 / 1024 * 100%);
+	position: relative;
+	/* aspect-ratio: 1024/916; */
+	height: 100%;
+	width: 100%;
 }
 
-#cow-container>img {
-    user-select: none;
-    pointer-events: none;
-    height: 100%;
-    width: auto;
-    max-width: 100%;
-    aspect-ratio: 1024/916;
+#cow-container > img {
+	user-select: none;
+	pointer-events: none;
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+	aspect-ratio: 1024/916;
+	object-fit: contain;
 }
 
-#cow-container>* {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1024/916;
+#cow-container > * {
+	position: absolute;
+	aspect-ratio: 1024/916;
+	object-fit: contain;
+	width: auto;
+	height: 100%;
+	max-width: 100%;
 }
 
 /*========== Drug seringe ==========*/
