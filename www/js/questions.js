@@ -165,7 +165,6 @@ function initBuddy() {
     buddyResizable.style.bottom = buddyMargin+"px";
     updateBuddySliders();
 }
-initBuddy();
 
 function updateBuddySliders() {
     const containerWidth = buddyContainer.offsetWidth - 2 * buddyMargin;
@@ -255,6 +254,8 @@ document.getElementById("tallfat-submit").addEventListener("click", function() {
     USER.addPrompt("poids", buddySliderWeight.value > 50 ? "gros" : "maigre");
     PAGES.goto("nature");
 });
+
+PAGES.addCallback("poids_taille", initBuddy);
 
 /*========== Nature ==========*/
 
