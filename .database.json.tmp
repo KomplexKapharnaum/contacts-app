@@ -446,27 +446,29 @@
       "status": "pending"
     },
     {
-      "uuid": "req_bljfo20inccrdxckgr1fp",
+      "uuid": "req_elo2dn5lx3wxxj9ez7wte",
       "userid": "xgppf8scc4b1bnh7fiwy82",
       "data": {
         "name": "zeaze",
         "userid": "xgppf8scc4b1bnh7fiwy82",
-        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1711106327796.jpg",
+        "selfie": "uploads/xgppf8scc4b1bnh7fiwy82_1711108977984.jpg",
         "prompts": {
+          "poids": "gros",
+          "hybride": "vegetal",
           "visage": "non"
         }
       },
       "input": {
         "input": {
-          "image": "http://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1711106327796.jpg",
-          "image_to_become": "http://localhost:4000/models/v2_PIG_00113_.png",
-          "prompt": "a man with a flower in his hair, digital art, by Igor Morski, zbrush central contest winner, portrait of chester bennington, steven klein, orchid, album cover concept art, face covered in dirt, movie promotional image, portrait of karl pilkington, amano and karol bak, displacement, day-light, exhibition, aerochrome eyes",
+          "image": "http://localhost:4000/uploads/xgppf8scc4b1bnh7fiwy82_1711108977984.jpg",
+          "image_to_become": "http://localhost:4000/models/v8_champi_pierre_00034_.png",
+          "prompt": "a close up of a person wearing a hat with a strawberry on it, inspired by Martin Schoeller, in a wild mushroom fountain, bubbles ”, renaissance fair, in 2 0 0 2, flikr, baked bean skin texture, living flora, start, cornwall, full f/22, john stephens, mrs bean",
           "negative_prompt": "",
           "number_of_images": 1,
           "denoising_strength": 1,
           "prompt_strength": 0.8,
           "control_depth_strength": 0.3,
-          "instant_id_strength": null,
+          "instant_id_strength": 0.3,
           "image_to_become_strength": 0.8,
           "image_to_become_noise": 0.53,
           "seed": 9,

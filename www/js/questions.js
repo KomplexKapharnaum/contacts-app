@@ -674,7 +674,23 @@ PAGES.addCallback("viande", () => {
     cowCanvas.height = cowCanvas.offsetHeight;
 
     cowToMask.onload = function() {
-        cowCtx.drawImage(cowToMask, 0, 0, cowCanvas.width, cowCanvas.height);
+        const aspectRatio = 1024 / 916;
+        const canvasAspectRatio = cowCanvas.width / cowCanvas.height;
+        let width, height;
+
+        if (canvasAspectRatio > aspectRatio) {
+            width = cowCanvas.height * aspectRatio;
+            height = cowCanvas.height;
+        } else {
+            width = cowCanvas.width;
+            height = cowCanvas.width / aspectRatio;
+        }
+
+        const x = (cowCanvas.width - width) / 2;
+        const y = (cowCanvas.height - height) / 2;
+
+        cowCtx.clearRect(0, 0, cowCanvas.width, cowCanvas.height);
+        cowCtx.drawImage(cowToMask, x, y, width, height);
         cowData.default = getOpaquePixels();
     }
 
