@@ -1,0 +1,278 @@
+[
+    {
+
+        "file_name":"v1_jellyfish_00111_ (1).png", 
+        "prompt_txt": "a painting of a man with a strawberry on his head, hyperrealism, surreal material, well worn, biological illustrations, dustin panzino, butcher, half turned around, tick helmet, color portrait, 3 0, half - length head portrait, two heads, growth on head, wearing a patch over one eye, sharp contrast",
+        "poids": "maigre",
+        "hybride": "vegetal",
+        "paranoia": "faible",
+        "visage": "oui"
+      
+    },
+
+    {
+
+        "file_name":"v2_PIG_00113_.png", 
+        "prompt_txt": "a man with a flower in his hair, digital art, by Igor Morski, zbrush central contest winner, portrait of chester bennington, steven klein, orchid, album cover concept art, face covered in dirt, movie promotional image, portrait of karl pilkington, amano and karol bak, displacement, day-light, exhibition, aerochrome eyes",
+        "poids": "maigre",
+        "hybride": "vegetal",
+        "paranoia": "faible",
+        "visage": "non"
+    },
+
+
+    {
+
+        "file_name":"v3_jellyfish_00184_.png", 
+        "prompt_txt": "a black and white photo of a man covered in food, a detailed drawing, inspired by Roger Ballen, zbrush central contest winner, hyperrealism, double exposure tree bark, made of cactus spines, ribbed man face portrait, joost swarte, subject made of white mesh rope, patriotism, pieter rudolph kleijn, trending on saatchi art",
+        "poids": "maigre",
+        "hybride": "vegetal" ,
+        "paranoia": "classique",
+        "scarifications": "oui" 
+    },
+    
+    {
+
+        "file_name":"v4_madame brocoli.jpg", 
+        "prompt_txt": "a close up of a person's head with broccoli on it, by Igor Morski, trending on zbrush central, digital art, flora borsi, bodypainting, salad, photo mid shot, grain”, avatar image",
+        "poids": "maigre",
+        "hybride": "vegetal" ,
+        "paranoia": "classique",
+        "scarifications": "non" 
+    },
+
+    {
+
+        "file_name":"v5_jellyfish_00118_.png", 
+        "prompt_txt": "a close up of a statue of a head of cauliflower, shutterstock, conceptual art, eva green as metamorpho, an 80 year old man, 2 0 1 0 photo, extreme detailed face and body, advertising photo, dough sculpture, masha krasnova, dwarf, close up front view, rj palmer, 8 l, full face portrait",
+        "poids": "maigre",
+        "hybride": "vegetal" ,
+        "paranoia": "eleve",
+        "pilosite": "oui"
+
+
+
+
+    },
+
+
+    {
+
+        "file_name":"v6_jellyfish_00025_.png", 
+        "prompt_txt": "a close up of a person with a green face, inspired by Igor Morski, trending on zbrush central, photorealism, made of cactus spines, nagash editorial, travis bickle has a mohawk, cosplay photo, andy samberg, shot in the photo studio, an olive skinned, photorealistic - h 6 4 0, road warrior, swamp monster",
+        "poids": "maigre",
+        "hybride": "vegetal" ,
+        "paranoia": "eleve",
+        "pilosite": "non"
+    },
+
+
+
+
+
+
+    {
+
+        "file_name":"v7_jellyfish_00168_.png", 
+        "prompt_txt": "a close up of a person wearing a purple hat, a stock photo, inspired by Maria van Oosterwijk, digital art, prosthetics, scars on eye, photographic style of avedon, over the shoulder perspective, white face, bjork smiling, vray. subsurface scattering, taken with canon 8 0 d, pain from naruto, upscale photo",
+        "poids": "gros",
+        "hybride": "vegetal" ,
+        "paranoia": "faible",
+        "visage": "oui"
+
+
+    },
+    
+
+    {
+
+        "file_name":"v8_champi_pierre_00034_.png", 
+        "prompt_txt": "a close up of a person wearing a hat with a strawberry on it, inspired by Martin Schoeller, in a wild mushroom fountain, bubbles ”, renaissance fair, in 2 0 0 2, flikr, baked bean skin texture, living flora, start, cornwall, full f/22, john stephens, mrs bean",
+        "poids": "gros",
+        "hybride": "vegetal",
+        "paranoia": "faible",
+        "visage": "non"
+    },
+
+
+    {
+
+        "file_name":"v9_jellyfish_00201_.png", 
+        "prompt_txt": "a close up of a person with a strawberry on their head, inspired by Tytus Czyżewski, digital art, marlon brando as baron harkonnen, short unkempt green hair, hyperrealistic anatomy, anthony hopkins, promotional image, deux ex machina, avatar image",
+        "poids": "gros",
+        "hybride": "vegetal" ,
+        "paranoia": "classique",
+        "scarifications": "oui" 
+    },
+
+    {
+
+        "file_name":"v10_algue_00009_.png", 
+        "prompt_txt": "a close up of a creature with yellow hair, a surrealist sculpture, by John Armleder, under water deep sea laboratory, jabba the hutt, 1998 photo, spirits covered in drapery, national geographic photo”, rasta, made of wax and water, he is about 50 years old, mu pan, wwe, courtesy mbari",
+        "poids": "gros",
+        "hybride": "vegetal" ,
+        "paranoia": "classique",
+        "scarifications": "non" 
+    },
+    
+    {
+
+        "file_name":"v11_coriandre_00043_.png", 
+        "prompt_txt": "a close up of a person with a beard, inspired by Jozef Czapski, digital art, apocalypse with vegetation, animatronic bill murray, beeple. hyperrealism, moai seedling, he is about 8 0 years old, 3rd eye, dirt and unclean, in style of leonardo da vinci, humanoid woman",
+        "poids": "gros",
+        "hybride": "vegetal" ,
+        "paranoia": "eleve",
+        "pilosite": "oui"
+    },
+
+    {
+
+        "file_name":"v12_algue_00039_.png", 
+        "prompt_txt": "a close up of a person wearing a green costume, inspired by Arcimboldo, featured on zbrush central, romanesco broccoli, shot on hasselblad, very fat, maori, people watching, very buff, author unknown, veggies, * colour splash *, profile picture 1024px, desperate pose, monk, macro image!!!!!",
+        "poids": "gros",
+        "hybride": "vegetal" ,
+        "paranoia": "eleve",
+        "pilosite": "non"
+    },
+
+
+
+
+
+
+
+
+
+    {
+
+        "file_name":"A1_snake_00007_ copie.png", 
+        "prompt_txt": "a man with green paint on his face and a snake on his shoulder, by Mario Comensoli, deviantart, inner ear, 2 0 1 0 photo, journey to the west. pop art, greeting hand on head, concept photo, battle between good and evil, shallan davar, high key, adam and eve inside the brain, preparing to fight",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "faible",
+        "intelligence": "eleve"
+
+
+    },
+
+    {
+
+        "file_name":"A2_araigneV2_00007_.png", 
+        "prompt_txt": "a close up of a person with long hair, an album cover, net art, ( ( spiderwoman ) ), red green, african domme mistress, glittering skin, 2 0 0 2 photo, jeweled costume, caramel, monkey, photo from the 80s, sculpted, amad, unreleased, holiday season, rainny, full hair, sunken",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "faible",
+        "intelligence": "faible"
+    },
+
+    {
+
+        "file_name":"A3_nasique_00040_copie.png", 
+        "prompt_txt": "a drawing of a man with red hair, a hyperrealistic painting, trending on zbrush central, hyperrealism, pinocchio nose, profile putin, elf with blue skin, beeple and jean giraud, dictator, an old lady with red skin, anton semenov, very humorous illustration, on a pale background, voldemort, blue edge",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "classique",
+        "viande": "eleve"
+
+    },
+
+    {
+
+        "file_name":"A4_lombric_00018_ .png", 
+        "prompt_txt": "a close up of a bird's face on a piece of meat, by Paul Davis, featured on zbrush central, art photography, plague doctor mask, antropromorphic stick insect, round bulbous nose, with index finger, new guinea mud man, portrait cute-fine-face, sectoid, 24 mm, front side full, skinny face",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "classique",
+        "viande": "faible"
+
+
+    },
+
+    
+    {
+
+        "file_name":"A5_grenouille_00070_.png", 
+        "prompt_txt": "a close up of a frog head with a carrot in it's mouth, by Paul Davis, featured on zbrush central, digital art, hyperrealistic anatomy posse, sandworm, photo of a crazy wasp, lower half of his body is snake, realistic! 8k, fish lens, opened mouth, merging crocodile head, detailed close foot shot, oliver vernon",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "eleve",
+        "scarifications": "oui" 
+
+
+    },
+
+    {
+
+        "file_name":"A6_loup_00017_ copie 2.png", 
+        "prompt_txt": "a close up of a person with long hair, by Carlo Randanini, tumblr, conceptual art, snarling dog teeth, hyper color photograph, angry at mirror, punk rocker, scary lightning, walrus, 2 0 1 0 photo, istock, the creature sits in a car, avril lavigne, jungle, dew, iggy pop, very long, bear",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "eleve",
+        "scarifications":  "non"
+
+    },
+
+    {
+
+        "file_name":"A7_PIG_00188_.png", 
+        "prompt_txt": "a close up of a person with a dog on his shoulder, inspired by Igor Morski, featured on zbrush central, pig pig pig, with red haze and a massive grin, grainy photo of an ugly woman, homer simpson lookalike, photorealistic -20, #green, very very very realistic, dirty rats, clenching teeth, olivia kemp, farmer",
+        "poids": "gros",
+        "hybride": "animal",
+        "violence": "faible",
+        "intelligence": "eleve"
+    },
+
+    {
+
+        "file_name":"a8_madame poisson_2.png", 
+        "prompt_txt": "a close up of a person with a fish mask on, inspired by Igor Morski, zbrush central contest winner, hyperrealism, covered in red slime, cockroach lady, extremely fat, hyperrealistic anatomy, album photo, phoenix head. burning wax, beauty is a virus, walking down, no - text no - logo, albert watson, 2 d cg",
+        "poids": "gros",
+        "hybride": "animal",
+        "violence": "faible",
+        "intelligence": "faible"
+    },
+
+    {
+
+        "file_name":"A9_PIG_00012_copie.png", 
+        "prompt_txt": "a pig with an apple on its head, a photorealistic painting, inspired by Igor Morski, hyperrealism, bloody + concept art, wears a destroyed hat, flesh blob, air brush illustration, wearing a patch over one eye, greg beeple, sticky tar. concept art, rick sanchez in real life, caspar david, david choe, very real",
+        "poids": "gros",
+        "hybride": "animal",
+        "violence": "classique",
+        "viande": "eleve"
+
+    },
+
+    {
+
+        "file_name":"A10_fourmi_00076_.png", 
+        "prompt_txt": "a close up view of a bug's eye, a macro photograph, by Paul Davis, shutterstock, art photography, brown red blue, wide angle portrait of astroboy, rendered in v-ray, delicate jaw, pixar weta portrait, slightly buck - toothed, contest winning masterpiece, ranger, smooth oval head, glazed, waist up portrait, horn, ap photo",
+        "poids": "gros",
+        "hybride": "animal",
+        "violence": "classique",
+        "viande": "faible"
+
+    },
+
+    {
+
+        "file_name":"A11_PIG_00011.png", 
+        "prompt_txt": "a close up of a pig with blood on it's face, digital art, inspired by Ryohei Hase, hyperrealism, red and cyan, artur bordalo, nychos, green eggs and ham, anatomical drawing of a minion, no - text no - logo, andrey gordeev, rhino rendered, dissection of funny",
+        "poids": "gros",
+        "hybride": "animal",
+        "violence": "eleve",
+        "scarifications": "oui" 
+    },
+
+    {
+
+        "file_name":"A12_jellyfish_00092_.png", 
+        "prompt_txt": "a close up of a person wearing a weird hat, inspired by Slawomir Maniak, zbrush central contest winner, digital art, transparent jellyfish, detailed painting of dune movie, full portrait of electromancer, hair looks like a helmet, made of wax and oil, highly realistic concept art, isopod, concept art of tony stark, hair fluid, albino",
+        "poids": "maigre",
+        "hybride": "animal",
+        "violence": "eleve",
+        "scarifications":  "non"
+    }
+
+]
+

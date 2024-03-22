@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`localhost`)"  # Set the domain
+      - "traefik.http.routers.frontend.entrypoints=websecure"  # Use HTTPS entry point
+      - "traefik.http.routers.frontend.tls=true"  # Enable TLS
+  traefik:
+    image: "traefik:v2.5"  # Use the version of Traefik you prefer
+    command:
+      - "--api.insecure=false"  # Enable insecure API on port 8080 (for testing purposes)
+      - "--providers.docker=true"  # Enable Docker provider
+      - "--entrypoints.web.address=:80"  # HTTP entry point
+      - "--entrypoints.websecure.address=:443"  # HTTPS entry point
+    ports:
+     # - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Connect to Docker socket
