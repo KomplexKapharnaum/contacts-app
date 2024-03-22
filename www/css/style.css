@@ -33,7 +33,7 @@ body {
     background-image: var(--background-image);
     background-size: cover;
     overflow: hidden;
-    height: 100vh;
+    height: 100%;
     overscroll-behavior-y: none;
     font-family: "K.ft88-regular";
 }
@@ -41,6 +41,7 @@ body {
 * {
     box-sizing: border-box;
     color: var(--font-color);
+    touch-action: manipulation;
 }
 
 #background-squares {

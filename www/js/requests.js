@@ -84,7 +84,8 @@ socket.on('error', function(req, err) {
     $('#avatar-error').show()
     $('#avatar-error-retry').unbind('click').click(function() {
         $('#avatar-error').hide()
-        socket.emit('retry', req.uuid);
+        // socket.emit('retry', req.uuid);
+        location.reload()
     })
 })
 

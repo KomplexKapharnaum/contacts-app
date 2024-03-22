@@ -61,6 +61,7 @@ var requestAI = async function (reqid) {
       return data
     }
     catch (err) {
+      console.error('=== request error', response)
       throw new Error(err)
     }
   }
@@ -142,6 +143,10 @@ io.on('connection', (socket) => {
   // Get all outputs
   socket.on('outputs', () => {
     var outputs = fs.readdirSync('outputs')
+
+    // randomize outputs
+    outputs.sort(() => Math.random() - 0.5);
+
     for (var i = 0; i < outputs.length; i++) {
       socket.emit('output', "outputs/" + outputs[i])
     }
@@ -253,6 +258,16 @@ app.post('/gen', function (req, res) {
 
 app.get('/totem', function (req, res) {
   res.sendFile(__dirname + '/www/totem.html');
+});
+
+app.get('/reload', function (req, res) {
+  io.emit('reload');
+  res.send('reloaded');
+});
+
+app.get('/reload-totem', function (req, res) {
+  io.emit('reload-totem');
+  res.send('totem reloaded');
 });
 
 app.get('/', function (req, res) {

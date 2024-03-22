@@ -28,12 +28,20 @@ socket.on('output', function(output) {
     showNext()
 })
 
+socket.on('reload', function() {
+    location.reload()
+})
+
+socket.on('reload-totem', function() {
+    location.reload()
+})
+
 function showNext() {
     
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(function() {
         showNext()
-    }, 8000)
+    }, 425 * 3) //425
 
     if (imagesList.length <= 0) return
     for (var j=0; j<imagesList.length; j++) {
@@ -43,4 +51,3 @@ function showNext() {
     imagesList[i % imagesList.length].show()
     console.log('show', i, imagesList[i % imagesList.length].attr('src'))
 }
-
