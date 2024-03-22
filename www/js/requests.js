@@ -36,6 +36,8 @@ function showImage(link) {
 
 function submitData() {
 
+    $('#avatar-error').hide()
+    
     var data = generateInput();
 
     // Fetch POST /gen => Create pending request on server 
@@ -77,12 +79,13 @@ socket.on('nickname', function(nick) {
 })
 
 socket.on('error', function(req, err) {
-    console.error('== AI error:', err)
+    console.error('== AI error:', req, err)
     $('.part').hide()
-    $('#error').show()
-    $('#reqerr').html(
-        JSON.stringify(req) + '<br><br>' +
-        JSON.stringify(err))
+    $('#avatar-error').show()
+    $('#avatar-error-retry').unbind('click').click(function() {
+        $('#avatar-error').hide()
+        socket.emit('retry', req.uuid);
+    })
 })
 
 socket.on('done', function(req) {

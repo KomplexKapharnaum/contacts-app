@@ -53,6 +53,46 @@ var requestAI = async function (reqid) {
   throw new Error('Request not found');
 }
 
+var goAI = async function (reqid) {
+  requestAI(reqid).then((res) => {
+    console.log('=== request processed', reqid)
+    console.log(res)
+
+    // pick the request
+    var request = db.data.requests.find((req) => req.uuid === reqid)
+
+    // detect error
+    if (res.error || !res.output) {
+      request.status = "error"
+      db.write()
+      console.log('\tERROR: No output')
+      console.log('\t', res.error)
+      io.to(request.userid).emit('error', request, res)
+      return
+    }
+
+    var request = db.data.requests.find((req) => req.uuid === reqid)
+
+    // Save base64 result to outputs/
+    for (var i = 0; i < res.output.length; i++) {
+      var out = res.output[i];
+      var outData = out.replace(/^data:image\/\w+;base64,/, "");
+      var buf = Buffer.from(outData, 'base64');
+      var filename = 'outputs/' + reqid + '_' + i + '.jpg';
+      fs.writeFileSync(filename, buf);
+      request.output.push(filename);
+    }
+
+    request.status = "done"
+    db.write()
+    console.log('done', reqid)
+    io.to(request.userid).emit('done', request)
+    for (var i = 0; i < request.output.length; i++) {
+      io.emit('output', request.output[i])
+    }
+  })
+}
+
 
 // Socket.io 
 //
@@ -83,6 +123,11 @@ io.on('connection', (socket) => {
     for (var i = 0; i < outputs.length; i++) {
       socket.emit('output', "outputs/" + outputs[i])
     }
+  })
+
+  // Retry request
+  socket.on('retry', (reqid) => {
+    goAI(reqid)
   })
 
   // Send initial HELLO trigger
@@ -178,43 +223,7 @@ app.post('/gen', function (req, res) {
 
   // Query AI
   console.log('=== request AI', reqid)
-  requestAI(reqid).then((res) => {
-    console.log('=== request processed', reqid)
-    console.log(res)
-
-    // pick the request
-    var request = db.data.requests.find((req) => req.uuid === reqid)
-
-    // detect error
-    if (res.error || !res.output) {
-      console.log('\tERROR: No output')
-      console.log('\t', res.error)
-      request.status = "error"
-      db.write()
-      io.to(request.userid).emit('error', request, res)
-      return
-    }
-
-    var request = db.data.requests.find((req) => req.uuid === reqid)
-
-    // Save base64 result to outputs/
-    for (var i = 0; i < res.output.length; i++) {
-      var out = res.output[i];
-      var outData = out.replace(/^data:image\/\w+;base64,/, "");
-      var buf = Buffer.from(outData, 'base64');
-      var filename = 'outputs/' + reqid + '_' + i + '.jpg';
-      fs.writeFileSync(filename, buf);
-      request.output.push(filename);
-    }
-
-    request.status = "done"
-    db.write()
-    console.log('done', reqid)
-    io.to(request.userid).emit('done', request)
-    for (var i = 0; i < request.output.length; i++) {
-      io.emit('output', request.output[i])
-    }
-  })
+  goAI(reqid)
 
   // Echo request 
   res.send(request);

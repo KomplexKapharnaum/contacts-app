@@ -33,7 +33,7 @@
         <h2>Prenez votre visage en photo !</h2>
 
         <div class="video-container">
-            <video id="media-stream" src=""></video>
+            <video id="media-stream" src="" muted autoplay playsinline loop></video>
             <div id="media-reload" style="visibility: hidden;">⟳</div>
         </div>
         
@@ -218,6 +218,11 @@
     <div class="page" data-page-id="submit">
         <h2 id="avatar-label">Ton avatar est en cours de création...</h2>
         <div id="avatar-container"></div>
+        <div id="avatar-error">
+            <h3>Erreur lors de la création de l'avatar</h3>
+            <p>Une erreur est survenue lors de la création de l'avatar. Veuillez réessayer.</p>
+            <button id="avatar-error-retry">Réessayer</button>
+        </div>
     </div>
 
     <!-- Libs -->

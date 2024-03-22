@@ -9,6 +9,10 @@ formPseudoSubmit.addEventListener('click', function() {
     PAGES.goto("photo");
 });
 
+formPseudoInput.addEventListener('change', function() {
+    formPseudoSubmit.click();
+})
+
 PAGES.addCallback("pseudo", () => {
     DRAW_BACKGROUND = false;
 });
@@ -30,7 +34,7 @@ function startMediaStream() {
     snapState = 3;
     reloadButton.style.visibility = "hidden";
     snapshotButton.textContent = "Chargement...";
-    navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 480 }, height: { ideal: 480 } } })
+    navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 640 } } })
     .then((stream) => {
         vid.srcObject = stream;
         vid.play();
@@ -40,6 +44,7 @@ function startMediaStream() {
     })
     .catch((err) => {
         console.error(err);
+        // alert(JSON.stringify(err));
     });
 }
 

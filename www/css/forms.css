@@ -39,6 +39,7 @@
 #media-stream {
     width: 100%;
     object-fit: cover;
+    border: solid 2px cyan;
 }
 
 #media-reload {
