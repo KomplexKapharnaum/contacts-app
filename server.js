@@ -10,6 +10,7 @@ dotenv.config();
 
 // Global variables
 const COG_API_URL = process.env.COG_API_URL || 'http://localhost:5000'
+const COG_API_URL2 = process.env.COG_API_URL2 || 'http://localhost:5000'
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:4000'
 
@@ -37,6 +38,7 @@ var io = new IoServer(server);
 
 // Request AI
 //
+var cogBalance = 0
 var requestAI = async function (reqid) {
   var request = db.data.requests.find((req) => req.uuid === reqid)
   if (request) {
@@ -46,9 +48,21 @@ var requestAI = async function (reqid) {
     console.log(raw)
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const response = await fetch(`${COG_API_URL}/predictions`, { method: 'POST', headers: myHeaders, body: raw, redirect: "follow" })
-    const data = await response.json();
-    return data
+
+    var COG
+    if (cogBalance === 0) COG = COG_API_URL
+    else COG = COG_API_URL2
+    cogBalance = (cogBalance + 1) % 2
+    console.log('=== COG endpoint', COG)
+
+    const response = await fetch(`${COG}/predictions`, { method: 'POST', headers: myHeaders, body: raw, redirect: "follow" })
+    try {
+      const data = await response.json();
+      return data
+    }
+    catch (err) {
+      throw new Error(err)
+    }
   }
   throw new Error('Request not found');
 }
@@ -91,6 +105,14 @@ var goAI = async function (reqid) {
       io.emit('output', request.output[i])
     }
   })
+    .catch((err) => {
+      console.error('=== request error', reqid)
+      console.error(err)
+      var request = db.data.requests.find((req) => req.uuid === reqid)
+      request.status = "error"
+      db.write()
+      io.to(request.userid).emit('error', request, err)
+    })
 }
 
 
