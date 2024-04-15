@@ -9,8 +9,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Global variables
-const COG_API_URL = process.env.COG_API_URL || 'http://localhost:5000'
-const COG_API_URL2 = process.env.COG_API_URL2 || 'http://localhost:5000'
+const COG_API_URL = process.env.COG_API_URL || 'http://127.0.0.1:5000'
+const COG_API_URL2 = process.env.COG_API_URL2 || 'http://127.0.0.1:5000'
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:4000'
 
