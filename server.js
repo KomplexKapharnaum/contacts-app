@@ -93,5 +93,18 @@ app.use('/pwa', express.static('www/pwa'));
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {
-    console.log('hook', event, repo, data);
+    // console.log('hook', event, repo, data);
+    if (event === 'push') {
+        // git stash then git pull && pm2 restart contacts
+        console.log('push event', repo, data);
+        const { exec } = require('child_process');
+        exec('git stash && git pull && pm2 restart contacts', (err, stdout, stderr) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log(stdout);
+        });        
+
+    }
 });
