@@ -11,6 +11,7 @@ dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const USE_HTTPS = process.env.USE_HTTPS && process.env.USE_HTTPS === 'true'
+const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret'
 
 // Path
 import path from 'path'
@@ -18,10 +19,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Hooks
+var GithubWebHook = require('express-github-webhook');
+var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET });
+
 // Express
 //
+var bodyParser = require('body-parser')
 var app = express();
-app.use(express.json({ limit: '50mb' }));
+app.use(bodyParser.json());
+app.use(webhookHandler);
 
 // HTTPS / HTTP
 if (USE_HTTPS) {
@@ -67,13 +74,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/www/index.html');
 });
 
-// Serve gitpull hook
-//
-app.post('/gitpull', function (req, res) {
-  console.log('gitpull', req.body);
-  res.send('OK');
 
-});
 
 // Serve static files /static
 // app.use('/static', express.static('www'));
@@ -88,3 +89,9 @@ app.get('/pwa', function (req, res) {
 });
 
 app.use('/pwa', express.static('www/pwa'));
+
+// HOOKS
+//
+webhookHandler.on('*', function (event, repo, data) {
+    console.log('hook', event, repo, data);
+});
