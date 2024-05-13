@@ -1,4 +1,8 @@
 import express from 'express';
+
+// HTTPS
+import https from 'https';
+
 import { Server as HttpServer } from 'http';
 import { Server as IoServer } from "socket.io";
 import fs from 'fs';
@@ -29,9 +33,19 @@ const __dirname = path.dirname(__filename);
 const defaultData = { users: [{ nick: "Rasta1" }], requests: [] }
 const db = await JSONFilePreset('database.json', defaultData)
 
-// Servers
+// Servers HTTPS
+//
+const options = {
+  key: fs.readFileSync('certs/server.key'),
+  cert: fs.readFileSync('certs/server.cert')
+};
+
+// Express
+//
 var app = express();
-var server = HttpServer(app);
+app.use(express.json({ limit: '50mb' }));
+
+var server = https.createServer(options, app);
 var io = new IoServer(server);
 
 
