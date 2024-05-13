@@ -11,7 +11,7 @@ dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const USE_HTTPS = process.env.USE_HTTPS && process.env.USE_HTTPS === 'true'
-const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret'
+const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret' 
 
 // Path
 import path from 'path'
@@ -20,12 +20,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Hooks
-var GithubWebHook = require('express-github-webhook');
+import GithubWebHook from 'express-github-webhook';
 var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET });
 
 // Express
 //
-var bodyParser = require('body-parser')
+import bodyParser from 'body-parser';
 var app = express();
 app.use(bodyParser.json());
 app.use(webhookHandler);
