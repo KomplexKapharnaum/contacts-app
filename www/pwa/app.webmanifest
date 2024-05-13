@@ -1,0 +1,14 @@
+{
+    "name": "KXKM PWA TEST",
+    "start_url": "/pwa",
+    "icons": [
+      {
+        "src": "/pwa/icon.png",
+        "type": "image/png", 
+        "sizes": "512x512"
+      }
+    ],
+    "display": "standalone",
+    "display_overrides": ["standalone", "minimal-ui", "fullscreen", "browser"]
+  }
+  
