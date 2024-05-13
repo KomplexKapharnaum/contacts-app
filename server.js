@@ -73,7 +73,6 @@ app.post('/gitpull', function (req, res) {
   console.log('gitpull', req.body);
   res.send('OK');
 
-  // 15KZWpymhglHnv5EcSwGkY7548JHSCtg
 });
 
 // Serve static files /static
