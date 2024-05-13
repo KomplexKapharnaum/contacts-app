@@ -1,8 +1,19 @@
 function registerNotification() {
-	Notification.requestPermission(permission => {
-		if (permission === 'granted'){ registerBackgroundSync() }
-		else console.error("Permission was not granted.")
-	})
+    if (!navigator.serviceWorker){
+        return console.error("Service Worker not supported")
+    }
+
+    console.log("Registering notification")
+    
+    Notification.requestPermission(permission => {
+        if (permission === 'granted'){ 
+            registerBackgroundSync() 
+            new Notification("Liste de trucs à faire", {
+                body: "N'oublie pas de faire les courses !"
+            })
+        }
+        else console.error("Permission was not granted.")
+    })
 }
 
 function registerBackgroundSync() {
