@@ -11,7 +11,7 @@ dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const USE_HTTPS = process.env.USE_HTTPS && process.env.USE_HTTPS === 'true'
-const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret' 
+const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret'  
 
 // Path
 import path from 'path'
