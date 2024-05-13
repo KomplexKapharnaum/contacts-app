@@ -15,8 +15,7 @@ const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:4000'
 
 // import prompt_tree.json
-const prompt_tree = JSON.parse(fs.readFileSync('prompt_tree.json', 'utf8'));
-
+const prompt_tree = {}; // JSON.parse(fs.readFileSync('prompt_tree.json', 'utf8'));
 
 const upload_folder = "https://localhost:4000" // https://contacts.kxkm.net
 
@@ -284,3 +283,10 @@ app.use('/static', express.static('www'));
 app.use('/uploads', express.static('uploads'));
 app.use('/models', express.static('models'));
 app.use('/outputs', express.static('outputs'));
+
+// Serve PWA
+app.get('/pwa', function (req, res) {
+  res.sendFile(__dirname + '/www/pwa/app.html');
+});
+
+app.use('/pwa', express.static('www/pwa'));
