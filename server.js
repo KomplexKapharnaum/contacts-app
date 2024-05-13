@@ -1,9 +1,9 @@
 import express from 'express';
 
-// HTTPS
+// HTTPS / HTTP
+import http from 'http';
 import https from 'https';
 
-import { Server as HttpServer } from 'http';
 import { Server as IoServer } from "socket.io";
 import fs from 'fs';
 import { JSONFilePreset } from 'lowdb/node'
@@ -15,13 +15,13 @@ dotenv.config();
 // Global variables
 const COG_API_URL = process.env.COG_API_URL || 'http://127.0.0.1:5000'
 const COG_API_URL2 = process.env.COG_API_URL2 || 'http://127.0.0.1:5000'
+
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:4000'
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://127.0.0.1:'+BACKEND_PORT
+const USE_HTTPS = process.env.USE_HTTPS && process.env.USE_HTTPS === 'true'
 
 // import prompt_tree.json
 const prompt_tree = {}; // JSON.parse(fs.readFileSync('prompt_tree.json', 'utf8'));
-
-const upload_folder = "https://localhost:4000" // https://contacts.kxkm.net
 
 // Path
 import path from 'path'
@@ -33,19 +33,22 @@ const __dirname = path.dirname(__filename);
 const defaultData = { users: [{ nick: "Rasta1" }], requests: [] }
 const db = await JSONFilePreset('database.json', defaultData)
 
-// Servers HTTPS
-//
-const options = {
-  key: fs.readFileSync('certs/server.key'),
-  cert: fs.readFileSync('certs/server.cert')
-};
-
 // Express
 //
 var app = express();
 app.use(express.json({ limit: '50mb' }));
 
-var server = https.createServer(options, app);
+// HTTPS / HTTP
+if (USE_HTTPS) {
+  const options = { 
+    key: fs.readFileSync('certs/server.key'), 
+    cert: fs.readFileSync('certs/server.cert') 
+  };
+  var server = https.createServer(options, app);
+} 
+else var server = http.createServer(app);
+
+// Socket.io
 var io = new IoServer(server);
 
 
@@ -180,7 +183,10 @@ io.on('connection', (socket) => {
 //
 
 server.listen(BACKEND_PORT, function () {
-  console.log(`listening on *:${BACKEND_PORT}`);
+  var txt = 'listening on http'
+  if (USE_HTTPS) txt += 's'
+  txt += '://*:' + BACKEND_PORT;
+  console.log(txt);
 });
 
 app.use(express.json({ limit: '50mb' }));
