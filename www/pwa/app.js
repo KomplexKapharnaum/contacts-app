@@ -51,6 +51,7 @@ UTILS.subscribeToPush = async function(callback) {
     console.log(navigator.serviceWorker.ready)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(async function(reg) {
+            console.log("ready")
             // Check if there is an active subscription
             const subscription = await reg.pushManager.getSubscription();
             if (subscription) {
