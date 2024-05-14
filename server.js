@@ -98,7 +98,7 @@ webhookHandler.on('*', function (event, repo, data) {
     if (event === 'push') {
         // git stash then git pull && pm2 restart contacts
         console.log('processing push event (stash / Pull / Restart)');
-        exec('git stash && git pull && pm2 restart contacts', (err, stdout, stderr) => {
+        exec('git stash && git pull && npm i && pm2 restart contacts', (err, stdout, stderr) => {
             if (err) {
                 console.error(err);
                 return;
