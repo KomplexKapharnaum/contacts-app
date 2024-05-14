@@ -42,9 +42,10 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
-UTILS.subscribeToPush = async function() {
+UTILS.subscribeToPush = async function(callback) {
     const response = await fetch("/vapidPublicKey");
     const vapidPublicKey = await response.text();
+    console.log("vapidPublicKey", vapidPublicKey)
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(async function(reg) {
@@ -54,11 +55,12 @@ UTILS.subscribeToPush = async function() {
                 // If there is an active subscription, unsubscribe
                 await subscription.unsubscribe();
             }
+            console.log("subscribing...")
             // Subscribe with the new applicationServerKey
-            return reg.pushManager.subscribe({
+            reg.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: convertedVapidKey
-            });
+            }).then((subscription) => callback(subscription))
         });
     }
 }
@@ -74,13 +76,14 @@ document.addEventListener('click', function() {
 });
 
 document.getElementById("subscribe").addEventListener("click", async function() {
-    const subscription = await UTILS.subscribeToPush();
-    console.log(subscription);
-    fetch("/subscribe", {
-        method: "POST",
-        body: JSON.stringify(subscription),
-        headers: {
-            "content-type": "application/json"
-        }
+    await UTILS.subscribeToPush((subscription) => {
+        console.log(subscription);
+        fetch("/sub", {
+            method: "POST",
+            body: JSON.stringify(subscription),
+            headers: {
+                "content-type": "application/json"
+            }
+        });
     });
 });

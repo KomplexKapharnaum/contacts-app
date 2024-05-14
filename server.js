@@ -8,6 +8,8 @@ import https from 'https';
 import { Server as IoServer } from "socket.io";
 import fs from 'fs';
 import dotenv from 'dotenv';
+
+import webPush from "web-push";
 dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
@@ -109,8 +111,6 @@ webhookHandler.on('*', function (event, repo, data) {
 });
 
 // Web Push
-import webPush from "web-push";
-
 if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   console.log(
     "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
@@ -133,29 +133,11 @@ webPush.setVapidDetails(
 
 app.get(`/vapidPublicKey`, (req, res) => {
   res.send(process.env.VAPID_PUBLIC_KEY);
-  sendNotif(
-    {
-      endpoint: req.query.endpoint,
-      keys: {
-        auth: req.query.auth,
-        p256dh: req.query.p256dh,
-      },
-    },
-    "Hello from the server",
-    60,
-    0,
-  );
 });
 
-app.get(`/subscribe`, async (req, res) => {
-  const subscription = JSON.parse(req.body);
-  
-  // Unsubscribe the existing subscription
-  const existingSubscription = await webPush.getSubscription();
-  if (existingSubscription) {
-    await existingSubscription.unsubscribe();
-  }
-
+app.post(`/sub`, async (req, res) => {
+  const subscription = req.body;
+  console.log(subscription);
   // Subscribe with the new application server key
   sendNotif(
     subscription,
