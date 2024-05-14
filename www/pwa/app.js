@@ -47,24 +47,23 @@ UTILS.subscribeToPush = async function(callback) {
     const vapidPublicKey = await response.text();
     console.log("vapidPublicKey", vapidPublicKey)
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-    console.log('serviceWorker' in navigator)
-    console.log(navigator.serviceWorker.ready)
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.ready.then(async function(reg) {
-            console.log("ready")
-            // Check if there is an active subscription
-            const subscription = await reg.pushManager.getSubscription();
-            if (subscription) {
-                // If there is an active subscription, unsubscribe
-                await subscription.unsubscribe();
-            }
-            console.log("subscribing...")
-            // Subscribe with the new applicationServerKey
-            reg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: convertedVapidKey
-            }).then((subscription) => callback(subscription))
-        });
+
+        let reg = await navigator.serviceWorker.ready;
+
+        // Check if there is an active subscription
+        const subscription = await reg.pushManager.getSubscription();
+        if (subscription) {
+            // If there is an active subscription, unsubscribe
+            await subscription.unsubscribe();
+        }
+        
+        console.log("subscribing...")
+        // Subscribe with the new applicationServerKey
+        reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidKey
+        }).then((subscription) => callback(subscription))
     }
 }
 
