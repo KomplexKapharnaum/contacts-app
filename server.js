@@ -116,7 +116,13 @@ if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
     "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
       "environment variables. You can use the following ones:",
   );
-  console.log(webPush.generateVAPIDKeys());
+  const { publicKey, privateKey } = generateVAPIDKeys();
+
+  process.env.VAPID_PUBLIC_KEY = publicKey;
+  process.env.VAPID_PRIVATE_KEY = privateKey;
+
+  console.log('VAPID_PUBLIC_KEY:', publicKey);
+  console.log('VAPID_PRIVATE_KEY:', privateKey);
 }
 
 webPush.setVapidDetails(
