@@ -124,3 +124,36 @@ webPush.setVapidDetails(
   process.env.VAPID_PUBLIC_KEY,
   process.env.VAPID_PRIVATE_KEY,
 );
+
+app.get(`/vapidPublicKey`, (req, res) => {
+  res.send(process.env.VAPID_PUBLIC_KEY);
+  sendNotif(
+    {
+      endpoint: req.query.endpoint,
+      keys: {
+        auth: req.query.auth,
+        p256dh: req.query.p256dh,
+      },
+    },
+    "Hello from the server",
+    60,
+    0,
+  );
+});
+
+function sendNotif(subscription, payload, ttl, delay) {
+  const options = {
+    TTL: ttl,
+  };
+
+  setTimeout(() => {
+    webPush
+      .sendNotification(subscription, payload, options)
+      .then(() => {
+        console.log("Push sent");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, delay * 1000);
+}

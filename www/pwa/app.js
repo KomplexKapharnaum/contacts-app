@@ -21,21 +21,23 @@ UTILS.registerServiceWorker = function() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/pwa/sw.js')
         .then(function(reg) {
-            console.log('Service Worker Registered!', reg);
-            return reg.pushManager.getSubscription().then(function(sub) {
-                if (sub) {
-                    return sub;
-                }
-                return reg.pushManager.subscribe({
-                    userVisibleOnly: true
-                });
-            });
+            console.log('Service Worker registered with scope: ', reg.scope);
         })
         .catch(function(err) {
             console.log('Service Worker registration failed: ', err);
         });
     }
 };
+
+UTILS.subscribeToPush = async function() {
+    const response = await fetch("/vapidPublicKey");
+    const vapidPublicKey = await response.text();
+    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+    return reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedVapidKey
+    });
+}
 
 UTILS.registerServiceWorker();
 
@@ -45,4 +47,8 @@ document.addEventListener('click', function() {
             body: 'Notification from PWA'
         });
     });
+});
+
+document.getElementById("subscribe").addEventListener("click", function() {
+    UTILS.subscribeToPush();
 });

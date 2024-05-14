@@ -13,6 +13,21 @@ html, body {
 }
 
 div {
-    font-size: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+div>span {
     color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+div>button {
+    border: solid 1px white;
+    background-color: black;
+    color: white;
+    padding: 10px;
 }
