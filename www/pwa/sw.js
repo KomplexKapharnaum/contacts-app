@@ -25,13 +25,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(cacheFirst(event.request));
 });
 
-setInterval(() => {
-    self.registration.showNotification("Notification Title", {
-        body: "Notification Body",
-        icon: "path/to/notification-icon.png"
-    });
-}, 10000);
-
-self.addEventListener("activate", (event) => {
-    event.waitUntil(self.clients.claim());
+self.addEventListener("push", (event) => {
+    const payload = event.data?.text() ?? "no payload";
+    event.waitUntil(
+        self.registration.showNotification("Notification received !", {
+            body: payload,
+        }),
+    );
 });

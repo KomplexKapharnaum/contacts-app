@@ -105,6 +105,22 @@ webhookHandler.on('*', function (event, repo, data) {
             }
             console.log(stdout);
         });        
-
     }
 });
+
+// Web Push
+import webPush from "web-push";
+
+if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+  console.log(
+    "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
+      "environment variables. You can use the following ones:",
+  );
+  console.log(webPush.generateVAPIDKeys());
+}
+
+webPush.setVapidDetails(
+  "https://contacts.kxkm.net",
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY,
+);

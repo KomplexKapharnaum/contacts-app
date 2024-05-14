@@ -22,6 +22,14 @@ UTILS.registerServiceWorker = function() {
         navigator.serviceWorker.register('/pwa/sw.js')
         .then(function(reg) {
             console.log('Service Worker Registered!', reg);
+            return reg.pushManager.getSubscription().then(function(sub) {
+                if (sub) {
+                    return sub;
+                }
+                return reg.pushManager.subscribe({
+                    userVisibleOnly: true
+                });
+            });
         })
         .catch(function(err) {
             console.log('Service Worker registration failed: ', err);
