@@ -148,7 +148,7 @@ app.get(`/vapidPublicKey`, (req, res) => {
 });
 
 app.get(`/subscribe`, async (req, res) => {
-  const subscription = JSON.parse(req.query.subscription);
+  const subscription = JSON.parse(req.body);
   
   // Unsubscribe the existing subscription
   const existingSubscription = await webPush.getSubscription();
