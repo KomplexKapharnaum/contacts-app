@@ -46,10 +46,14 @@ UTILS.subscribeToPush = async function() {
     const response = await fetch("/vapidPublicKey");
     const vapidPublicKey = await response.text();
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-    return reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey
-    });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(function(reg) {
+            return reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: convertedVapidKey
+            });
+        });
+    }
 }
 
 UTILS.registerServiceWorker();
