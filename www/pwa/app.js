@@ -43,26 +43,23 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 UTILS.subscribeToPush = async function() {
-    const response = await fetch("/vapidPublicKey");
-    const vapidPublicKey = await response.text();
-    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.ready.then(function(reg) {
-            return reg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: convertedVapidKey
-            });
-        });
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+    if (subscription) {
+        await subscription.unsubscribe();
     }
-}
-
+    return registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedVapidKey
+    });
+};
 UTILS.registerServiceWorker();
 
 document.addEventListener('click', function() {
     UTILS.requestNotificationPermission(function() {
-        UTILS.displayNotification('Hello from PWA', {
+        /*UTILS.displayNotification('Hello from PWA', {
             body: 'Notification from PWA'
-        });
+        });*/
     });
 });
 
