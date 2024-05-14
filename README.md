@@ -1,6 +1,5 @@
 # contacts-app
 
-
 # Notes sur l'application
 ## PWA Manifest 
 - peut être un .json ou un .webmanifest
