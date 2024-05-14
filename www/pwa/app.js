@@ -10,7 +10,7 @@ UTILS.requestNotificationPermission = function(callback) {
 
 UTILS.displayNotification = function(title, options) {
     if (Notification.permission === 'granted') {
-        navigator.serviceWorker.getRegistration().then(function(reg) {
+        navigator.serviceWorker.ready.then(function(reg) {
             alert("Notification permission granted")
             reg.showNotification(title, options);
         });
