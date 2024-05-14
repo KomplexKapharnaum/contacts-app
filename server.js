@@ -147,6 +147,16 @@ app.get(`/vapidPublicKey`, (req, res) => {
   );
 });
 
+app.get(`/subscribe`, (req, res) => {
+  sendNotif(
+    JSON.parse(req.query.subscription),
+    "Hello from the server",
+    60,
+    10,
+  );
+  res.send("done");
+});
+
 function sendNotif(subscription, payload, ttl, delay) {
   const options = {
     TTL: ttl,

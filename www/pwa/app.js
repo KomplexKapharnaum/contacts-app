@@ -66,6 +66,14 @@ document.addEventListener('click', function() {
     });
 });
 
-document.getElementById("subscribe").addEventListener("click", function() {
-    UTILS.subscribeToPush();
+document.getElementById("subscribe").addEventListener("click", async function() {
+    const subscription = await UTILS.subscribeToPush();
+    console.log(subscription);
+    fetch("/subscribe", {
+        method: "POST",
+        body: JSON.stringify(subscription),
+        headers: {
+            "content-type": "application/json"
+        }
+    });
 });
