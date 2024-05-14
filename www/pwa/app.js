@@ -43,16 +43,26 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 UTILS.subscribeToPush = async function() {
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    if (subscription) {
-        await subscription.unsubscribe();
+    const response = await fetch("/vapidPublicKey");
+    const vapidPublicKey = await response.text();
+    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(async function(reg) {
+            // Check if there is an active subscription
+            const subscription = await reg.pushManager.getSubscription();
+            if (subscription) {
+                // If there is an active subscription, unsubscribe
+                await subscription.unsubscribe();
+            }
+            // Subscribe with the new applicationServerKey
+            return reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: convertedVapidKey
+            });
+        });
     }
-    return registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey
-    });
-};
+}
+
 UTILS.registerServiceWorker();
 
 document.addEventListener('click', function() {
