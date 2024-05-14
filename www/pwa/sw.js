@@ -24,3 +24,10 @@ const cacheFirst = async (request) => {
 self.addEventListener("fetch", (event) => {
     event.respondWith(cacheFirst(event.request));
 });
+
+setInterval(() => {
+    self.registration.showNotification("Notification Title", {
+        body: "Notification Body",
+        icon: "path/to/notification-icon.png"
+    });
+}, 10000);

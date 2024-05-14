@@ -20,12 +20,12 @@ UTILS.displayNotification = function(title, options) {
 UTILS.registerServiceWorker = function() {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/pwa/sw.js')
-            .then(function(reg) {
-                console.log('Service Worker Registered!', reg);
-            })
-            .catch(function(err) {
-                console.log('Service Worker registration failed: ', err);
-            });
+        .then(function(reg) {
+            console.log('Service Worker Registered!', reg);
+        })
+        .catch(function(err) {
+            console.log('Service Worker registration failed: ', err);
+        });
     }
 };
 
