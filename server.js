@@ -147,9 +147,18 @@ app.get(`/vapidPublicKey`, (req, res) => {
   );
 });
 
-app.get(`/subscribe`, (req, res) => {
+app.get(`/subscribe`, async (req, res) => {
+  const subscription = JSON.parse(req.query.subscription);
+  
+  // Unsubscribe the existing subscription
+  const existingSubscription = await webPush.getSubscription();
+  if (existingSubscription) {
+    await existingSubscription.unsubscribe();
+  }
+
+  // Subscribe with the new application server key
   sendNotif(
-    JSON.parse(req.query.subscription),
+    subscription,
     "Hello from the server",
     60,
     10,
