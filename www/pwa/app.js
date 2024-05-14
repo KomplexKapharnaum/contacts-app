@@ -48,22 +48,29 @@ UTILS.subscribeToPush = async function(callback) {
     console.log("vapidPublicKey", vapidPublicKey)
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
     if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/pwa/sw.js').then(async function(reg) {
 
-        let reg = await navigator.serviceWorker.ready;
+                // let reg = await navigator.serviceWorker.ready;
 
-        // Check if there is an active subscription
-        const subscription = await reg.pushManager.getSubscription();
-        if (subscription) {
-            // If there is an active subscription, unsubscribe
-            await subscription.unsubscribe();
-        }
+                // Check if there is an active subscription
+                const subscription = await reg.pushManager.getSubscription();
+                if (subscription) {
+                    // If there is an active subscription, unsubscribe
+                    await subscription.unsubscribe();
+                }
         
-        console.log("subscribing...")
-        // Subscribe with the new applicationServerKey
-        reg.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
-        }).then((subscription) => callback(subscription))
+                console.log("subscribing...")
+                // Subscribe with the new applicationServerKey
+                reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey
+                }).then((subscription) => callback(subscription))
+
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
     }
 }
 
