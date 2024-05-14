@@ -46,6 +46,6 @@
   ],
   "start_url": "/pwa",
   "display": "fullscreen",
-  "theme_color": "#0000FF",
-  "background_color": "#00FF00"
+  "theme_color": "#FFFF00",
+  "background_color": "#000000"
 }

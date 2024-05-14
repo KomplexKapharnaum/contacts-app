@@ -1,46 +1,40 @@
-function registerNotification() {
-    if (!navigator.serviceWorker){
-        return console.error("Service Worker not supported")
-    }
+let UTILS = {};
 
-    console.log("Registering notification")
-    
-    Notification.requestPermission(permission => {
-        if (permission === 'granted'){ 
-            registerBackgroundSync() 
-            new Notification("Liste de trucs à faire", {
-                body: "N'oublie pas de faire les courses !"
-            })
+UTILS.requestNotificationPermission = function(callback) {
+    Notification.requestPermission(function(result) {
+        if (result === 'granted') {
+            callback();
         }
-        else console.error("Permission was not granted.")
-    })
-}
-
-function registerBackgroundSync() {
-    if (!navigator.serviceWorker){
-        return console.error("Service Worker not supported")
-    }
-
-    navigator.serviceWorker.ready
-    .then(registration => registration.sync.register('syncAttendees'))
-    .then(() => console.log("Registered background sync"))
-    .catch(err => console.error("Error registering background sync", err))
-}
-
-
-self.addEventListener('sync', function(event) {
-	console.log("sync event", event);
-    if (event.tag === 'syncAttendees') {
-        event.waitUntil(syncAttendees()); // sending sync request
-    }
-});
-
-function syncAttendees(){
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        }, 10000);
-    }).then(() => {
-        self.registration.showNotification("Hello world !");
     });
-}
+};
+
+UTILS.displayNotification = function(title, options) {
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+            alert("Notification permission granted")
+            reg.showNotification(title, options);
+        });
+    }
+};
+
+UTILS.registerServiceWorker = function() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/pwa/sw.js')
+            .then(function(reg) {
+                console.log('Service Worker Registered!', reg);
+            })
+            .catch(function(err) {
+                console.log('Service Worker registration failed: ', err);
+            });
+    }
+};
+
+UTILS.registerServiceWorker();
+
+document.addEventListener('click', function() {
+    UTILS.requestNotificationPermission(function() {
+        UTILS.displayNotification('Hello from PWA', {
+            body: 'Notification from PWA'
+        });
+    });
+});
