@@ -31,3 +31,7 @@ setInterval(() => {
         icon: "path/to/notification-icon.png"
     });
 }, 10000);
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(self.clients.claim());
+});
