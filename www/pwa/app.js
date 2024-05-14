@@ -47,6 +47,8 @@ UTILS.subscribeToPush = async function(callback) {
     const vapidPublicKey = await response.text();
     console.log("vapidPublicKey", vapidPublicKey)
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+    console.log('serviceWorker' in navigator)
+    console.log(navigator.serviceWorker.ready)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(async function(reg) {
             // Check if there is an active subscription
