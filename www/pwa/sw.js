@@ -33,3 +33,8 @@ self.addEventListener("push", (event) => {
         }),
     );
 });
+
+self.addEventListener("notificationclick", (event) => {
+    event.notification.close();
+    // Add your custom logic here for handling notification click event
+});
