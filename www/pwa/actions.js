@@ -229,23 +229,32 @@ const FLASHLIGHT = {
     track: null,
     on: function() {
         if ('mediaDevices' in navigator) {
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    deviceId: camera.deviceId,
-                    facingMode: ['user', 'environment'],
-                    height: {ideal: 1080},
-                    width: {ideal: 1920}
+            navigator.mediaDevices.enumerateDevices().then(devices => {
+                const cameras = devices.filter((device) => device.kind === 'videoinput');
+            
+                if (cameras.length === 0) {
+                    throw 'No camera found on this device.';
                 }
-                }).then(stream => {
-                const track = stream.getVideoTracks()[0];
-                FLASHLIGHT.track = track;
+                const camera = cameras[cameras.length - 1];
 
-                //Create image capture object and get camera capabilities
-                const imageCapture = new ImageCapture(track)
-                const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-                    let track = stream.getVideoTracks()[0];
-                    track.applyConstraints({
-                        advanced: [{torch: true}]
+                navigator.mediaDevices.getUserMedia({
+                    video: {
+                        deviceId: camera.deviceId,
+                        facingMode: ['user', 'environment'],
+                        height: {ideal: 1080},
+                        width: {ideal: 1920}
+                    }
+                    }).then(stream => {
+                    const track = stream.getVideoTracks()[0];
+                    FLASHLIGHT.track = track;
+
+                    //Create image capture object and get camera capabilities
+                    const imageCapture = new ImageCapture(track)
+                    const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                        let track = stream.getVideoTracks()[0];
+                        track.applyConstraints({
+                            advanced: [{torch: true}]
+                        });
                     });
                 });
             });
