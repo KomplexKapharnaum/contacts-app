@@ -231,20 +231,15 @@ const FLASHLIGHT = {
             if ('mediaDevices' in navigator) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                 .then((stream) => {
-                    const imageCapture = new ImageCapture(track)
-                    const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-                        console.log(photoCapabilities);
-                        const track = stream.getVideoTracks()[0];
-                        FLASHLIGHT.track = track;
-                    });
-                })
-                .catch((err) => {
+                    const track = stream.getVideoTracks()[0];
+                    FLASHLIGHT.track = track;
                     console.error(err);
                 });
             }
         },
     flash: function(state) {
         if (FLASHLIGHT.track) {
+            console.log("Flashlight state: " + state);
             FLASHLIGHT.track.applyConstraints({
                 advanced: [{ torch: state }]
             });
