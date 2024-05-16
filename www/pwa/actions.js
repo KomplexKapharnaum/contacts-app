@@ -231,8 +231,12 @@ const FLASHLIGHT = {
             if ('mediaDevices' in navigator) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                 .then((stream) => {
-                    const track = stream.getVideoTracks()[0];
-                    FLASHLIGHT.track = track;
+                    const imageCapture = new ImageCapture(track)
+                    const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                        console.log(photoCapabilities);
+                        const track = stream.getVideoTracks()[0];
+                        FLASHLIGHT.track = track;
+                    });
                 })
                 .catch((err) => {
                     console.error(err);
