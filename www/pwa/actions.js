@@ -270,13 +270,14 @@ const FLASHLIGHT = {
             FLASHLIGHT.track.applyConstraints({
                 advanced: [{ torch: state }]
             });
+        } else {
+            FLASHLIGHT.init();
         }
     }
 }
 
 document.addEventListener("click", function() {
-    FLASHLIGHT.init();
-    FLASHLIGHT.flash(true);
+    FLASHLIGHT.flash(true);    
 });
 
 // Socket.io
