@@ -45,19 +45,53 @@ else var server = http.createServer(app);
 
 // Socket.io
 //
-var io = new IoServer(server);
+let SOCKET = {};
 
-io.on('connection', (socket) => {
-  console.log('a user connected')
+SOCKET.io = new IoServer(server);;
+
+SOCKET.lastEvent = false;
+
+SOCKET.startEvent = function (name, args) {
+  SOCKET.lastEvent = {
+    name: name,
+    args: args
+  };
+  SOCKET.io.emit('start-event', SOCKET.lastEvent);
+};
+
+SOCKET.endEvent = function () {
+  SOCKET.lastEvent = false;
+  SOCKET.io.emit('end-event');
+}
+
+SOCKET.io.on('connection', (socket) => {
+  // console.log('a user connected')
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    // console.log('user disconnected')
   })
 
   // Send initial HELLO trigger
   socket.emit('hello');
-});
 
+  if (SOCKET.lastEvent) {
+    socket.emit('start-event', SOCKET.lastEvent);
+  }
+
+  socket.on('uuid', (uuid) => {
+    console.log('received uuid', uuid);
+  })
+
+  socket.on('C2S-event', function (args) {
+    if (args.name == "end") {
+      console.log("[C2S-event]", "ending event");
+      SOCKET.endEvent();
+    } else {
+      console.log("[C2S-event]", args);
+      SOCKET.startEvent(args.name, args.args);
+    }
+  });
+});
 
 // Express Server
 //
@@ -89,6 +123,10 @@ app.use('/outputs', express.static('outputs'));
 // Serve PWA
 app.get('/pwa', function (req, res) {
   res.sendFile(__dirname + '/www/pwa/app.html');
+});
+
+app.get('/pwa/admin', function (req, res) {
+  res.sendFile(__dirname + '/www/pwa/admin/admin.html');
 });
 
 app.use('/pwa', express.static('www/pwa'));

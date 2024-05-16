@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin panel</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 1em;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Admin panel</h1>
+    <button id="color-event">Color event</button>
+    <button id="text-event">Text event</button>
+    <button id="end-event">End current event</button>
+    <script>
+        const socket = io();
+        document.getElementById('color-event').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "color",
+                args: ["red", "blue", "green"]
+            });
+        });
+
+        document.getElementById('text-event').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "text",
+                args: ["Hello world !", "Goodbye world !"]
+            });
+        });
+
+        document.getElementById('end-event').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "end"
+            });
+        });
+    </script>
+</body>
+</html>

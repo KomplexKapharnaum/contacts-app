@@ -13,12 +13,39 @@
     <link rel="stylesheet" href="/pwa/style.css">
 	<link rel="manifest" href="/pwa/app.webmanifest">
 
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div>
-        <span>PWA TEST</span>
-        <button id="subscribe">Subscribe</button>
+    <div id="OVERLAY">
+
     </div>
+    <main>
+        <h1>CONTACTS</h1>
+        <button id="subscribe">Avoir une notification via abonnement</button>
+
+        <button id="recorder-btn">Enregistrer un cri</button>
+        <div id="recorder-bar"><div></div></div>
+
+        <h2>Selfie</h2>
+        <video id="media-stream" src=""></video>
+        <div>
+            <button id="media-stream-snapshot">Capturer</button>
+            <button id="media-reload" style="visibility: hidden;">⟳</button>
+        </div>
+        
+        <h2>Sélectionner une image</h2>
+        <button id="image-getbutton">Recevoir des images</button>
+        <div id="image-array">
+            
+        </div>
+
+        <h2>Activer overlay</h2>
+        <div id="overlay-array">
+
+        </div>
+    </main>
+
     <script src="/pwa/app.js"></script>
+    <script src="/pwa/actions.js"></script>
 </body>
 </html>

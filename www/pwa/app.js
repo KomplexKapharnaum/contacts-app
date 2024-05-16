@@ -1,3 +1,28 @@
+Cookies = {
+    get: function(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    },
+    set: function(name, value, days) {
+        var d = new Date;
+        d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+        document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+    },
+    str: function() {
+        return document.cookie;
+    }
+};
+
+var uuid = Cookies.get('userid') || Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+Cookies.set('userid', uuid, { expires: 3700 })
+
+var socket = io();
+socket.on('hello', function() {
+    console.log("sending uuid", uuid)
+    socket.emit('uuid', uuid);
+});
+
 let UTILS = {};
 
 UTILS.requestNotificationPermission = function(callback) {

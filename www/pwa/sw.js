@@ -1,5 +1,6 @@
 const ressourcesToCache = [
-    "/pwa"
+    "", // root (app.html)
+    "style.css"
 ]
 
 const addResourcesToCache = async (resources) => {
@@ -9,7 +10,7 @@ const addResourcesToCache = async (resources) => {
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        addResourcesToCache(ressourcesToCache),
+        addResourcesToCache("/pwa/" + ressourcesToCache),
     );
 });
 
@@ -35,6 +36,5 @@ self.addEventListener("push", (event) => {
 });
 
 self.addEventListener("notificationclick", (event) => {
-    event.notification.close();
-    // Add your custom logic here for handling notification click event
+    event.notification.close(); 
 });
