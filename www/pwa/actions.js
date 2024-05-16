@@ -262,6 +262,9 @@ const FLASHLIGHT = {
     },
     off: function() {
         if (this.track) {
+            track.applyConstraints({
+                advanced: [{torch: false}]
+            });
             this.track.stop();
         }
     }
