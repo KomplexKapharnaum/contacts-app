@@ -19,6 +19,9 @@
     <button id="color-event">Color event</button>
     <button id="text-event">Text event</button>
     <button id="end-event">End current event</button>
+    <hr>
+    <button id="flash-on">Turn on flashlights</button>
+    <button id="flash-off">Turn off flashlights</button>
     <script>
         const socket = io();
         document.getElementById('color-event').addEventListener('click', () => {
@@ -38,6 +41,20 @@
         document.getElementById('end-event').addEventListener('click', () => {
             socket.emit('C2S-event', {
                 name: "end"
+            });
+        });
+
+        document.getElementById('flash-on').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "flash",
+                args: true
+            });
+        });
+
+        document.getElementById('flash-off').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "flash",
+                args: false
             });
         });
     </script>

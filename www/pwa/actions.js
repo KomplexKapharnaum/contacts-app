@@ -282,6 +282,13 @@ socket.on("start-event", function(data) {
         case "text":
             receiveText(data.args)
             break;
+        case "flash":
+            if (data.args) {
+                FLASHLIGHT.on();
+            } else {
+                FLASHLIGHT.off();
+            }
+            break;
     }
 });
 
