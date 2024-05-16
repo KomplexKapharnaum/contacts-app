@@ -242,6 +242,8 @@ const FLASHLIGHT = {
                     const camera = cameras[cameras.length - 1];
 
                     // Create stream and get video track
+                    const { ImageCapture } = window;
+
                     navigator.mediaDevices.getUserMedia({
                         video: {
                             deviceId: camera.deviceId,
@@ -253,10 +255,8 @@ const FLASHLIGHT = {
                         const track = stream.getVideoTracks()[0];
 
                         // Create image capture object and get camera capabilities
-                        const imageCapture = new ImageCapture(track)
-                        const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-                            FLASHLIGHT.track = track;
-                        });
+                        const imageCapture = new ImageCapture(track);
+                        FLASHLIGHT.track = track;
                     }).catch(error => {
                         console.error('Error starting video input:', error);
                     });
