@@ -234,7 +234,6 @@ const FLASHLIGHT = {
             if (SUPPORTS_MEDIA_DEVICES) {
                 // Get the environment camera (usually the second one)
                 navigator.mediaDevices.enumerateDevices().then(devices => {
-
                     const cameras = devices.filter((device) => device.kind === 'videoinput');
 
                     if (cameras.length === 0) {
@@ -258,6 +257,8 @@ const FLASHLIGHT = {
                         const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
                             FLASHLIGHT.track = track;
                         });
+                    }).catch(error => {
+                        console.error('Error starting video input:', error);
                     });
                 });
 
