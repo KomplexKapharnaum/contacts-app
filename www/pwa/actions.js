@@ -227,23 +227,33 @@ const colorArr = [
 
 const FLASHLIGHT = {
     track: null,
-    init: function() {
-            if ('mediaDevices' in navigator) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    const track = stream.getVideoTracks()[0];
-                    FLASHLIGHT.track = track;
+    on: function() {
+        if ('mediaDevices' in navigator) {
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    deviceId: camera.deviceId,
+                    facingMode: ['user', 'environment'],
+                    height: {ideal: 1080},
+                    width: {ideal: 1920}
+                }
+                }).then(stream => {
+                const track = stream.getVideoTracks()[0];
+                FLASHLIGHT.track = track;
+
+                //Create image capture object and get camera capabilities
+                const imageCapture = new ImageCapture(track)
+                const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+                    let track = stream.getVideoTracks()[0];
+                    track.applyConstraints({
+                        advanced: [{torch: true}]
+                    });
                 });
-            }
-        },
-    flash: function(state) {
-        if (FLASHLIGHT.track) {
-            console.log("Flashlight state: " + state);
-            FLASHLIGHT.track.applyConstraints({
-                advanced: [{ torch: state }]
             });
-        } else {
-            FLASHLIGHT.init();
+        }
+    },
+    off: function() {
+        if (this.track) {
+            this.track.stop();
         }
     }
 }
