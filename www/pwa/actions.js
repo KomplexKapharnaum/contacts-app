@@ -228,41 +228,17 @@ const colorArr = [
 const FLASHLIGHT = {
     track: null,
     init: function() {
-        FLASHLIGHT.init = function() {
-            const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
-
-            if (SUPPORTS_MEDIA_DEVICES) {
-                // Get the environment camera (usually the second one)
-                navigator.mediaDevices.enumerateDevices().then(devices => {
-                    const cameras = devices.filter((device) => device.kind === 'videoinput');
-
-                    if (cameras.length === 0) {
-                        throw 'No camera found on this device.';
-                    }
-                    const camera = cameras[cameras.length - 1];
-
-                    // Create stream and get video track
-                    const { ImageCapture } = window;
-
-                    navigator.mediaDevices.getUserMedia({
-                        video: {
-                            deviceId: camera.deviceId,
-                            facingMode: ['user', 'environment'],
-                            height: { ideal: 1080 },
-                            width: { ideal: 1920 }
-                        }
-                    }).then(stream => {
-                        const track = stream.getVideoTracks()[0];
-                        FLASHLIGHT.track = track;
-                    }).catch(error => {
-                        console.error('Error starting video input:', error);
-                    });
+            if ('mediaDevices' in navigator) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    const track = stream.getVideoTracks()[0];
+                    FLASHLIGHT.track = track;
+                })
+                .catch((err) => {
+                    console.error(err);
                 });
-
-                // The light will be on as long the track exists
             }
-        };
-    },
+        },
     flash: function(state) {
         if (FLASHLIGHT.track) {
             FLASHLIGHT.track.applyConstraints({
