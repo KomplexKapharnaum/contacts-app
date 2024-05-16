@@ -259,7 +259,7 @@ const FLASHLIGHT = {
 }
 
 document.addEventListener("click", function() {
-    FLASHLIGHT.flash(true);    
+    FLASHLIGHT.on(); 
 });
 
 // Socket.io
