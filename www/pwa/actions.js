@@ -233,7 +233,6 @@ const FLASHLIGHT = {
                 .then((stream) => {
                     const track = stream.getVideoTracks()[0];
                     FLASHLIGHT.track = track;
-                    console.error(err);
                 });
             }
         },
