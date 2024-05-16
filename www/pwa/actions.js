@@ -253,9 +253,6 @@ const FLASHLIGHT = {
                         }
                     }).then(stream => {
                         const track = stream.getVideoTracks()[0];
-
-                        // Create image capture object and get camera capabilities
-                        const imageCapture = new ImageCapture(track);
                         FLASHLIGHT.track = track;
                     }).catch(error => {
                         console.error('Error starting video input:', error);
