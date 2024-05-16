@@ -95,7 +95,7 @@ function startMediaStream() {
     });
 }
 
-startMediaStream();
+// startMediaStream();
 
 snapshotButton.addEventListener("click", function() {
     
