@@ -254,9 +254,19 @@ class flashlightHandler {
             }).then((stream) => {
                 this.track = stream.getVideoTracks()[0];
                 
-                if (!(this.track.getCapabilities().torch)) {
-                    alert("No torch available.");
-                }; 
+                if (this.track.getCapabilities && this.track.getCapabilities().torch) {
+                    // Torch is available
+                } else if (this.track.applyConstraints) {
+                    // Torch is not available, try applying constraints
+                    this.track.applyConstraints({ advanced: [{ torch: false }] })
+                    .then(() => {
+                        // Torch is turned on
+                    })
+                    .catch((error) => {
+                        // Failed to turn on torch
+                        console.error(error);
+                    });
+                }
             });
         });
     }
