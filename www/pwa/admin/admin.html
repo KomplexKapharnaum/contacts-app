@@ -22,6 +22,8 @@
     <hr>
     <button id="flash-on">Turn on flashlights</button>
     <button id="flash-off">Turn off flashlights</button>
+    <hr>
+    <button id="vibrate">Vibrate devices</button>
     <script>
         const socket = io();
         document.getElementById('color-event').addEventListener('click', () => {
@@ -55,6 +57,13 @@
             socket.emit('C2S-event', {
                 name: "flash",
                 args: false
+            });
+        });
+
+        document.getElementById('vibrate').addEventListener('click', () => {
+            socket.emit('C2S-event', {
+                name: "vibrate",
+                args: [500, 100, 200, 50, 100]
             });
         });
     </script>

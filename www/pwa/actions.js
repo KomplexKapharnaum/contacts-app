@@ -304,6 +304,9 @@ socket.on("start-event", function(data) {
                 FLASHLIGHT.off();
             }
             break;
+        case "vibrate":
+            vibrate(data.args);
+            break;
     }
 });
 
