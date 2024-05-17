@@ -225,50 +225,53 @@ const colorArr = [
 // Flashlight management
 //
 
-const FLASHLIGHT = {
-    track: null,
-    on: function() {
-        if ('mediaDevices' in navigator) {
-            navigator.mediaDevices.enumerateDevices().then(devices => {
-                const cameras = devices.filter((device) => device.kind === 'videoinput');
+class flashlightHandler {
+
+    static track; //the video track which is used to turn on/off the flashlight
+
+    static accessFlashlight() {
+        //Test browser support
+        if (!('mediaDevices' in window.navigator)) {
+            alert("Media Devices not available. Use HTTPS!");
+            return;
+        };
+
+        //Get the environment camera (usually the second one)
+        window.navigator.mediaDevices.enumerateDevices().then((devices) => {
+
+            const cameras = devices.filter((device) => device.kind === 'videoinput');
+            if (cameras.length === 0) {
+                alert("No camera found. If your device has camera available, check permissions.");
+                return;
+            };
             
-                if (cameras.length === 0) {
-                    throw 'No camera found on this device.';
+            const camera = cameras[cameras.length - 1];
+            
+            window.navigator.mediaDevices.getUserMedia({
+                video: {
+                    deviceId: camera.deviceId
                 }
-                const camera = cameras[cameras.length - 1];
-
-                navigator.mediaDevices.getUserMedia({
-                    video: {
-                        deviceId: camera.deviceId,
-                        facingMode: ['user', 'environment'],
-                        height: {ideal: 1080},
-                        width: {ideal: 1920}
-                    }
-                    }).then(stream => {
-                    const track = stream.getVideoTracks()[0];
-                    FLASHLIGHT.track = track;
-
-                    //Create image capture object and get camera capabilities
-                    const imageCapture = new ImageCapture(track)
-                    const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-                        let track = stream.getVideoTracks()[0];
-                        track.applyConstraints({
-                            advanced: [{torch: true}]
-                        });
-                    });
-                });
+            }).then((stream) => {
+                this.track = stream.getVideoTracks()[0];
+                
+                if (!(this.track.getCapabilities().torch)) {
+                    alert("No torch available.");
+                }; 
             });
-        }
-    },
-    off: function() {
-        if (this.track) {
-            this.track.applyConstraints({
-                advanced: [{torch: false}]
-            });
-            this.track.stop();
-        }
+        });
+    }
+
+    static setFlashlightStatus(status) {
+        this.track.applyConstraints({
+            advanced: [{
+                torch: status
+            }]
+        });
     }
 }
+
+const FLASHLIGHT = new flashlightHandler();
+FLASHLIGHT.accessFlashlight();
 
 // Control phone vibration
 //
@@ -278,7 +281,7 @@ const vibrate = function(pattern) {
         console.log(result)
         if (result === 'granted') {
             console.log("Vibrating")
-            window.navigator.vibrate(pattern);
+            navigator.vibrate(pattern);
         }
     });
 }
@@ -301,9 +304,9 @@ socket.on("start-event", function(data) {
             break;
         case "flash":
             if (data.args) {
-                FLASHLIGHT.on();
+                FLASHLIGHT.setFlashlightStatus(true);
             } else {
-                FLASHLIGHT.off();
+                FLASHLIGHT.setFlashlightStatus(false);
             }
             break;
         case "vibrate":
