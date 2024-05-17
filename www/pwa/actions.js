@@ -270,8 +270,7 @@ class flashlightHandler {
     }
 }
 
-const FLASHLIGHT = new flashlightHandler();
-FLASHLIGHT.accessFlashlight();
+flashlightHandler.accessFlashlight()
 
 // Control phone vibration
 //
@@ -304,9 +303,9 @@ socket.on("start-event", function(data) {
             break;
         case "flash":
             if (data.args) {
-                FLASHLIGHT.setFlashlightStatus(true);
+                flashlightHandler.setFlashlightStatus(true);
             } else {
-                FLASHLIGHT.setFlashlightStatus(false);
+                flashlightHandler.setFlashlightStatus(false);
             }
             break;
         case "vibrate":
