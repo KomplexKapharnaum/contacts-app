@@ -275,6 +275,7 @@ const FLASHLIGHT = {
 
 const vibrate = function(pattern) {
     Notification.requestPermission(function(result) {
+        console.log(result)
         if (result === 'granted') {
             console.log("Vibrating")
             window.navigator.vibrate(pattern);
