@@ -270,9 +270,21 @@ const FLASHLIGHT = {
     }
 }
 
-document.addEventListener("click", function() {
-    FLASHLIGHT.on(); 
-});
+// Control phone vibration
+//
+
+const vibrate = function(pattern) {
+    Notification.requestPermission(function(result) {
+        if (result === 'granted') {
+            window.navigator.vibrate(pattern);
+        }
+    });
+}
+
+
+document.onclick = function() {
+    vibrate([100, 100, 100, 100, 100]);
+}
 
 // Socket.io
 //
