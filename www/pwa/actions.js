@@ -252,16 +252,14 @@ const FLASHLIGHT = {
                     if ('ImageCapture' in window) {
                         const imageCapture = new ImageCapture(track)
                         const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
-                            let track = stream.getVideoTracks()[0];
                             track.applyConstraints({
                                 advanced: [{torch: true}]
                             });
                         });
                     } else {
-                        let track = stream.getVideoTracks()[0];
                         track.applyConstraints({
                             advanced: [{torch: true}]
-                        }); 
+                        });
                     }
                 });
             });
