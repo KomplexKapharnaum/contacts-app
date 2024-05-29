@@ -1,0 +1,137 @@
+@font-face {
+    font-family: 'wondertype';
+    src: url(../font/wondertype.otf);
+}
+
+@font-face {
+    font-family: 'v50-regular';
+    src: url(../font/version50_regular.ttf);
+}
+
+@font-face {
+    font-family: 'v50-bold';
+    src: url(../font/version50_bold.ttf);
+}
+
+:root {
+    --color-primary: #F15025;
+    --color-background: #0D0D0D;
+
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CED0CE;
+
+    --font-primary: 'v50-regular';
+    --font-secondary: 'v50-bold';
+    --font-big: 'wondertype';
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-primary);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-big);
+    color: var(--color-text-primary);
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.page {
+    display:none;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 16px;
+    padding-bottom: calc(32px + 16px);
+
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.page.active {
+    display: flex;
+}
+
+button {
+    font-family: var(--font-primary);
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+nav {
+    background-color: var(--color-text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 32px;
+    position: fixed;
+    bottom: 0;
+}
+
+.caption {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin: 32px 0;
+    gap: 16px;
+}
+
+.txt {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    align-items: center;
+}
+
+.txt.secondary {
+    font-family: var(--font-secondary);
+    color: var(--color-text-secondary);
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.illustration {
+    margin: 0 auto;
+    width: auto;
+    height: 100%;
+    max-height: 33vh;
+    object-fit: contain;
+}

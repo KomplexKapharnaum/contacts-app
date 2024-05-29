@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CONTACTS</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div id="background"></div>
+    <nav></nav>
+    <!-- Onboarding -->
+    <div class="page" data-page-id="unsupported">
+        <h1>PWA NOT COMPATIBLE</h1>
+    </div>
+    
+    <div class="page active" data-page-id="home">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                <span>Bienvenue au carnaval CONTACTS</span>
+                <span>Rejoignez notre monde virtuel</span>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button onclick="PAGES.goto('pwa_install')">Créer mon identité virtuelle</button>
+            <button>J'ai déjà un compte</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="pwa_install">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                <span>Veuillez installer l'application pour continuer</span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="UTIL.promptPWAInstall()">Installer l'application</button>
+        </div>
+    </div>
+
+    <script src="./js/shader.js"></script>
+    <script src="./js/canvas.js"></script>
+    <script src="./js/main.js"></script>
+    <script> PAGES.home(); </script>
+</body>
+</html>

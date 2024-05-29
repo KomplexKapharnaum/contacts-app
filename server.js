@@ -120,6 +120,11 @@ app.use('/uploads', express.static('uploads'));
 app.use('/models', express.static('models'));
 app.use('/outputs', express.static('outputs'));
 
+app.use('/app', express.static('www/app'));
+app.get('/app', function (req, res) {
+  res.sendFile(__dirname + '/www/app/app.html');
+});
+
 // Serve PWA
 app.get('/pwa', function (req, res) {
   res.sendFile(__dirname + '/www/pwa/app.html');

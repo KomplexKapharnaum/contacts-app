@@ -288,11 +288,6 @@ const vibrate = function(pattern) {
     });
 }
 
-
-document.onclick = function() {
-    vibrate([100, 100, 100, 100, 100]);
-}
-
 // Socket.io
 //
 
