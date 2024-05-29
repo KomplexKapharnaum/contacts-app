@@ -6,10 +6,12 @@ import http from 'http';
 import https from 'https';
 
 import { Server as IoServer } from "socket.io";
+import webPush from "web-push";
+import knex from 'knex';
+
 import fs from 'fs';
 import dotenv from 'dotenv';
 
-import webPush from "web-push";
 dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
@@ -25,6 +27,15 @@ const __dirname = path.dirname(__filename);
 // Hooks
 import GithubWebHook from 'express-github-webhook';
 var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET });
+
+// Database
+const db = knex({
+  client: 'better-sqlite3',
+  connection: {
+    filename: './database/session0.sqlite',
+  },
+  useNullAsDefault: true,
+});
 
 // Express
 //
@@ -151,8 +162,8 @@ webhookHandler.on('*', function (event, repo, data) {
 // Web Push
 if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   console.log(
-    "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
-      "environment variables. You can use the following ones:",
+    "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY in .env file. " +
+      "You can use the following ones:",
   );
   const { publicKey, privateKey } = webPush.generateVAPIDKeys()
 
