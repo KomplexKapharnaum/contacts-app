@@ -1,6 +1,6 @@
 const test = new roundedGraphics(document.getElementById("background"), 5);
 
-test.addElement(document.querySelector(".illustration"));
+document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
 // document.querySelectorAll("button").forEach(button => test.addElement(button));
 test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
 test.render();
@@ -31,10 +31,29 @@ UTIL.isPWACompatible = function() {
 
 UTIL.promptPWAInstall = function() {
     if (UTIL.isPWACompatible()) {
+        if (!window.chrome) {
+            // UTIL.alert("This browser is not Chromium-based");
+        }
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.prompt();
+            e.preventDefault(); // Prevent the default prompt
+            this.alert("Install this app?"); // Show a custom prompt
+            e.prompt(); // Trigger the installation prompt
         });
     }
+}
+
+UTIL.promptPWAInstall();
+
+UTIL.isPhoneNumberValid = function (str) {
+    str = str.trim();
+    str = str.replace(/ /g, '');
+    if (str[0] != '+' && str[0] != '0') return false;
+    for (let i = 1; i < str.length; i++) {
+        if (isNaN(str[i])) return false;
+    }
+    if (str.length != 10 && str.length != 12) return false;
+    
+    return true;
 }
 
 let PAGES = {
