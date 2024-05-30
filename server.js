@@ -1,13 +1,26 @@
 import express from 'express';
 import { exec } from 'child_process';
 
+// MODELS / DB
+import db from './db.js';
+
+var MODELS = {};
+function loadModel(name) {
+  // load model default using import
+  let model = import('./models/' + name.toLowerCase() + '.js');
+  model.then((m) => {
+    MODELS[name] = m.default;
+  })
+}
+
+loadModel('Session');
+
 // HTTPS / HTTP
 import http from 'http';
 import https from 'https';
 
 import { Server as IoServer } from "socket.io";
 import webPush from "web-push";
-import knex from 'knex';
 
 import fs from 'fs';
 import dotenv from 'dotenv';
@@ -28,14 +41,6 @@ const __dirname = path.dirname(__filename);
 import GithubWebHook from 'express-github-webhook';
 var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET });
 
-// Database
-const db = knex({
-  client: 'better-sqlite3',
-  connection: {
-    filename: './database/session0.sqlite',
-  },
-  useNullAsDefault: true,
-});
 
 // Express
 //
@@ -75,6 +80,14 @@ SOCKET.endEvent = function () {
   SOCKET.io.emit('end-event');
 }
 
+SOCKET.auth = function (socket) {
+  if (!socket.rooms.has('admin')) {
+    socket.emit('auth', 'failed');
+    return false;
+  }
+  return true;
+}
+
 SOCKET.io.on('connection', (socket) => {
   // console.log('a user connected')
 
@@ -85,6 +98,83 @@ SOCKET.io.on('connection', (socket) => {
   // Send initial HELLO trigger
   socket.emit('hello');
 
+  // login
+  socket.on('login', (password) => {
+    if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
+    if (password === process.env.ADMIN_PASSWORD) {
+      socket.emit('auth', 'ok');
+      socket.join('admin');
+
+      console.log('admin connected');
+    }
+    else socket.emit('auth', 'failed');
+  });
+
+  // ctrl-do
+  socket.on('ctrl-do', (data) => {
+
+    console.log('ctrl-do', data);
+    if (!SOCKET.auth(socket)) return;   // check if admin
+
+    if (data.name == "end") SOCKET.endEvent();
+    else SOCKET.startEvent(data.name, data.args);
+
+  });
+
+  // db-do
+  socket.on('db-do', (data) => {
+
+    console.log('db-do', data);
+    if (!SOCKET.auth(socket)) return;   // check if admin
+
+    let model = data.name.split('.')[0]
+    let action = data.name.split('.')[1]
+
+    // Check if Model Class exists
+    if (MODELS[model] === undefined) {
+      console.error('Model not found', model);
+      SOCKET.io.emit('log', 'Model not found ' + model);
+      return;
+    }
+
+    // Load object model
+    let m = new MODELS[model]();
+
+    // Check if Method exists
+    if (m[action] === undefined) {
+      console.log(m)
+      console.error('Action not found ' + model + '.' + action);
+      SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
+      return;
+    }
+    
+    m[action](data.args)
+      .then((answer) => {
+          if (data.uuid) SOCKET.io.emit('ok-'+data.uuid, "BOZ")  // send response to client Promise
+          if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tOK')
+      })
+      .catch((err) => {
+        if (data.uuid) SOCKET.io.emit('ko-'+data.uuid, err.message)  // send response to client Promise
+        SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
+        console.error(err);
+      })
+  });
+
+  // db-get
+  socket.on('db-get', (data) => {
+
+    console.log('db-get', data);
+    if (!SOCKET.auth(socket)) return;   // check if admin
+
+    // session-list
+    if (data.name == "Session.list")
+      db('sessions').select().then((sessions) => {
+        socket.emit('Session.list', sessions);
+      });  
+
+  });
+
+  // last event
   if (SOCKET.lastEvent) {
     socket.emit('start-event', SOCKET.lastEvent);
   }
@@ -93,15 +183,6 @@ SOCKET.io.on('connection', (socket) => {
     console.log('received uuid', uuid);
   })
 
-  socket.on('C2S-event', function (args) {
-    if (args.name == "end") {
-      console.log("[C2S-event]", "ending event");
-      SOCKET.endEvent();
-    } else {
-      console.log("[C2S-event]", args);
-      SOCKET.startEvent(args.name, args.args);
-    }
-  });
 });
 
 // Express Server
