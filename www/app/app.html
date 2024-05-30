@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CONTACTS</title>
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/avatar_questions.css">
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -111,6 +112,88 @@
         </div>
     </div>
 
+    <!-- Avatar creation -->
+
+    <div class="page" data-page-id="create_avatar_photo">
+
+        <div class="caption" style="margin:0; height:auto;">
+            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                Il est l'heure de concevoir ton identité virtuelle. Réponds à un petit formulaire pour avoir un avatar qui te sera unique. 
+            </div>
+        </div>
+
+        <div class="video-container">
+            <video id="media-stream" src=""></video>
+            <button id="media-reload" style="visibility: hidden;">⟳</button>
+        </div>
+
+        <div class="buttons">
+            <button id="media-stream-snapshot">Capturer</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="create_avatar_question1">
+
+        <div class="caption" style="margin:0; height:auto;">
+            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                A quel point souhaites-tu rester anonyme ?
+            </div>
+        </div>
+
+        <div id="anonymity-container">
+            <img src="img/questions/mask_man.png" alt="face" class="center" draggable="false">
+            <img src="img/questions/mask.png" alt="face mask" id="anonymity-mask" draggable="false">
+        </div>
+        
+        <div class="buttons">
+            <button id="question1-suivant">Suivant</button>
+        </div>
+    </div>
+    
+    <div class="page" data-page-id="create_avatar_question2">
+
+        <div class="caption" style="margin:0; height:auto;">
+            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                Consommes-tu beaucoup de viande ?
+            </div>
+        </div>
+
+        <div id="cow-container">
+            <img src="img/questions/cow_skeleton.png" alt="cow skeleton">
+            <img src="img/questions/cow.png" alt="cow" id="cow-to-mask" style="display: none;">
+            <canvas id="cow-canvas"></canvas>
+        </div>
+
+        <div class="buttons">
+            <button id="cow-reset">Recommencer</button>
+            <button id="question2-suivant">Suivant</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="create_avatar_question3">
+
+        <div class="caption" style="margin:0; height:auto;">
+            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                Quel est ton poids & ta taille ?
+            </div>
+        </div>
+
+        <div id="tallfat-container">
+            <div id="tallfat-buddy">
+                <div id="resize-topleft" class="resizable-point"></div>
+                <div id="resize-bottomright" class="resizable-point"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button id="question3-suivant">Suivant</button>
+        </div>
+    </div>
+
     <!-- Main menu / Event -->
 
     <div class="page" data-page-id="main">
@@ -148,23 +231,6 @@
         <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
         <div class="buttons">
             <a class="button" href="geo:124.028582,-29.201930" target="_blank" >Ouvrir sur mon GPS</a>
-        </div>
-    </div>
-
-    <!-- Create avatar -->
-
-    <div class="page" data-page-id="avatar-photo">
-        <div class="caption" style="margin:0">
-            <img class="illustration" src="./img/face.png" alt="image test">
-
-            <div class="txt secondary">
-                Il est l'heure de concevoir ton identité virtuelle.<br>
-                Réponds à un petit formulaire pour avoir un avatar qui te sera unique. 
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button>Valider la photo</button>
         </div>
     </div>
 
@@ -277,7 +343,8 @@
     <script src="./js/network.js"></script>
 
     <script src="./js/pages/onboarding.js"></script>
-
-    <script> PAGES.goto('mon-avatar'); </script>
+    <script src="./js/pages/avatar.js"></script>
+    
+    <script> PAGES.goto('create_avatar_photo'); </script>
 </body>
 </html>

@@ -291,3 +291,23 @@ input[type="text"] {
     font-family: var(--font-secondary);
     color: var(--color-background);
 }
+
+/* Avatar creation */
+
+.video-container {
+    width: 100%;
+    height: fit-content;
+    position: relative;
+}
+
+#media-stream {
+    width: 100%;
+    height: auto;
+}
+
+#media-reload {
+    position:absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+}
