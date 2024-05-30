@@ -156,10 +156,10 @@ SOCKET.io.on('connection', (socket) => {
     else socket.emit('auth', 'failed');
   });
 
-  // ctrl-do
-  socket.on('ctrl-do', (data) => {
+  // ctrl
+  socket.on('ctrl', (data) => {
 
-    console.log('ctrl-do', data);
+    console.log('ctrl', data);
     if (!SOCKET.auth(socket)) return;   // check if admin
 
     if (data.name == "end") SOCKET.endEvent();
@@ -167,11 +167,14 @@ SOCKET.io.on('connection', (socket) => {
 
   });
 
-  // db-do
+  // query
   socket.on('query', (data) => {
 
+    // if (!SOCKET.auth(socket)) {
+    //   console.log('unauthorized query', data);
+    //   return;   // check if admin
+    // }
     console.log('query', data);
-    if (!SOCKET.auth(socket)) return;   // check if admin
 
     let model = data.name.split('.')[0]
     let action = data.name.split('.')[1]
@@ -200,6 +203,7 @@ SOCKET.io.on('connection', (socket) => {
     // Call method and send response to client
     m[action](...data.args)
       .then((answer) => {
+          console.log('answer', answer)
           if (data.resid) SOCKET.io.emit('ok-'+data.resid, answer)  // send response to client Promise
           if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tOK')
       })

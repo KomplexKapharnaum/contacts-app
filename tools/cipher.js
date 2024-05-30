@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const algorithm = 'aes-256-cbc';
-const key = process.env.CIPHER_KEY;
+const key = crypto.createHash('sha256').update(String(process.env.CIPHER_KEY)).digest('base64').substr(0, 32);
 
 var cipher = {
     encrypt: (text) => {

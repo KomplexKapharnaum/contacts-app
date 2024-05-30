@@ -6,6 +6,12 @@ document.querySelectorAll(".illustration").forEach(illustration => test.addEleme
 test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
 test.render();
 
+// LOG
+//
+function log(...msg) {
+    console.log(...msg)
+}
+
 // Utilities
 //
 

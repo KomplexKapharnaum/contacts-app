@@ -42,16 +42,23 @@ class User {
     {
         this.clear()
         this.fields.name = name;
-        this.fields.phone = this.phoneParse(phone).number;
+        this.fields.phone = this.phoneParse(phone);
         await this.save();
+        return this.export()
+    }
+
+    async create_byphone(phone) {
+        // load or create user by phone number
+        let phoneNumber = this.phoneParse(phone);
+        let user = await db('users').where({ phone: phoneNumber }).first();
+        if (user) return this.load(user.uuid);
+        else return this.new(null, phone);
     }
     
     async save() {
-        if (!this.fields.name) throw new Error('User name is required');
         if (!this.fields.phone) throw new Error('User phone is required');
 
-        let phoneNumber = this.phoneParse(this.fields.phone);
-        if (!phoneNumber || !phoneNumber.isValid()) throw new Error('Invalid phone number');
+        this.phoneParse(this.fields.phone); // check phone format
 
         this.fields.uuid = this.generate_uuid();
 
@@ -73,25 +80,42 @@ class User {
     async load(uuid) {
         let user = await db('users').where({ uuid: uuid }).first();
         if (user) this.fields = user;
+        else throw new Error('User not found');
 
         let sessions = await db('users_sessions').where({ user_id: this.fields.id });
         this.sessions = sessions.map((s) => new Session(s.session_id));
 
         let avatars = await db('avatars').where({ user_id: this.fields.id });
         this.avatars = avatars.map((a) => new Avatar(a.id));
+
+        return this.export()
+    }
+
+    async load_byphone(phone) {
+        let phoneNumber = this.phoneParse(phone);
+        let user = await db('users').where({ phone: phoneNumber }).first();
+        return this.load(user.uuid);
+    }
+
+    async set_name(uuid, name) {
+        await this.load(uuid);
+        this.fields.name = name;
+        await db('users').where({ id: this.fields.id }).update({ name: name });
+        console.log('User', this.fields.id, 'updated with name', name);
+        return this.export()
     }
 
     async delete(uuid) {
-        if (uuid) this.load(uuid);
+        if (uuid) await this.load(uuid);
         if (!this.fields.id) throw new Error('User does not exist');
 
         // Delete user
-        await db('users').where({ id: this.id }).del();
+        await db('users').where({ id: this.fields.id }).del();
 
         // Delete avatars
-        await db('avatars').where({ user_id: this.id }).del();
+        await db('avatars').where({ user_id: this.fields.id }).del();
 
-        console.log('User', this.id, 'deleted');
+        console.log('User', this.fields.id, 'deleted');
     }
 
     async register(session_id) {
@@ -123,7 +147,9 @@ class User {
     }
 
     phoneParse(phone) {
-        return parsePhoneNumber(phone, 'FR');
+        var phoneNumber = parsePhoneNumber(phone, 'FR');
+        if (!phoneNumber.isValid()) throw new Error('Invalid phone number');
+        return phoneNumber.number;
     }
 
     generate_uuid() {
@@ -132,6 +158,18 @@ class User {
     }
 
     id() { return this.fields.id; }
+
+    export() {
+        return {
+            id: this.fields.id,
+            name: this.fields.name,
+            // phone: this.fields.phone,
+            uuid: this.fields.uuid,
+            selected_avatar: this.fields.selected_avatar,
+            sessions: this.sessions.map((s) => s.id()),
+            avatars: this.avatars.map((a) => a.id())
+        }
+    }
 
 }
 

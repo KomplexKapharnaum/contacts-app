@@ -98,7 +98,7 @@ function updateUsers() {
                 $('<td>').text(user.selected_avatar).appendTo(tr)
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
-                        query("User.delete", user.id).then(updateUsers)
+                        query("User.delete", user.uuid).then(updateUsers)
                 })
             })
         })

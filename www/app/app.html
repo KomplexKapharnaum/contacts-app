@@ -27,12 +27,13 @@
         </div>
         
         <div class="buttons">
-            <button onclick="PAGES.goto('pwa_install')">Créer mon identité virtuelle</button>
-            <button onclick="PAGES.goto('phone_login')">J'ai déjà un compte</button>
+            <button onclick="PAGES.goto('phone_register')">Connexion</button>
+            <!-- <button onclick="PAGES.goto('pwa_install')">Créer mon identité virtuelle</button> -->
+            <!-- <button onclick="PAGES.goto('phone_login')">J'ai déjà un compte</button> -->
         </div>
     </div>
 
-    <div class="page" data-page-id="pwa_install">
+    <!-- <div class="page" data-page-id="pwa_install">
         <h1>CONTACTS</h1>
 
         <div class="caption">
@@ -45,7 +46,7 @@
         <div class="buttons">
             <button onclick="PAGES.goto('phone_register')">Installer l'application</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="page" data-page-id="phone_register">
         <h1>CONTACTS</h1>
@@ -69,7 +70,7 @@
         </div>
     </div>
 
-    <div class="page" data-page-id="phone_login">
+    <!-- <div class="page" data-page-id="phone_login">
         <h1>CONTACTS</h1>
 
         <div class="caption">
@@ -89,7 +90,7 @@
             <button id="loginToRegister" style="visibility: hidden;" onclick="PAGES.goto('phone_register')">Créer un compte</button>
             <button onclick="login_phone()">Valider mon téléphone</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="page" data-page-id="pseudonyme_register">
         <h1>CONTACTS</h1>
@@ -111,9 +112,28 @@
         </div>
     </div>
 
-    <!-- Main menu / Event -->
-
+    <!-- Main Menu -->
     <div class="page" data-page-id="main">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="txt secondary">
+                <span>Bienvenue dans le carnaval CONTACTS</span>
+                <span>Que souhaitez-vous faire ?</span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button onclick="PAGES.goto('event-countdown')">Prochain évènement</button>
+            <button onclick="PAGES.goto('notifications')">Mes notifications</button>
+            <button onclick="PAGES.goto('mon-avatar')">Mon avatar</button>
+        </div>
+    </div>
+
+    <!-- Event -->
+
+    <div class="page" data-page-id="event-countdown">
 
         <div></div>
 
