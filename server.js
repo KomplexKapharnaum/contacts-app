@@ -88,6 +88,25 @@ SOCKET.auth = function (socket) {
   return true;
 }
 
+function isEventActive() {
+  return false;
+}
+
+let accounts = {
+  "0783115016" : {
+    pseudo: false,
+    images: []
+  }
+}
+
+app.get('/phone', function (req, res) {
+  console.log('phone', req.query.phone)
+  const phone = req.query.phone;
+  console.log('phone', phone)
+  if (accounts[phone]) res.send(true);
+  else res.send(false);
+});
+
 SOCKET.io.on('connection', (socket) => {
   // console.log('a user connected')
 
@@ -97,6 +116,31 @@ SOCKET.io.on('connection', (socket) => {
 
   // Send initial HELLO trigger
   socket.emit('hello');
+
+  socket.on('register', (data) => {
+    let phone = data.phone;
+    if (accounts[phone]) {
+      socket.emit('register', false);
+      return;
+    };
+    accounts[phone] = {
+      pseudo: data.pseudo,
+      images: []
+    }
+    socket.emit('register', phone);
+  });
+
+  socket.on('auth', (token) => {
+    if (accounts[token]) socket.emit('auth', accounts[token]);
+    else socket.emit('auth', false);
+  });
+
+  socket.on('event?', () => {
+    socket.emit("event?", isEventActive());
+  });
+
+  // Partie de Maigre, je touche pas
+  //
 
   // login
   socket.on('login', (password) => {

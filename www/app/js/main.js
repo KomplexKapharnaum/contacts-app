@@ -1,9 +1,13 @@
-const test = new roundedGraphics(document.getElementById("background"), 5);
+// Render rounded graphics
+//
 
+const test = new roundedGraphics(document.getElementById("background"), 5);
 document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
-// document.querySelectorAll("button").forEach(button => test.addElement(button));
 test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
 test.render();
+
+// Utilities
+//
 
 let UTIL = {};
 
@@ -44,17 +48,45 @@ UTIL.promptPWAInstall = function() {
 
 UTIL.promptPWAInstall();
 
+UTIL.normalizePhone = function(phone) {
+    phone = phone.replace(/ /g, '');
+    if (phone[0] === '+') phone = '0' + phone.substring(3);
+    return phone;
+  }
+  
+
 UTIL.isPhoneNumberValid = function (str) {
-    str = str.trim();
-    str = str.replace(/ /g, '');
-    if (str[0] != '+' && str[0] != '0') return false;
+    str = UTIL.normalizePhone(str);
+    if (str[0] != '0') return false;
     for (let i = 1; i < str.length; i++) {
         if (isNaN(str[i])) return false;
     }
-    if (str.length != 10 && str.length != 12) return false;
+    if (str.length != 10) return false;
     
     return true;
 }
+
+// Cookies
+//
+
+Cookies = {
+    get: function(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    },
+    set: function(name, value, days) {
+        var d = new Date;
+        d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+        document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString();
+    },
+    str: function() {
+        return document.cookie;
+    }
+};
+
+// Pages
+//
 
 let PAGES = {
     class: "page"
@@ -100,7 +132,8 @@ PAGES.random = function(...routes) {
     
 PAGES.home = function() { PAGES.goto("home"); };
 
-/* Initialize the application */
+// Initialize the application
+//
 
 document.addEventListener("DOMContentLoaded", function() {
     if (!UTIL.isPWACompatible()) {

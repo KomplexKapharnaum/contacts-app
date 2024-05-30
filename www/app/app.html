@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CONTACTS</title>
     <link rel="stylesheet" href="./css/main.css">
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <div id="background"></div>
@@ -27,7 +28,7 @@
         
         <div class="buttons">
             <button onclick="PAGES.goto('pwa_install')">Créer mon identité virtuelle</button>
-            <button>J'ai déjà un compte</button>
+            <button onclick="PAGES.goto('phone_login')">J'ai déjà un compte</button>
         </div>
     </div>
 
@@ -54,11 +55,39 @@
             <div class="txt secondary">
                 <span>Validez votre numéro de téléphone</span>
             </div>
-            <input type="text" id="input_register_phone">
+
+            <div class="input-text">
+                <input type="text" id="input_register_phone">
+                <div class="err"></div>
+            </div>
+        
         </div>
 
         <div class="buttons">
+            <button id="registerToLogin" style="visibility: hidden;" onclick="PAGES.goto('phone_login')">Se connecter avec un compte existant</button>
             <button onclick="register_phone()">Valider mon téléphone</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="phone_login">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/phone.png" alt="image test">
+            <div class="txt secondary">
+                <span>Veuillez rentrer votre numéro de téléphone</span>
+            </div>
+
+            <div class="input-text">
+                <input type="text" id="input_login_phone">
+                <div class="err"></div>
+            </div>
+        
+        </div>
+
+        <div class="buttons">
+            <button id="loginToRegister" style="visibility: hidden;" onclick="PAGES.goto('phone_register')">Créer un compte</button>
+            <button onclick="login_phone()">Valider mon téléphone</button>
         </div>
     </div>
 
@@ -70,7 +99,11 @@
             <div class="txt secondary">
                 <span>Rentrez un pseudonyme</span>
             </div>
-            <input type="text" id="input_register_pseudo">
+
+            <div class="input-text">
+                <input type="text" id="input_register_pseudo">
+                <div class="err"></div>
+            </div>
         </div>
 
         <div class="buttons">
@@ -241,6 +274,7 @@
     <script src="./js/shader.js"></script>
     <script src="./js/canvas.js"></script>
     <script src="./js/main.js"></script>
+    <script src="./js/network.js"></script>
 
     <script src="./js/pages/onboarding.js"></script>
 
