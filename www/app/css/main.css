@@ -166,6 +166,18 @@ input[type="text"] {
     text-align: center;
 }
 
+.input-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-text .err {
+    font-family: var(--font-secondary);
+    color: var(--color-primary);
+    font-size: 0.8em;
+}
+
 .illustration {
     margin: 0 auto;
     width: auto;
