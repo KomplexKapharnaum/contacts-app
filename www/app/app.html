@@ -8,6 +8,7 @@
 <body>
     <div id="background"></div>
     <nav></nav>
+
     <!-- Onboarding -->
     <div class="page" data-page-id="unsupported">
         <h1>PWA NOT COMPATIBLE</h1>
@@ -34,20 +35,215 @@
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <img class="illustration" src="./img/mask.png" alt="image test">
+            <img class="illustration" src="./img/install.png" alt="image test">
             <div class="txt secondary">
                 <span>Veuillez installer l'application pour continuer</span>
             </div>
         </div>
 
         <div class="buttons">
-            <button onclick="UTIL.promptPWAInstall()">Installer l'application</button>
+            <button onclick="PAGES.goto('phone_register')">Installer l'application</button>
         </div>
+    </div>
+
+    <div class="page" data-page-id="phone_register">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/phone.png" alt="image test">
+            <div class="txt secondary">
+                <span>Validez votre numéro de téléphone</span>
+            </div>
+            <input type="text" id="input_register_phone">
+        </div>
+
+        <div class="buttons">
+            <button onclick="register_phone()">Valider mon téléphone</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="pseudonyme_register">
+        <h1>CONTACTS</h1>
+
+        <div class="caption">
+            <img class="illustration" src="./img/crayon.png" alt="image test">
+            <div class="txt secondary">
+                <span>Rentrez un pseudonyme</span>
+            </div>
+            <input type="text" id="input_register_pseudo">
+        </div>
+
+        <div class="buttons">
+            <button onclick="register_pseudo()">Valider mon pseudonyme</button>
+        </div>
+    </div>
+
+    <!-- Main menu / Event -->
+
+    <div class="page" data-page-id="main">
+
+        <div></div>
+
+        <div class="txt secondary">
+            <span>Le prochain évènement aura lieu <br>
+            le <span id="nextevent-date">25/06/2024</span> à <span id="nextevent-time">20:00</span></span>
+        </div>
+
+        <div id="nextevent-countdown">
+            <div class="jours">
+                <div class="number">04</div>
+                <div class="label">Jours</div>
+            </div>
+            <div class="heures">
+                <div class="number">17</div>
+                <div class="label">Heures</div>
+            </div>
+            <div class="minutes">
+                <div class="number">11</div>
+                <div class="label">Minutes</div>
+            </div>
+        </div>
+
+        <img class="illustration" src="./img/clock.png" alt="clock">
+
+        <div class="buttons">
+            <button>Me notifier 1 jour avant l'évènement</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="event-location">
+        <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
+        <div class="buttons">
+            <a class="button" href="geo:124.028582,-29.201930" target="_blank" >Ouvrir sur mon GPS</a>
+        </div>
+    </div>
+
+    <!-- Create avatar -->
+
+    <div class="page" data-page-id="avatar-photo">
+        <div class="caption" style="margin:0">
+            <img class="illustration" src="./img/face.png" alt="image test">
+
+            <div class="txt secondary">
+                Il est l'heure de concevoir ton identité virtuelle.<br>
+                Réponds à un petit formulaire pour avoir un avatar qui te sera unique. 
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button>Valider la photo</button>
+        </div>
+    </div>
+
+    <!-- SPECIAL EVENTS -->
+    <div class="page" data-page-id="event-idle">
+
+        <div class="caption">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
+            <div class="txt secondary">
+                Des notifications vous seront envoyé dès que vous aurez besoin d'utiliser votre téléphone.
+            </div>
+            <img class="illustration" src="./img/party.png" alt="image test">
+            <div class="txt secondary">
+                Profitez du carnaval pirate !
+            </div>
+        </div>
+
+        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
+    </div>
+
+    <div class="page" data-page-id="event-flashlight">
+        <div class="caption">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+            
+            <div class="txt secondary">
+                <span>Allumez moi ces lampes de poche !</span>
+                <span>Gardez l'application ouverte<br>pour garder la lampe allumée.</span>
+                <span>Sinon, allumez la manuellement.</span>
+            </div>
+
+            <img class="illustration" src="./img/sun.png" alt="image test">
+        </div>
+
+        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
+    </div>
+    
+    <div class="page" data-page-id="event-color">
+        <div class="caption">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+            
+            <div class="txt secondary">
+                C'est l'heure d'utiliser les couleurs de vos beaux écrans ! Choisissez une couleur parmi celles proposées.
+            </div>
+
+            <div id="color-selection">
+                <div style="background-color: red;"></div>
+                <div style="background-color: green;"></div>
+                <div style="background-color: blue;"></div>
+            </div>
+
+        </div>
+
+        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
+    </div>
+    
+    <div class="page" data-page-id="event-text">
+        <div class="caption">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+            
+            <div class="txt secondary">
+                Faites passer un message au metaverse !
+                Choisissez un texte parmi ceux proposés
+            </div>
+
+            <div id="text-selection">
+                <div>Vive la liberté du cyberespace !</div>
+                <div>Nous resterons anonyme</div>
+                <div>Non aux normes, vive la différence</div>
+                <div>Les masques nous libèrent</div>
+            </div>
+
+        </div>
+        
+        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
+    </div>
+
+    <!-- Sub pages -->
+
+    <div class="page" data-page-id="notifications">
+        <h1>Mes notifications</h1>
+        <div id="notifications">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>
+                <div>
+                    <span class="light">5/24/2024 à 21:00</span>
+                    <span class="bold">Evènement à Bellcour, Lyon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="mon-avatar">
+        <h1>Mon avatar</h1>
+
+        <div id="mon-avatar-container">
+            <img src="" alt="Avatar">
+            <button>Changer mon avatar</button>
+        </div>
+
+        <div class="buttons">
+            <button>Changer mon pseudo</button>
+            <button>Supprimer mes données</button>
+        </div>
+
     </div>
 
     <script src="./js/shader.js"></script>
     <script src="./js/canvas.js"></script>
     <script src="./js/main.js"></script>
-    <script> PAGES.home(); </script>
+
+    <script src="./js/pages/onboarding.js"></script>
+
+    <script> PAGES.goto('mon-avatar'); </script>
 </body>
 </html>

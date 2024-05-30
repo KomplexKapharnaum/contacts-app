@@ -3,8 +3,6 @@ class WebGLShader {
         this.canvas = canvas;
 
         this.gl = this.canvas.getContext('webgl');
-        this.gl.enable(this.gl.BLEND);
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 
         if (!this.gl) {
             console.error('Unable to initialize WebGL. Your browser may not support it.');
