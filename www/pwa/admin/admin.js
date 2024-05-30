@@ -21,34 +21,87 @@ const socket = io();
 
 // SOCKET SEND
 //
-function ctrl_do(name, args) 
+function ctrl(name, args) 
 {
-    socket.emit('ctrl-do', {
+    socket.emit('ctrl', {
         name: name,
         args: args
     });
 }
 
-function db_do(name, args) 
+function query(name, args) 
 {
-    var uuid = Math.random().toString(36).substring(7)
-    socket.emit('db-do', {
+    var resid = Math.random().toString(36).substring(2);
+    socket.emit('query', {
         name: name,
         args: args,
-        uuid: uuid
+        resid: resid
     });
     return new Promise((resolve, reject) => {
-        socket.once('ok-'+uuid, (data) => { resolve(data) })
-        socket.once('ko-'+uuid, (data) => { reject(data) })
+        socket.once('ok-'+resid, (data) => { resolve(data) })
+        socket.once('ko-'+resid, (data) => { try {reject(data)} catch(e) {log("ERROR: ", data)}})
     })
 }
 
-function db_get(name, args) 
-{
-    socket.emit('db-get', {
-        name: name,
-        args: args
-    });
+// LISTS
+//
+function updateSessions() { 
+    query("Session.list")
+        .then((sessions) => { 
+            console.log(sessions)
+            $('#sessions').empty()
+            var table = $('<table>').appendTo('#sessions')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('starting_at').appendTo(tr)
+            $('<th>').text('ending_at').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            sessions.forEach((session) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(session.id).appendTo(tr)
+                $('<td>').text(session.name).appendTo(tr)
+                $('<td>').text(session.starting_at).appendTo(tr)
+                $('<td>').text(session.ending_at).appendTo(tr)
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete session " + session.name + " ?") &&
+                        query("Session.delete", session.id).then(updateSessions)
+                })
+            })
+        })
+}
+
+function updateUsers() {
+    query("User.list")
+        .then((users) => { 
+            $('#users').empty()
+            var table = $('<table>').appendTo('#users')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('uuid').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('phone').appendTo(tr)
+            $('<th>').text('selected_avatar').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            users.forEach((user) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(user.uuid).appendTo(tr)
+                $('<td>').text(user.name).appendTo(tr)
+                $('<td>').text(user.phone).appendTo(tr)
+                $('<td>').text(user.selected_avatar).appendTo(tr)
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete user " + user.name + " ?") &&
+                        query("User.delete", user.id).then(updateUsers)
+                })
+            })
+        })
 }
 
 // SOCKET RECEIVE
@@ -58,8 +111,8 @@ socket.on('hello', () => {
     log("hello") 
     
     socket.emit('login', password);
-    db_get("Session.list")
-    db_get("User.list") 
+    updateSessions()
+    updateUsers()
 })
 
 socket.on('log', (msg) => { log(msg) })
@@ -73,62 +126,32 @@ socket.on('auth', (msg) => {
     }
 })
 
-socket.on('trigger', (e) => { 
-    socket.emit(e)
-})
-
-socket.on('Session.list', (sessions) => {
-    $('#sessions').empty()
-    var table = $('<table>').appendTo('#sessions')
-    var thead = $('<thead>').appendTo(table)
-    var tbody = $('<tbody>').appendTo(table)
-    var tr = $('<tr>').appendTo(thead)
-    
-    $('<th>').text('id').appendTo(tr)
-    $('<th>').text('name').appendTo(tr)
-    $('<th>').text('starting_at').appendTo(tr)
-    $('<th>').text('ending_at').appendTo(tr)
-    $('<th>').text('').appendTo(tr)
-
-    sessions.forEach((session) => {
-        var tr = $('<tr>').appendTo(tbody)
-        $('<td>').text(session.id).appendTo(tr)
-        $('<td>').text(session.name).appendTo(tr)
-        $('<td>').text(session.starting_at).appendTo(tr)
-        $('<td>').text(session.ending_at).appendTo(tr)
-        $('<td>').text('delete').appendTo(tr).on('click', () => {
-            confirm("Delete session " + session.name + " ?") &&
-                db_do("Session.delete", session.id)
-        })
-    })
-})
-
 
 // CONTROLS
 //
 
 document.getElementById('color-event').addEventListener('click', () => {
-    ctrl_do("color", ["red", "blue", "green"])
+    ctrl("color", ["red", "blue", "green"])
 });
 
 document.getElementById('text-event').addEventListener('click', () => {
-    ctrl_do("text", ["Hello world !", "Goodbye world !"])
+    ctrl("text", ["Hello world !", "Goodbye world !"])
 });
 
 document.getElementById('end-event').addEventListener('click', () => {
-    ctrl_do("end")
+    ctrl("end")
 });
 
 document.getElementById('flash-on').addEventListener('click', () => {
-    ctrl_do("flash", true)
+    ctrl("flash", true)
 });
 
 document.getElementById('flash-off').addEventListener('click', () => {
-    ctrl_do("flash", false)
+    ctrl("flash", false)
 });
 
 document.getElementById('vibrate').addEventListener('click', () => {
-    ctrl_do("vibrate", [500, 100, 200, 50, 100])
+    ctrl("vibrate", [500, 100, 200, 50, 100])
 });
 
 
@@ -138,9 +161,7 @@ document.getElementById('vibrate').addEventListener('click', () => {
 document.getElementById('session-new').addEventListener('click', () => {
     var name = prompt("Session name", "").trim()
     
-    db_do("Session.new", name)
-        .then(() => { db_get("Session.list") })
-        .catch((err) => { log("ERROR:", err) })
+    query("Session.new", name).then(updateSessions)
 })
 
 

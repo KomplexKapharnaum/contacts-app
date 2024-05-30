@@ -7,49 +7,64 @@
 // - ending_at: the session ending time (can be null)
 //
 
-import db from '../db.js';
+import db from '../tools/db.js';
 
 class Session {
     constructor() {
-        this.id = null;
-        this.name = null;
-        this.starting_at = null;
-        this.ending_at = null;
+        this.clear()
+    }
+
+    clear() {
+        this.fields = {
+            id: null,
+            name: null,
+            starting_at: null,
+            ending_at: null
+        };
     }
 
     async new(name) {
-        // check if name is already used
-        let session = await db('sessions').where({ name: name }).first();
-        if (session) throw new Error('Session name already used');
-
-        this.name = name;
+        this.clear();
+        this.fields.name = name;
         await this.save();
     }
     
     async save() {
-        if (!this.name) throw new Error('Session name is required');
-        await db('sessions').insert({
-            name: this.name,
-            starting_at: this.starting_at,
-            ending_at: this.ending_at
-        });
-        console.log('Session', this.name, 'saved');
+        if (!this.fields.name) throw new Error('Session name is required');
+
+        // Check if name not used yet by another session
+        let session = await db('sessions').where({ name: this.fields.name }).first();
+        if (session && session.id != this.fields.id) throw new Error('Session name already used');
+
+        // Insert or Update
+        if (!this.fields.id) {
+            let id = await db('sessions').insert(this.fields);
+            this.fields.id = id[0];
+            console.log('Session', this.fields.id, 'created');
+        } else {
+            await db('sessions').where({ id: this.fields.id }).update(this.fields);
+            console.log('Session', this.fields.id, 'updated');
+        }
     }
 
     async load(id) {
         let session = await db('sessions').where({ id: id }).first();
-        if (session) {
-            this.id = session.id;
-            this.name = session.name;
-            this.starting_at = session.starting_at;
-            this.ending_at = session.ending_at;
-        }
+        if (session) this.fields = session;
     }
 
-    async delete() {
-        if (!this.id) throw new Error('Session id is required');
-        await db('sessions').where({ id: this.id }).del();
-        console.log('Session', this.id, 'deleted');
+    async delete(id) {
+        if (id) await this.load(id)
+        if (!this.fields.id) throw new Error('Session id not found');
+        await db('sessions').where({ id: this.fields.id }).del();
+        console.log('Session', this.fields.id, 'deleted');
+    }
+
+    async list() {
+        return db('sessions').select();
+    }
+
+    id() {
+        return this.fields.id;
     }
 }
 

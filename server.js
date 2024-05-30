@@ -2,7 +2,7 @@ import express from 'express';
 import { exec } from 'child_process';
 
 // MODELS / DB
-import db from './db.js';
+import db from './tools/db.js';
 
 var MODELS = {};
 function loadModel(name) {
@@ -14,6 +14,8 @@ function loadModel(name) {
 }
 
 loadModel('Session');
+loadModel('User');
+loadModel('Avatar');
 
 // HTTPS / HTTP
 import http from 'http';
@@ -122,9 +124,9 @@ SOCKET.io.on('connection', (socket) => {
   });
 
   // db-do
-  socket.on('db-do', (data) => {
+  socket.on('query', (data) => {
 
-    console.log('db-do', data);
+    console.log('query', data);
     if (!SOCKET.auth(socket)) return;   // check if admin
 
     let model = data.name.split('.')[0]
@@ -148,30 +150,20 @@ SOCKET.io.on('connection', (socket) => {
       return;
     }
     
-    m[action](data.args)
+    // marke args a list if not already
+    if (!Array.isArray(data.args)) data.args = [data.args]
+
+    // Call method and send response to client
+    m[action](...data.args)
       .then((answer) => {
-          if (data.uuid) SOCKET.io.emit('ok-'+data.uuid, "BOZ")  // send response to client Promise
+          if (data.resid) SOCKET.io.emit('ok-'+data.resid, answer)  // send response to client Promise
           if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tOK')
       })
       .catch((err) => {
-        if (data.uuid) SOCKET.io.emit('ko-'+data.uuid, err.message)  // send response to client Promise
+        if (data.resid) SOCKET.io.emit('ko-'+data.resid, err.message)  // send response to client Promise
         SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
         console.error(err);
       })
-  });
-
-  // db-get
-  socket.on('db-get', (data) => {
-
-    console.log('db-get', data);
-    if (!SOCKET.auth(socket)) return;   // check if admin
-
-    // session-list
-    if (data.name == "Session.list")
-      db('sessions').select().then((sessions) => {
-        socket.emit('Session.list', sessions);
-      });  
-
   });
 
   // last event
@@ -179,9 +171,6 @@ SOCKET.io.on('connection', (socket) => {
     socket.emit('start-event', SOCKET.lastEvent);
   }
 
-  socket.on('uuid', (uuid) => {
-    console.log('received uuid', uuid);
-  })
 
 });
 
