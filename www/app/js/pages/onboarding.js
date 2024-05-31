@@ -55,21 +55,21 @@ function register_pseudo() {
 // Login
 //
 
-function login_phone() {
-    const input_phone = UTIL.normalizePhone(document.querySelector("#input_login_phone").value);
-    if (!UTIL.isPhoneNumberValid(input_phone)) {
-        document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Numéro de téléphone invalide";
-    } else {
-        fetch(`/phone?phone=${input_phone}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data) {
-                Cookies.set('token', input_phone, 30);
-                PAGES.goto("main");
-            } else {
-                document.getElementById("loginToRegister").style.visibility = "visible";
-                document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Aucun compte associé à ce numéro";
-            }
-        });
-    }
-}
+// function login_phone() {
+//     const input_phone = UTIL.normalizePhone(document.querySelector("#input_login_phone").value);
+//     if (!UTIL.isPhoneNumberValid(input_phone)) {
+//         document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Numéro de téléphone invalide";
+//     } else {
+//         fetch(`/phone?phone=${input_phone}`)
+//         .then(res => res.json())
+//         .then(data => {
+//             if (data) {
+//                 Cookies.set('token', input_phone, 30);
+//                 PAGES.goto("main");
+//             } else {
+//                 document.getElementById("loginToRegister").style.visibility = "visible";
+//                 document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Aucun compte associé à ce numéro";
+//             }
+//         });
+//     }
+// }

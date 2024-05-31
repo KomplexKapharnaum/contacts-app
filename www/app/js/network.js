@@ -35,7 +35,7 @@ NETWORK.loadUser = function() {
 
                     // Routing based on user status
                     //
-                    if (!userData.name) {                     // name is missing
+                    if (!userData.name) {                       // name is missing
                         PAGES.goto("pseudonyme_register");
                     }
                     else if (userData.avatars.length == 0) {   // avatars are missing
