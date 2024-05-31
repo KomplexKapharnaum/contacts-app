@@ -97,6 +97,22 @@ UTIL.addNotification = function(date,message) {
     document.getElementById("notifications").appendChild(notif);
 }
 
+UTIL.countDownInterval = false;
+UTIL.setCoundDown = function(date, time) {
+    const days = document.getElementById("label-countdown-days");
+    const hours = document.getElementById("label-countdown-hours");
+    const minutes = document.getElementById("label-countdown-minutes");
+
+    const countDownDateTime = new Date(date + ' ' + time).getTime();
+    UTIL.countDownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = countDownDateTime - now;
+        days.innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+        hours.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    }, 1000);
+}
+
 // Cookies
 //
 

@@ -24,7 +24,7 @@ function startMediaStream() {
     snapState = 3;
     reloadButton.style.visibility = "hidden";
     snapshotButton.textContent = "Chargement...";
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 640 } } })
     .then((stream) => {
         vid.srcObject = stream;
         vid.play();
