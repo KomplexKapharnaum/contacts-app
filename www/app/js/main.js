@@ -72,6 +72,31 @@ UTIL.isPhoneNumberValid = function (str) {
     return true;
 }
 
+UTIL.shownav = function(bool) {
+    if (!bool) document.body.classList.add("navhidden");
+    else document.body.classList.remove("navhidden");
+}
+UTIL.shownav(false);
+
+UTIL.showOverlay = function(bool, color, message) {
+    const overlay = document.getElementById("overlay");
+    if (bool) {
+        overlay.classList.add("active");
+        overlay.style.backgroundColor = color;
+        overlay.innerHTML = message;
+    } else {
+        overlay.classList.remove("active");
+    }
+}
+
+const notif_template = document.getElementById("notif-template");
+UTIL.addNotification = function(date,message) {
+    const notif = notif_template.content.cloneNode(true);
+    notif.querySelector(".bold").innerText = message;
+    notif.querySelector(".light").innerText = date;
+    document.getElementById("notifications").appendChild(notif);
+}
+
 // Cookies
 //
 
