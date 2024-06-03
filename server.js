@@ -14,6 +14,7 @@ function loadModel(name) {
 }
 
 loadModel('Session');
+loadModel('Event');
 loadModel('User');
 loadModel('Avatar');
 
@@ -163,9 +164,9 @@ SOCKET.io.on('connection', (socket) => {
     // Call method and send response to client
     m[action](...data.args)
       .then((answer) => {
-          console.log('answer', answer)
+          // console.log('answer', answer)
           if (data.resid) SOCKET.io.emit('ok-'+data.resid, answer)  // send response to client Promise
-          if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tOK')
+          if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
       })
       .catch((err) => {
         if (data.resid) SOCKET.io.emit('ko-'+data.resid, err.message)  // send response to client Promise

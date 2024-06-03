@@ -48,6 +48,13 @@ class Model {
         console.log(this.table, this.fields.id, 'deleted');
     }
 
+    async update(w, f) {
+        if (w) await this.load(w);
+        for (let key in f) 
+            if (this.fields[key] !== undefined) this.fields[key] = f[key];
+        await this.save();
+    }
+
     async list(w) {
         if (w) return db(this.table).where(w);
         else return db(this.table).select();

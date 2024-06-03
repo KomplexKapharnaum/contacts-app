@@ -64,9 +64,24 @@ function updateSessions() {
             sessions.forEach((session) => {
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(session.id).appendTo(tr)
-                $('<td>').text(session.name).appendTo(tr)
-                $('<td>').text(session.starting_at).appendTo(tr)
-                $('<td>').text(session.ending_at).appendTo(tr)
+                
+                $('<td>').text(session.name).appendTo(tr).on('click', () => {
+                    var name = prompt("Session name", session.name).trim()
+                    if (name) query("Session.update", [session.id, {name: name}]).then(updateSessions)
+                })
+            
+                $('<td>').appendTo(tr).append(
+                    $('<input>').attr('type', 'datetime-local').val(session.starting_at).on('change', (e) => {
+                        query("Session.update", [session.id, {starting_at: e.target.value}]).then(updateSessions)
+                    })
+                )
+
+                $('<td>').appendTo(tr).append(
+                    $('<input>').attr('type', 'datetime-local').val(session.ending_at).on('change', (e) => {
+                        query("Session.update", [session.id, {ending_at: e.target.value}]).then(updateSessions)
+                    }
+                ))
+
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete session " + session.name + " ?") &&
                         query("Session.delete", session.id).then(updateSessions)
@@ -104,6 +119,49 @@ function updateUsers() {
         })
 }
 
+function updateEvents() {
+    query("Event.list")
+        .then((events) => { 
+            $('#events').empty()
+            var table = $('<table>').appendTo('#events')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('starting_at').appendTo(tr)
+            $('<th>').text('ending_at').appendTo(tr)
+            $('<th>').text('location').appendTo(tr)
+            $('<th>').text('description').appendTo(tr)
+            $('<th>').text('session_id').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            events.forEach((event) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(event.id).appendTo(tr)
+                $('<td>').text(event.name).appendTo(tr)
+                $('<td>').appendTo(tr).append(
+                    $('<input>').attr('type', 'datetime-local').val(event.starting_at).on('change', (e) => {
+                        query("Event.update", [event.id, {starting_at: e.target.value}]).then(updateEvents)
+                    })
+                )
+                $('<td>').appendTo(tr).append(
+                    $('<input>').attr('type', 'datetime-local').val(event.ending_at).on('change', (e) => {
+                        query("Event.update", [event.id, {ending_at: e.target.value}]).then(updateEvents)
+                    })
+                )
+                $('<td>').text(event.location).appendTo(tr)
+                $('<td>').text(event.description).appendTo(tr)
+                $('<td>').text(event.session_id).appendTo(tr)
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete event " + event.name + " ?") &&
+                        query("Event.delete", event.id).then(updateEvents)
+                })
+            })
+        })
+}
+
 // SOCKET RECEIVE
 //
 socket.on('hello', () => { 
@@ -113,6 +171,7 @@ socket.on('hello', () => {
     socket.emit('login', password);
     updateSessions()
     updateUsers()
+    updateEvents()
 })
 
 socket.on('log', (msg) => { log(msg) })
@@ -165,4 +224,12 @@ document.getElementById('session-new').addEventListener('click', () => {
 })
 
 
+// EVENTS
+//
 
+document.getElementById('event-new').addEventListener('click', () => {
+    var name = prompt("Event name", "").trim()
+    var session_id = prompt("Session id", "").trim()
+    
+    query("Event.new", {name: name, session_id: session_id}).then(updateEvents)
+})
