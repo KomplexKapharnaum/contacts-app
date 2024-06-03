@@ -188,3 +188,25 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
 });
+
+// Leaflet map
+//
+
+var leafletMap = L.map('coords-map').setView([51.505, -0.09], 13);
+
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: '&copy; Stadia Maps'
+}).addTo(leafletMap);
+
+const attributionControl = leafletMap.attributionControl;
+leafletMap.removeControl(attributionControl);
+
+PAGES.addCallback("event-location", function() {
+    leafletMap.invalidateSize(false);
+});
+
+UTIL.setMapCoords = function(lat, lon) {
+    leafletMap.setView([lat, lon], 13);
+    L.marker([lat, lon]).addTo(leafletMap);
+}

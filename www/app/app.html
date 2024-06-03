@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/avatar_questions.css">
     <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
 </head>
 <body class="navhidden">
     <div id="background"></div>
@@ -276,9 +285,12 @@
     </div>
 
     <div class="page" data-page-id="event-location">
-        <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
-        <div class="buttons">
-            <a class="button" href="geo:124.028582,-29.201930" target="_blank" >Ouvrir sur mon GPS</a>
+        <div id="coords-map"></div>
+        <div id="coords-map-overlay">
+            <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
+            <div class="buttons">
+                <a class="button" href="geo:124.028582,-29.201930" target="_blank" >Ouvrir sur mon GPS</a>
+            </div>
         </div>
     </div>
 
