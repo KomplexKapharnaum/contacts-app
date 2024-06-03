@@ -206,7 +206,43 @@ PAGES.addCallback("event-location", function() {
     leafletMap.invalidateSize(false);
 });
 
-UTIL.setMapCoords = function(lat, lon) {
+var customIcon = L.icon({
+    iconUrl: './img/pin.png',
+    // shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [64, 64], // size of the icon
+    // shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [32, 64], // point of the icon which will correspond to marker's location
+    // shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [0, -64] // point from which the popup should open relative to the iconAnchor
+});
+
+UTIL.setMapCoords = function(lat, lon, popupText) {
     leafletMap.setView([lat, lon], 13);
-    L.marker([lat, lon]).addTo(leafletMap);
+    leafletMap.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+            leafletMap.removeLayer(layer);
+        }
+    });
+    L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
+}
+
+UTIL.getCssRootVar = function(variable) {
+    return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+}
+
+UTIL.generateShareLink = function(link) {
+    document.getElementById("qr-code").innerHTML = "";
+    let qrcode = new QRCode("qr-code", {
+        text: link,
+        width: 512,
+        height: 512,
+        colorDark : UTIL.getCssRootVar("--color-primary"),
+        colorLight : UTIL.getCssRootVar("--color-background"),
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    document.getElementById("copylink").onclick = function() {
+        navigator.clipboard.writeText(link);
+    }
 }
