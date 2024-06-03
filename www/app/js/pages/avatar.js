@@ -319,7 +319,7 @@ buddyTopLeft.addEventListener("touchstart", function(event) {
 
 document.getElementById("question3-suivant").addEventListener("click", function() {
     PAGES.goto("create_avatar_results")
-    NETWORK.requestAvatar([]).then((data) => {
+    NETWORK.requestAvatar().then((data) => {
         document.getElementById("avatar-preview-text").innerText = "Voici ton avatar !";
         document.getElementById("create-avatar-preview").src = data.url;
         document.getElementById("end-avatar-creation").style.visibility = "visible";
