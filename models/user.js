@@ -11,6 +11,7 @@
 //
 
 import db from '../tools/db.js';
+import Model from './model.js';
 
 import cipher from '../tools/cipher.js';
 
@@ -20,73 +21,63 @@ import Avatar from './avatar.js';
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 
 
-class User {
-    constructor() {
-        this.clear()
-    }
+class User extends Model {
 
-    clear() {
-        this.fields = {
-            id: null,
-            name: null,
-            phone: null,
-            uuid: null,
+    constructor() 
+    {
+        super('users',
+        {
+            id:             null,
+            name:           null,
+            phone:          null,
+            uuid:           null,
             selected_avatar: null
-        };
-        
+        });
+
         this.sessions = [];
         this.avatars = [];
     }
 
-    async new(name, phone) 
+    async new(f) 
     {
-        this.clear()
-        this.fields.name = name;
-        this.fields.phone = this.phoneParse(phone);
-        await this.save();
-        return this.export()
+        if (f.phone) f.phone = this.phoneParse(f.phone);
+        return super.new(f);
     }
 
-    async create_byphone(phone) {
+    async init_byphone(phone) 
+    {
         // load or create user by phone number
         let phoneNumber = this.phoneParse(phone);
         let user = await db('users').where({ phone: phoneNumber }).first();
-        if (user) return this.load(user.uuid);
-        else return this.new(null, phone);
+        if (user) return this.load({ uuid: user.uuid });
+        else return this.new({ phone: phoneNumber });
     }
-    
-    async save() {
+
+    async save() 
+    {
+        // mandatory fields
         if (!this.fields.phone) throw new Error('User phone is required');
 
-        this.phoneParse(this.fields.phone); // check phone format
-
+        // phone + uuid
+        this.phoneParse(this.fields.phone); 
         this.fields.uuid = this.generate_uuid();
 
-        // NEW : check if uuid not already used, then insert
-        if (!this.fields.id) {
-            let user = await db('users').where({ uuid: this.fields.uuid }).first();
-            if (user) throw new Error('User already exists with this phone number');
+        // check if uuid not already used
+        let user = await db('users').where({ uuid: this.fields.uuid }).first();
+        if (user && user.id != this.fields.id) throw new Error('User already exists with this phone number');
 
-            this.fields.id = await db('users').insert(this.fields);
-            console.log('User', this.fields.name, 'created with id', this.fields.id);
-        }
-        // UPDATE : 
-        else {
-            await db('users').where({ id: this.fields.id }).update(this.fields);
-            console.log('User', this.fields.id, 'updated');
-        }
+        super.save();
     }
-
-    async load(uuid) {
-        let user = await db('users').where({ uuid: uuid }).first();
-        if (user) this.fields = user;
-        else throw new Error('User not found');
+    
+    async load(w)
+    {
+        await super.load(w);
 
         let sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        this.sessions = sessions.map((s) => new Session(s.session_id));
+        this.sessions = sessions.map((s) => new Session().load(s.session_id));
 
         let avatars = await db('avatars').where({ user_id: this.fields.id });
-        this.avatars = avatars.map((a) => new Avatar(a.id));
+        this.avatars = avatars.map((a) => new Avatar().load(a.id));
 
         return this.export()
     }
@@ -94,23 +85,25 @@ class User {
     async load_byphone(phone) {
         let phoneNumber = this.phoneParse(phone);
         let user = await db('users').where({ phone: phoneNumber }).first();
-        return this.load(user.uuid);
+        return this.load({ uuid: user.uuid });
     }
 
     async set_name(uuid, name) {
-        await this.load(uuid);
+        await this.load({ uuid: uuid });
         this.fields.name = name;
         await db('users').where({ id: this.fields.id }).update({ name: name });
         console.log('User', this.fields.id, 'updated with name', name);
         return this.export()
     }
-
+    
     async delete(uuid) {
-        if (uuid) await this.load(uuid);
-        if (!this.fields.id) throw new Error('User does not exist');
+        await this.load({ uuid: uuid });
 
         // Delete user
         await db('users').where({ id: this.fields.id }).del();
+
+        // Delete user sessions
+        await db('users_sessions').where({ user_id: this.fields.id }).del();
 
         // Delete avatars
         await db('avatars').where({ user_id: this.fields.id }).del();
@@ -122,8 +115,13 @@ class User {
         if (!this.fields.id) throw new Error('User does not exist');
         let session = new Session();
         await session.load(session_id);
-        if (!session.id) throw new Error('Session does not exist');
+        
+        // check if already registered
+        let user_session = await db('users_sessions').where({ user_id: this.fields.id, session_id: session_id }).first();
+        if (user_session) throw new Error('User already registered to session');
+
         await db('users_sessions').insert({ user_id: this.fields.id, session_id: session_id });
+        
         console.log('User', this.fields.id, 'registered to session', session_id);
     }
 
@@ -131,8 +129,13 @@ class User {
         if (!this.fields.id) throw new Error('User does not exist');
         let session = new Session();
         await session.load(session_id);
-        if (!session.id) throw new Error('Session does not exist');
+
+        // check if registered
+        let user_session = await db('users_sessions').where({ user_id: this.fields.id, session_id: session_id }).first();
+        if (!user_session) throw new Error('User not registered to session');
+
         await db('users_sessions').where({ user_id: this.fields.id, session_id: session_id }).del();
+
         console.log('User', this.fields.id, 'unregistered from session', session_id);
     }
 
@@ -140,10 +143,6 @@ class User {
         if (!this.fields.id) throw new Error('User does not exist');
         await db('users').where({ id: this.fields.id }).update({ selected_avatar: avatar_id }); 
         console.log('User', this.fields.id, 'selected avatar', avatar_id);
-    }
-
-    async list() {
-        return db('users').select();
     }
 
     phoneParse(phone) {
@@ -157,8 +156,6 @@ class User {
         return cipher.encrypt(this.fields.phone);
     }
 
-    id() { return this.fields.id; }
-
     export() {
         return {
             id: this.fields.id,
@@ -170,7 +167,7 @@ class User {
             avatars: this.avatars.map((a) => a.id())
         }
     }
-
+    
 }
 
 

@@ -161,7 +161,7 @@ document.getElementById('vibrate').addEventListener('click', () => {
 document.getElementById('session-new').addEventListener('click', () => {
     var name = prompt("Session name", "").trim()
     
-    query("Session.new", name).then(updateSessions)
+    query("Session.new", {name: name}).then(updateSessions)
 })
 
 

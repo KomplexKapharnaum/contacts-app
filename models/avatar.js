@@ -6,67 +6,37 @@
 // - url: the avatar image url
 
 import db from '../tools/db.js';
+import Model from './model.js';
 
-class Avatar {
-    constructor() {
-        this.clear()
-    }
+class Avatar extends Model {
 
-    clear() {
-        this.fields = {
+    constructor() 
+    {
+        super('avatars',
+        {
             id: null,
             user_id: null,
             url: null
-        };
+        });
     }
 
-    async new(user_id, url) {
-        this.clear();
-        this.fields.user_id = user_id;
-        this.fields.url = url;
-        await this.save();
-    }
-
-    async save() {
+    async save() 
+    {
+        // mandatory fields
         if (!this.fields.user_id) throw new Error('Avatar user_id is required');
         if (!this.fields.url) throw new Error('Avatar url is required');
 
-        // Insert or Update
-        if (!this.fields.id) {
-            let id = await db('avatars').insert(this.fields);
-            this.fields.id = id[0];
-            console.log('Avatar', this.fields.id, 'created');
-        } else {
-            await db('avatars').where({ id: this.fields.id }).update(this.fields);
-            console.log('Avatar', this.fields.id, 'updated');
-        }
+        super.save();
     }
 
-    async load(id) {
-        let avatar = await db('avatars').where({ id: id }).first();
-        if (avatar) this.fields = avatar;
-    }
-
-    async delete() {
-        if (!this.fields.id) throw new Error('Avatar id is required');
-        await db('avatars').where({ id: this.fields.id }).del();
-        console.log('Avatar', this.fields.id, 'deleted');
-    }
-
-    async list(user_id) {
-        let user = await db('users').where({ id: user_id }).first();
-        if (!user_id || !user) throw new Error('User not found');
-        return await db('avatars').where({ user_id: user_id });
-    }
-
-    async select() {
+    async select()
+    {
         let user = await db('users').where({ id: this.fields.user_id }).first();
         if (!user) throw new Error('User not found');
         await db('users').where({ id: this.fields.user_id }).update({ selected_avatar: this.fields.id });
         console.log('Avatar', this.fields.id, 'selected for user', this.fields.user_id);
     }
 
-    id() { return this.fields.id; }
 }
 
 // Create Table if not exists

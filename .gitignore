@@ -2,6 +2,7 @@
 uploads/*
 outputs/*
 database.json
+*.sqlite
 
 # Logs
 logs

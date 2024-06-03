@@ -18,7 +18,7 @@ function register_phone()
     } else {
 
          // Create or load user from phone
-         NETWORK.query('User.create_byphone', input_phone)
+         NETWORK.query('User.init_byphone', input_phone)
             .then((data) => {
                 console.log("User created:", data);
                 userData = data;
@@ -26,7 +26,10 @@ function register_phone()
                 Cookies.set('token', data.uuid, 30);
                 setTimeout(() => { NETWORK.loadUser() }, 1500);
             })
-            .catch((err) => { register_phone_err("Numéro de téléphone invalide"); })
+            .catch((err) => { 
+                register_phone_err("Numéro de téléphone invalide"); 
+                console.log("Error creating user:", err);
+            })
     }
 }
 

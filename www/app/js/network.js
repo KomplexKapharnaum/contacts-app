@@ -26,7 +26,7 @@ NETWORK.loadUser = function() {
     const token = Cookies.get('token');
     // console.log("User token :", token)
 
-    NETWORK.query('User.load', token)
+    NETWORK.query('User.load', {uuid: token})
                 .then((data) => {
                     userData = data;
 

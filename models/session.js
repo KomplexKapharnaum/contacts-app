@@ -8,64 +8,34 @@
 //
 
 import db from '../tools/db.js';
+import Model from './model.js';
 
-class Session {
-    constructor() {
-        this.clear()
-    }
 
-    clear() {
-        this.fields = {
-            id: null,
-            name: null,
-            starting_at: null,
-            ending_at: null
-        };
-    }
+class Session extends Model {
 
-    async new(name) {
-        this.clear();
-        this.fields.name = name;
-        await this.save();
+    constructor() 
+    {
+        super('sessions', 
+        {
+            id:             null,
+            name:           null,
+            starting_at:    null,
+            ending_at:      null
+        })
     }
     
-    async save() {
+    async save() 
+    {
+        // mandatory fields
         if (!this.fields.name) throw new Error('Session name is required');
 
         // Check if name not used yet by another session
         let session = await db('sessions').where({ name: this.fields.name }).first();
         if (session && session.id != this.fields.id) throw new Error('Session name already used');
 
-        // Insert or Update
-        if (!this.fields.id) {
-            let id = await db('sessions').insert(this.fields);
-            this.fields.id = id[0];
-            console.log('Session', this.fields.id, 'created');
-        } else {
-            await db('sessions').where({ id: this.fields.id }).update(this.fields);
-            console.log('Session', this.fields.id, 'updated');
-        }
+        super.save();
     }
 
-    async load(id) {
-        let session = await db('sessions').where({ id: id }).first();
-        if (session) this.fields = session;
-    }
-
-    async delete(id) {
-        if (id) await this.load(id)
-        if (!this.fields.id) throw new Error('Session id not found');
-        await db('sessions').where({ id: this.fields.id }).del();
-        console.log('Session', this.fields.id, 'deleted');
-    }
-
-    async list() {
-        return db('sessions').select();
-    }
-
-    id() {
-        return this.fields.id;
-    }
 }
 
 
