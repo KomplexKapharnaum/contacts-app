@@ -1,3 +1,10 @@
 ////// FRONT
 
-- on user login => if user not subscribed to next session: popup to propose !
+- how to subscribe to ignored session (clear cookies)
+
+
+
+///////// ADMIN
+
+- pagination with lazy loading on Users / Avatars
+- merge Users and avatars tables

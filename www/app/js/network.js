@@ -60,16 +60,33 @@ NETWORK.loadUser = function() {
                                 .then((id) => {
                                     // check if user is already registered from userData
                                     nextSession = id;
-                                    console.log("Next session:", id);
-                                    if (userData.sessions.includes(id)) {
-                                        console.log("User already registered to next session");
-                                    }
-                                    else {
-                                        console.log("User not registered to next session");
-                                        // NETWORK.query('User.register', [nextSession]);
-                                    }
 
+                                    if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
+                                        console.log("User not registered to next session");
+
+                                        // check if user declined to register
+                                        if (Cookies.get('session_declined_'+nextSession)) {
+                                            console.log("User declined to register");
+                                            return;
+                                        }
+
+                                        // Get session details
+                                        NETWORK.query('Session.export', [nextSession])
+                                            .then((session) => {
+                                                if (confirm("Voulez-vous vous inscrire à la prochaine session: " + session.name + " ?")) {
+                                                    NETWORK.query('User.register', [userData.uuid, nextSession]).then(NETWORK.loadUser())
+                                                }
+                                                else {
+                                                    // set cookie to avoid asking again
+                                                    Cookies.set('session_declined_'+nextSession, true, 30);
+                                                    console.log("User declined to register");
+                                                }
+                                            });
+                                    }
                                 })
+                                .catch((err) => {
+                                    console.log("No next session found");
+                                });
                     }    
                     
                 })

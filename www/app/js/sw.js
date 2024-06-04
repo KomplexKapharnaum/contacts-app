@@ -1,16 +1,21 @@
+const baseRessourcePath = "/app";
+
 const ressourcesToCache = [
-    "", // root (app.html)
-    "style.css"
+    "/", // root (app.html)
+    "/css/main.css"
 ]
 
 const addResourcesToCache = async (resources) => {
     const cache = await caches.open("v1");
-    await cache.addAll(resources);
+    for (let resource of resources) {
+        // console.log("Caching " + baseRessourcePath + resource);
+        await cache.add(baseRessourcePath + resource);
+    }
 };
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        addResourcesToCache("/pwa/" + ressourcesToCache),
+        addResourcesToCache(ressourcesToCache),
     );
 });
 
