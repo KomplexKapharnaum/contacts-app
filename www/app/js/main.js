@@ -247,6 +247,27 @@ UTIL.generateShareLink = function(link) {
     }
 }
 
+UTIL.promptForSubscribingEvent = function(evenement) {
+    PAGES.goto("event-subscribe-prompt");
+    const eventname_label = document.getElementById("subscribe-label-event");
+    const confirm_button = document.getElementById("subscribe-confirm");
+    const decline_button = document.getElementById("subscribe-decline");
+
+    eventname_label.innerText = evenement.name;
+
+    confirm_button.onclick = function() {
+        NETWORK.query('User.register', [userData.uuid, evenement.id]).then(()=>{
+            NETWORK.loadUser();
+            PAGES.goto("event-countdown");
+        });
+    }
+
+    decline_button.onclick = function() {
+        Cookies.set('session_declined_'+evenement.id, true, 30);
+        PAGES.goto("event-countdown");
+    }
+}
+
 // Debug
 PAGES.addCallback("share_link", function() { 
     UTIL.generateShareLink("https://www.google.com");

@@ -352,10 +352,6 @@ document.getElementById("question3-suivant").addEventListener("click", function(
         });
 });
 
-PAGES.addCallback("event-countdown", () => {
-    UTIL.shownav(true);
-});
-
 PAGES.addCallback("mon_avatar", () => {
     // document.getElementById("mon-avatar-preview").src = AVATAR_DATA.photo;
     NETWORK.query("Avatar.list", {id: userData.selected_avatar}).then((data) => {
