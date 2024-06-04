@@ -122,6 +122,7 @@ function updateUsers() {
             $('<th>').text('name').appendTo(tr)
             $('<th>').text('phone').appendTo(tr)
             $('<th>').text('selected_avatar').appendTo(tr)
+            $('<th>').text('sessions').appendTo(tr)
             $('<th>').text('').appendTo(tr)
 
             users.forEach((user) => {
@@ -131,6 +132,17 @@ function updateUsers() {
                 $('<td>').text(user.name).appendTo(tr)
                 $('<td>').text(user.phone).appendTo(tr)
                 $('<td>').text(user.selected_avatar).appendTo(tr)
+
+                var sessions = $('<td>').appendTo(tr)
+                query("User.export", [{uuid: user.uuid}, true]).then((data) => {
+                    data.sessions.forEach((session) => {
+                        $('<span>').text(session.name + ' ').appendTo(sessions).on('click', () => {
+                            if (confirm("Unregister user " + user.name + " from session " + session.name + " ?")) 
+                                query("User.unregister", [user.uuid, session.id]).then(updateUsers)
+                        })
+                    })
+                })
+
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
                         query("User.delete", user.uuid).then(updateUsers)
@@ -210,6 +222,7 @@ function updateEvents() {
             })
         })
 }
+
 
 // SOCKET RECEIVE
 //

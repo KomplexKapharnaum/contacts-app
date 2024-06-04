@@ -125,7 +125,8 @@ class User extends Model {
         console.log('User', this.fields.id, 'deleted');
     }
 
-    async register(session_id) {
+    async register(uuid, session_id) {
+        if (uuid) await this.load({ uuid: uuid });
         if (!this.fields.id) throw new Error('User does not exist');
         let session = new Session();
         await session.load(session_id);
@@ -139,7 +140,8 @@ class User extends Model {
         console.log('User', this.fields.id, 'registered to session', session_id);
     }
 
-    async unregister(session_id) {
+    async unregister(uuid, session_id) {
+        if (uuid) await this.load({ uuid: uuid });
         if (!this.fields.id) throw new Error('User does not exist');
         let session = new Session();
         await session.load(session_id);
