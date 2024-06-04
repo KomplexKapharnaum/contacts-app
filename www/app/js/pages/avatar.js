@@ -334,12 +334,20 @@ document.getElementById("question3-suivant").addEventListener("click", function(
 
             console.log(data);
 
+            let lock = false;
             for (let i = 0; i < data.length; i++) {
                 const img = document.createElement("img");
                 img.src = data[i].url;
                 document.getElementById("create-avatar-preview").appendChild(img);
+                img.addEventListener("click", ()=> {
+                    if (lock) return;
+                    lock = true;
+                    NETWORK.query("Avatar.select", {user_id: userData.id, id: data[i].id}).then(() => {
+                        PAGES.goto("event-countdown");
+                    });
+                })
             }
-            document.getElementById("end-avatar-creation").style.visibility = "visible";
+            // document.getElementById("end-avatar-creation").style.visibility = "visible";
         });
 });
 
