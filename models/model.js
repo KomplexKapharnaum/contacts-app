@@ -19,7 +19,7 @@ class Model {
         for (let key in f) 
             if (this.fields[key] !== undefined) this.fields[key] = f[key];
         await this.save();
-        return this.export()
+        return await this.export()
     }
 
     async save() {
