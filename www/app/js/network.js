@@ -1,6 +1,8 @@
 var NETWORK = {};
 
 var userData = null;
+var nextSession = null;
+
 var socket = io();
 
 // MODELS QUERY
@@ -26,46 +28,72 @@ NETWORK.loadUser = function() {
     const token = Cookies.get('token');
     // console.log("User token :", token)
 
-    NETWORK.query('User.load', {uuid: token})
+    NETWORK.query('User.export', [{uuid: token}, true])
                 .then((data) => {
                     userData = data;
 
-                    // log('auth successful.', data);
-                    log('auth successful.');
+                    log('User loaded', data);
+                    // log('auth successful.');
 
                     // Routing based on user status
                     //
                     if (!userData.name) {                       // name is missing
                         PAGES.goto("pseudonyme_register");
                     }
-                    else if (userData.avatars.length == 0) {   // avatars are missing
+                    else if (userData.avatars.length == 0) {    // avatars are missing
                         PAGES.goto("create_avatar_photo"); 
                     }
                     else {
-                        PAGES.goto("event-countdown"); // profile page
+                        PAGES.goto("event-countdown");          // profile page
                         UTIL.shownav(true);
+
+                        // Load next session and offers to register
+                        NETWORK.query('Session.next')
+                                .then((id) => {
+                                    // check if user is already registered from userData
+                                    nextSession = id;
+                                    console.log("Next session:", id);
+                                    if (userData.sessions.includes(id)) {
+                                        console.log("User already registered to next session");
+                                    }
+                                    else {
+                                        console.log("User not registered to next session");
+                                        // NETWORK.query('User.register', [nextSession]);
+                                    }
+
+                                })
                     }    
                     
                 })
                 .catch((err) => {
-                    log('auth failed.', err);
+                    log('Auth failed.', err);
                     Cookies.set('token', "", 30)
                     PAGES.goto("home");
                 });
 }
 
-NETWORK.requestAvatar = async function(args) {
-    // socket.emit('requestAvatar', args);
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve({status: "ok", url: "https://picsum.photos/256/256"});
-        }, 3000);
-    });
+
+// NETWORK.requestAvatar = async function(args) {
+//     // socket.emit('requestAvatar', args);
+//     return new Promise((resolve, reject) => {
+//         setTimeout(() => {
+//             resolve({status: "ok", url: "https://picsum.photos/256/256"});
+//         }, 3000);
+//     });
+// }
+NETWORK.createAvatars = function(data) {
+    NETWORK.query('Avatar.generate', data).then((data) => {
+        console.log("Avatars generated:", data);
+        userData.avatars = data;
+        PAGES.goto("create_avatar_photo");
+    })
 }
+
 
 socket.on('hello', () => 
 {
     console.log("Connexion established with server");
+
     NETWORK.loadUser();
 });
 

@@ -38,6 +38,12 @@ class User extends Model {
         this.avatars = [];
     }
 
+    clear() {
+        super.clear();
+        this.sessions = [];
+        this.avatars = [];
+    }
+
     async new(f) 
     {
         if (f.phone) f.phone = this.phoneParse(f.phone);
@@ -65,7 +71,7 @@ class User extends Model {
         // check if uuid not already used
         let user = await db('users').where({ uuid: this.fields.uuid }).first();
         if (user && user.id != this.fields.id) throw new Error('User already exists with this phone number');
-
+        
         super.save();
     }
     
@@ -74,10 +80,18 @@ class User extends Model {
         await super.load(w);
 
         let sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        this.sessions = sessions.map((s) => new Session().load(s.session_id));
+        for (let s of sessions) {
+            let session = new Session();
+            await session.load(s.session_id);
+            this.sessions.push(session);
+        }
 
         let avatars = await db('avatars').where({ user_id: this.fields.id });
-        this.avatars = avatars.map((a) => new Avatar().load(a.id));
+        for (let a of avatars) {
+            let avatar = new Avatar();
+            await avatar.load(a.id);
+            this.avatars.push(avatar);
+        }
 
         return this.export()
     }
@@ -156,16 +170,15 @@ class User extends Model {
         return cipher.encrypt(this.fields.phone);
     }
 
-    export() {
-        return {
-            id: this.fields.id,
-            name: this.fields.name,
-            // phone: this.fields.phone,
-            uuid: this.fields.uuid,
-            selected_avatar: this.fields.selected_avatar,
-            sessions: this.sessions.map((s) => s.id()),
-            avatars: this.avatars.map((a) => a.id())
-        }
+    async export(w, full = false) {
+        if (w) await this.load(w);
+        let u = await super.export();
+        delete u.phone;
+
+        u.sessions = await Promise.all(this.sessions.map(s => (full ? s.export(null,true) : s.id())));
+        u.avatars = await Promise.all(this.avatars.map(a => (full ? a.export() : a.id())));
+
+        return u;
     }
     
 }

@@ -1,0 +1,3 @@
+////// FRONT
+
+- on user login => if user not subscribed to next session: popup to propose !

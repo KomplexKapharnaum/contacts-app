@@ -24,7 +24,7 @@ function register_phone()
                 userData = data;
                 register_phone_err("Compte créé !");
                 Cookies.set('token', data.uuid, 30);
-                setTimeout(() => { NETWORK.loadUser() }, 1500);
+                NETWORK.loadUser()
             })
             .catch((err) => { 
                 register_phone_err("Numéro de téléphone invalide"); 
@@ -49,30 +49,8 @@ function register_pseudo() {
                 console.log("User updated:", data);
                 userData = data;
                 register_pseudo_err("Pseudo enregistré !");
-                setTimeout(() => { NETWORK.loadUser() }, 1500);
+                NETWORK.loadUser()
             })
             .catch((err) => { register_pseudo_err("Erreur lors de l'enregistrement du pseudo"); })
     }
 }
-
-// Login
-//
-
-// function login_phone() {
-//     const input_phone = UTIL.normalizePhone(document.querySelector("#input_login_phone").value);
-//     if (!UTIL.isPhoneNumberValid(input_phone)) {
-//         document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Numéro de téléphone invalide";
-//     } else {
-//         fetch(`/phone?phone=${input_phone}`)
-//         .then(res => res.json())
-//         .then(data => {
-//             if (data) {
-//                 Cookies.set('token', input_phone, 30);
-//                 PAGES.goto("main");
-//             } else {
-//                 document.getElementById("loginToRegister").style.visibility = "visible";
-//                 document.querySelector("#input_login_phone").parentElement.querySelector(".err").innerHTML = "Aucun compte associé à ce numéro";
-//             }
-//         });
-//     }
-// }

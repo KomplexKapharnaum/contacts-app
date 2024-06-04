@@ -9,7 +9,7 @@
 
 import db from '../tools/db.js';
 import Model from './model.js';
-
+import Event from './event.js';
 
 class Session extends Model {
 
@@ -22,6 +22,27 @@ class Session extends Model {
             starting_at:    null,
             ending_at:      null
         })
+
+        this.events = [];
+    }
+
+    clear() {
+        super.clear();
+        this.events = [];
+    }
+
+    async load(w)
+    {
+        await super.load(w);
+
+        let events = await db('events').where({ session_id: this.fields.id });
+        for (let e of events) {
+            let event = new Event();
+            event.fields = e;
+            this.events.push(event);
+        }
+
+        return this.export()
     }
     
     async save() 
@@ -36,6 +57,26 @@ class Session extends Model {
         super.save();
     }
 
+    async delete(w)
+    {
+        await super.delete(w);
+        await db('events').where({ session_id: this.fields.id }).del();
+    }
+
+    async export(w, full = false)
+    {
+        if (w) await this.load(w);
+        let s = await super.export();
+        s.events = await Promise.all(this.events.map(e => (full) ? e.export() : e.id()));
+        return s;
+    }
+
+    async next()
+    {
+        let session = await db('sessions').where('ending_at', '>', db.fn.now()).orderBy('starting_at').first();
+        if (!session) throw new Error('No upcoming session');
+        return session.id;
+    }
 }
 
 

@@ -15,6 +15,24 @@ function log(...msg) {
     document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
 }
 
+// MODAL FORM
+//
+function modalForm(title, callback) {
+    var modal = $('<div>').addClass('modal').appendTo('body')
+    var modalDialog = $('<div>').addClass('modal-dialog').appendTo(modal)
+    var modalContent = $('<div>').addClass('modal-content').appendTo(modalDialog)
+    var modalHeader = $('<div>').addClass('modal-header').appendTo(modalContent)
+    var modalTitle = $('<h5>').addClass('modal-title').text(title).appendTo(modalHeader)
+    var modalBody = $('<div>').addClass('modal-body').appendTo(modalContent)
+    var modalFooter = $('<div>').addClass('modal-footer').appendTo(modalContent)
+    var modalSubmit = $('<button>').addClass('btn btn-primary').text('Submit').appendTo(modalFooter)
+    var modalClose = $('<button>').addClass('btn btn-secondary').text('Close').appendTo(modalFooter)
+
+    modalClose.on('click', () => { modal.remove() })
+    modalSubmit.on('click', () => { callback(modal, modal) })
+    return modal
+}
+
 // SOCKETIO INIT
 //
 const socket = io();
@@ -99,6 +117,7 @@ function updateUsers() {
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
             
+            $('<th>').text('id').appendTo(tr)
             $('<th>').text('uuid').appendTo(tr)
             $('<th>').text('name').appendTo(tr)
             $('<th>').text('phone').appendTo(tr)
@@ -107,6 +126,7 @@ function updateUsers() {
 
             users.forEach((user) => {
                 var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(user.id).appendTo(tr)
                 $('<td>').text(user.uuid).appendTo(tr)
                 $('<td>').text(user.name).appendTo(tr)
                 $('<td>').text(user.phone).appendTo(tr)
@@ -118,6 +138,35 @@ function updateUsers() {
             })
         })
 }
+
+function updateAvatars() {
+    query("Avatar.list")
+        .then((avatars) => {
+            $('#avatars').empty()
+            var table = $('<table>').appendTo('#avatars')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('user_id').appendTo(tr)
+            $('<th>').text('url').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            avatars.forEach((avatar) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(avatar.id).appendTo(tr)
+                $('<td>').text(avatar.user_id).appendTo(tr)
+                $('<td>').text(avatar.url).appendTo(tr)
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete avatar " + avatar.url + " ?") &&
+                        query("Avatar.delete", avatar.id).then(updateAvatars)
+                })
+            })
+        }
+    )
+}
+
 
 function updateEvents() {
     query("Event.list")
@@ -170,8 +219,9 @@ socket.on('hello', () => {
     
     socket.emit('login', password);
     updateSessions()
-    updateUsers()
     updateEvents()
+    updateUsers()
+    updateAvatars()
 })
 
 socket.on('log', (msg) => { log(msg) })

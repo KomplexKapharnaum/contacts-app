@@ -5,8 +5,17 @@
 // - user_id: the user id
 // - url: the avatar image url
 
+const AVATAR_GEN_SIZE = 2;
+
 import db from '../tools/db.js';
 import Model from './model.js';
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
+const uploadDir = path.join(__dirname, '../upload');
 
 class Avatar extends Model {
 
@@ -29,14 +38,54 @@ class Avatar extends Model {
         super.save();
     }
 
-    async select()
+    async select(user_id, id) 
     {
-        let user = await db('users').where({ id: this.fields.user_id }).first();
-        if (!user) throw new Error('User not found');
-        await db('users').where({ id: this.fields.user_id }).update({ selected_avatar: this.fields.id });
-        console.log('Avatar', this.fields.id, 'selected for user', this.fields.user_id);
+        let avatar = new Avatar();
+        await avatar.load(id);
+        if (avatar.fields.user_id != user_id) throw new Error('Avatar not found');
+        await db('users').where({ id: user_id }).update({ selected_avatar: id });
+        console.log('Avatar', id, 'selected for user', user_id);
     }
 
+    async generate(user_id, data) 
+    {   
+        // check if user exists
+        let user = await db('users').where({ id: user_id }).first();
+        if (!user) throw new Error('User not found');
+
+        if (!data.pic) throw new Error('Base pic is required');
+
+        // save uploaded data.pic from dataURL to upload folder
+        let filename = path.join(uploadDir, user_id + '_' + Date.now() + '.png');
+        let dataURL = data.pic.replace(/^data:image\/png;base64,/, '');
+        fs.writeFileSync(filename, dataURL, 'base64');
+
+        // delete all not selected avatars for this user
+        await db('avatars').where({ user_id: user_id }).whereNot({ id: user.selected_avatar }).del();
+
+        let avatars = [];
+
+        // add selected avatar if exists
+        if (user.selected_avatar) {
+            let avatar = new Avatar();
+            await avatar.load(user.selected_avatar);
+            avatars.push(avatar);
+        }
+
+        // add original pic
+        let avatar = new Avatar();
+        await avatar.new({ user_id: user_id, url: '/upload/'+ path.basename(filename) });
+        avatars.push(avatar);
+
+        // complete with new avatars to reach AVATAR_GEN_SIZE
+        for (let i = avatars.length; i < AVATAR_GEN_SIZE; i++) {
+            let avatar = new Avatar();
+            await avatar.new({ user_id: user_id, url: '/upload/'+ path.basename(filename) });
+            avatars.push(avatar);
+        }
+
+        return await Promise.all(avatars.map(a => a.export()));
+    }
 }
 
 // Create Table if not exists

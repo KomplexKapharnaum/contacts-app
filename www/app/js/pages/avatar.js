@@ -319,11 +319,28 @@ buddyTopLeft.addEventListener("touchstart", function(event) {
 
 document.getElementById("question3-suivant").addEventListener("click", function() {
     PAGES.goto("create_avatar_results")
-    NETWORK.requestAvatar([]).then((data) => {
-        document.getElementById("avatar-preview-text").innerText = "Voici ton avatar !";
-        document.getElementById("create-avatar-preview").src = data.url;
-        document.getElementById("end-avatar-creation").style.visibility = "visible";
-    });
+    
+    NETWORK.query('Avatar.generate', [userData.id ,
+        {
+            pic: AVATAR_DATA.photo,
+            mask: getMaskDistance(),
+            cow: cowData.current,
+            height: buddyResizable.offsetHeight,
+            weight: buddyResizable.offsetWidth
+        }])
+        .then((data) => {
+            document.getElementById("avatar-preview-text").innerText = "Choisis ton avatar favori";
+            // document.getElementById("create-avatar-preview").src = data.url;
+
+            console.log(data);
+
+            for (let i = 0; i < data.length; i++) {
+                const img = document.createElement("img");
+                img.src = data[i].url;
+                document.getElementById("create-avatar-preview").appendChild(img);
+            }
+            document.getElementById("end-avatar-creation").style.visibility = "visible";
+        });
 });
 
 PAGES.addCallback("event-countdown", () => {

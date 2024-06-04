@@ -206,7 +206,7 @@ app.get('/', function (req, res) {
 // Serve static files /static
 // app.use('/static', express.static('www'));
 app.use('/static', express.static('www'));
-app.use('/uploads', express.static('uploads'));
+app.use('/upload', express.static('upload'));
 app.use('/models', express.static('models'));
 app.use('/outputs', express.static('outputs'));
 

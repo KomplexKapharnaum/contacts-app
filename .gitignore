@@ -4,6 +4,9 @@ outputs/*
 database.json
 *.sqlite
 
+# UPLOAD
+upload/*.png
+
 # Logs
 logs
 *.log

@@ -35,6 +35,7 @@ class Model {
     }
 
     async load(w) {
+        this.clear();
         if (typeof w === 'number') w = { id: w };
         let item = await db(this.table).where(w).first();
         if (item) this.fields = item;
@@ -61,7 +62,7 @@ class Model {
     }
 
     async export() {
-        return this.fields;
+        return JSON.parse(JSON.stringify(this.fields));
     }
 
     id() {
