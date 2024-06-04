@@ -28,7 +28,7 @@
         <button onclick="PAGES.goto('notifications')">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         </button>
-        <button onclick="PAGES.goto('mon-avatar')">
+        <button onclick="PAGES.goto('mon_avatar')">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
         <button onclick="PAGES.goto('share_link')">
@@ -247,7 +247,7 @@
         <div class="buttons">
             <button onclick="PAGES.goto('event-countdown')">Prochain évènement</button>
             <button onclick="PAGES.goto('notifications')">Mes notifications</button>
-            <button onclick="PAGES.goto('mon-avatar')">Mon avatar</button>
+            <button onclick="PAGES.goto('mon_avatar')">Mon avatar</button>
         </div>
     </div>
 
@@ -387,12 +387,16 @@
         </div>
     </div>
 
-    <div class="page" data-page-id="mon-avatar">
+    <div class="page" data-page-id="mon_avatar">
         <h1>Mon avatar</h1>
 
         <div id="mon-avatar-container">
             <img src="" alt="Avatar">
-            <button>Changer mon avatar</button>
+            <button id="change-avatar">Changer mon avatar</button>
+        </div>
+
+        <div id="change-avatar-container">
+            
         </div>
 
         <div class="buttons">

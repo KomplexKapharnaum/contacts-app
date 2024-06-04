@@ -342,7 +342,8 @@ document.getElementById("question3-suivant").addEventListener("click", function(
                 img.addEventListener("click", ()=> {
                     if (lock) return;
                     lock = true;
-                    NETWORK.query("Avatar.select", {user_id: userData.id, id: data[i].id}).then(() => {
+                    NETWORK.query("Avatar.select", [userData.id, data[i].id]).then(() => {
+                        userData.selected_avatar = data[i].id;
                         PAGES.goto("event-countdown");
                     });
                 })
@@ -354,3 +355,36 @@ document.getElementById("question3-suivant").addEventListener("click", function(
 PAGES.addCallback("event-countdown", () => {
     UTIL.shownav(true);
 });
+
+PAGES.addCallback("mon_avatar", () => {
+    // document.getElementById("mon-avatar-preview").src = AVATAR_DATA.photo;
+    NETWORK.query("Avatar.list", {id: userData.selected_avatar}).then((data) => {
+        document.querySelector("#mon-avatar-container>img").src = data[0].url;
+    });
+});
+
+const container_avatar = document.getElementById("mon-avatar-container");
+const container_changeavatar = document.getElementById("change-avatar-container");
+
+document.getElementById("change-avatar").addEventListener("click", () => {
+
+    container_avatar.style.display = "none";
+
+    container_changeavatar.innerHTML = "";
+    container_changeavatar.style.display = "grid";
+
+    userData.avatars.forEach((avatar) => {
+        const img = document.createElement("img");
+        img.src = avatar.url;
+        container_changeavatar.appendChild(img);
+        img.addEventListener("click", ()=> {
+            NETWORK.query("Avatar.select", [userData.id, avatar.id]).then(() => {
+                userData.selected_avatar = avatar.id;
+                document.querySelector("#mon-avatar-container>img").src = avatar.url;
+
+                container_changeavatar.style.display = "none";
+                container_avatar.style.display = "block";
+            });
+        })
+    });
+})

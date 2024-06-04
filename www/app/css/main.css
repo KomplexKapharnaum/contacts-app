@@ -384,7 +384,24 @@ input[type="text"] {
     max-width: 100%;
 }
 
+#mon-avatar-container {
+    position: relative;
+    width: 100%;
+    height: fit-content;
+}
+
+#mon-avatar-container img {
+    width: 100%;
+}
+
+#mon-avatar-container button {
+    position: absolute;
+    bottom: 8px;
+    left: 8px
+}
+
 /* Avatar creation */
+/* */
 
 .video-container {
     width: 100%;
