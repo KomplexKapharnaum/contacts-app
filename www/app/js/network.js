@@ -22,6 +22,14 @@ NETWORK.query = function (name, args)
     return p
 }
 
+NETWORK.requestAvatar = async function() {
+    return new Promise((resolve, reject) => {
+        NETWORK.query("Avatar.new", {user_id: userData.id, url: "https://picsum.photos/256/256"}).then((data) => {
+           resolve(data);
+        });
+    });
+}
+
 NETWORK.loadUser = function() {
 
     // Load USER from UUID token
@@ -71,24 +79,6 @@ NETWORK.loadUser = function() {
                     PAGES.goto("home");
                 });
 }
-
-
-// NETWORK.requestAvatar = async function(args) {
-//     // socket.emit('requestAvatar', args);
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve({status: "ok", url: "https://picsum.photos/256/256"});
-//         }, 3000);
-//     });
-// }
-NETWORK.createAvatars = function(data) {
-    NETWORK.query('Avatar.generate', data).then((data) => {
-        console.log("Avatars generated:", data);
-        userData.avatars = data;
-        PAGES.goto("create_avatar_photo");
-    })
-}
-
 
 socket.on('hello', () => 
 {

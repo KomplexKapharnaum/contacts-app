@@ -246,3 +246,8 @@ UTIL.generateShareLink = function(link) {
         navigator.clipboard.writeText(link);
     }
 }
+
+// Debug
+PAGES.addCallback("share_link", function() { 
+    UTIL.generateShareLink("https://www.google.com");
+});
