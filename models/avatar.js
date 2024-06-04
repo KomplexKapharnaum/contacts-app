@@ -35,7 +35,7 @@ class Avatar extends Model {
         if (!this.fields.user_id) throw new Error('Avatar user_id is required');
         if (!this.fields.url) throw new Error('Avatar url is required');
 
-        super.save();
+        await super.save();
     }
 
     async select(user_id, id) 
@@ -80,7 +80,7 @@ class Avatar extends Model {
         // complete with new avatars to reach AVATAR_GEN_SIZE
         for (let i = avatars.length; i < AVATAR_GEN_SIZE; i++) {
             let avatar = new Avatar();
-            await avatar.new({ user_id: user_id, url: '/upload/'+ path.basename(filename) });
+            await avatar.new({ user_id: user_id, url: 'https://picsum.photos/1024/1024' });
             avatars.push(avatar);
         }
 
