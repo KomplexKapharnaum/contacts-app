@@ -134,7 +134,7 @@ function updateUsers() {
                 $('<td>').text(user.selected_avatar).appendTo(tr)
 
                 var sessions = $('<td>').appendTo(tr)
-                query("User.export", [{uuid: user.uuid}, true]).then((data) => {
+                query("User.getfull", {uuid: user.uuid}).then((data) => {
                     data.sessions.forEach((session) => {
                         $('<span>').text(session.name + ' ').appendTo(sessions).on('click', () => {
                             if (confirm("Unregister user " + user.name + " from session " + session.name + " ?")) 

@@ -42,7 +42,7 @@ class Session extends Model {
             this.events.push(event);
         }
 
-        return this.export()
+        return this.get()
     }
     
     async save() 
@@ -63,11 +63,11 @@ class Session extends Model {
         await db('events').where({ session_id: this.fields.id }).del();
     }
 
-    async export(w, full = false)
+    async get(w, full = false)
     {
         if (w) await this.load(w);
-        let s = await super.export();
-        s.events = await Promise.all(this.events.map(e => (full) ? e.export() : e.id()));
+        let s = await super.get();
+        s.events = await Promise.all(this.events.map(e => (full) ? e.get() : e.id()));
         return s;
     }
 

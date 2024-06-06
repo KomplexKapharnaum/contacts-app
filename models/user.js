@@ -79,6 +79,8 @@ class User extends Model {
     {
         await super.load(w);
 
+        // TODO: LAZY OR CONCURRENT LOAD...
+
         let sessions = await db('users_sessions').where({ user_id: this.fields.id });
         for (let s of sessions) {
             let session = new Session();
@@ -93,7 +95,7 @@ class User extends Model {
             this.avatars.push(avatar);
         }
 
-        return this.export()
+        return this.get()
     }
 
     async load_byphone(phone) {
@@ -107,7 +109,7 @@ class User extends Model {
         this.fields.name = name;
         await db('users').where({ id: this.fields.id }).update({ name: name });
         console.log('User', this.fields.id, 'updated with name', name);
-        return this.export()
+        return this.get()
     }
     
     async delete(uuid) {
@@ -172,13 +174,19 @@ class User extends Model {
         return cipher.encrypt(this.fields.phone);
     }
 
-    async export(w, full = false) {
+    async get(w, full = false) {
         if (w) await this.load(w);
-        let u = await super.export();
+        let u = await super.get();
         delete u.phone;
 
-        u.sessions = await Promise.all(this.sessions.map(s => (full ? s.export(null,true) : s.id())));
-        u.avatars = await Promise.all(this.avatars.map(a => (full ? a.export() : a.id())));
+        if (this.fields.selected_avatar !== null && full) {
+            let avatar = new Avatar();
+            await avatar.load(this.fields.selected_avatar);
+            u.selected_avatar = await avatar.get();
+        }
+
+        u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
+        u.avatars = await Promise.all(this.avatars.map(a => (full ? a.get() : a.id())));
 
         return u;
     }

@@ -19,7 +19,7 @@ class Model {
         for (let key in f) 
             if (this.fields[key] !== undefined) this.fields[key] = f[key];
         await this.save();
-        return await this.export()
+        return await this.get()
     }
 
     async save() {
@@ -61,8 +61,14 @@ class Model {
         else return db(this.table).select();
     }
 
-    async export() {
+    async get(w, full = false) {
+        if (w) await this.load(w);
         return JSON.parse(JSON.stringify(this.fields));
+    }
+
+    async getfull(w)
+    {
+        return await this.get(w, true);
     }
 
     id() {

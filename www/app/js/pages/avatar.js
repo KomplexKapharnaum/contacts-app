@@ -317,10 +317,13 @@ buddyTopLeft.addEventListener("touchstart", function(event) {
     document.addEventListener("touchend", stopResizeBuddy);
 });
 
-document.getElementById("question3-suivant").addEventListener("click", function() {
+document.getElementById("question3-suivant").addEventListener("click", function() 
+{
     PAGES.goto("create_avatar_results")
+    document.getElementById("avatar-preview-text").innerText = "Ton avatar est en cours de création...";
+    document.getElementById("create-avatar-preview").innerHTML = "";
     
-    NETWORK.query('Avatar.generate', [userData.id ,
+    NETWORK.query('Avatar.generate', [userData.uuid ,
         {
             pic: AVATAR_DATA.photo,
             mask: getMaskDistance(),
@@ -328,39 +331,36 @@ document.getElementById("question3-suivant").addEventListener("click", function(
             height: buddyResizable.offsetHeight,
             weight: buddyResizable.offsetWidth
         }])
-        .then((data) => {
-            document.getElementById("avatar-preview-text").innerText = "Choisis ton avatar favori";
-            // document.getElementById("create-avatar-preview").src = data.url;
-
-            console.log(data);
-
-            let lock = false;
-            for (let i = 0; i < data.length; i++) {
-                const img = document.createElement("img");
-                img.src = data[i].url;
-                document.getElementById("create-avatar-preview").appendChild(img);
-                img.addEventListener("click", ()=> {
-                    if (lock) return;
-                    lock = true;
-                    NETWORK.query("Avatar.select", [userData.id, data[i].id]).then(() => {
-                        userData.selected_avatar = data[i].id;
-                        PAGES.goto("event-countdown");
-                    });
-                })
-            }
-            // document.getElementById("end-avatar-creation").style.visibility = "visible";
-        });
+        .then((data) => { PAGES.selectAvatar(data); });
 });
+
+PAGES.selectAvatar = function(avatars) {
+    
+    document.getElementById("avatar-preview-text").innerText = "Choisis ton avatar favori";
+    document.getElementById("create-avatar-preview").innerHTML = "";
+
+    let lock = false;
+    for (let i = 0; i < avatars.length; i++) {
+        const img = document.createElement("img");
+        img.src = avatars[i].url;
+        document.getElementById("create-avatar-preview").appendChild(img);
+        img.addEventListener("click", ()=> {
+            if (lock) return;
+            lock = true;
+            NETWORK.query("Avatar.select", [userData.uuid, avatars[i].id])
+                        .then( () => { NETWORK.loadUser(); });
+        })
+    }
+
+    PAGES.goto("create_avatar_results")
+}
 
 PAGES.addCallback("event-countdown", () => {
     UTIL.shownav(true);
 });
 
 PAGES.addCallback("mon_avatar", () => {
-    // document.getElementById("mon-avatar-preview").src = AVATAR_DATA.photo;
-    NETWORK.query("Avatar.list", {id: userData.selected_avatar}).then((data) => {
-        document.querySelector("#mon-avatar-container>img").src = data[0].url;
-    });
+    document.querySelector("#mon-avatar-container>img").src = userData.selected_avatar.url
 });
 
 const container_avatar = document.getElementById("mon-avatar-container");
@@ -378,8 +378,8 @@ document.getElementById("change-avatar").addEventListener("click", () => {
         img.src = avatar.url;
         container_changeavatar.appendChild(img);
         img.addEventListener("click", ()=> {
-            NETWORK.query("Avatar.select", [userData.id, avatar.id]).then(() => {
-                userData.selected_avatar = avatar.id;
+            NETWORK.query("Avatar.select", [userData.uuid, avatar.id]).then(() => {
+                userData.selected_avatar = avatar
                 document.querySelector("#mon-avatar-container>img").src = avatar.url;
 
                 container_changeavatar.style.display = "none";

@@ -36,7 +36,7 @@ NETWORK.loadUser = function() {
     const token = Cookies.get('token');
     // console.log("User token :", token)
 
-    NETWORK.query('User.export', [{uuid: token}, true])
+    NETWORK.query('User.getfull', {uuid: token})
                 .then((data) => {
                     userData = data;
 
@@ -50,6 +50,10 @@ NETWORK.loadUser = function() {
                     }
                     else if (userData.avatars.length == 0) {    // avatars are missing
                         PAGES.goto("create_avatar_photo"); 
+                    }
+                                                                // no avatar selected
+                    else if (!userData.selected_avatar) {
+                        PAGES.selectAvatar(userData.avatars);
                     }
                     else {
                         PAGES.goto("event-countdown");          // profile page
@@ -71,7 +75,7 @@ NETWORK.loadUser = function() {
                                         }
 
                                         // Get session details
-                                        NETWORK.query('Session.export', [nextSession])
+                                        NETWORK.query('Session.get', nextSession)
                                             .then((session) => {
                                                 if (confirm("Voulez-vous vous inscrire à la prochaine session: " + session.name + " ?")) {
                                                     NETWORK.query('User.register', [userData.uuid, nextSession]).then(NETWORK.loadUser())

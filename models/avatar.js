@@ -9,6 +9,7 @@ const AVATAR_GEN_SIZE = 2;
 
 import db from '../tools/db.js';
 import Model from './model.js';
+import User from './user.js';
 
 import fs from 'fs';
 import path from 'path';
@@ -38,30 +39,33 @@ class Avatar extends Model {
         await super.save();
     }
 
-    async select(user_id, id) 
+    async select(uuid, id) 
     {
-        let avatar = new Avatar();
-        await avatar.load(id);
-        if (avatar.fields.user_id != user_id) throw new Error('Avatar not found');
-        await db('users').where({ id: user_id }).update({ selected_avatar: id });
-        console.log('Avatar', id, 'selected for user', user_id);
+        let user = new User();
+        await Promise.all([
+            user.load({ uuid: uuid }), 
+            this.load(id)
+        ])
+        if (this.fields.user_id != user.id()) throw new Error('Avatar not found');
+        await user.update(null, { selected_avatar: id });
+        console.log('Avatar', id, 'selected for user', user.id());
     }
 
-    async generate(user_id, data) 
+    async generate(uuid, data) 
     {   
         // check if user exists
-        let user = await db('users').where({ id: user_id }).first();
-        if (!user) throw new Error('User not found');
+        let user = new User();
+        await user.load({ uuid: uuid });
 
         if (!data.pic) throw new Error('Base pic is required');
 
         // save uploaded data.pic from dataURL to upload folder
-        let filename = path.join(uploadDir, user_id + '_' + Date.now() + '.png');
+        let filename = path.join(uploadDir, user.id() + '_' + Date.now() + '.png');
         let dataURL = data.pic.replace(/^data:image\/png;base64,/, '');
         fs.writeFileSync(filename, dataURL, 'base64');
 
         // delete all not selected avatars for this user
-        await db('avatars').where({ user_id: user_id }).whereNot({ id: user.selected_avatar }).del();
+        await db('avatars').where({ user_id: user.id() }).whereNot({ id: user.selected_avatar }).del();
 
         let avatars = [];
 
@@ -74,17 +78,17 @@ class Avatar extends Model {
 
         // add original pic
         let avatar = new Avatar();
-        await avatar.new({ user_id: user_id, url: '/upload/'+ path.basename(filename) });
+        await avatar.new({ user_id: user.id(), url: '/upload/'+ path.basename(filename) });
         avatars.push(avatar);
 
         // complete with new avatars to reach AVATAR_GEN_SIZE
         for (let i = avatars.length; i < AVATAR_GEN_SIZE; i++) {
             let avatar = new Avatar();
-            await avatar.new({ user_id: user_id, url: 'https://picsum.photos/1024/1024' });
+            await avatar.new({ user_id: user.id(), url: 'https://picsum.photos/1024/1024' });
             avatars.push(avatar);
         }
 
-        return await Promise.all(avatars.map(a => a.export()));
+        return await Promise.all(avatars.map(a => a.get()));
     }
 }
 
