@@ -65,7 +65,9 @@ class Avatar extends Model {
         fs.writeFileSync(filename, dataURL, 'base64');
 
         // delete all not selected avatars for this user
-        await db('avatars').where({ user_id: user.id() }).whereNot({ id: user.selected_avatar }).del();
+        let req = db('avatars').where({ user_id: user.id() })
+        if (user.selected_avatar) req.whereNot({ id: user.selected_avatar });
+        await req.del();
 
         let avatars = [];
 
