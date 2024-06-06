@@ -34,6 +34,7 @@ NETWORK.loadUser = function() {
 
     // Load USER from UUID token
     const token = Cookies.get('token');
+    console.log("User token :", token)
     // console.log("User token :", token)
 
     NETWORK.query('User.export', [{uuid: token}, true])
@@ -52,7 +53,7 @@ NETWORK.loadUser = function() {
                         PAGES.goto("create_avatar_photo"); 
                     }
                     else {
-                        PAGES.goto("event-countdown");          // profile page
+                        PAGES.goto("main");          // profile page
                         UTIL.shownav(true);
 
                         // Load next session and offers to register
@@ -67,6 +68,7 @@ NETWORK.loadUser = function() {
                                         // check if user declined to register
                                         if (Cookies.get('session_declined_'+nextSession)) {
                                             console.log("User declined to register");
+                                            pages.goto("main");
                                             return;
                                         }
 
@@ -98,6 +100,8 @@ socket.on('hello', () =>
 });
 
 NETWORK.receiveSessionEvent = function(event) {
+    if (!isEventActive()) return;
+    console.log("Received event", event);
     let container;
     switch (event.name) {
         case "color" :
@@ -131,3 +135,9 @@ NETWORK.receiveSessionEvent = function(event) {
             break;
     }
 }
+
+socket.on('start-event', NETWORK.receiveSessionEvent);
+socket.on('end-event', () => {
+    PAGES.goto("main");
+    UTIL.showOverlay(false);
+});

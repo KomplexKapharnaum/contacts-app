@@ -344,7 +344,7 @@ document.getElementById("question3-suivant").addEventListener("click", function(
                     lock = true;
                     NETWORK.query("Avatar.select", [userData.id, data[i].id]).then(() => {
                         userData.selected_avatar = data[i].id;
-                        PAGES.goto("event-countdown");
+                        PAGES.goto("main");
                     });
                 })
             }
