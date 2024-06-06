@@ -355,10 +355,6 @@ PAGES.selectAvatar = function(avatars) {
     PAGES.goto("create_avatar_results")
 }
 
-PAGES.addCallback("event-countdown", () => {
-    UTIL.shownav(true);
-});
-
 PAGES.addCallback("mon_avatar", () => {
     document.querySelector("#mon-avatar-container>img").src = userData.selected_avatar.url
 });

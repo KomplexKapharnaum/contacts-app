@@ -22,7 +22,7 @@
 <body class="navhidden">
     <div id="background"></div>
     <nav>
-        <button onclick="PAGES.goto('event-countdown')">
+        <button onclick="PAGES.goto('main')">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </button>
         <button onclick="PAGES.goto('notifications')">
@@ -239,19 +239,24 @@
         <div class="caption">
             <img class="illustration" src="./img/mask.png" alt="image test">
             <div class="txt secondary">
-                <span>Bienvenue dans le carnaval CONTACTS</span>
-                <span>Que souhaitez-vous faire ?</span>
+                <span>Bienvenue au carnaval CONTACTS</span>
+                <span>Aucun évènement est à venir.</span>
             </div>
-        </div>
-
-        <div class="buttons">
-            <button onclick="PAGES.goto('event-countdown')">Prochain évènement</button>
-            <button onclick="PAGES.goto('notifications')">Mes notifications</button>
-            <button onclick="PAGES.goto('mon_avatar')">Mon avatar</button>
         </div>
     </div>
 
     <!-- Event -->
+
+    <div class="page" data-page-id="event-subscribe-prompt">
+        <div class="txt secondary">
+            <span>L'évènement <span id="subscribe-label-event"></span> va arriver bientôt !</span>
+            <span>Voulez-vous y participer ?</span>
+        </div>
+        <div class="buttons">
+            <button id="subscribe-confirm">Participer</button>
+            <button id="subscribe-decline">Ne pas participer</button>
+        </div>
+    </div>
 
     <div class="page" data-page-id="event-countdown">
 
@@ -396,7 +401,7 @@
         </div>
 
         <div id="change-avatar-container">
-            
+
         </div>
 
         <div class="buttons">
@@ -430,6 +435,7 @@
     <script src="./js/main.js"></script>
     <script src="./js/network.js"></script>
 
+    <script src="./js/pages/evenements.js"></script>
     <script src="./js/pages/onboarding.js"></script>
     <script src="./js/pages/avatar.js"></script>
     

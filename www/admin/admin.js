@@ -196,10 +196,18 @@ function updateEvents() {
             $('<th>').text('location').appendTo(tr)
             $('<th>').text('description').appendTo(tr)
             $('<th>').text('session_id').appendTo(tr)
+            $('<th>').text('actions').appendTo(tr)
             $('<th>').text('').appendTo(tr)
 
             events.forEach((event) => {
                 var tr = $('<tr>').appendTo(tbody)
+
+                const start = new Date(event.starting_at);
+                const end = new Date(event.ending_at);
+                const now = new Date();
+                const isEventLive = start < now && now < end;
+                if (isEventLive) tr.css('background-color', 'darkgreen');
+
                 $('<td>').text(event.id).appendTo(tr)
                 $('<td>').text(event.name).appendTo(tr)
                 $('<td>').appendTo(tr).append(
@@ -215,6 +223,23 @@ function updateEvents() {
                 $('<td>').text(event.location).appendTo(tr)
                 $('<td>').text(event.description).appendTo(tr)
                 $('<td>').text(event.session_id).appendTo(tr)
+
+                var actions = $('<td>').appendTo(tr)
+                $('<button>').text('flash').appendTo(actions).on('click', () => {
+                    ctrl("flash", true)
+                })
+                $('<button>').text('color').appendTo(actions).on('click', () => {
+                    const promptColor = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
+                    ctrl("color", promptColor)
+                });
+                $('<button>').text('text').appendTo(actions).on('click', () => {
+                    const promptText = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
+                    ctrl("text", promptText)
+                });
+                $('<button>').text('end').appendTo(actions).on('click', () => {
+                    ctrl("end")
+                });
+
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete event " + event.name + " ?") &&
                         query("Event.delete", event.id).then(updateEvents)

@@ -34,6 +34,7 @@ NETWORK.loadUser = function() {
 
     // Load USER from UUID token
     const token = Cookies.get('token');
+    console.log("User token :", token)
     // console.log("User token :", token)
 
     NETWORK.query('User.getfull', {uuid: token})
@@ -56,7 +57,7 @@ NETWORK.loadUser = function() {
                         PAGES.selectAvatar(userData.avatars);
                     }
                     else {
-                        PAGES.goto("event-countdown");          // profile page
+                        PAGES.goto("main");          // profile page
                         UTIL.shownav(true);
 
                         // Load next session and offers to register
@@ -71,20 +72,14 @@ NETWORK.loadUser = function() {
                                         // check if user declined to register
                                         if (Cookies.get('session_declined_'+nextSession)) {
                                             console.log("User declined to register");
+                                            pages.goto("main");
                                             return;
                                         }
 
                                         // Get session details
                                         NETWORK.query('Session.get', nextSession)
                                             .then((session) => {
-                                                if (confirm("Voulez-vous vous inscrire à la prochaine session: " + session.name + " ?")) {
-                                                    NETWORK.query('User.register', [userData.uuid, nextSession]).then(NETWORK.loadUser())
-                                                }
-                                                else {
-                                                    // set cookie to avoid asking again
-                                                    Cookies.set('session_declined_'+nextSession, true, 30);
-                                                    console.log("User declined to register");
-                                                }
+                                                UTIL.promptForSubscribingEvent(session, nextSession);
                                             });
                                     }
                                 })
@@ -109,6 +104,8 @@ socket.on('hello', () =>
 });
 
 NETWORK.receiveSessionEvent = function(event) {
+    if (!isEventActive()) return;
+    console.log("Received event", event);
     let container;
     switch (event.name) {
         case "color" :
@@ -142,3 +139,9 @@ NETWORK.receiveSessionEvent = function(event) {
             break;
     }
 }
+
+socket.on('start-event', NETWORK.receiveSessionEvent);
+socket.on('end-event', () => {
+    PAGES.goto("main");
+    UTIL.showOverlay(false);
+});
