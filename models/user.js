@@ -17,6 +17,7 @@ import cipher from '../tools/cipher.js';
 
 import Session from './session.js';
 import Avatar from './avatar.js';
+import Genjob from './genjob.js';
 
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 
@@ -36,12 +37,14 @@ class User extends Model {
 
         this.sessions = [];
         this.avatars = [];
+        this.genjobs = [];
     }
 
     clear() {
         super.clear();
         this.sessions = [];
         this.avatars = [];
+        this.genjobs = [];
     }
 
     async new(f) 
@@ -72,7 +75,7 @@ class User extends Model {
         let user = await db('users').where({ uuid: this.fields.uuid }).first();
         if (user && user.id != this.fields.id) throw new Error('User already exists with this phone number');
         
-        super.save();
+        await super.save();
     }
     
     async load(w)
@@ -93,6 +96,13 @@ class User extends Model {
             let avatar = new Avatar();
             await avatar.load(a.id);
             this.avatars.push(avatar);
+        }
+
+        let genjobs = await db('genjobs').where({ userid: this.fields.id });
+        for (let g of genjobs) {
+            let genjob = new Genjob();
+            await genjob.load(g.id);
+            this.genjobs.push(genjob);
         }
 
         return this.get()
@@ -123,6 +133,9 @@ class User extends Model {
 
         // Delete avatars
         await db('avatars').where({ user_id: this.fields.id }).del();
+
+        // Delete genjobs
+        await db('genjobs').where({ userid: this.fields.id }).del();
 
         console.log('User', this.fields.id, 'deleted');
     }
@@ -180,13 +193,18 @@ class User extends Model {
         delete u.phone;
 
         if (this.fields.selected_avatar !== null && full) {
-            let avatar = new Avatar();
-            await avatar.load(this.fields.selected_avatar);
-            u.selected_avatar = await avatar.get();
+            try {
+                let avatar = new Avatar();
+                await avatar.load(this.fields.selected_avatar);
+                u.selected_avatar = await avatar.get();
+            } catch (e) {
+                u.selected_avatar = null;
+            }
         }
 
         u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
         u.avatars = await Promise.all(this.avatars.map(a => (full ? a.get() : a.id())));
+        u.genjobs = await Promise.all(this.genjobs.map(g => (full ? g.get() : g.id())));
 
         return u;
     }

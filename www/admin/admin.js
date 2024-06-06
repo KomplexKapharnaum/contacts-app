@@ -145,7 +145,10 @@ function updateUsers() {
 
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
-                        query("User.delete", user.uuid).then(updateUsers)
+                        query("User.delete", user.uuid).then(() => {
+                            updateAvatars()
+                            updateUsers()
+                        })
                 })
             })
         })
@@ -248,6 +251,77 @@ function updateEvents() {
         })
 }
 
+function updateWorkflows() {
+    query("Workflow.list")
+        .then((workflows) => { 
+            $('#workflows').empty()
+            var table = $('<table>').appendTo('#workflows')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('path').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            workflows.forEach((workflow) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(workflow.id).appendTo(tr)
+                $('<td>').text(workflow.name).appendTo(tr).on('click', () => {
+                    var name = prompt("Workflow name", workflow.name).trim()
+                    if (name) query("Workflow.update", [workflow.id, {name: name}]).then(updateWorkflows)
+                })
+
+                $('<td>').text(workflow.path).appendTo(tr).on('click', () => {
+                    var path = prompt("Workflow path", workflow.path).trim()
+                    if (path) query("Workflow.update", [workflow.id, {path: path}]).then(updateWorkflows)
+                })
+
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete workflow " + workflow.name + " ?") &&
+                        query("Workflow.delete", workflow.id).then(updateWorkflows)
+                })
+            })
+        })
+}
+
+function updateGenjobs() {
+    query("Genjob.list")
+        .then((genjobs) => { 
+            $('#genjobs').empty()
+            var table = $('<table>').appendTo('#genjobs')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+            
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('userid').appendTo(tr)
+            $('<th>').text('status').appendTo(tr)
+            $('<th>').text('workflowid').appendTo(tr)
+            $('<th>').text('userdata').appendTo(tr)
+            $('<th>').text('input').appendTo(tr)
+            $('<th>').text('output').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            genjobs.forEach((genjob) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(genjob.id).appendTo(tr)
+                $('<td>').text(genjob.userid).appendTo(tr)
+                $('<td>').text(genjob.status).appendTo(tr)
+                $('<td>').text(genjob.workflowid).appendTo(tr)
+                $('<td>').text(genjob.userdata).appendTo(tr)
+                $('<td>').text(genjob.input).appendTo(tr)
+                $('<td>').text(genjob.output).appendTo(tr)
+
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete genjob " + genjob.id + " ?") &&
+                        query("Genjob.delete", genjob.id).then(updateGenjobs)
+                })
+            })
+        })
+
+}
 
 // SOCKET RECEIVE
 //
@@ -260,6 +334,8 @@ socket.on('hello', () => {
     updateEvents()
     updateUsers()
     updateAvatars()
+    updateWorkflows()
+    updateGenjobs()
 })
 
 socket.on('log', (msg) => { log(msg) })
@@ -320,4 +396,14 @@ document.getElementById('event-new').addEventListener('click', () => {
     var session_id = prompt("Session id", "").trim()
     
     query("Event.new", {name: name, session_id: session_id}).then(updateEvents)
+})
+
+// WORKFLOWS
+//
+
+document.getElementById('workflow-new').addEventListener('click', () => {
+    var name = prompt("Workflow name", "").trim()
+    var path = prompt("Workflow path", "").trim()
+    
+    query("Workflow.new", {name: name, path: path}).then(updateWorkflows)
 })
