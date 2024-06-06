@@ -17,6 +17,8 @@ loadModel('Session');
 loadModel('Event');
 loadModel('User');
 loadModel('Avatar');
+loadModel('Workflow');
+loadModel('Genjob');
 
 // HTTPS / HTTP
 import http from 'http';

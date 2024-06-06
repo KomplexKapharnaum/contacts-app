@@ -331,7 +331,7 @@ document.getElementById("question3-suivant").addEventListener("click", function(
             height: buddyResizable.offsetHeight,
             weight: buddyResizable.offsetWidth
         }])
-        .then((data) => { PAGES.selectAvatar(data); });
+        .then((data) => { PAGES.selectAvatar(data); }); // TODO: don't go directly to results since generation is in queue ! Thus data is empty for now..
 });
 
 PAGES.selectAvatar = function(avatars) {
