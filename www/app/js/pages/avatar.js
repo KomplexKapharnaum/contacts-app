@@ -331,7 +331,9 @@ document.getElementById("question3-suivant").addEventListener("click", function(
             height: buddyResizable.offsetHeight,
             weight: buddyResizable.offsetWidth
         }])
-        .then((data) => { PAGES.selectAvatar(data); }); // TODO: don't go directly to results since generation is in queue ! Thus data is empty for now..
+        .then((data) => { 
+            PAGES.goto("create_avatar_processing") 
+        }); // TODO: don't go directly to results since generation is in queue ! Thus data is empty for now..
 });
 
 PAGES.selectAvatar = function(avatars) {

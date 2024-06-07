@@ -14,6 +14,7 @@ class SessionModel {
         dom.querySelector('.subscribed-users').innerText = subscribed_users;
         dom.querySelector('.events-count').innerText = events_count;
 
+        this.dom = dom.firstElementChild;
         parent.appendChild(dom);
     }
 }
@@ -32,3 +33,37 @@ class EvenementModel {
     }
 }
 models.Evenement = EvenementModel;
+
+class SessionPage {
+    constructor(title, button) {
+        const dom = docId('model-session-page').cloneNode(true).content;
+
+        dom.querySelector('.title').innerHTML = title;
+
+        this.logsContainer = dom.querySelector('.logs');
+        this.evenementsContainer = dom.querySelector('.evenements');
+
+        this.dom = dom.firstElementChild;
+
+        button.addEventListener('click', () => {
+            this.dom.classList.add('active');
+        });
+
+        dom.querySelector('.close').addEventListener('click', () => {
+            this.dom.classList.remove('active');
+        });
+
+        document.querySelector("#session-pages").appendChild(this.dom);
+    }
+
+    addLog(log) {
+        const logElement = document.createElement('div');
+        logElement.innerText = log;
+        this.logsContainer.appendChild(logElement);
+    }
+
+    addEvenement(evenement) {
+        models.Evenement(evenement.title, evenement.date, evenement.hours, evenement.location, this.evenementsContainer);
+    }
+}
+models.SessionPage = SessionPage;

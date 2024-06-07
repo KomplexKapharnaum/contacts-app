@@ -48,6 +48,8 @@ NETWORK.loadUser = function() {
                     //
                     if (!userData.name) {                       // name is missing
                         PAGES.goto("pseudonyme_register");
+                    } else if (userData.genjobs.length > 0) {
+                        PAGES.goto("create_avatar_processing");
                     }
                     else if (userData.avatars.length == 0) {    // avatars are missing
                         PAGES.goto("create_avatar_photo"); 
