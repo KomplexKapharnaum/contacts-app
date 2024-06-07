@@ -68,7 +68,26 @@ class Session extends Model {
         if (w) await this.load(w);
         let s = await super.get();
         s.events = await Promise.all(this.events.map(e => (full) ? e.get() : e.id()));
+        s.users = await this.getusers();
         return s;
+    }
+
+    async getusers(w)
+    {
+        if (w) await this.load(w);
+        let users = await db('users_sessions').where({ session_id: this.fields.id });
+        return await Promise.all(users.map(async u => {
+                let user = new User();
+                await user.load(u.user_id);
+                return await user.get();
+            })
+        ) 
+    }
+
+    async getevents(w)
+    {
+        if (w) await this.load(w);
+        return await Promise.all(this.events.map(e.get()));
     }
 
     async next()

@@ -13,6 +13,7 @@
 import e from 'express';
 import db from '../tools/db.js';
 import Model from './model.js';
+import Session from './session.js';
 
 class Event extends Model {
     
@@ -40,6 +41,16 @@ class Event extends Model {
         if (event && event.id != this.fields.id) throw new Error('Event name already used');
 
         super.save();
+    }
+
+    async getusers(w) {
+        if (w) await this.load(w);
+        
+        // find session
+        let session = new Session();
+        await session.load(this.fields.session_id);
+
+        return await session.getusers();
     }
 
 }
