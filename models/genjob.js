@@ -31,22 +31,24 @@ class Genjob extends Model {
         });
     }
 
-    async save() 
-    {
-        // Check user exists
-        let user = new User();
-        await user.load({ id: this.fields.userid });
-        if (!user.id()) throw new Error('Genjob user not found');
-
-        await super.save();
-    }
-
     async run()
     {
+        // Dummy job
+        if (this.fields.id === 0 && this.fields.status == 'pending') {
+            await this.status('running');
+            await new Promise(r => setTimeout(r, 1000));
+            await this.status('done');
+            return;
+        }
+
+        console.log('Genjob', this.fields.id, 'run', this.fields.status, 'user', this.fields.userid, 'workflow', this.fields.workflowid);
+
         // Check user exists
         let user = new User();
-        await user.load({ id: this.fields.userid });
-        if (!user.id()) {
+        try {
+            await user.load({ id: this.fields.userid });
+        }
+        catch (e) {
             this.fields.output = 'User not found';
             await this.status('error');
         }
@@ -107,6 +109,24 @@ class Genjob extends Model {
             delete j.output;
         }
         return JSON.parse(JSON.stringify(j));
+    }
+
+    async next() {
+        let job = await db('genjobs').where({ status: 'pending' }).orderBy('last_modified').first();
+        if (job) {
+            await this.load(job.id);
+            return this;
+        }
+        else {
+            console.log('No pending job');
+            // dummy job
+            let j = new Genjob();
+            j.fields.id = 0;
+            j.fields.userid = 0;
+            j.fields.status = 'pending';
+            j.fields.workflowid = 0;
+            return j
+        }
     }
 }
 
