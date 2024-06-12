@@ -93,9 +93,19 @@
             </form>
         </div>
     </div>
-    <div id="sessions-container" class="flex-container">
+    <div id="sessions-container" class="flex-container"></div>
+    <div id="session-pages"></div>
 
-    </div>
+    <template id="model-session-page">
+        <div class="session-page page">
+            <h2><button class="close">X</button><span class="title"></span></h2>
+            <hr>
+            <div class="logs"></div>
+            <div class="flex-container evenements">
+
+            </div>
+        </div>
+    </template>
 
     <h2>Users</h2>
     <div id="users" class="db"></div>

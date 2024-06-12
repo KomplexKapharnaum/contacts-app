@@ -72,8 +72,11 @@ function updateSessions() {
     .then((sessions) => { 
         console.log(sessions)
         sessions.forEach(ses => {
-            console.log(ses)
-            new models.Session(ses.id, ses.name, `${ses.starting_at.split('T')[0]} - ${ses.ending_at.split('T')[0]} `, 0, 0, ses_container)
+            query("Session.getfull", ses.id).then((data) => {
+                console.log(data)
+            });
+            const session_button = new models.Session(ses.id, ses.name, `${ses.starting_at.split('T')[0]} - ${ses.ending_at.split('T')[0]} `, 0, 0, ses_container)
+            new models.SessionPage(ses.name, session_button.dom)
         });
     })
 }

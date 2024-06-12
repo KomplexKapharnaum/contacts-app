@@ -2,6 +2,12 @@ html, body {
     background-color: #121212;
     color: #D9D9D9;
     font-family: 'Open Sans', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding: 16px;
 }
 
 h2 {
@@ -105,4 +111,24 @@ h2 button{
 
 .db table tr:nth-child(odd) {
     background-color: #111;
+}
+
+/* Pages & sub-pages */
+/* */
+
+.page {
+    display: none;
+    padding: 16px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: #121212;
+}
+
+.page.active {
+    display: block;
 }
