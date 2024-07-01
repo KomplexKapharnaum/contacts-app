@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>envoie SMS</title>
+
+    <link rel="stylesheet" href="/static/admin/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+</head>
+<body class="">
+    <form action="" class="flex">
+
+        <fieldset id="radio_sms">
+            <label for="manuel">manuel</label>
+            <input type="radio" name="groupe" id="manuel" value="manuel" checked="checked">
+
+            <label for="all">all</label>
+            <input type="radio" name="groupe" id="all" value="all">
+    
+            <label for="specifique">specifique</label>
+            <input type="radio" name="groupe" id="groupe" value="groupe">
+
+        </fieldset>
+    
+        <label for="num" >numero</label>
+        <input name="num" id="num_sms" type="text" maxlength="10">
+    
+        <label for="groupe_sms" >labelle groupe</label>
+        <input name="groupe_sms" id="groupe_sms" disabled type="text">
+    
+        <label for="msg">message</label>
+        <textarea name="msg" id="msg_sms"></textarea>
+        
+        <button type="button" id="test">envoie</button>
+    </form>
+
+    <script src="/static/admin/sms.js"></script>
+</body>
+</html>
+

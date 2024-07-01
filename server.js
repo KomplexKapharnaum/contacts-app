@@ -1,5 +1,6 @@
 import express from 'express';
 import { exec } from 'child_process';
+import sendSMS from './tools/sms_test.js';
 
 // MODELS / DB
 import db from './tools/db.js';
@@ -180,6 +181,26 @@ SOCKET.io.on('connection', (socket) => {
     socket.emit('start-event', SOCKET.lastEvent);
   }
 
+  socket.on("sms", (msg, numero) => {
+    if(numero == "all") {
+      
+      db('users').select().then((users) => {
+
+        console.log(users)
+        users.forEach((u)=> {
+          sendSMS([u.phone], msg)
+        }) 
+    })
+      
+
+    } // else if (){
+
+    // }
+    else {
+       sendSMS([numero], msg)
+    }
+  })
+
 
 });
 
@@ -227,6 +248,9 @@ app.get('/admin', function (req, res) {
   res.sendFile(__dirname + '/www/admin/admin.html');
 });
 
+app.get('/admin/sms', function (req, res) {
+  res.sendFile(__dirname + '/www/admin/sms_form.html');
+});
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {
@@ -332,5 +356,5 @@ function processJobs() {
     });
 }
 
-processJobs();
+// processJobs();
 
