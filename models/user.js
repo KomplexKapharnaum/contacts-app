@@ -32,7 +32,8 @@ class User extends Model {
             name:           null,
             phone:          null,
             uuid:           null,
-            selected_avatar: null
+            selected_avatar: null,
+            groupe_id: null
         });
 
         this.sessions = [];
@@ -137,6 +138,9 @@ class User extends Model {
         // Delete genjobs
         await db('genjobs').where({ userid: this.fields.id }).del();
 
+        // Delete groupe_id
+        await db('groupe_id').where({ user_id: this.fields.id }).del();
+
         console.log('User', this.fields.id, 'deleted');
     }
 
@@ -151,7 +155,6 @@ class User extends Model {
         if (user_session) throw new Error('User already registered to session');
 
         await db('users_sessions').insert({ user_id: this.fields.id, session_id: session_id });
-        
         console.log('User', this.fields.id, 'registered to session', session_id);
     }
 
@@ -221,6 +224,8 @@ db.schema.hasTable('users').then(exists => {
             table.string('phone');
             table.string('uuid');
             table.integer('selected_avatar');
+            table.integer('groupe_id');
+
         }).then(() => {
             console.log('created users table');
         });

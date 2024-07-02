@@ -18,6 +18,7 @@ await loadModel('User');
 await loadModel('Avatar');
 await loadModel('Workflow');
 await loadModel('Genjob');
+await loadModel('Groupe');
 
 // HTTPS / HTTP
 import http from 'http';
@@ -33,7 +34,7 @@ dotenv.config();
 
 const BACKEND_PORT = process.env.BACKEND_PORT || 4000
 const USE_HTTPS = process.env.USE_HTTPS && process.env.USE_HTTPS === 'true'
-const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret'  
+const GITHOOK_SECRET = process.env.GITHOOK_SECRET || 'secret'
 
 // Path
 import path from 'path'
@@ -55,12 +56,12 @@ app.use(webhookHandler);
 
 // HTTPS / HTTP
 if (USE_HTTPS) {
-  const options = { 
-    key: fs.readFileSync('certs/server.key'), 
-    cert: fs.readFileSync('certs/server.cert') 
+  const options = {
+    key: fs.readFileSync('certs/server.key'),
+    cert: fs.readFileSync('certs/server.cert')
   };
   var server = https.createServer(options, app);
-} 
+}
 else var server = http.createServer(app);
 
 // Socket.io
@@ -158,19 +159,19 @@ SOCKET.io.on('connection', (socket) => {
       SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
       return;
     }
-    
+
     // marke args a list if not already
     if (!Array.isArray(data.args)) data.args = [data.args]
 
     // Call method and send response to client
     m[action](...data.args)
       .then((answer) => {
-          // console.log('answer', answer)
-          if (data.resid) SOCKET.io.emit('ok-'+data.resid, answer)  // send response to client Promise
-          if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
+        // console.log('answer', answer)
+        if (data.resid) SOCKET.io.emit('ok-' + data.resid, answer)  // send response to client Promise
+        if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
       })
       .catch((err) => {
-        if (data.resid) SOCKET.io.emit('ko-'+data.resid, err.message)  // send response to client Promise
+        if (data.resid) SOCKET.io.emit('ko-' + data.resid, err.message)  // send response to client Promise
         SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
         console.error(err);
       })
@@ -182,25 +183,48 @@ SOCKET.io.on('connection', (socket) => {
   }
 
   socket.on("sms", (msg, numero) => {
-    if(numero == "all") {
-      
+    if (numero == "all") {
+
       db('users').select().then((users) => {
 
         console.log(users)
-        users.forEach((u)=> {
+        users.forEach((u) => {
           sendSMS([u.phone], msg)
-        }) 
-    })
-      
-
-    } // else if (){
-
-    // }
-    else {
-       sendSMS([numero], msg)
+        })
+      })
+      // @ balise de reco pour groupe
+    } else if (/@/.test(numero)) { 
+      // SET GROUP FOR USER => DELETE WHEN FRONT READY
+      db('users').where({id: 1}).update({
+        groupe_id: 1,
+      }).then((res)=> console.log(res)).catch((err)=>console.log(err))
+      //
+      numero = numero.replace(/@/, '')
+      console.log(numero)
+      db.select("phone")
+        .from("users")
+        .where({"groupe_id": numero})
+        .then((users)=>{
+          users.forEach((u)=>{
+            console.log(u.phone)
+            sendSMS([u.phone], msg)
+          })
+        })
+    } else {
+      sendSMS([numero], msg)
     }
   })
 
+  socket.on("groupe_create", (g_name, u_id, g_desc) => {
+    console.log(g_name, u_id, g_desc, "into")
+    db('Groupes').insert({ name: g_name, description: g_desc, user_id: u_id }).then(
+      console.log(db('Groupes').select().then((groupe) => {
+        groupe.forEach((g) => {
+          console.log([g.name])
+        })
+      }))
+    );
+  })
 
 });
 
@@ -254,25 +278,25 @@ app.get('/admin/sms', function (req, res) {
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {
-    // console.log('hook', event, repo, data);
-    if (event === 'push') {
-        // git stash then git pull && pm2 restart contacts
-        console.log('processing push event (stash / Pull / Restart)');
-        exec('git stash && git pull && npm i && pm2 restart contacts', (err, stdout, stderr) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log(stdout);
-        });        
-    }
+  // console.log('hook', event, repo, data);
+  if (event === 'push') {
+    // git stash then git pull && pm2 restart contacts
+    console.log('processing push event (stash / Pull / Restart)');
+    exec('git stash && git pull && npm i && pm2 restart contacts', (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(stdout);
+    });
+  }
 });
 
 // Web Push
 if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   console.log(
     "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY in .env file. " +
-      "You can use the following ones:",
+    "You can use the following ones:",
   );
   const { publicKey, privateKey } = webPush.generateVAPIDKeys()
 
@@ -329,7 +353,7 @@ function sendNotif(subscription, payload, ttl, delay) {
 function processJobs() {
 
   console.log('Available models :', Object.keys(MODELS))
-  
+
   var job = new MODELS['Genjob']()
   // Get next job (pending status, older date first)
   job.next()

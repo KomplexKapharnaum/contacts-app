@@ -51,3 +51,6 @@ hr {
 .flex{
     display: flex;
 }
+.input_sms{
+    display: none;
+}
