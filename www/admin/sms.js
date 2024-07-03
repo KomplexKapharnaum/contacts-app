@@ -40,14 +40,14 @@ function fill_select(){
     })
 }
 function clean_select() {
-    let is_child = $( "groupe.list:first-child" )
-    while (is_child != null ) {
-        $("groupe.listfirst-child").remove('<option>');
+    let have_child = document.getElementById("groupe_sms").childNodes
+    
+    while (have_child.length > 1 ) {
+        have_child[1].remove();
     }
 }
 
 document.getElementById("create_groupe").addEventListener("click", (e)=>{
-    const socket = io();
     let g_name = document.getElementById("groupe_name").value
     let u_id = document.getElementById("user_id").value
     let g_desc = document.getElementById("g_desc").value
@@ -81,7 +81,7 @@ list.addEventListener('change', (e)=>{
             document.getElementById("groupe_sms").style.display = 'none';
             break;    
         case 'groupe':
-
+            clean_select()
             fill_select()
             document.getElementById("num_sms").style.display = 'none';
             document.getElementById("groupe_sms").style.display = 'block';

@@ -182,8 +182,8 @@ SOCKET.io.on('connection', (socket) => {
     socket.emit('start-event', SOCKET.lastEvent);
   }
 
-  socket.on("sms", (msg, numero) => {
-    if (numero == "all") {
+  socket.on("sms", (msg, request) => {
+    if (request == "all") {
 
       db('users').select().then((users) => {
 
@@ -193,17 +193,17 @@ SOCKET.io.on('connection', (socket) => {
         })
       })
       // @ balise de reco pour groupe
-    } else if (/@/.test(numero)) { 
-      // SET GROUP FOR USER => DELETE WHEN FRONT READY
+    } else if (/@/.test(request)) { 
+      /////////////// SET GROUP FOR USER => DELETE WHEN FRONT READY
       db('users').where({id: 1}).update({
         groupe_id: 1,
       }).then((res)=> console.log(res)).catch((err)=>console.log(err))
-      //
-      numero = numero.replace(/@/, '')
-      console.log(numero)
+      ///////////////
+      request = request.replace(/@/, '')
+      console.log(request)
       db.select("phone")
         .from("users")
-        .where({"groupe_id": numero})
+        .where({"groupe_id": request})
         .then((users)=>{
           users.forEach((u)=>{
             console.log(u.phone)
@@ -211,7 +211,7 @@ SOCKET.io.on('connection', (socket) => {
           })
         })
     } else {
-      sendSMS([numero], msg)
+      sendSMS([request], msg)
     }
   })
 
