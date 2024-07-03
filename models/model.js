@@ -27,10 +27,10 @@ class Model {
         if (!this.fields.id) {
             let id = await db(this.table).insert(this.fields);
             this.fields.id = id[0];
-            console.log(this.table, this.fields.id, 'created');
+            // console.log(this.table, this.fields.id, 'created');
         } else {
             await db(this.table).where({ id: this.fields.id }).update(this.fields);
-            console.log(this.table, this.fields.id, 'updated');
+            // console.log(this.table, this.fields.id, 'updated');
         }
     }
 

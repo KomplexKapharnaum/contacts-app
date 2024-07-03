@@ -15,7 +15,6 @@ await loadModel('Session');
 await loadModel('Event');
 await loadModel('User');
 await loadModel('Avatar');
-await loadModel('Workflow');
 await loadModel('Genjob');
 
 // HTTPS / HTTP
@@ -301,36 +300,22 @@ function sendNotif(subscription, payload, ttl, delay) {
 
 // JOBS Processing : 
 //
-
+var worker = new MODELS['Genjob']()
 function processJobs() {
-
-  console.log('Available models :', Object.keys(MODELS))
-  
-  var job = new MODELS['Genjob']()
   // Get next job (pending status, older date first)
-  job.next()
+  worker.next()
     .then((job) => {
-      if (job) {
-        console.log('Processing job', job.id, job.name);
         job.run()
           .then(() => {
-            console.log('Job done', job.id, job.name);
+            if (job.fields.id >= 0) console.log('Job done', job.fields.id);
           })
           .catch((err) => {
-            console.error('Job error', job.id, job.name, err);
+            console.error('Job error', job.fields.id, err);
+          })
+          .finally(() => {
+            processJobs();
           });
-      }
-      else {
-        console.log('No job to process');
-      }
     })
-    .catch((err) => {
-      console.error('Job error', err);
-    })
-    .finally(() => {
-      setTimeout(processJobs, 1000);
-    });
 }
-
 processJobs();
 

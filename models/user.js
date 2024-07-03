@@ -84,26 +84,26 @@ class User extends Model {
 
         // TODO: LAZY OR CONCURRENT LOAD...
 
-        let sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        for (let s of sessions) {
-            let session = new Session();
-            await session.load(s.session_id);
-            this.sessions.push(session);
-        }
+        // let sessions = await db('users_sessions').where({ user_id: this.fields.id });
+        // for (let s of sessions) {
+        //     let session = new Session();
+        //     await session.load(s.session_id);
+        //     this.sessions.push(session);
+        // }
 
-        let avatars = await db('avatars').where({ user_id: this.fields.id });
-        for (let a of avatars) {
-            let avatar = new Avatar();
-            await avatar.load(a.id);
-            this.avatars.push(avatar);
-        }
+        // let avatars = await db('avatars').where({ user_id: this.fields.id });
+        // for (let a of avatars) {
+        //     let avatar = new Avatar();
+        //     await avatar.load(a.id);
+        //     this.avatars.push(avatar);
+        // }
 
-        let genjobs = await db('genjobs').where({ userid: this.fields.id });
-        for (let g of genjobs) {
-            let genjob = new Genjob();
-            await genjob.load(g.id);
-            this.genjobs.push(genjob);
-        }
+        // let genjobs = await db('genjobs').where({ userid: this.fields.id });
+        // for (let g of genjobs) {
+        //     let genjob = new Genjob();
+        //     await genjob.load(g.id);
+        //     this.genjobs.push(genjob);
+        // }
 
         return this.get()
     }
@@ -170,7 +170,8 @@ class User extends Model {
         console.log('User', this.fields.id, 'unregistered from session', session_id);
     }
 
-    async select_avatar(avatar_id) {
+    async select_avatar(uuid, avatar_id) {
+        if (uuid) await this.load({ uuid: uuid });
         if (!this.fields.id) throw new Error('User does not exist');
         await db('users').where({ id: this.fields.id }).update({ selected_avatar: avatar_id }); 
         console.log('User', this.fields.id, 'selected avatar', avatar_id);
