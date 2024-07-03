@@ -19,6 +19,7 @@ await loadModel('Avatar');
 await loadModel('Workflow');
 await loadModel('Genjob');
 await loadModel('Groupe');
+await loadModel('Message');
 
 // HTTPS / HTTP
 import http from 'http';
@@ -226,6 +227,17 @@ SOCKET.io.on('connection', (socket) => {
     );
   })
 
+  socket.on("chat_msg", (message) => {
+    console.log(message)
+    db('Messages').insert({ message: message}).then(
+      console.log(db('Messages').select().then((message) => {
+        message.forEach((m) => {
+          console.log([m.message])
+        })
+      }))
+    );
+  })
+
 });
 
 // Express Server
@@ -274,6 +286,10 @@ app.get('/admin', function (req, res) {
 
 app.get('/admin/sms', function (req, res) {
   res.sendFile(__dirname + '/www/admin/sms_form.html');
+});
+
+app.get('/app/msg', function (req, res) {
+  res.sendFile(__dirname + '/www/app/msg_box.html');
 });
 // HOOKS
 //
