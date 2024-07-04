@@ -9,18 +9,27 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #inbox{
+            display: flex;
+            flex-flow: column;
+        }
+    </style>
 
 </head>
 <body>
     <fieldset>
-        <div>
+        <div id="inbox">
             
         </div>
     </fieldset>
     <fieldset>
         <input type="text" placeholder="message" id="message">
         <button id="send_msg">envoie</button>
+        <button id="read">console.log</button>
     </fieldset>
+    <input type="hidden" value="0" id="last_read">
+    <input type="hidden" value="0" id="last_msg">
     <script src="./js/pages/msg_box.js"></script>
 </body>
 </html>

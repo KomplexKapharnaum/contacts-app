@@ -194,19 +194,19 @@ SOCKET.io.on('connection', (socket) => {
         })
       })
       // @ balise de reco pour groupe
-    } else if (/@/.test(request)) { 
+    } else if (/@/.test(request)) {
       /////////////// SET GROUP FOR USER => DELETE WHEN FRONT READY
-      db('users').where({id: 1}).update({
+      db('users').where({ id: 1 }).update({
         groupe_id: 1,
-      }).then((res)=> console.log(res)).catch((err)=>console.log(err))
+      }).then((res) => console.log(res)).catch((err) => console.log(err))
       ///////////////
       request = request.replace(/@/, '')
       console.log(request)
       db.select("phone")
         .from("users")
-        .where({"groupe_id": request})
-        .then((users)=>{
-          users.forEach((u)=>{
+        .where({ "groupe_id": request })
+        .then((users) => {
+          users.forEach((u) => {
             console.log(u.phone)
             sendSMS([u.phone], msg)
           })
@@ -229,7 +229,14 @@ SOCKET.io.on('connection', (socket) => {
 
   socket.on("chat_msg", (message) => {
     console.log(message)
-    db('Messages').insert({ message: message}).then(
+    let time_stamp = Date.now()
+    db('Messages').insert({ message: message, emit_time: time_stamp }).then();
+    SOCKET.io.emit('newQM', message)
+  })
+
+  socket.on("request_message", (message) => {
+    console.log(message)
+    db('Messages').insert({ message: message }).then(
       console.log(db('Messages').select().then((message) => {
         message.forEach((m) => {
           console.log([m.message])
@@ -238,7 +245,15 @@ SOCKET.io.on('connection', (socket) => {
     );
   })
 
+  // delete quand finit
+  socket.on("truc", (truc) => {
+    db('users').where({ id: 1 }).update({
+      last_read: 1719998347012.0,
+    }).then((res) => console.log(res)).catch((err) => console.log(err))
+  })
 });
+//
+
 
 // Express Server
 //

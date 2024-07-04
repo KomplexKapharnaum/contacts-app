@@ -27,10 +27,6 @@ class Message extends Model {
         return this.get()
     }
 
-    clear() {
-        super.clear();
-    }
-
     async save() 
     {
         // mandatory fields
@@ -48,6 +44,15 @@ class Message extends Model {
     {
         if (w) await this.load(w);
         return await Promise.all(this.user.map(e.get()));
+    }
+
+    async list(w,limit) {
+        if (w) {
+            return db(this.table).where("emit_time", '>', w)
+        }
+        if (limit) {
+            return db(this.table).orderBy("emit_time","desc").limit(limit)
+        }
     }
 
 }

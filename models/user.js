@@ -33,7 +33,8 @@ class User extends Model {
             phone:          null,
             uuid:           null,
             selected_avatar: null,
-            groupe_id: null
+            groupe_id:      null,
+            last_read:      null
         });
 
         this.sessions = [];
@@ -141,6 +142,9 @@ class User extends Model {
         // Delete groupe_id
         await db('groupe_id').where({ user_id: this.fields.id }).del();
 
+        // Delete last_read
+        await db('last_read').where({ user_id: this.fields.id }).del();
+
         console.log('User', this.fields.id, 'deleted');
     }
 
@@ -225,6 +229,7 @@ db.schema.hasTable('users').then(exists => {
             table.string('uuid');
             table.integer('selected_avatar');
             table.integer('groupe_id');
+            table.integer('last_read');
 
         }).then(() => {
             console.log('created users table');
