@@ -236,46 +236,57 @@ SOCKET.io.on('connection', (socket) => {
     );
   })
 
-  
-  socket.on("request_groupe_in_sess", (session_id) =>  {
+  socket.on("request_groupe_in_sess", (session_id) => {
     let g_array = new Array()
+    console.log("emit")
     db.select("Groupes.name", "Groupes.id")
-        .from("Groupes")
-        .leftOuterJoin('sessions', 'sessions.id', '=', 'Groupes.session_id')
-        .where({ "sessions.id": session_id })
-        .then((groupe) => {
-          groupe.forEach((g) => {
-            g_array.push([g.name, g.id])
-          }),
+      .from("Groupes")
+      .join('sessions', 'sessions.id', '=', 'Groupes.session_id')
+      .where({ "sessions.id": session_id })
+      .then((groupe) => {
+        groupe.forEach((g) => {
+          g_array.push([g.name, g.id])
+        }),
           console.log(g_array)
-          SOCKET.io.emit('groupe_list', g_array)
-        })
-  })
-
-  socket.on("chat_msg", (message) => {
-    let time_stamp = Date.now()
-    db('Messages').insert({ message: message, emit_time: time_stamp }).then();
-    SOCKET.io.emit('newQM', message)
-  })
-
-  socket.on("request_message", (message) => {
-    db('Messages').insert({ message: message }).then(
-      db('Messages').select().then((message) => {
-        message.forEach((m) => {
-          console.log([m.message])
-        })
+        SOCKET.io.emit('groupe_list', g_array)
       })
-    );
   })
 
-  // delete quand finit
+  socket.on("chat_msg", (message, session) => {
+    let time_stamp = Date.now()
+    db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();
+    // SOCKET.io.emit('newQM', message)
+  })
+
+  socket.on("msg_request", (session) => {
+
+    let msg_list = new Array()
+    db.select("message", "emit_time")
+      .from("Messages")
+      .join("sessions", "sessions.id", "=", "Messages.session_id")
+      .where({ "sessions.id": session })
+      .then((message) => {
+        message.forEach((m) => {
+          msg_list.push([m.message, m.emit_time])
+        })
+        console.log(msg_list)
+        SOCKET.io.emit('listed_msg', msg_list)
+      });
+  })
+
+  ///////////////////// delete quand finit
+
   socket.on("truc", (truc) => {
     db('users').where({ id: 1 }).update({
-      last_read: 1719998347012.0,
+      last_read: 1720101162518,
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
+
+
+
+  ///////////////////////
 });
-//
+
 
 
 // Express Server

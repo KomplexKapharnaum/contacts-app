@@ -1,7 +1,7 @@
 const socket = io();
 
 socket.on("newQM", (data) => {
-    console.log("New QM received:", data)
+    right("last")
 })
 
 function query(name, args) {
@@ -17,31 +17,68 @@ function query(name, args) {
     })
 }
 
-function get_message() {
-    var msg_array = new Array()
-    query('Message.list', ['', 20]).then((msg)=>{
-        msg.forEach((msg)=>{
-            if (msg.message != null){
-                msg_array.push([msg.message, msg.emit_time])
-
-            }
-        })
-    })
-    return msg_array
-}
+function get_message(session_id) {
+    socket.emit("msg_request", session_id)
+};
 
 function right() {
-    if (true) {
-        // creation des message_box si aucune presente
-        msg = get_message()
-        console.log(msg)
-        // console.log(msg)
-    } else {
-        // ecriture des nouveau message
-        query('Message.list', ['', 10])
-    }
+
+    let session_id = document.getElementById("listSess2").value
+
+    get_message(session_id)
+
+    socket.on("listed_msg", (msg_list) => {
+
+        let count = 0
+        msg_list.forEach((m) => {
+            console.log("truc2")
+
+            let field = document.createElement("fieldset")
+            let hidden_input = document.createElement('input')
+            let p = document.createElement("p")
+
+            field.setAttribute("id", "msg" + count)
+
+            hidden_input.type = "hidden"
+            p.innerHTML = m[0]
+            hidden_input.value = m[1]
+
+            document.getElementById('inbox').appendChild(field)
+            document.getElementById('msg' + count).appendChild(p)
+            document.getElementById('msg' + count).appendChild(hidden_input)
+
+            console.log(field)
+
+            count++
+        })
+    });
+    // }
 
 }
+
+document.getElementById("send_msg").addEventListener("click", (e) => {
+    let message = document.getElementById("message").value
+    let session = document.getElementById("listSess").value
+    socket.emit("chat_msg", message, session)
+})
+
+fill_select_session("listSess")
+
+function fill_select_session(id_html) {
+
+    let select = document.getElementById(id_html)
+    query("Session.list").then((list) => {
+        list.forEach((session) => {
+            $('<option>').text(session.name).val(session.id).appendTo(select)
+        })
+    })
+}
+
+///////////////////////////////////////////////////////////////
+////////  
+////////  test purpose
+////////  
+///////////////////////////////////////////////////////////////
 
 document.getElementById("read").addEventListener("click", (e) => {
     // delete quand finit
@@ -50,24 +87,7 @@ document.getElementById("read").addEventListener("click", (e) => {
     //
 })
 
-document.getElementById("send_msg").addEventListener("click", (e) => {
-    socket.emit("chat_msg", message)
 
-})
+fill_select_session("listSess2")
+// setTimeout(right(), 3000)
 
-
-// let count = 0
-// let field = document.createElement("fieldset")
-//                 let hidden_input = document.createElement('input')
-//                 hidden_input.type = "hidden"
-//                 let p = document.createElement("p")
-
-//                 document.getElementById('inbox').appendChild(field)
-//                 field.setAttribute("id", "msg"+count)
-
-//                 hidden_input.value = msg.emit_time
-//                 p.innerHTML = msg.message
-
-//                 document.getElementById('msg'+count).appendChild(p)
-//                 document.getElementById('msg'+count).appendChild(hidden_input)
-//                 count++

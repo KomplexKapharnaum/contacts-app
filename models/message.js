@@ -2,20 +2,19 @@ import db from '../tools/db.js';
 import Model from './model.js';
 
 class Message extends Model {
-    
-    constructor() 
-    {
+
+    constructor() {
         super('Messages',
-        {
-            id:             null,
-            data:           null,
-            emit_time:      null,
-            message:        null,
-        });
+            {
+                id:         null,
+                data:       null,
+                emit_time:  null,
+                message:    null,
+                session:    null
+            });
     }
-    
-    async load(w)
-    {
+
+    async load(w) {
         await super.load(w);
 
         for (let e of user) {
@@ -27,32 +26,23 @@ class Message extends Model {
         return this.get()
     }
 
-    async save() 
-    {
+    async save() {
         // mandatory fields
         if (!this.fields.message) throw new Error('Message is required');
 
         super.save();
     }
 
-    async delete(w)
-    {
+    async delete(w) {
         await super.delete(w);
+        await db('Messages').where({ session_id: this.fields.id }).del();
     }
 
-    async getgroupes(w)
-    {
-        if (w) await this.load(w);
-        return await Promise.all(this.user.map(e.get()));
-    }
-
-    async list(w,limit) {
+    async list(w) {
         if (w) {
             return db(this.table).where("emit_time", '>', w)
         }
-        if (limit) {
-            return db(this.table).orderBy("emit_time","desc").limit(limit)
-        }
+        return db(this.table)
     }
 
 }
@@ -63,8 +53,9 @@ db.schema.hasTable('Messages').then(exists => {
         db.schema.createTable('Messages', table => {
             table.increments('id').primary();
             table.string('data');
-            table.text('emit_time');
-            table.integer('message');
+            table.integer('emit_time');
+            table.string('message');
+            table.integer('session_id')
         }).then(() => {
             console.log('created Messages table');
         });

@@ -14,42 +14,50 @@
 </head>
 
 <body class="">
-    <form action="" class="flex">
+    <form action="" class="flex ">
 
-        <select name="select_method" id="select_menu_sms">
-            <option value="manuel" selected>Simple</option>
-            <option value="groupe">Groupe</option>
-            <option value="all">All</option>
-        </select>
 
-        <input name="num" id="num_sms" type="text" maxlength="10" placeholder="numero">
-
-        <div id="session_pop">
-            <label for="session">session</label>
-            <select name="session" id="session_choice">
+        <fieldset class="contain">
+            <h4>sms</h4>
+            <select name="select_method" id="select_menu_sms">
+                <option value="manuel" selected>Simple</option>
+                <option value="groupe">Groupe</option>
+                <option value="all">All</option>
             </select>
-        </div>
 
-        <div id="groupe_pop">
-            <label for="groupe">groupe</label>
-            <select name="groupe" id="groupe_sms" class="input_sms">
+            <input name="num" id="num_sms" type="text" maxlength="10" placeholder="numero">
+
+            <div id="session_pop" class="hidden">
+                <label for="session">session</label>
+                <select name="session" id="session_choice">
+                </select>
+            </div>
+
+            <div id="groupe_pop" class="hidden">
+                <label for="groupe">groupe</label>
+                <select name="groupe" id="groupe_sms" class="input_sms">
+                </select>
+            </div>
+
+            <textarea name="msg" id="msg_sms" placeholder="message"></textarea>
+
+            <button type="button" id="test">envoie</button>
+
+        </fieldset>
+
+        <fieldset class="contain">
+            <h4>creation groupe</h4>
+            <select name="sess" id="create_group_sess">
             </select>
-        </div>
-
-        <textarea name="msg" id="msg_sms" placeholder="message"></textarea>
-
-        <button type="button" id="test">envoie</button>
+            <input type="text" placeholder="groupe name" id="groupe_name">
+            <input type="text" placeholder="id" id="user_id">
+            <input type="text" placeholder="text" id="g_desc">
+            <button id="create_groupe">create</button>
+        </fieldset>
 
     </form>
     <!--/////////////////////// test creation groupe // delete when front ready -->
-    <fieldset>
-        <select name="sess" id="create_group_sess">
-        </select>
-        <input type="text" placeholder="groupe name" id="groupe_name">
-        <input type="text" placeholder="id" id="user_id">
-        <input type="text" placeholder="text" id="g_desc">
-        <button id="create_groupe">create</button>
-    </fieldset>
+
     <!--////////////////////////  -->
     <script src="/static/admin/sms.js"></script>
 </body>

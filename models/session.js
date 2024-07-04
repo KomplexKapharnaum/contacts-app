@@ -26,6 +26,7 @@ class Session extends Model {
 
         this.events = [];
         this.groupe = [];
+        this.message = []
     }
 
     clear() {

@@ -41,13 +41,14 @@ function fill_select_groupe() {
 
     let sess_id = document.getElementById("session_choice").value
     socket.emit('request_groupe_in_sess', sess_id)
+    console.log(" avant foreach")
     socket.on("groupe_list", (data) => {
         console.log(data)
         data.forEach((g) => {
+            console.log(g)
             $('<option>').text(g[0]).val(g[1]).appendTo(select)
         });
     })
-
 }
 
 function fill_select_session(id_html) {
