@@ -184,15 +184,24 @@ SOCKET.io.on('connection', (socket) => {
   }
 
   socket.on("sms", (msg, request) => {
-    if (request == "all") {
+
+    if (/\|/.test(request)) {
+      request = request.replace(/\|/, '')
+      console.log("requete : " + request)
 
       db('users').select().then((users) => {
-
-        console.log(users)
-        users.forEach((u) => {
-          sendSMS([u.phone], msg)
-        })
+        db.select("phone")
+          .from("users")
+          .join('users_sessions', 'users.id', '=', 'user_sessions.user_id')
+          .where({ "users_sessions.session_id": request })
+          .then((phone) => {
+            phone.forEach((p) => {
+              console.log(p)
+              sendSMS([p], msg)
+            })
+          })
       })
+
       // @ balise de reco pour groupe
     } else if (/@/.test(request)) {
       /////////////// SET GROUP FOR USER => DELETE WHEN FRONT READY
@@ -216,9 +225,9 @@ SOCKET.io.on('connection', (socket) => {
     }
   })
 
-  socket.on("groupe_create", (g_name, u_id, g_desc) => {
+  socket.on("groupe_create", (s_id, g_name, u_id, g_desc) => {
     console.log(g_name, u_id, g_desc, "into")
-    db('Groupes').insert({ name: g_name, description: g_desc, user_id: u_id }).then(
+    db('Groupes').insert({ name: g_name, description: g_desc, user_id: u_id, session_id: s_id }).then(
       console.log(db('Groupes').select().then((groupe) => {
         groupe.forEach((g) => {
           console.log([g.name])
@@ -227,21 +236,35 @@ SOCKET.io.on('connection', (socket) => {
     );
   })
 
+  
+  socket.on("request_groupe_in_sess", (session_id) =>  {
+    let g_array = new Array()
+    db.select("Groupes.name", "Groupes.id")
+        .from("Groupes")
+        .leftOuterJoin('sessions', 'sessions.id', '=', 'Groupes.session_id')
+        .where({ "sessions.id": session_id })
+        .then((groupe) => {
+          groupe.forEach((g) => {
+            g_array.push([g.name, g.id])
+          }),
+          console.log(g_array)
+          SOCKET.io.emit('groupe_list', g_array)
+        })
+  })
+
   socket.on("chat_msg", (message) => {
-    console.log(message)
     let time_stamp = Date.now()
     db('Messages').insert({ message: message, emit_time: time_stamp }).then();
     SOCKET.io.emit('newQM', message)
   })
 
   socket.on("request_message", (message) => {
-    console.log(message)
     db('Messages').insert({ message: message }).then(
-      console.log(db('Messages').select().then((message) => {
+      db('Messages').select().then((message) => {
         message.forEach((m) => {
           console.log([m.message])
         })
-      }))
+      })
     );
   })
 
