@@ -98,17 +98,35 @@ SOCKET.io.on('connection', (socket) => {
   // console.log('a user connected')
 
   socket.on('disconnect', () => {
-    // console.log('user disconnected')
+    console.log('user disconnected')
+
   })
 
   // Send initial HELLO trigger
   socket.emit('hello');
 
+  socket.on('identify', (uuid) => {
+    // si nuuid valid:
+    socket.user_uuid = uuid
+
+    // do: set flag in db for this user
+
+    socket.on('disconnect', () => {
+      // do: unset flag in db for this user using socket.user_uuid
+    })
+
+    // add user to room 
+      // _ user
+      // _ group
+      // _ session
+
+  })
+
 
   // Partie de Maigre, je touche pas
   //
 
-  // login
+  // login admin
   socket.on('login', (password) => {
     if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
     if (password === process.env.ADMIN_PASSWORD) {
@@ -210,7 +228,6 @@ SOCKET.io.on('connection', (socket) => {
       }).then((res) => console.log(res)).catch((err) => console.log(err))
       ///////////////
       request = request.replace(/@/, '')
-      console.log(request)
       db.select("phone")
         .from("users")
         .where({ "groupe_id": request })
@@ -226,68 +243,31 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   socket.on("groupe_create", (s_id, g_name, u_id, g_desc) => {
-    console.log(g_name, u_id, g_desc, "into")
     db('Groupes').insert({ name: g_name, description: g_desc, user_id: u_id, session_id: s_id }).then(
-      console.log(db('Groupes').select().then((groupe) => {
+      db('Groupes').select().then((groupe) => {
         groupe.forEach((g) => {
           console.log([g.name])
         })
-      }))
-    );
-  })
-
-  socket.on("request_groupe_in_sess", (session_id) => {
-    let g_array = new Array()
-    console.log("emit")
-    db.select("Groupes.name", "Groupes.id")
-      .from("Groupes")
-      .join('sessions', 'sessions.id', '=', 'Groupes.session_id')
-      .where({ "sessions.id": session_id })
-      .then((groupe) => {
-        groupe.forEach((g) => {
-          g_array.push([g.name, g.id])
-        }),
-          console.log(g_array)
-        SOCKET.io.emit('groupe_list', g_array)
       })
+    );
   })
 
   socket.on("chat_msg", (message, session) => {
     let time_stamp = Date.now()
     db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();
-    // SOCKET.io.emit('newQM', message)
-  })
-
-  socket.on("msg_request", (session) => {
-
-    let msg_list = new Array()
-    db.select("message", "emit_time")
-      .from("Messages")
-      .join("sessions", "sessions.id", "=", "Messages.session_id")
-      .where({ "sessions.id": session })
-      .then((message) => {
-        message.forEach((m) => {
-          msg_list.push([m.message, m.emit_time])
-        })
-        console.log(msg_list)
-        SOCKET.io.emit('listed_msg', msg_list)
-      });
+    SOCKET.io.emit('new_chatMessage', message)
   })
 
   ///////////////////// delete quand finit
 
   socket.on("truc", (truc) => {
     db('users').where({ id: 1 }).update({
-      last_read: 1720101162518,
+      last_read: 1720165826486,
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
 
-
-
   ///////////////////////
 });
-
-
 
 // Express Server
 //

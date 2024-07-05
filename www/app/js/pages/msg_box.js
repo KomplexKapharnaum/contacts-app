@@ -1,8 +1,35 @@
 const socket = io();
 
-socket.on("newQM", (data) => {
-    right("last")
+socket.on("new_chatMessage", (data) => {
+    right(true)
+    console.log("dans new_chatMessage")
 })
+
+socket.on("listed_msg", (msg_list) => {
+
+    let count = 0
+    msg_list.forEach((m) => {
+        console.log("truc2")
+
+        let field = document.createElement("fieldset")
+        let hidden_input = document.createElement('input')
+        let p = document.createElement("p")
+
+        field.setAttribute("id", "msg" + count)
+
+        hidden_input.type = "hidden"
+        p.innerHTML = m[0]
+        hidden_input.value = m[1]
+
+        document.getElementById('inbox').appendChild(field)
+        document.getElementById('msg' + count).appendChild(p)
+        document.getElementById('msg' + count).appendChild(hidden_input)
+
+        console.log(field)
+
+        count++
+    })
+});
 
 function query(name, args) {
     var resid = Math.random().toString(36).substring(2);
@@ -17,42 +44,39 @@ function query(name, args) {
     })
 }
 
-function get_message(session_id) {
-    socket.emit("msg_request", session_id)
-};
+function right(last) {
 
-function right() {
+    if (last == true) {
+        let session_id = document.getElementById("listSess2").value
+        query("Message.last", { "Messages.session_id": session_id }).then(
+            (message) => {
+                message.forEach((msg) => {
 
-    let session_id = document.getElementById("listSess2").value
+                    let inbox = document.getElementById("inbox")
+                    let fieldset = $('<fieldset>').appendTo(inbox)
+                    $('<p>').text(msg.message).appendTo(fieldset)
 
-    get_message(session_id)
+                })
+            })
+    } else {
+        setTimeout(() => {
+            let session_id = document.getElementById("listSess2").value
+            console.log("into else", session_id)
+            query("Message.list", { 'session_id': session_id }).then(
+                (message) => {
+                    console.log(message)
+                    message.forEach((msg) => {
+                        console.log(msg)
 
-    socket.on("listed_msg", (msg_list) => {
+                        let inbox = document.getElementById("inbox")
+                        let fieldset = $('<fieldset>').appendTo(inbox)
+                        $('<p>').text(msg.message).appendTo(fieldset)
 
-        let count = 0
-        msg_list.forEach((m) => {
-            console.log("truc2")
+                    })
+                })
+        }, 1000);
 
-            let field = document.createElement("fieldset")
-            let hidden_input = document.createElement('input')
-            let p = document.createElement("p")
-
-            field.setAttribute("id", "msg" + count)
-
-            hidden_input.type = "hidden"
-            p.innerHTML = m[0]
-            hidden_input.value = m[1]
-
-            document.getElementById('inbox').appendChild(field)
-            document.getElementById('msg' + count).appendChild(p)
-            document.getElementById('msg' + count).appendChild(hidden_input)
-
-            console.log(field)
-
-            count++
-        })
-    });
-    // }
+    }
 
 }
 
@@ -89,5 +113,6 @@ document.getElementById("read").addEventListener("click", (e) => {
 
 
 fill_select_session("listSess2")
-// setTimeout(right(), 3000)
+right()
+
 

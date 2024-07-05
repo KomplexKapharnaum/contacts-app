@@ -1,6 +1,5 @@
 import db from '../tools/db.js';
 import Model from './model.js';
-import User from './user.js';
 
 class Groupe extends Model {
 
@@ -70,6 +69,11 @@ class Groupe extends Model {
     async getgroupes(w) {
         if (w) await this.load(w);
         return await Promise.all(this.user.map(e.get()));
+    }
+
+    async list(w) {
+        if (w) return db(this.table).where(w);
+        else return db(this.table).select();
     }
 
 }

@@ -6,11 +6,11 @@ class Message extends Model {
     constructor() {
         super('Messages',
             {
-                id:         null,
-                data:       null,
-                emit_time:  null,
-                message:    null,
-                session:    null
+                id: null,
+                data: null,
+                emit_time: null,
+                message: null,
+                session: null
             });
     }
 
@@ -33,20 +33,20 @@ class Message extends Model {
         super.save();
     }
 
-    async delete(w) {
-        await super.delete(w);
-        await db('Messages').where({ session_id: this.fields.id }).del();
-    }
-
     async list(w) {
         if (w) {
-            return db(this.table).where("emit_time", '>', w)
+            return await super.list(w)
         }
         return db(this.table)
     }
 
+    async last(w) {
+            console.log( db(this.table)
+                .orderBy("emit_time", "desc")
+                .limit(1)
+                .where(w))
+    }
 }
-
 // Create Table if not exists
 db.schema.hasTable('Messages').then(exists => {
     if (!exists) {

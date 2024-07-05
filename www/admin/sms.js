@@ -1,5 +1,3 @@
-
-
 const socket = io();
 
 function doSend() {
@@ -39,15 +37,12 @@ function fill_select_groupe() {
     let select = document.getElementById('groupe_sms')
     $('<option>').text("-----------").val("").appendTo(select)
 
-    let sess_id = document.getElementById("session_choice").value
-    socket.emit('request_groupe_in_sess', sess_id)
-    console.log(" avant foreach")
-    socket.on("groupe_list", (data) => {
-        console.log(data)
-        data.forEach((g) => {
-            console.log(g)
-            $('<option>').text(g[0]).val(g[1]).appendTo(select)
-        });
+    let session_id = document.getElementById("session_choice").value
+
+    query("Groupe.list", { "Groupes.session_id": session_id }).then((groupe) => {
+        groupe.forEach((g) => {
+            $('<option>').text(g.name).val(g.id).appendTo(select)
+        })
     })
 }
 
@@ -141,7 +136,7 @@ let list_sess = document.getElementById("session_choice")
 list_sess.addEventListener("change", (e) => {
     clean_select("groupe", '')
     fill_select_groupe();
-    
+
 })
 
 fill_select_session("create_group_sess")
