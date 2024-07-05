@@ -41,10 +41,10 @@ class Message extends Model {
     }
 
     async last(w) {
-            console.log( db(this.table)
+            return db(this.table)
                 .orderBy("emit_time", "desc")
                 .limit(1)
-                .where(w))
+                .where(w)
     }
 }
 // Create Table if not exists

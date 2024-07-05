@@ -93,33 +93,31 @@ SOCKET.auth = function (socket) {
   }
   return true;
 }
-
+//  demarage server update all user !!!!!!!!!!!
 SOCKET.io.on('connection', (socket) => {
   // console.log('a user connected')
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
 
-  })
+
 
   // Send initial HELLO trigger
   socket.emit('hello');
 
   socket.on('identify', (uuid) => {
-    // si nuuid valid:
     socket.user_uuid = uuid
-
-    // do: set flag in db for this user
-
-    socket.on('disconnect', () => {
-      // do: unset flag in db for this user using socket.user_uuid
-    })
+    db('users').update("is_connected", 1).where("uuid", "=", uuid);
+    // si nuuid valid:    
 
     // add user to room 
-      // _ user
-      // _ group
-      // _ session
+    // _ user
+    // _ group
+    // _ session
+  })
 
+  socket.on('disconnect', () => {
+    if (socket.user_uuid){
+      db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid);
+    }
   })
 
 
@@ -242,6 +240,7 @@ SOCKET.io.on('connection', (socket) => {
     }
   })
 
+  //groupe create
   socket.on("groupe_create", (s_id, g_name, u_id, g_desc) => {
     db('Groupes').insert({ name: g_name, description: g_desc, user_id: u_id, session_id: s_id }).then(
       db('Groupes').select().then((groupe) => {
@@ -252,6 +251,7 @@ SOCKET.io.on('connection', (socket) => {
     );
   })
 
+  // insert msg
   socket.on("chat_msg", (message, session) => {
     let time_stamp = Date.now()
     db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();

@@ -1,5 +1,11 @@
 const socket = io();
 
+
+// connexion des users et envoie demande de modi base
+socket.on('hello', () => {
+    socket.emit("identify", Cookies.get('token'))
+});
+
 socket.on("new_chatMessage", (data) => {
     right(true)
     console.log("dans new_chatMessage")
@@ -47,7 +53,7 @@ function query(name, args) {
 function right(last) {
 
     if (last == true) {
-        let session_id = document.getElementById("listSess2").value
+        let session_id = document.getElementById("listSess").value
         query("Message.last", { "Messages.session_id": session_id }).then(
             (message) => {
                 message.forEach((msg) => {

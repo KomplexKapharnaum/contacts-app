@@ -34,7 +34,8 @@ class User extends Model {
             uuid:           null,
             selected_avatar: null,
             groupe_id:      null,
-            last_read:      null
+            last_read:      null,
+            is_connected:   null
         });
 
         this.sessions = [];
@@ -216,6 +217,13 @@ class User extends Model {
         return u;
     }
     
+    async switch_connect(w, state){
+        if (state == true) {
+            await db('users').update("is_connected", 1).where(w);
+        } else{
+            await db('users').update("is_connected", 0).where(w);
+        }
+    }
 }
 
 
@@ -230,6 +238,7 @@ db.schema.hasTable('users').then(exists => {
             table.integer('selected_avatar');
             table.integer('groupe_id');
             table.integer('last_read');
+            table.integer('is_connected');
 
         }).then(() => {
             console.log('created users table');
