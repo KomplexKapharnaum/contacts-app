@@ -11,8 +11,8 @@ class roundedGraphics {
         this.height = canvas.height;
 
         const buffer = document.createElement('canvas');
-        buffer.width = this.width / resolution;
-        buffer.height = this.height / resolution;
+        buffer.width = this.width;
+        buffer.height = this.height;
         this.buffer = buffer;
         this.res = resolution;
 
@@ -25,23 +25,64 @@ class roundedGraphics {
             uniform sampler2D u_texture;
             uniform vec2 u_resolution;
             uniform vec4 color;
+            uniform vec2 pixels;
             void main(void) {
-                vec2 uv = vec2(0.0, 0.0); // UV start
-                vec2 uvEnd = vec2(1.0, 1.0); // UV end
-                vec2 texCoord = mix(uv, uvEnd, gl_FragCoord.xy / u_resolution);
-                vec4 texColor = texture2D(u_texture, texCoord);
-                gl_FragColor = color * smoothstep(.45, .55, texColor.r);;
+                vec2 uv = gl_FragCoord.xy / u_resolution;
+                // vec2 pixels = vec2(10.);
+
+                // Center the pixelation
+                vec2 st = (uv - 0.5) * u_resolution / pixels;
+                st = floor(st) / (u_resolution / pixels) + 0.5;
+
+                vec4 col = texture2D(u_texture, st);
+
+                gl_FragColor = col;
             }
         `
 
         const shader = new WebGLShader(canvas, fragmentShaderSource);
         shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
+        shader.updateUniform('pixels', '2f', [resolution, resolution]);
         this.shader = shader;
 
         parent.appendChild(canvas);
 
         this.shader.loadTexture(buffer, 'u_texture');
     }
+
+    roundRect(
+        ctx,
+        x,
+        y,
+        width,
+        height,
+        radius = 5,
+        fill = false,
+        stroke = true
+      ) {
+        if (typeof radius === 'number') {
+          radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        } else {
+          radius = {...{tl: 0, tr: 0, br: 0, bl: 0}, ...radius};
+        }
+        ctx.beginPath();
+        ctx.moveTo(x + radius.tl, y);
+        ctx.lineTo(x + width - radius.tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+        ctx.lineTo(x + width, y + height - radius.br);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+        ctx.lineTo(x + radius.bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+        ctx.lineTo(x, y + radius.tl);
+        ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+        ctx.closePath();
+        if (fill) {
+          ctx.fill();
+        }
+        if (stroke) {
+          ctx.stroke();
+        }
+      }
     
     renderBuffer() {
         const ctx = this.buffer.getContext('2d');
@@ -53,15 +94,18 @@ class roundedGraphics {
             const bounds = domElement.getBoundingClientRect();
             ctx.fillStyle = 'white';
             const coords = {
-                x: bounds.left / this.res,
-                y: bounds.top / this.res,
-                width: bounds.width / this.res,
-                height: bounds.height / this.res
+                x: bounds.left,
+                y: bounds.top,
+                width: bounds.width,
+                height: bounds.height
             }
 
             switch (domElement.tagName) {
                 case 'BUTTON':
-                    ctx.fillRect(coords.x, coords.y, coords.width, coords.height);
+                    const col = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+                    ctx.fillStyle = col;
+                    this.roundRect(ctx, coords.x, coords.y, coords.width, coords.height, 8, true, false);
+                    domElement.style.backgroundColor = 'transparent';
                     break;
                 case 'IMG':
                     // console.log('img', domElement.complete);
@@ -92,6 +136,10 @@ class roundedGraphics {
     updateColor(hex) {
         const rgba = this.hexToRgb(hex);
         this.shader.updateUniform('color', '4f', [rgba.r / 255, rgba.g / 255, rgba.b / 255, 1]);
+    }
+
+    updatePixelSize(size) {
+        this.shader.updateUniform('pixels', '2f', [size, size]);
     }
     
     render() {

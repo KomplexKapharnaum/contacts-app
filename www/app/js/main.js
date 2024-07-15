@@ -1,10 +1,42 @@
 // Render rounded graphics
 //
 
-const test = new roundedGraphics(document.getElementById("background"), 5);
+const test = new roundedGraphics(document.getElementById("background"), 1);
 document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
+document.querySelectorAll("button").forEach(button => test.addElement(button));
 test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
 test.render();
+
+// Glitched elements
+//
+const glitch_elements = []
+document.querySelectorAll("button").forEach(button => glitch_elements.push(button));
+
+async function glitchOffset(element, original) {
+    const offsetX = Math.floor(Math.random() * 20) - 10;
+    const offsetY = Math.floor(Math.random() * 20) - 10;
+    if (original == `translate(0, 0)`) {
+        element.style.transform = `translate(${offsetX}px, ${offsetY}px)`
+    } else {
+        const originalvalues = original.split("translate(")[1].split(")")[0].split(",");
+        const originalX = originalvalues[0];
+        const originalY = originalvalues[1];
+
+        element.style.transform = `translate(calc( ${originalX} + ${offsetX}px ), calc( ${originalY} + ${offsetY}px))`
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    element.style.transform = original
+    const randomWait = Math.floor(Math.random() * 5000) + 500;
+    await new Promise(resolve => setTimeout(resolve, randomWait));
+    glitchOffset(element, original);
+}
+
+glitch_elements.forEach(element => {
+    const style = element.style.transform;
+    let original = style ? style : `translate(0, 0)`
+    glitchOffset(element, original);
+});
 
 // LOG
 //

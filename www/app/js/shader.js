@@ -124,4 +124,8 @@ class WebGLShader {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
     }
+
+    getUniform(name) {
+        return this.gl.getUniformLocation(this.program, name);
+    }
 }
