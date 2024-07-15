@@ -99,8 +99,26 @@
     <template id="model-session-page">
         <div class="session-page page">
             <h2><button class="close">X</button><span class="title"></span></h2>
+            <form class="form-edit">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" placeholder="Title">
+                </div>
+                <div>
+                    <label for="start-date">Start Date</label>
+                    <input type="date" name="start-date" placeholder="Start Date">
+                </div>
+                <div>
+                    <label for="end-date">End Date</label>
+                    <input type="date" name="end-date" placeholder="End Date">
+                </div>
+                <button type="button">Update</button>
+            </form>
+            <button class="remove-session">Delete session</button>
             <hr>
             <div class="logs"></div>
+
+            <h2><button>+</button> Events</h2>
             <div class="flex-container evenements">
 
             </div>

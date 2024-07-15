@@ -38,13 +38,14 @@
 ## Admin page
 - [X] Admin login password
 - [X] General logs
+- [ ] Two colors/text choose option : user choose or it's chosen by random
 
 ### Sessions
 - [X] Listing all sessions
 - [ ] Tracking session status (incoming, active, finished)
 - [X] Creating a new session
-- [ ] Editing a session
-- [ ] Deleting a session
+- [X] Editing a session
+- [X] Deleting a session
 - [ ] Listing users from this session
 
 ### Events

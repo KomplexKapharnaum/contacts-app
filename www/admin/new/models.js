@@ -35,25 +35,64 @@ class EvenementModel {
 models.Evenement = EvenementModel;
 
 class SessionPage {
-    constructor(title, button) {
+    constructor(session, button) {
         const dom = docId('model-session-page').cloneNode(true).content;
 
-        dom.querySelector('.title').innerHTML = title;
+        dom.querySelector('.title').innerHTML = session.name;
 
         this.logsContainer = dom.querySelector('.logs');
         this.evenementsContainer = dom.querySelector('.evenements');
 
         this.dom = dom.firstElementChild;
 
+        this.editform = this.dom.querySelector('.form-edit');
+
+        let editName = this.editform.querySelector('input[name="title"]');
+        let editStart = this.editform.querySelector('input[name="start-date"]');
+        let editEnd = this.editform.querySelector('input[name="end-date"]');
+
+        editName.value = session.name;
+        editStart.value = session.starting_at.split('T')[0];
+        editEnd.value = session.ending_at.split('T')[0];
+
+        this.editform.querySelector('button').addEventListener('click', () => {
+
+            query("Session.update", [session.id, {
+                name: editName.value,
+                starting_at: editStart.value,
+                ending_at: editEnd.value
+            }]).then(() => {
+                this.dom.classList.remove('active');
+                updateSessions();
+            });
+        });
+
         button.addEventListener('click', () => {
             this.dom.classList.add('active');
+            this.listEvents(session.events)
         });
 
         dom.querySelector('.close').addEventListener('click', () => {
             this.dom.classList.remove('active');
         });
 
+        dom.querySelector(".remove-session").addEventListener('click', () => {
+            query("Session.delete", session.id).then(() => {
+                this.dom.remove();
+                updateSessions();
+            });
+        });
+
         document.querySelector("#session-pages").appendChild(this.dom);
+    }
+
+    listEvents(events) {
+        let container = this.dom.querySelector('.evenements');
+        container.innerHTML = "";
+        events.forEach(event => {
+            new models.Evenement(event.name, event.starting_at.split("T")[0], `${event.starting_at.split("T")[1]} - ${event.ending_at.split("T")[1]}`, event.location, container);
+        });
+        // models.Evenement
     }
 
     addLog(log) {
