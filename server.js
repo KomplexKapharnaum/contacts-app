@@ -5,20 +5,17 @@ import { exec } from 'child_process';
 import db from './tools/db.js';
 
 var MODELS = {};
-function loadModel(name) {
+async function loadModel(name) {
   // load model default using import
-  let model = import('./models/' + name.toLowerCase() + '.js');
-  model.then((m) => {
-    MODELS[name] = m.default;
-  })
+  let model = await import('./models/' + name.toLowerCase() + '.js');
+  MODELS[name] = model.default;
 }
 
-loadModel('Session');
-loadModel('Event');
-loadModel('User');
-loadModel('Avatar');
-loadModel('Workflow');
-loadModel('Genjob');
+await loadModel('Session');
+await loadModel('Event');
+await loadModel('User');
+await loadModel('Avatar');
+await loadModel('Genjob');
 
 // HTTPS / HTTP
 import http from 'http';
@@ -300,3 +297,25 @@ function sendNotif(subscription, payload, ttl, delay) {
       });
   }, delay * 1000);
 }
+
+// JOBS Processing : 
+//
+var worker = new MODELS['Genjob']()
+function processJobs() {
+  // Get next job (pending status, older date first)
+  worker.next()
+    .then((job) => {
+        job.run()
+          .then(() => {
+            if (job.fields.id >= 0) console.log('Job done', job.fields.id);
+          })
+          .catch((err) => {
+            console.error('Job error', job.fields.id, err);
+          })
+          .finally(() => {
+            processJobs();
+          });
+    })
+}
+processJobs();
+

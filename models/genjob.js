@@ -4,7 +4,7 @@
 // - id: the genjob id
 // - userid: the user id
 // - status: the genjob status
-// - workflowid: the workflow id
+// - workflow: the workflow name (matching <workflow>.js and <workflow>.json files in ./workflows)
 // - userdata: the genjob user data
 // - input: the genjob input
 // - output: the genjob output
@@ -12,7 +12,7 @@
 import db from '../tools/db.js';
 import Model from './model.js';
 import User from './user.js';
-import Workflow from './workflow.js';
+import fs from 'fs';
 
 class Genjob extends Model {
 
@@ -24,60 +24,77 @@ class Genjob extends Model {
             userid: null,
             last_modified: null,
             status: null,
-            workflowid: null,
-            userdata: null,
+            workflow: null,
             input: null,
             output: null
         });
+
+        this.cb = {
+            'running': null,
+            'done': null,
+            'error': null
+        }
     }
 
-    async save() 
-    {
-        // Check user exists
+    async new(f) 
+    {   
+        // check if user exists
         let user = new User();
-        await user.load({ id: this.fields.userid });
-        if (!user.id()) throw new Error('Genjob user not found');
+        await user.load({ id: f.userid });
 
-        await super.save();
+        // check if <workflow>.js and <workflow>.json files exist using fs 
+        if (!fs.existsSync('workflows/' + f.workflow + '.js')) throw new Error('workflows/' + f.workflow + '.js not found');
+        if (!fs.existsSync('workflows/' + f.workflow + '.json')) throw new Error('workflows/' + f.workflow + '.json not found');
+
+        this.fields.userid = f.userid;
+        this.fields.status = 'pending';
+        this.fields.last_modified = new Date();
+        this.fields.workflow = f.workflow;
+        this.fields.input = f.input;
+
+        await this.save();
+        return this.fields.id;
     }
 
     async run()
     {
-        // Check user exists
-        let user = new User();
-        await user.load({ id: this.fields.userid });
-        if (!user.id()) {
-            this.fields.output = 'User not found';
-            await this.status('error');
+        // Dummy job (wait 1s)
+        if (this.fields.id == -1) {
+            await new Promise(r => setTimeout(r, 1000));
+            return;
         }
 
-        // Check workflow exists
-        let workflow = new Workflow();
-        await workflow.load({ id: this.fields.workflowid });
-        if (!workflow.id()) {
-            this.fields.output = 'Workflow not found';
-            await this.status('error');
-        }
+        console.log('Genjob', this.fields.id, 'run', this.fields.status, 'user', this.fields.userid, 'workflow', this.fields.workflow);
 
-        if (this.fields.status == 'error') throw new Error(this.fields.output);
+        // Check if job is loaded and pending
+        if (!this.fields.id) throw new Error('Genjob not loaded');
         if (this.fields.status != 'pending') throw new Error('Genjob can\'t run now, status is ' + this.fields.status);
 
         // Mark as running
         await this.status('running');
-
+        
         // run workflow and catch error
         let s;
         try {
-            let result = await workflow.run(this.fields.input);
-            this.fields.output = result;
+            // Check user exists
+            let user = new User();
+            await user.load({ id: this.fields.userid });
 
-            // Create Avatar
-            let avatar = new Avatar();
-            await avatar.new({ user_id: user.id(), url: 'https://picsum.photos/1024/1024' });
-            avatars.push(avatar);
+            // Load <workflow>.json file from ./workflows path
+            let wjson = fs.readFileSync('workflows/' + this.fields.workflow + '.json', 'utf8');
+            
+            // Parse JSON
+            wjson = JSON.parse(wjson);
 
+            // Load <workflow>.js file from ./workflows path
+            let wjs = await import('../workflows/' + this.fields.workflow + '.js');
+            
+            // Run workflow
+            const serverAddress = '100.87.54.119:8188';
+            this.fields.output = await wjs.run(serverAddress, wjson, this.fields.input);
             s = 'done';
-        } catch (e) {
+        } 
+        catch (e) {
             this.fields.output = e.message;
             s = 'error';
         }
@@ -91,10 +108,13 @@ class Genjob extends Model {
             this.fields.status = s;
             this.fields.last_modified = new Date();
             await this.save();
-            console.log('Genjob', this.fields.id, 'status', this.fields.status);
+            // console.log('Genjob', this.fields.id, 'status', this.fields.status);
         }
         // reload status
         await this.load({ id: this.fields.id });
+
+        // callback
+        if (this.cb[this.fields.status]) this.cb[this.fields.status](this);
         return this.fields.status;
     }
 
@@ -108,7 +128,32 @@ class Genjob extends Model {
         }
         return JSON.parse(JSON.stringify(j));
     }
+
+    async next() {
+        let job = await db('genjobs').where({ status: 'pending' }).orderBy('last_modified').first();
+        if (job) {
+            await this.load(job.id);
+            return this;
+        }
+        else {
+            // console.log('No pending job');
+            // dummy job
+            let j = new Genjob();
+            j.fields.id = -1;
+            return j
+        }
+    }
+
+    async retry(w) {
+        if (w) await this.load(w)
+        await this.status('pending')
+    }
+
+    on(e, cb) {
+        this.cb[e] = cb;
+    }
 }
+
 
 // Create Table if not exists
 db.schema.hasTable('genjobs').then(exists => {
@@ -118,7 +163,7 @@ db.schema.hasTable('genjobs').then(exists => {
             table.integer('userid');
             table.datetime('last_modified');
             table.string('status');
-            table.integer('workflowid');
+            table.string('workflow');
             table.string('userdata');
             table.string('input');
             table.string('output');

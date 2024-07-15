@@ -82,8 +82,11 @@ class Avatar extends Model {
             }
         }
 
+        // find workflow id for avatar generation
+        let wName = 'faceswap';
+
         // Check if jobs are already in queue (not done nor error)
-        let genjobs = await db('genjobs').where({ userid: user.id() }).whereNotIn('status', ['done', 'error']);
+        let genjobs = await db('genjobs').where({ userid: user.id(), workflow: wName }).whereNotIn('status', ['done', 'error']);
         already += genjobs.length;
 
         if (already >= AVATAR_GEN_SIZE) console.log('Avatars already in GEN queue !');
@@ -91,8 +94,17 @@ class Avatar extends Model {
         // build Genjob for each avatar
         for (let i = already; i < AVATAR_GEN_SIZE; i++) {
             let genjob = new Genjob();
-            await genjob.new({ userid: user.id(), workflowid: 1, input: JSON.stringify({ pic: filename, seed: i }) });
-            await genjob.status('pending');
+            await genjob.new({ userid: user.id(), workflow: wName, input: JSON.stringify({ pic: filename, seed: i }) });
+
+            genjob.on('done', (job) => {
+                console.log('Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.output);
+            })
+
+            genjob.on('error', (job) => {
+                console.error('Genjob', job.id(), 'error', job.fields.workflow, job.output);
+            })
+            
+            // TODO: subscribe to completed event for this genjob
         }
 
         // // add original pic

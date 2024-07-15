@@ -251,40 +251,6 @@ function updateEvents() {
         })
 }
 
-function updateWorkflows() {
-    query("Workflow.list")
-        .then((workflows) => { 
-            $('#workflows').empty()
-            var table = $('<table>').appendTo('#workflows')
-            var thead = $('<thead>').appendTo(table)
-            var tbody = $('<tbody>').appendTo(table)
-            var tr = $('<tr>').appendTo(thead)
-            
-            $('<th>').text('id').appendTo(tr)
-            $('<th>').text('name').appendTo(tr)
-            $('<th>').text('path').appendTo(tr)
-            $('<th>').text('').appendTo(tr)
-
-            workflows.forEach((workflow) => {
-                var tr = $('<tr>').appendTo(tbody)
-                $('<td>').text(workflow.id).appendTo(tr)
-                $('<td>').text(workflow.name).appendTo(tr).on('click', () => {
-                    var name = prompt("Workflow name", workflow.name).trim()
-                    if (name) query("Workflow.update", [workflow.id, {name: name}]).then(updateWorkflows)
-                })
-
-                $('<td>').text(workflow.path).appendTo(tr).on('click', () => {
-                    var path = prompt("Workflow path", workflow.path).trim()
-                    if (path) query("Workflow.update", [workflow.id, {path: path}]).then(updateWorkflows)
-                })
-
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
-                    confirm("Delete workflow " + workflow.name + " ?") &&
-                        query("Workflow.delete", workflow.id).then(updateWorkflows)
-                })
-            })
-        })
-}
 
 function updateGenjobs() {
     query("Genjob.list")
@@ -298,7 +264,7 @@ function updateGenjobs() {
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('userid').appendTo(tr)
             $('<th>').text('status').appendTo(tr)
-            $('<th>').text('workflowid').appendTo(tr)
+            $('<th>').text('workflow').appendTo(tr)
             $('<th>').text('userdata').appendTo(tr)
             $('<th>').text('input').appendTo(tr)
             $('<th>').text('output').appendTo(tr)
@@ -308,8 +274,11 @@ function updateGenjobs() {
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(genjob.id).appendTo(tr)
                 $('<td>').text(genjob.userid).appendTo(tr)
-                $('<td>').text(genjob.status).appendTo(tr)
-                $('<td>').text(genjob.workflowid).appendTo(tr)
+                $('<td>').text(genjob.status).appendTo(tr).on('click', () => {
+                    query("Genjob.retry", genjob.id).then(updateGenjobs)
+                })
+
+                $('<td>').text(genjob.workflow).appendTo(tr)
                 $('<td>').text(genjob.userdata).appendTo(tr)
                 $('<td>').text(genjob.input).appendTo(tr)
                 $('<td>').text(genjob.output).appendTo(tr)
@@ -334,7 +303,6 @@ socket.on('hello', () => {
     updateEvents()
     updateUsers()
     updateAvatars()
-    updateWorkflows()
     updateGenjobs()
 })
 
@@ -396,14 +364,4 @@ document.getElementById('event-new').addEventListener('click', () => {
     var session_id = prompt("Session id", "").trim()
     
     query("Event.new", {name: name, session_id: session_id}).then(updateEvents)
-})
-
-// WORKFLOWS
-//
-
-document.getElementById('workflow-new').addEventListener('click', () => {
-    var name = prompt("Workflow name", "").trim()
-    var path = prompt("Workflow path", "").trim()
-    
-    query("Workflow.new", {name: name, path: path}).then(updateWorkflows)
 })
