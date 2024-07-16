@@ -1,10 +1,22 @@
+const DEBUGS = {
+    pwaBypass: true
+}
+
 // Render rounded graphics
 //
 
 const test = new roundedGraphics(document.getElementById("background"), 1);
 document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
 document.querySelectorAll("button").forEach(button => test.addElement(button));
-test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
+test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+test.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
+
+let sin=0;
+setInterval(() => {
+    sin+=0.01;
+    const val = (Math.sin(sin) + 1) / 2;
+    test.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
+}, 10);
 test.render();
 
 // Glitched elements
@@ -184,6 +196,23 @@ PAGES.active = function() {
     }
 }
 
+PAGES.next = function() {
+    let pages = PAGES.all();
+    for (let i = 0; i < pages.length; i++) {
+        if (pages[i].classList.contains("active")) {
+            let id;
+            if (i < pages.length - 1) {
+                id = pages[i + 1].dataset.pageId
+            } else {
+                id = pages[0].dataset.pageId
+            };
+            console.log(id);
+            PAGES.goto(id);
+            return;
+        }
+    }
+}
+
 PAGES.callbacks = {};
 
 PAGES.addCallback = function(pageID, callback) {
@@ -216,7 +245,7 @@ PAGES.home = function() { PAGES.goto("home"); };
 
 document.addEventListener("DOMContentLoaded", function() {
     if (!UTIL.isPWACompatible()) {
-        PAGES.goto("unsupported");
+        if (!DEBUGS.pwaBypass) PAGES.goto("unsupported");
         return;
     }
 });
