@@ -95,17 +95,13 @@ SOCKET.auth = function (socket) {
 }
 //  demarage server update all user !!!!!!!!!!!
 SOCKET.io.on('connection', (socket) => {
-  // console.log('a user connected')
-
-
-
 
   // Send initial HELLO trigger
   socket.emit('hello');
 
   socket.on('identify', (uuid) => {
     socket.user_uuid = uuid
-    db('users').update("is_connected", 1).where("uuid", "=", uuid);
+    db('users').update("is_connected", 1).where("uuid", "=", uuid).then();
     // si nuuid valid:    
 
     // add user to room 
@@ -115,8 +111,8 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    if (socket.user_uuid){
-      db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid);
+    if (socket.user_uuid) {
+      db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid).then();
     }
   })
 
@@ -252,21 +248,39 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   // insert msg
-  socket.on("chat_msg", (message, session) => {
+  socket.on("chat_msg", (message, session, checked) => {
     let time_stamp = Date.now()
     db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();
+    // todo chatmsg if connected else sms
+    db("users").select("is_connected", "phone").then((users) => {
+      if (checked == true) {
+        users.forEach((u) => {
+          if (u.is_connected == 0) {
+            sendSMS([u.phone], "contacts.kxkm.net")
+          }
+        })
+      }
+    })
     SOCKET.io.emit('new_chatMessage', message)
   })
 
   ///////////////////// delete quand finit
-
   socket.on("truc", (truc) => {
     db('users').where({ id: 1 }).update({
       last_read: 1720165826486,
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
 
+  socket.on("addU", (u) => {
+    db("users").insert({
+      name: "userTest",
+      phone: "0674287959",
+      uuid: "TEST",
+      is_connected: 0
+    }).then()
+  })
   ///////////////////////
+
 });
 
 // Express Server
@@ -320,6 +334,13 @@ app.get('/admin/sms', function (req, res) {
 app.get('/app/msg', function (req, res) {
   res.sendFile(__dirname + '/www/app/msg_box.html');
 });
+
+///////////////////////// TODELETE
+app.get('/app/addU', function (req, res) {
+  res.sendFile(__dirname + '/www/app/add_user_TODELETE.html');
+});
+/////////////////////////
+
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {

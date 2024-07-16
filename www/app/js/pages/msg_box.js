@@ -1,6 +1,5 @@
 const socket = io();
 
-
 // connexion des users et envoie demande de modi base
 socket.on('hello', () => {
     socket.emit("identify", Cookies.get('token'))
@@ -8,14 +7,12 @@ socket.on('hello', () => {
 
 socket.on("new_chatMessage", (data) => {
     right(true)
-    console.log("dans new_chatMessage")
 })
 
 socket.on("listed_msg", (msg_list) => {
 
     let count = 0
     msg_list.forEach((m) => {
-        console.log("truc2")
 
         let field = document.createElement("fieldset")
         let hidden_input = document.createElement('input')
@@ -30,8 +27,6 @@ socket.on("listed_msg", (msg_list) => {
         document.getElementById('inbox').appendChild(field)
         document.getElementById('msg' + count).appendChild(p)
         document.getElementById('msg' + count).appendChild(hidden_input)
-
-        console.log(field)
 
         count++
     })
@@ -67,12 +62,9 @@ function right(last) {
     } else {
         setTimeout(() => {
             let session_id = document.getElementById("listSess2").value
-            console.log("into else", session_id)
             query("Message.list", { 'session_id': session_id }).then(
                 (message) => {
-                    console.log(message)
                     message.forEach((msg) => {
-                        console.log(msg)
 
                         let inbox = document.getElementById("inbox")
                         let fieldset = $('<fieldset>').appendTo(inbox)
@@ -89,7 +81,8 @@ function right(last) {
 document.getElementById("send_msg").addEventListener("click", (e) => {
     let message = document.getElementById("message").value
     let session = document.getElementById("listSess").value
-    socket.emit("chat_msg", message, session)
+    let checked = document.getElementById("checkSMS").checked
+    socket.emit("chat_msg", message, session, checked)
 })
 
 fill_select_session("listSess")
@@ -116,7 +109,6 @@ document.getElementById("read").addEventListener("click", (e) => {
     socket.emit('truc', "")
     //
 })
-
 
 fill_select_session("listSess2")
 right()
