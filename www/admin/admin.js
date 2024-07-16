@@ -365,3 +365,14 @@ document.getElementById('event-new').addEventListener('click', () => {
     
     query("Event.new", {name: name, session_id: session_id}).then(updateEvents)
 })
+
+// WORKFLOWS
+//
+
+document.getElementById('workflow-new').addEventListener('click', () => {
+    var name = prompt("Workflow name", "").trim()
+    var path = prompt("Workflow path", "").trim()
+    
+    query("Workflow.new", {name: name, path: path}).then(updateWorkflows)
+})
+
