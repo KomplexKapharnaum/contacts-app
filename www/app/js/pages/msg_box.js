@@ -57,6 +57,7 @@ function right(last) {
                     let fieldset = $('<fieldset>').appendTo(inbox)
                     $('<p>').text(msg.message).appendTo(fieldset)
 
+                    socket.emit("last_read", Cookies.get('token'))
                 })
             })
     } else {
@@ -97,20 +98,13 @@ function fill_select_session(id_html) {
     })
 }
 
+right()
 ///////////////////////////////////////////////////////////////
 ////////  
 ////////  test purpose
 ////////  
 ///////////////////////////////////////////////////////////////
 
-document.getElementById("read").addEventListener("click", (e) => {
-    // delete quand finit
-    right()
-    socket.emit('truc', "")
-    //
-})
-
 fill_select_session("listSess2")
-right()
 
 

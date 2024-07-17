@@ -103,15 +103,44 @@ SOCKET.io.on('connection', (socket) => {
     db('users').update("is_connected", 1).where("uuid", "=", uuid).then();
     // si nuuid valid:    
 
-    // add user to room 
-    // _ user
-    // _ group
-    // _ session
+    // join ( or create ) room on session name and groupe name // FG
+    db.select("Groupes.name")
+      .from("Groupes")
+      .join("users", "users.groupe_id", "=", "Groupes.id")
+      .where("users.uuid", "=", uuid)
+      .then((groupe) =>{
+        groupe.forEach((g)=>{
+          db.select("sessions.name")
+          .from("sessions")
+          .join("Groupes", "Groupes.session_id", "=", "sessions.id")
+          .where("Groupes.name", "=", g.name)
+          .then((s) =>{
+            socket.join(s.name+"@"+g.name)
+          })
+        })
+      })
   })
 
   socket.on('disconnect', () => {
     if (socket.user_uuid) {
       db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid).then();
+
+      // leave room when disconect // FG
+      db.select("Groupes.name")
+      .from("Groupes")
+      .join("users", "users.groupe_id", "=", "Groupes.id")
+      .where("users.uuid", "=", uuid)
+      .then((groupe) =>{
+        groupe.forEach((g)=>{
+          db.select("sessions.name")
+          .from("sessions")
+          .join("Groupes", "Groupes.session_id", "=", "sessions.id")
+          .where("Groupes.name", "=", g.name)
+          .then((s) =>{
+            socket.leave(s.name+"@"+g.name)
+          })
+        })
+      })
     }
   })
 
@@ -250,26 +279,25 @@ SOCKET.io.on('connection', (socket) => {
   socket.on("chat_msg", (message, session, checked) => {
     let time_stamp = Date.now()
     db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();
-    // todo chatmsg if connected else sms
-    db("users").select("is_connected", "phone").then((users) => {
-      if (checked == true) {
+    if (checked == true) {
+      db("users").select("is_connected", "phone").then((users) => {
         users.forEach((u) => {
           if (u.is_connected == 0) {
             sendSMS([u.phone], "contacts.kxkm.net")
           }
         })
-      }
-    })
+      })
+    }
     SOCKET.io.emit('new_chatMessage', message)
   })
 
-  ///////////////////// delete quand finit
-  socket.on("truc", (truc) => {
+  //set last read
+  socket.on("last_read", (uuid) =>{
     db('users').where({ id: 1 }).update({
-      last_read: 1720165826486,
+      last_read: Date.now()
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
-
+  ///////////////////// delete quand finit
   socket.on("addU", (u) => {
     db("users").insert({
       name: "userTest",
