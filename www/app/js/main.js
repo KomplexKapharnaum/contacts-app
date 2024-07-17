@@ -44,10 +44,14 @@ async function glitchOffset(element, original) {
     glitchOffset(element, original);
 }
 
-glitch_elements.forEach(element => {
+function glitchElementInit(element) {
     const style = element.style.transform;
     let original = style ? style : `translate(0, 0)`
     glitchOffset(element, original);
+}
+
+glitch_elements.forEach(element => {
+    glitchElementInit(element);
 });
 
 // LOG
@@ -185,7 +189,8 @@ UTIL.addIncomingEvent = function(evenement) {
     eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
     
     renderer.addElement(eventDom);
-
+    glitchElementInit(eventDom);
+    
     document.getElementById("event-list").appendChild(eventDom);
     
     eventDom.addEventListener("click", () => {
