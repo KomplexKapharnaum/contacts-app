@@ -78,32 +78,37 @@ NETWORK.loadUser = function () {
 
                     console.log("Sessions User", userData.sessions)
 
-                    // if (!userData.sessions.map((s) => s.fields.id).includes(nextSession)) {
-                    //     console.log("User not registered to next session");
+                    // get session from userData.sessions where id = nextSession
+                    let session = userData.sessions.filter((s) => s.id == nextSession)[0];
+                    
+                    if (!session) {
+                        console.log("User not registered to next session");
 
-                    //     // check if user declined to register
-                    //     if (Cookies.get('session_declined_' + nextSession)) {
-                    //         console.log("User declined to register");
-                    //         pages.goto("main");
-                    //         return;
-                    //     }
+                        // check if user declined to register
+                        if (Cookies.get('session_declined_' + nextSession)) {
+                            console.log("User declined to register");
+                            pages.goto("main");
+                            return;
+                        }
 
-                    //     // Get session details
-                    //     NETWORK.query('Session.get', nextSession)
-                    //         .then((session) => {
-                    //             UTIL.promptForSubscribingEvent(session, nextSession);
-                    //         });
-                    // } else {
-                    //     let events = userData.sessions[0].events;
-                    //     if (events.length > 0) {
-                    //         if (isEventActive()) return;
-                    //         PAGES.goto("event-list");
-                    //         events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
-                    //         events.forEach(evenement => {
-                    //             UTIL.addIncomingEvent(evenement.fields);
-                    //         })
-                    //     }
-                    // }
+                        // Get session details
+                        NETWORK.query('Session.get', nextSession)
+                            .then((session) => {
+                                UTIL.promptForSubscribingEvent(session, nextSession);
+                            });
+
+                    } 
+                    else {
+                        let events = session.events;
+                        if (events.length > 0) {
+                            if (isEventActive()) return;
+                            PAGES.goto("event-list");
+                            events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
+                            events.forEach(evenement => {
+                                UTIL.addIncomingEvent(evenement);
+                            })
+                        }
+                    }
                     
                 })
                 .catch((err) => {
