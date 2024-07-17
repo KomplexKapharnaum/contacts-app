@@ -87,6 +87,10 @@ document.getElementById("send_msg").addEventListener("click", (e) => {
 })
 
 fill_select_session("listSess")
+fill_select_group("listGroup")
+let gSelect = document.getElementById("listSess").addEventListener("change", ()=>{
+    fill_select_group("listGroup")
+})
 
 function fill_select_session(id_html) {
 
@@ -98,6 +102,25 @@ function fill_select_session(id_html) {
     })
 }
 
+let select = document.getElementById("listGroup")
+$('<option>').text("-----------").val("").appendTo(select)
+function fill_select_group(id_html) {
+
+    let have_child = document.getElementById(id_html).childNodes
+        while (have_child.length > 1) {
+            have_child[1].remove();
+            console.log('removed G')
+            console.log(have_child.length)
+        }
+
+    let session_id = document.getElementById("listSess").value
+
+    query("Group.list", { "session_id": session_id }).then((groupe) => {
+        groupe.forEach((g) => {
+            $('<option>').text(g.name).val(g.id).appendTo(select)
+        })
+    })
+}
 right()
 
 
