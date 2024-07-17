@@ -85,7 +85,6 @@ db.schema.hasTable('groups').then(exists => {
             table.increments('id').primary();
             table.string('name');
             table.text('description');
-            table.integer('user_id');
             table.integer('session_id');
         }).then(() => {
             console.log('created groups table');

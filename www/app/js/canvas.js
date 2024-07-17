@@ -20,6 +20,7 @@ class roundedGraphics {
 
         this.res = resolution;
         this.color = 'white';
+        this.backgroundColor = 'black';
 
         // document.body.appendChild(buffer);
 
@@ -88,6 +89,15 @@ class roundedGraphics {
 
         const ctx = this.buffer.getContext('2d');
         ctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
+
+        this.elements.sort((a, b) => {
+            if (a.tagName === 'IMG' && b.tagName !== 'IMG') return -1;
+            if (a.tagName !== 'IMG' && b.tagName === 'IMG') return 1;
+            if (a.tagName === 'BUTTON' && b.tagName !== 'BUTTON') return 1;
+            if (a.tagName !== 'BUTTON' && b.tagName === 'BUTTON') return -1;
+            return 0;
+        });
+
         this.elements.forEach(domElement => {
 
             if (!domElement.offsetParent || domElement.offsetWidth === 0 || domElement.offsetHeight === 0) return;
@@ -116,7 +126,7 @@ class roundedGraphics {
 
                     ctx.save();
                     ctx.translate(coords.x + coords.width / 2, coords.y + coords.height / 2);
-                    ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 10);
+                    ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 30);
                     ctx.drawImage(domElement, -coords.width / 2, -coords.height / 2, coords.width, coords.height);
                     ctx.restore();
                     domElement.style.opacity = 0;
@@ -133,7 +143,9 @@ class roundedGraphics {
         this.renderedImage.height = this.res.y;
         renderedCtx.width = this.res.x;
         renderedCtx.height = this.res.y;
-        renderedCtx.clearRect(0, 0, this.renderedImage.width, this.renderedImage.height);
+        renderedCtx.fillStyle = this.backgroundColor;
+        renderedCtx.fillRect(0, 0, this.renderedImage.width, this.renderedImage.height); 
+        // renderedCtx.clearRect(0, 0, this.renderedImage.width, this.renderedImage.height);
         renderedCtx.drawImage(this.buffer, 0, 0, this.renderedImage.width, this.renderedImage.height);
         
         this.shader.loadTexture(this.renderedImage, 'u_texture');
@@ -149,8 +161,10 @@ class roundedGraphics {
 
     updateColor(hex) {
         this.color = hex;
-        // const rgba = this.hexToRgb(hex);
-        // this.shader.updateUniform('color', '4f', [rgba.r / 255, rgba.g / 255, rgba.b / 255, 1]);
+    }
+
+    updateBackgroundColor(hex) {
+        this.backgroundColor = hex;
     }
 
     updatePixelSize(size) {

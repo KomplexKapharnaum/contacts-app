@@ -81,15 +81,21 @@ NETWORK.loadUser = function () {
                     // get session from userData.sessions where id = nextSession
                     let session = userData.sessions.filter((s) => s.id == nextSession)[0];
                     
+                    UTIL.getMessages(userData.id, nextSession).then((messages) => {
+                        console.log("messages : ",  messages);
+                    })
+                    
                     if (!session) {
                         console.log("User not registered to next session");
-
+                        
+                        /*
                         // check if user declined to register
                         if (Cookies.get('session_declined_' + nextSession)) {
                             console.log("User declined to register");
                             pages.goto("main");
                             return;
                         }
+                        */
 
                         // Get session details
                         NETWORK.query('Session.get', nextSession)
@@ -110,7 +116,6 @@ NETWORK.loadUser = function () {
                             })
                         }
                     }
-                    
                 })
                 .catch((err) => {
                     console.log("No next session found");
@@ -225,6 +230,10 @@ NETWORK.receiveSessionEvent = function (event) {
                     container.appendChild(div);
                 });
             })();
+            break;
+        case "info":
+            PAGES.goto("event-info");
+            document.getElementById("event-info-message").innerHTML = event.args.message; 
             break;
         case "flash":
             PAGES.goto("event-flash");

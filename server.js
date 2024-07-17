@@ -80,7 +80,12 @@ SOCKET.startEvent = function (name, args) {
     name: name,
     args: args
   };
-  SOCKET.io.emit('start-event', SOCKET.lastEvent);
+
+  if (args.params.grpChoice != '') {
+    SOCKET.io.to(args.params.grpChoice).emit(SOCKET.lastEvent);
+  } else {
+    SOCKET.io.emit('start-event', SOCKET.lastEvent);
+  }
 };
 
 SOCKET.endEvent = function () {
@@ -123,24 +128,17 @@ SOCKET.io.on('connection', (socket) => {
     socket.user_uuid = USER.fields.uuid
     socket.user_id = USER.fields.id
 
-    // join ( or create ) room on session name and groupe name // FG
-    db.select("groups.name")
+    // join ( or create ) room on groupId // FG
+    db.select("groups.id")
       .from("groups")
       .join("users", "users.groupe_id", "=", "groups.id")
       .where("users.uuid", "=", uuid)
-      .then((groupe) =>{
-        groupe.forEach((g)=>{
-          db.select("sessions.name")
-          .from("sessions")
-          .join("groups", "groups.session_id", "=", "sessions.id")
-          .where("groups.name", "=", g.name)
-          .then((s) =>{
-            socket.join(s.name+"@"+g.name)
-          })
+      .then((groupe) => {
+        groupe.forEach((g) => {
+          socket.join(g.id)
         })
       })
   })
-
   socket.on('disconnect', () => {
     if (socket.user_uuid) {
 
@@ -148,21 +146,15 @@ SOCKET.io.on('connection', (socket) => {
       USER.isConnected({ uuid: uuid }, false)
 
       // leave room when disconect // FG
-      db.select("groups.name")
-      .from("groups")
-      .join("users", "users.groupe_id", "=", "groups.id")
-      .where("users.uuid", "=", socket.user_uuid)
-      .then((groupe) =>{
-        groupe.forEach((g)=>{
-          db.select("sessions.name")
-          .from("sessions")
-          .join("groups", "groups.session_id", "=", "sessions.id")
-          .where("groups.name", "=", g.name)
-          .then((s) =>{
-            socket.leave(s.name+"@"+g.name)
+      db.select("groups.id")
+        .from("groups")
+        .join("users", "users.groupe_id", "=", "groups.id")
+        .where("users.uuid", "=", socket.user_uuid)
+        .then((groupe) => {
+          groupe.forEach((g) => {
+            socket.leave(g.id)
           })
         })
-      })
     }
   })
 
@@ -314,7 +306,7 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   //set last read
-  socket.on("last_read", (uuid) =>{
+  socket.on("last_read", (uuid) => {
     db('users').where({ id: 1 }).update({
       last_read: Date.now()
     }).then((res) => console.log(res)).catch((err) => console.log(err))

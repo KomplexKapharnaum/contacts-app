@@ -33,7 +33,6 @@ class User extends Model {
             phone:          null,
             uuid:           null,
             selected_avatar: null,
-            groupe_id:      null,
             last_read:      null,
             is_connected:   null
         });
@@ -41,7 +40,8 @@ class User extends Model {
 
     clear() {
         super.clear();
-        this.sessions = [];
+        this.sessions = [];     // TODO: remove sessions association since already linked to groups
+        this.groups =  [];
         this.avatars = [];
         this.genjobs = [];
     }
@@ -84,6 +84,8 @@ class User extends Model {
         let sessions = await db('users_sessions').where({ user_id: this.fields.id }).select('session_id');
         this.sessions = sessions.map(s => s.session_id);
 
+        let groups = await db('users_groups').where({ user_id: this.fields.id }).select('group_id');
+        this.groups = groups.map(g => g.group_id);
 
         let avatars = await db('avatars').where({ user_id: this.fields.id }).select('id');
         this.avatars = avatars.map(a => a.id);
@@ -121,17 +123,14 @@ class User extends Model {
         // Delete user sessions
         await db('users_sessions').where({ user_id: this.fields.id }).del();
 
+        // Delete user groups
+        await db('users_groups').where({ user_id: this.fields.id }).del();
+
         // Delete avatars
         await db('avatars').where({ user_id: this.fields.id }).del();
 
         // Delete genjobs
         await db('genjobs').where({ userid: this.fields.id }).del();
-
-        // Delete groupe_id
-        await db('groupe_id').where({ user_id: this.fields.id }).del();
-
-        // Delete last_read
-        await db('last_read').where({ user_id: this.fields.id }).del();
 
         console.log('User', this.fields.id, 'deleted');
     }
@@ -199,6 +198,7 @@ class User extends Model {
         }
 
         u.sessions = this.sessions;
+        u.groups = this.groups;
         u.avatars = this.avatars;
         u.genjobs = this.genjobs;
 
@@ -207,6 +207,13 @@ class User extends Model {
                 let session = new Session();
                 await session.load(s);
                 return session.get(null, true);
+            }))
+
+        if (full === true || (Array.isArray(full) && full.includes('groups')))
+            u.groups = await Promise.all(this.groups.map(async g => {
+                let group = new Group();
+                await group.load(g);
+                return group.get();
             }))
         
         if (full === true || (Array.isArray(full) && full.includes('avatars')))
@@ -229,6 +236,11 @@ class User extends Model {
     async getMessages(w, session_id) {
         if (w) await this.load(w);
         
+        // check if user is registered to session
+
+        // get messages with group_id null or group_id in user.groups
+        
+
     }
     
     async isConnected(w, state) 
@@ -251,7 +263,6 @@ db.schema.hasTable('users').then(exists => {
             table.string('phone');
             table.string('uuid');
             table.integer('selected_avatar');
-            table.integer('groupe_id');
             table.integer('last_read');
             table.integer('is_connected');
 
@@ -268,6 +279,17 @@ db.schema.hasTable('users_sessions').then(exists => {
             table.integer('session_id');
         }).then(() => {
             console.log('created users_sessions table');
+        });
+    }
+});
+
+db.schema.hasTable('users_groups').then(exists => {
+    if (!exists) {
+        db.schema.createTable('users_groups', table => {
+            table.integer('user_id');
+            table.integer('group_id');
+        }).then(() => {
+            console.log('created users_groups table');
         });
     }
 });

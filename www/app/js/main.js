@@ -9,6 +9,8 @@ const renderer = new roundedGraphics(document.getElementById("background"), 1);
 document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
 document.querySelectorAll("button").forEach(button => renderer.addElement(button));
 renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim());
+
 renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
 let sin=0;
@@ -208,6 +210,14 @@ UTIL.addIncomingEvent = function(evenement) {
 
         UTIL.setCoundDown(...evenement.starting_at.split("T"));
     });
+}
+
+UTIL.getMessages = async function(user_id, session_id) {
+    return new Promise(async (resolve, reject) => {
+        // const messages = await NETWORK.query('Message.list', {user_id: user_id, session_id: session_id});
+        const messages = await NETWORK.query("User.getMessages", user_id, session_id);
+        resolve(messages);
+    })
 }
 
 // Cookies
