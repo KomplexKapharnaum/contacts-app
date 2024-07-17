@@ -11,6 +11,7 @@ import db from '../tools/db.js';
 import Model from './model.js';
 import Event from './event.js';
 import User from './user.js';
+import Group from './group.js';
 
 class Session extends Model {
 
@@ -25,23 +26,29 @@ class Session extends Model {
         })
 
         this.events = [];
+        this.groups = [];
+        this.messages = []
     }
 
     clear() {
         super.clear();
         this.events = [];
+        this.groups = [];
+        this.messages = []
     }
 
     async load(w)
     {
         await super.load(w);
 
-        let events = await db('events').where({ session_id: this.fields.id });
-        for (let e of events) {
-            let event = new Event();
-            event.fields = e;
-            this.events.push(event);
-        }
+        let events = await db('events').where({ session_id: this.fields.id }).select('id');
+        this.events = events.map(e => {e.id})
+
+        let groups = await db('groups').where({ session_id: this.fields.id }).select('id');
+        this.groups = groups.map(e => {e.id})
+
+        let messages = await db('messages').where({ session_id: this.fields.id }).select('id');
+        this.messages = messages.map(e => {e.id})
 
         return this.get()
     }
@@ -62,33 +69,43 @@ class Session extends Model {
     {
         await super.delete(w);
         await db('events').where({ session_id: this.fields.id }).del();
+        await db('groups').where({ session_id: this.fields.id }).del();
     }
 
     async get(w, full = false)
     {
         if (w) await this.load(w);
         let s = await super.get();
-        s.events = await Promise.all(this.events.map(e => (full) ? e.get() : e.id()));
-        // s.users = await this.getusers();
+        s.events = full ? await this.getevents() : this.events;
+        s.groupe = full ? await this.getgroups() : this.groups;
         return s;
     }
 
-    async getusers(w)
+    async getusers(w, full = false)
     {
         if (w) await this.load(w);
-        let users = await db('users_sessions').where({ session_id: this.fields.id });
+        let users = await db('users_sessions').where({ session_id: this.fields.id }).select('user_id');
+        let user = new User();
         return await Promise.all(users.map(async u => {
-                let user = new User();
-                await user.load(u.user_id);
-                return await user.get();
-            })
-        ) 
+            return await user.get(u.user_id, full);
+        }))
     }
 
     async getevents(w)
     {
         if (w) await this.load(w);
-        return await Promise.all(this.events.map(e.get()));
+        let event = new Event();
+        return await Promise.all(this.events.map(async e => {
+            return await event.get(e);
+        }))
+    }
+    async getgroups(w)
+    {
+        if (w) await this.load(w);
+        let groupe = new Group();
+        return await Promise.all(this.groups.map(async e => {
+            return await groupe.get(e);
+        }))
     }
 
     async next()

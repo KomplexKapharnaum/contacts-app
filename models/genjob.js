@@ -14,6 +14,11 @@ import Model from './model.js';
 import User from './user.js';
 import fs from 'fs';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+var jobsCallbacks = {};
+
 class Genjob extends Model {
 
     constructor() 
@@ -28,12 +33,6 @@ class Genjob extends Model {
             input: null,
             output: null
         });
-
-        this.cb = {
-            'running': null,
-            'done': null,
-            'error': null
-        }
     }
 
     async new(f) 
@@ -90,8 +89,7 @@ class Genjob extends Model {
             let wjs = await import('../workflows/' + this.fields.workflow + '.js');
             
             // Run workflow
-            const serverAddress = '100.87.54.119:8188';
-            this.fields.output = await wjs.run(serverAddress, wjson, this.fields.input);
+            this.fields.output = await wjs.run(process.env.COMFY_API_URL, wjson, this.fields.input);
             s = 'done';
         } 
         catch (e) {
@@ -108,13 +106,15 @@ class Genjob extends Model {
             this.fields.status = s;
             this.fields.last_modified = new Date();
             await this.save();
-            // console.log('Genjob', this.fields.id, 'status', this.fields.status);
         }
         // reload status
         await this.load({ id: this.fields.id });
 
         // callback
-        if (this.cb[this.fields.status]) this.cb[this.fields.status](this);
+        if (jobsCallbacks[this.fields.id] && jobsCallbacks[this.fields.id][this.fields.status]) {
+            jobsCallbacks[this.fields.id][this.fields.status](this);
+        }
+
         return this.fields.status;
     }
 
@@ -150,7 +150,9 @@ class Genjob extends Model {
     }
 
     on(e, cb) {
-        this.cb[e] = cb;
+        if (!this.fields.id) throw new Error('Genjob not loaded');
+        jobsCallbacks[this.fields.id] = jobsCallbacks[this.fields.id] || {};
+        jobsCallbacks[this.fields.id][e] = cb;
     }
 }
 

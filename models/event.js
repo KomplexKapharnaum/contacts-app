@@ -48,9 +48,7 @@ class Event extends Model {
         
         // find session
         let session = new Session();
-        await session.load(this.fields.session_id);
-
-        return await session.getusers();
+        return await session.getusers(this.fields.session_id);
     }
 
 }

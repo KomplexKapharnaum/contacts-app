@@ -7,6 +7,8 @@ export const run =
         // randomise the codeformer weight
         prompt['1'].inputs.codeformer_weight = Math.random(0, 0.1)
 
+        // TODO: modify the prompt with the input !!
+
         // Create client
         const client = new ComfyUIClient(serverAddress);
 
@@ -15,20 +17,22 @@ export const run =
 
         // Wait for images
         const result = await client.runPrompt(prompt);
-        console.log('Result:', JSON.stringify(result, null, 2));
+        // console.log('Result:', JSON.stringify(result, null, 2));
 
         const images = client.getImages(result);
-        console.log('Images:', images);
+        // console.log('Images:', images);
 
         // Save images to file
-        // const outputDir = '/tmp';
-        // await client.saveImages(images, outputDir);
+        const outputDir = 'outputs';
+        await client.saveImages(images, outputDir);
 
         // console.log('Images saved to:', outputDir, images);
 
+        // make array of filenames
+        const filenames = Object.keys(images);
 
         // Disconnect
         await client.disconnect();
 
-        return 'OK';
+        return JSON.stringify(filenames);
     };

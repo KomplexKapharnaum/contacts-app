@@ -32,7 +32,10 @@ class User extends Model {
             name:           null,
             phone:          null,
             uuid:           null,
-            selected_avatar: null
+            selected_avatar: null,
+            groupe_id:      null,
+            last_read:      null,
+            is_connected:   null
         });
 
         this.sessions = [];
@@ -82,28 +85,15 @@ class User extends Model {
     {
         await super.load(w);
 
-        // TODO: LAZY OR CONCURRENT LOAD...
+        let sessions = await db('users_sessions').where({ user_id: this.fields.id }).select('session_id');
+        this.sessions = sessions.map(s => s.session_id);
 
-        // let sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        // for (let s of sessions) {
-        //     let session = new Session();
-        //     await session.load(s.session_id);
-        //     this.sessions.push(session);
-        // }
 
-        // let avatars = await db('avatars').where({ user_id: this.fields.id });
-        // for (let a of avatars) {
-        //     let avatar = new Avatar();
-        //     await avatar.load(a.id);
-        //     this.avatars.push(avatar);
-        // }
+        let avatars = await db('avatars').where({ user_id: this.fields.id }).select('id');
+        this.avatars = avatars.map(a => a.id);
 
-        // let genjobs = await db('genjobs').where({ userid: this.fields.id });
-        // for (let g of genjobs) {
-        //     let genjob = new Genjob();
-        //     await genjob.load(g.id);
-        //     this.genjobs.push(genjob);
-        // }
+        let genjobs = await db('genjobs').where({ userid: this.fields.id }).whereNot('status', 'done').select('id');
+        this.genjobs = genjobs.map(g => g.id);
 
         return this.get()
     }
@@ -137,6 +127,12 @@ class User extends Model {
         // Delete genjobs
         await db('genjobs').where({ userid: this.fields.id }).del();
 
+        // Delete groupe_id
+        await db('groupe_id').where({ user_id: this.fields.id }).del();
+
+        // Delete last_read
+        await db('last_read').where({ user_id: this.fields.id }).del();
+
         console.log('User', this.fields.id, 'deleted');
     }
 
@@ -151,7 +147,6 @@ class User extends Model {
         if (user_session) throw new Error('User already registered to session');
 
         await db('users_sessions').insert({ user_id: this.fields.id, session_id: session_id });
-        
         console.log('User', this.fields.id, 'registered to session', session_id);
     }
 
@@ -203,22 +198,41 @@ class User extends Model {
             }
         }
 
-        u.sessions = [];
-        const user_sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        console.log("USER SESSIONS", user_sessions)
-        for (let s of user_sessions) {
-            let session = new Session();
-            await session.load(s.session_id);
-            u.sessions.push(session);
-        }
-        
-        // u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
-        u.avatars = await Promise.all(this.avatars.map(a => (full ? a.get() : a.id())));
-        u.genjobs = await Promise.all(this.genjobs.map(g => (full ? g.get() : g.id())));
+        u.sessions = this.sessions;
+        u.avatars = this.avatars;
+        u.genjobs = this.genjobs;
 
+        if (full === true || (Array.isArray(full) && full.includes('sessions')))
+            u.sessions = await Promise.all(this.sessions.map(async s => {
+                let session = new Session();
+                await session.load(s);
+                return session.get(null, true);
+            }))
+        
+        if (full === true || (Array.isArray(full) && full.includes('avatars')))
+            u.avatars = await Promise.all(this.avatars.map(async a => {
+                let avatar = new Avatar();
+                await avatar.load(a);
+                return avatar.get();
+            }))
+
+        if (full === true || (Array.isArray(full) && full.includes('genjobs')))
+            u.genjobs = await Promise.all(this.genjobs.map(async g => {
+                let genjob = new Genjob();
+                await genjob.load(g);
+                return genjob.get();
+            }))
+        
         return u;
     }
     
+    async switch_connect(w, state){
+        if (state == true) {
+            await db('users').update("is_connected", 1).where(w);
+        } else{
+            await db('users').update("is_connected", 0).where(w);
+        }
+    }
 }
 
 
@@ -231,6 +245,10 @@ db.schema.hasTable('users').then(exists => {
             table.string('phone');
             table.string('uuid');
             table.integer('selected_avatar');
+            table.integer('groupe_id');
+            table.integer('last_read');
+            table.integer('is_connected');
+
         }).then(() => {
             console.log('created users table');
         });
