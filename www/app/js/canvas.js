@@ -14,7 +14,12 @@ class roundedGraphics {
         buffer.width = this.width;
         buffer.height = this.height;
         this.buffer = buffer;
+
+        const renderedImage = document.createElement('canvas');
+        this.renderedImage = renderedImage;
+
         this.res = resolution;
+        this.color = 'white';
 
         // document.body.appendChild(buffer);
 
@@ -24,30 +29,23 @@ class roundedGraphics {
             precision mediump float;
             uniform sampler2D u_texture;
             uniform vec2 u_resolution;
-            uniform vec4 color;
-            uniform vec2 pixels;
+            uniform vec2 imageRes;
             void main(void) {
                 vec2 uv = gl_FragCoord.xy / u_resolution;
-                // vec2 pixels = vec2(10.);
-
-                // Center the pixelation
-                vec2 st = (uv - 0.5) * u_resolution / pixels;
-                st = floor(st) / (u_resolution / pixels) + 0.5;
-
+                vec2 st = (floor(uv * imageRes) + 0.5) / imageRes;
                 vec4 col = texture2D(u_texture, st);
-
                 gl_FragColor = col;
             }
         `
 
         const shader = new WebGLShader(canvas, fragmentShaderSource);
         shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
-        shader.updateUniform('pixels', '2f', [resolution, resolution]);
+        shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
         this.shader = shader;
 
         parent.appendChild(canvas);
 
-        this.shader.loadTexture(buffer, 'u_texture');
+        this.shader.loadTexture(this.renderedImage, 'u_texture');
     }
 
     roundRect(
@@ -85,6 +83,9 @@ class roundedGraphics {
       }
     
     renderBuffer() {
+        this.buffer.width = this.width;
+        this.buffer.height = this.height;
+
         const ctx = this.buffer.getContext('2d');
         ctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
         this.elements.forEach(domElement => {
@@ -102,14 +103,17 @@ class roundedGraphics {
 
             switch (domElement.tagName) {
                 case 'BUTTON':
-                    const col = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-                    ctx.fillStyle = col;
+                    if (domElement.style.visibility === 'hidden') break;
+                    /* const col = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();*/
+                    ctx.fillStyle = this.color;
                     this.roundRect(ctx, coords.x, coords.y, coords.width, coords.height, 8, true, false);
                     domElement.style.backgroundColor = 'transparent';
                     break;
                 case 'IMG':
                     // console.log('img', domElement.complete);
-                    if (domElement.complete === false) return;
+                    if (domElement.complete === false) break;
+                    if (domElement.style.visibility === 'hidden') break;
+
                     ctx.save();
                     ctx.translate(coords.x + coords.width / 2, coords.y + coords.height / 2);
                     ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 10);
@@ -122,7 +126,17 @@ class roundedGraphics {
                     break;
             }
         });
-        this.shader.loadTexture(this.buffer, 'u_texture');
+
+        const renderedCtx = this.renderedImage.getContext('2d');
+
+        this.renderedImage.width = this.res.x;
+        this.renderedImage.height = this.res.y;
+        renderedCtx.width = this.res.x;
+        renderedCtx.height = this.res.y;
+        renderedCtx.clearRect(0, 0, this.renderedImage.width, this.renderedImage.height);
+        renderedCtx.drawImage(this.buffer, 0, 0, this.renderedImage.width, this.renderedImage.height);
+        
+        this.shader.loadTexture(this.renderedImage, 'u_texture');
     }
 
     hexToRgb(hex) {
@@ -134,12 +148,14 @@ class roundedGraphics {
     }
 
     updateColor(hex) {
-        const rgba = this.hexToRgb(hex);
-        this.shader.updateUniform('color', '4f', [rgba.r / 255, rgba.g / 255, rgba.b / 255, 1]);
+        this.color = hex;
+        // const rgba = this.hexToRgb(hex);
+        // this.shader.updateUniform('color', '4f', [rgba.r / 255, rgba.g / 255, rgba.b / 255, 1]);
     }
 
     updatePixelSize(size) {
-        this.shader.updateUniform('pixels', '2f', [size, size]);
+        this.shader.updateUniform('imageRes', '2f', [size.x, size.y]);
+        this.res = { x: size.x, y: size.y };
     }
     
     render() {

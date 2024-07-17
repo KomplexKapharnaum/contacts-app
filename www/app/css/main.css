@@ -209,11 +209,10 @@ input[type="text"] {
 }
 
 .illustration {
-    margin: 0 auto;
-    width: auto;
-    height: 100%;
-    max-height: 50vh;
-    object-fit: contain;
+    margin: auto auto;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
 }
 
 .box {
@@ -271,6 +270,25 @@ input[type="text"] {
 #nextevent-countdown .label {
     font-family: var(--font-secondary);
     color: var(--color-text-secondary);
+}
+
+#event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    padding: 16px 0;
+    overflow-y: scroll;
+}
+
+.event-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--color-primary);
+    color: var(--color-background);
 }
 
 /* Special events */

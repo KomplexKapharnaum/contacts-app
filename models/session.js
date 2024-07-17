@@ -10,7 +10,7 @@
 import db from '../tools/db.js';
 import Model from './model.js';
 import Event from './event.js';
-import Groupe from './groupe.js';
+import User from './user.js';
 
 class Session extends Model {
 
@@ -79,8 +79,7 @@ class Session extends Model {
         if (w) await this.load(w);
         let s = await super.get();
         s.events = await Promise.all(this.events.map(e => (full) ? e.get() : e.id()));
-        s.groupe = await Promise.all(this.groupe.map(e => (full) ? e.get() : e.id()));
-        s.users = await this.getusers();
+        // s.users = await this.getusers();
         return s;
     }
 

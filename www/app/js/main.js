@@ -1,11 +1,23 @@
+const DEBUGS = {
+    pwaBypass: true
+}
+
 // Render rounded graphics
 //
 
-const test = new roundedGraphics(document.getElementById("background"), 1);
-document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
-document.querySelectorAll("button").forEach(button => test.addElement(button));
-test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary'));
-test.render();
+const renderer = new roundedGraphics(document.getElementById("background"), 1);
+document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
+document.querySelectorAll("button").forEach(button => renderer.addElement(button));
+renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
+
+let sin=0;
+setInterval(() => {
+    sin+=0.01;
+    const val = (Math.sin(sin) + 1) / 2;
+    renderer.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
+}, 10);
+renderer.render();
 
 // Glitched elements
 //
@@ -32,10 +44,14 @@ async function glitchOffset(element, original) {
     glitchOffset(element, original);
 }
 
-glitch_elements.forEach(element => {
+function glitchElementInit(element) {
     const style = element.style.transform;
     let original = style ? style : `translate(0, 0)`
     glitchOffset(element, original);
+}
+
+glitch_elements.forEach(element => {
+    glitchElementInit(element);
 });
 
 // LOG
@@ -131,18 +147,57 @@ UTIL.addNotification = function(date,message) {
 
 UTIL.countDownInterval = false;
 UTIL.setCoundDown = function(date, time) {
+
+    document.getElementById("nextevent-date").innerHTML = date;
+    document.getElementById("nextevent-time").innerHTML = time;
+
     const days = document.getElementById("label-countdown-days");
     const hours = document.getElementById("label-countdown-hours");
     const minutes = document.getElementById("label-countdown-minutes");
 
     const countDownDateTime = new Date(date + ' ' + time).getTime();
-    UTIL.countDownInterval = setInterval(() => {
+
+    const updateCountDown = () => {
         const now = new Date().getTime();
         const distance = countDownDateTime - now;
         days.innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
         hours.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    }
+    
+    clearInterval(UTIL.countDownInterval);
+    updateCountDown();
+    UTIL.countDownInterval = setInterval(() => {
+        updateCountDown();
     }, 1000);
+}
+
+UTIL.countDown = function(countDownDateTime) {
+    const now = new Date().getTime();
+    const distance = new Date(countDownDateTime).getTime() - now;
+    return {
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+    }
+}
+
+UTIL.addIncomingEvent = function(evenement) {
+    const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
+    eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
+    const countDown = UTIL.countDown(evenement.starting_at);
+    eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
+    
+    renderer.addElement(eventDom);
+    glitchElementInit(eventDom);
+    
+    document.getElementById("event-list").appendChild(eventDom);
+    
+    eventDom.addEventListener("click", () => {
+        PAGES.goto("event-countdown");
+
+        UTIL.setCoundDown(...evenement.starting_at.split("T"));
+    });
 }
 
 // Cookies
@@ -184,6 +239,23 @@ PAGES.active = function() {
     }
 }
 
+PAGES.next = function() {
+    let pages = PAGES.all();
+    for (let i = 0; i < pages.length; i++) {
+        if (pages[i].classList.contains("active")) {
+            let id;
+            if (i < pages.length - 1) {
+                id = pages[i + 1].dataset.pageId
+            } else {
+                id = pages[0].dataset.pageId
+            };
+            console.log(id);
+            PAGES.goto(id);
+            return;
+        }
+    }
+}
+
 PAGES.callbacks = {};
 
 PAGES.addCallback = function(pageID, callback) {
@@ -216,7 +288,7 @@ PAGES.home = function() { PAGES.goto("home"); };
 
 document.addEventListener("DOMContentLoaded", function() {
     if (!UTIL.isPWACompatible()) {
-        PAGES.goto("unsupported");
+        if (!DEBUGS.pwaBypass) PAGES.goto("unsupported");
         return;
     }
 });
