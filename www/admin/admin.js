@@ -2,7 +2,7 @@
 // PASSWORD
 //
 if (!Cookies.get('pass')) {
-    pass = prompt("Password", "") 
+    pass = prompt("Password", "")
     Cookies.set('pass', pass, { expires: 10 })
 }
 var password = Cookies.get('pass')
@@ -39,16 +39,14 @@ const socket = io();
 
 // SOCKET SEND
 //
-function ctrl(name, args) 
-{
+function ctrl(name, args) {
     socket.emit('ctrl', {
         name: name,
         args: args
     });
 }
 
-function query(name, args) 
-{
+function query(name, args) {
     var resid = Math.random().toString(36).substring(2);
     socket.emit('query', {
         name: name,
@@ -56,23 +54,23 @@ function query(name, args)
         resid: resid
     });
     return new Promise((resolve, reject) => {
-        socket.once('ok-'+resid, (data) => { resolve(data) })
-        socket.once('ko-'+resid, (data) => { try {reject(data)} catch(e) {log("ERROR: ", data)}})
+        socket.once('ok-' + resid, (data) => { resolve(data) })
+        socket.once('ko-' + resid, (data) => { try { reject(data) } catch (e) { log("ERROR: ", data) } })
     })
 }
 
 // LISTS
 //
-function updateSessions() { 
+function updateSessions() {
     query("Session.list")
-        .then((sessions) => { 
+        .then((sessions) => {
             console.log(sessions)
             $('#sessions').empty()
             var table = $('<table>').appendTo('#sessions')
             var thead = $('<thead>').appendTo(table)
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
-            
+
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('name').appendTo(tr)
             $('<th>').text('starting_at').appendTo(tr)
@@ -82,23 +80,23 @@ function updateSessions() {
             sessions.forEach((session) => {
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(session.id).appendTo(tr)
-                
+
                 $('<td>').text(session.name).appendTo(tr).on('click', () => {
                     var name = prompt("Session name", session.name).trim()
-                    if (name) query("Session.update", [session.id, {name: name}]).then(updateSessions)
+                    if (name) query("Session.update", [session.id, { name: name }]).then(updateSessions)
                 })
-            
+
                 $('<td>').appendTo(tr).append(
                     $('<input>').attr('type', 'datetime-local').val(session.starting_at).on('change', (e) => {
-                        query("Session.update", [session.id, {starting_at: e.target.value}]).then(updateSessions)
+                        query("Session.update", [session.id, { starting_at: e.target.value }]).then(updateSessions)
                     })
                 )
 
                 $('<td>').appendTo(tr).append(
                     $('<input>').attr('type', 'datetime-local').val(session.ending_at).on('change', (e) => {
-                        query("Session.update", [session.id, {ending_at: e.target.value}]).then(updateSessions)
+                        query("Session.update", [session.id, { ending_at: e.target.value }]).then(updateSessions)
                     }
-                ))
+                    ))
 
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete session " + session.name + " ?") &&
@@ -110,13 +108,13 @@ function updateSessions() {
 
 function updateUsers() {
     query("User.list")
-        .then((users) => { 
+        .then((users) => {
             $('#users').empty()
             var table = $('<table>').appendTo('#users')
             var thead = $('<thead>').appendTo(table)
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
-            
+
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('uuid').appendTo(tr)
             $('<th>').text('name').appendTo(tr)
@@ -134,10 +132,10 @@ function updateUsers() {
                 $('<td>').text(user.selected_avatar).appendTo(tr)
 
                 var sessions = $('<td>').appendTo(tr)
-                query("User.getfull", {uuid: user.uuid}).then((data) => {
+                query("User.getfull", { uuid: user.uuid }).then((data) => {
                     data.sessions.forEach((session) => {
                         $('<span>').text(session.name + ' ').appendTo(sessions).on('click', () => {
-                            if (confirm("Unregister user " + user.name + " from session " + session.name + " ?")) 
+                            if (confirm("Unregister user " + user.name + " from session " + session.name + " ?"))
                                 query("User.unregister", [user.uuid, session.id]).then(updateUsers)
                         })
                     })
@@ -162,7 +160,7 @@ function updateAvatars() {
             var thead = $('<thead>').appendTo(table)
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
-            
+
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('user_id').appendTo(tr)
             $('<th>').text('url').appendTo(tr)
@@ -179,19 +177,19 @@ function updateAvatars() {
                 })
             })
         }
-    )
+        )
 }
 
 
 function updateEvents() {
     query("Event.list")
-        .then((events) => { 
+        .then((events) => {
             $('#events').empty()
             var table = $('<table>').appendTo('#events')
             var thead = $('<thead>').appendTo(table)
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
-            
+
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('name').appendTo(tr)
             $('<th>').text('starting_at').appendTo(tr)
@@ -215,12 +213,12 @@ function updateEvents() {
                 $('<td>').text(event.name).appendTo(tr)
                 $('<td>').appendTo(tr).append(
                     $('<input>').attr('type', 'datetime-local').val(event.starting_at).on('change', (e) => {
-                        query("Event.update", [event.id, {starting_at: e.target.value}]).then(updateEvents)
+                        query("Event.update", [event.id, { starting_at: e.target.value }]).then(updateEvents)
                     })
                 )
                 $('<td>').appendTo(tr).append(
                     $('<input>').attr('type', 'datetime-local').val(event.ending_at).on('change', (e) => {
-                        query("Event.update", [event.id, {ending_at: e.target.value}]).then(updateEvents)
+                        query("Event.update", [event.id, { ending_at: e.target.value }]).then(updateEvents)
                     })
                 )
                 $('<td>').text(event.location).appendTo(tr)
@@ -232,25 +230,44 @@ function updateEvents() {
                     ctrl("flash", true)
                 })
 
+                $('<select>', { id: 'grp' }).appendTo(actions)
+
+                
+                //////////////// tempo
+                $('<option>', { text: " ------ ",value: "" }).appendTo("#grp")
+                query("Group.list").then((group) => {
+                    group.forEach((g) => {
+                        $('<option>', { text: g.name,value: g.id }).appendTo("#grp")
+                    })
+                })
+                //////////////
+                
                 $('<button>').text('color').appendTo(actions).on('click', () => {
                     const promptColor = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
                     const flashing = confirm("Flashing ?");
                     const autoselect = confirm("Random autoselect ?");
-                    ctrl("color", {colors: promptColor, params: {flash: flashing, random: autoselect}})
+
+                    let grpChoice = document.getElementById("grp").value
+                    if (grpChoice != "") {
+                        ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice}})
+                    } else {
+                        ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice: ''}})
+                    }
+
                 });
 
                 $('<button>').text('text').appendTo(actions).on('click', () => {
                     const promptText = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
                     const autoselect = confirm("Random autoselect ?");
 
-                    ctrl("text", {texts: promptText, params: { random: autoselect }})
+                    ctrl("text", { texts: promptText, params: { random: autoselect } })
                 });
 
                 $('<button>').text('image').appendTo(actions).on('click', () => {
                     const promptText = prompt("Image", "Séparez chaques URL par un ';'").split(";").map(c => c.trim());
                     const autoselect = confirm("Random autoselect ?");
 
-                    ctrl("image", {images: promptText, params: { random: autoselect }})
+                    ctrl("image", { images: promptText, params: { random: autoselect } })
                 });
 
                 $('<button>').text('info').appendTo(actions).on('click', () => {
@@ -274,13 +291,13 @@ function updateEvents() {
 
 function updateGenjobs() {
     query("Genjob.list")
-        .then((genjobs) => { 
+        .then((genjobs) => {
             $('#genjobs').empty()
             var table = $('<table>').appendTo('#genjobs')
             var thead = $('<thead>').appendTo(table)
             var tbody = $('<tbody>').appendTo(table)
             var tr = $('<tr>').appendTo(thead)
-            
+
             $('<th>').text('id').appendTo(tr)
             $('<th>').text('userid').appendTo(tr)
             $('<th>').text('status').appendTo(tr)
@@ -314,10 +331,10 @@ function updateGenjobs() {
 
 // SOCKET RECEIVE
 //
-socket.on('hello', () => { 
+socket.on('hello', () => {
     document.getElementById('logs').innerHTML = ""
-    log("hello") 
-    
+    log("hello")
+
     socket.emit('login', password);
     updateSessions()
     updateEvents()
@@ -371,8 +388,8 @@ document.getElementById('vibrate').addEventListener('click', () => {
 
 document.getElementById('session-new').addEventListener('click', () => {
     var name = prompt("Session name", "").trim()
-    
-    query("Session.new", {name: name}).then(updateSessions)
+
+    query("Session.new", { name: name }).then(updateSessions)
 })
 
 
@@ -382,8 +399,8 @@ document.getElementById('session-new').addEventListener('click', () => {
 document.getElementById('event-new').addEventListener('click', () => {
     var name = prompt("Event name", "").trim()
     var session_id = prompt("Session id", "").trim()
-    
-    query("Event.new", {name: name, session_id: session_id}).then(updateEvents)
+
+    query("Event.new", { name: name, session_id: session_id }).then(updateEvents)
 })
 
 // WORKFLOWS
@@ -392,7 +409,7 @@ document.getElementById('event-new').addEventListener('click', () => {
 document.getElementById('workflow-new').addEventListener('click', () => {
     var name = prompt("Workflow name", "").trim()
     var path = prompt("Workflow path", "").trim()
-    
-    query("Workflow.new", {name: name, path: path}).then(updateWorkflows)
+
+    query("Workflow.new", { name: name, path: path }).then(updateWorkflows)
 })
 

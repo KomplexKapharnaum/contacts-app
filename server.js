@@ -77,7 +77,12 @@ SOCKET.startEvent = function (name, args) {
     name: name,
     args: args
   };
-  SOCKET.io.emit('start-event', SOCKET.lastEvent);
+
+  if (args.params.grpChoice != '') {
+    SOCKET.io.to(args.params.grpChoice).emit(SOCKET.lastEvent);
+  } else {
+    SOCKET.io.emit('start-event', SOCKET.lastEvent);
+  }
 };
 
 SOCKET.endEvent = function () {
@@ -104,44 +109,31 @@ SOCKET.io.on('connection', (socket) => {
     db('users').update("is_connected", 1).where("uuid", "=", uuid).then();
     // si nuuid valid:    
 
-    // join ( or create ) room on session name and groupe name // FG
-    db.select("groups.name")
+    // join ( or create ) room on groupId // FG
+    db.select("groups.id")
       .from("groups")
       .join("users", "users.groupe_id", "=", "groups.id")
       .where("users.uuid", "=", uuid)
-      .then((groupe) =>{
-        groupe.forEach((g)=>{
-          db.select("sessions.name")
-          .from("sessions")
-          .join("groups", "groups.session_id", "=", "sessions.id")
-          .where("groups.name", "=", g.name)
-          .then((s) =>{
-            socket.join(s.name+"@"+g.name)
-          })
+      .then((groupe) => {
+        groupe.forEach((g) => {
+          socket.join(g.id)
         })
       })
   })
-
   socket.on('disconnect', () => {
     if (socket.user_uuid) {
       db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid).then();
 
       // leave room when disconect // FG
-      db.select("groups.name")
-      .from("groups")
-      .join("users", "users.groupe_id", "=", "groups.id")
-      .where("users.uuid", "=", socket.user_uuid)
-      .then((groupe) =>{
-        groupe.forEach((g)=>{
-          db.select("sessions.name")
-          .from("sessions")
-          .join("groups", "groups.session_id", "=", "sessions.id")
-          .where("groups.name", "=", g.name)
-          .then((s) =>{
-            socket.leave(s.name+"@"+g.name)
+      db.select("groups.id")
+        .from("groups")
+        .join("users", "users.groupe_id", "=", "groups.id")
+        .where("users.uuid", "=", socket.user_uuid)
+        .then((groupe) => {
+          groupe.forEach((g) => {
+            socket.leave(g.id)
           })
         })
-      })
     }
   })
 
@@ -293,7 +285,7 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   //set last read
-  socket.on("last_read", (uuid) =>{
+  socket.on("last_read", (uuid) => {
     db('users').where({ id: 1 }).update({
       last_read: Date.now()
     }).then((res) => console.log(res)).catch((err) => console.log(err))
@@ -450,16 +442,16 @@ function processJobs() {
   // Get next job (pending status, older date first)
   worker.next()
     .then((job) => {
-        job.run()
-          .then(() => {
-            // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
-          })
-          .catch((err) => {
-            // console.error('Job error', job.fields.id, err);
-          })
-          .finally(() => {
-            processJobs();
-          });
+      job.run()
+        .then(() => {
+          // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
+        })
+        .catch((err) => {
+          // console.error('Job error', job.fields.id, err);
+        })
+        .finally(() => {
+          processJobs();
+        });
     })
 }
 
