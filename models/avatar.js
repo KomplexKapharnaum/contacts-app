@@ -107,7 +107,6 @@ class Avatar extends Model {
                 catch (e) {
                     console.error('Avatar Genjob', job.id(), 'error', e);
                 }
-                // TODO signal that an avatar has been generated..
             })
 
             genjob.on('error', (job) => {

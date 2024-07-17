@@ -125,14 +125,16 @@ NETWORK.loadUser = function () {
 
 socket.on('hello', () => {
     console.log("Connexion established with server");
-
     NETWORK.loadUser();
+});
 
+socket.on('disconnect', () => {
+    console.log("Disconnected from server");
+});
 
-    // console.log(Cookies.get('token'))
-
-
-
+socket.on('reload', () => {
+    console.log("Reloading page");
+    location.reload();
 });
 
 NETWORK.receiveSessionEvent = function (event) {

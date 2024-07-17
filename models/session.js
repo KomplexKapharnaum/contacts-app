@@ -24,10 +24,6 @@ class Session extends Model {
             starting_at:    null,
             ending_at:      null
         })
-
-        this.events = [];
-        this.groups = [];
-        this.messages = []
     }
 
     clear() {

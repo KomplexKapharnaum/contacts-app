@@ -37,10 +37,6 @@ class User extends Model {
             last_read:      null,
             is_connected:   null
         });
-
-        this.sessions = [];
-        this.avatars = [];
-        this.genjobs = [];
     }
 
     clear() {
@@ -92,7 +88,11 @@ class User extends Model {
         let avatars = await db('avatars').where({ user_id: this.fields.id }).select('id');
         this.avatars = avatars.map(a => a.id);
 
-        let genjobs = await db('genjobs').where({ userid: this.fields.id }).whereNot('status', 'done').select('id');
+        let genjobs = await db('genjobs').where({ userid: this.fields.id })
+                                            .whereNot('status', 'done')
+                                            .whereNot('status', 'error')
+                                            .select('id');
+
         this.genjobs = genjobs.map(g => g.id);
 
         return this.get()
@@ -225,13 +225,20 @@ class User extends Model {
         
         return u;
     }
+
+    async getMessages(w, session_id) {
+        if (w) await this.load(w);
+        
+    }
     
-    async switch_connect(w, state){
-        if (state == true) {
-            await db('users').update("is_connected", 1).where(w);
-        } else{
-            await db('users').update("is_connected", 0).where(w);
+    async isConnected(w, state) 
+    {
+        if (w) await this.load(w);
+        if (state !== undefined && state != this.fields.is_connected) {
+            this.fields.is_connected = state ? 1 : 0;
+            this.save();
         }
+        return this.fields.is_connected;
     }
 }
 

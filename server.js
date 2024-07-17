@@ -20,6 +20,10 @@ await loadModel('Genjob');
 await loadModel('Group');
 await loadModel('Message');
 
+// MODELS HANDLER
+var GENJOB = new MODELS['Genjob']()
+var USER = new MODELS['User']()
+
 // HTTPS / HTTP
 import http from 'http';
 import https from 'https';
@@ -45,7 +49,6 @@ const __dirname = path.dirname(__filename);
 // Hooks
 import GithubWebHook from 'express-github-webhook';
 var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET });
-
 
 // Express
 //
@@ -93,6 +96,18 @@ SOCKET.auth = function (socket) {
   return true;
 }
 
+SOCKET.findUUID = async function (uuid) {
+  let clients = await SOCKET.io.fetchSockets()
+  let client = clients.find(c => c.user_uuid === uuid)
+  return client
+}
+
+SOCKET.findID = async function (id) {
+  let clients = await SOCKET.io.fetchSockets()
+  let client = clients.find(c => c.user_id === id)
+  return client
+}
+
 //  demarage server update all user !!!!!!!!!!!
 SOCKET.io.on('connection', (socket) => {
 
@@ -100,9 +115,13 @@ SOCKET.io.on('connection', (socket) => {
   socket.emit('hello');
 
   socket.on('identify', (uuid) => {
-    socket.user_uuid = uuid
-    db('users').update("is_connected", 1).where("uuid", "=", uuid).then();
-    // si nuuid valid:    
+    
+    // update user is_connected
+    USER.isConnected({ uuid: uuid }, true)
+
+    // store user info in socket
+    socket.user_uuid = USER.fields.uuid
+    socket.user_id = USER.fields.id
 
     // join ( or create ) room on session name and groupe name // FG
     db.select("groups.name")
@@ -124,7 +143,9 @@ SOCKET.io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     if (socket.user_uuid) {
-      db('users').update("is_connected", 0).where("uuid", "=", socket.user_uuid).then();
+
+      // update user is_connected
+      USER.isConnected({ uuid: uuid }, false)
 
       // leave room when disconect // FG
       db.select("groups.name")
@@ -444,11 +465,9 @@ function sendNotif(subscription, payload, ttl, delay) {
 
 // JOBS Processing : 
 //
-var worker = new MODELS['Genjob']()
 function processJobs() {
-  var job = new MODELS['Genjob']()
   // Get next job (pending status, older date first)
-  worker.next()
+  GENJOB.next()
     .then((job) => {
         job.run()
           .then(() => {
@@ -458,6 +477,26 @@ function processJobs() {
             // console.error('Job error', job.fields.id, err);
           })
           .finally(() => {
+            
+            // check if there is still job to process for this user
+            if (job.fields.id >= 0) 
+            {
+              USER.load({ id: job.fields.user_id }).then(() => {
+                if (USER.genjobs.length == 0) {
+                  console.log('All jobs done for user', USER.fields.name);
+                  // send notification to user
+                  SOCKET.findID(USER.fields.id).then((client) => {
+                    if (client) client.emit('reload');
+                  })
+                } 
+              })
+  
+  
+              SOCKET.findID(job.fields.user_id).then((client) => {
+                if (client) client.emit('job', job.get());
+              })
+            }
+
             processJobs();
           });
     })
