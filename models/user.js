@@ -203,7 +203,16 @@ class User extends Model {
             }
         }
 
-        u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
+        u.sessions = [];
+        const user_sessions = await db('users_sessions').where({ user_id: this.fields.id });
+        console.log("USER SESSIONS", user_sessions)
+        for (let s of user_sessions) {
+            let session = new Session();
+            await session.load(s.session_id);
+            u.sessions.push(session);
+        }
+        
+        // u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
         u.avatars = await Promise.all(this.avatars.map(a => (full ? a.get() : a.id())));
         u.genjobs = await Promise.all(this.genjobs.map(g => (full ? g.get() : g.id())));
 

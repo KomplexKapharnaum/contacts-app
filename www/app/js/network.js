@@ -51,13 +51,14 @@ NETWORK.loadUser = function() {
                     } else if (userData.genjobs.length > 0) {
                         PAGES.goto("create_avatar_processing");
                     }
-                    else if (userData.avatars.length == 0) {    // avatars are missing
+                    // COMMENTAIRES A ENLEVER CAR DEBUG
+                    /*else if (userData.avatars.length == 0) {    // avatars are missing
                         PAGES.goto("create_avatar_photo"); 
                     }
                                                                 // no avatar selected
                     else if (!userData.selected_avatar) {
                         PAGES.selectAvatar(userData.avatars);
-                    }
+                    }*/
                     else {
                         PAGES.goto("main");          // profile page
                         UTIL.shownav(true);
@@ -68,7 +69,9 @@ NETWORK.loadUser = function() {
                                     // check if user is already registered from userData
                                     nextSession = id;
 
-                                    if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
+                                    // console.log("NEXT SESSION INFO", nextSession, userData);
+
+                                    if (!userData.sessions.map((s) => s.fields.id).includes(nextSession)) {
                                         console.log("User not registered to next session");
 
                                         // check if user declined to register
@@ -83,6 +86,15 @@ NETWORK.loadUser = function() {
                                             .then((session) => {
                                                 UTIL.promptForSubscribingEvent(session, nextSession);
                                             });
+                                    } else {
+                                        let events = userData.sessions[0].events;
+                                        if (events.length > 0) {
+                                            PAGES.goto("event-list");
+                                            events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
+                                            events.forEach(evenement => {
+                                                UTIL.addIncomingEvent(evenement.fields);
+                                            })
+                                        }
                                     }
                                 })
                                 .catch((err) => {

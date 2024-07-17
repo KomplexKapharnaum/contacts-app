@@ -103,6 +103,7 @@ class roundedGraphics {
 
             switch (domElement.tagName) {
                 case 'BUTTON':
+                    if (domElement.style.visibility === 'hidden') break;
                     /* const col = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();*/
                     ctx.fillStyle = this.color;
                     this.roundRect(ctx, coords.x, coords.y, coords.width, coords.height, 8, true, false);
@@ -110,7 +111,9 @@ class roundedGraphics {
                     break;
                 case 'IMG':
                     // console.log('img', domElement.complete);
-                    if (domElement.complete === false) return;
+                    if (domElement.complete === false) break;
+                    if (domElement.style.visibility === 'hidden') break;
+
                     ctx.save();
                     ctx.translate(coords.x + coords.width / 2, coords.y + coords.height / 2);
                     ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 10);

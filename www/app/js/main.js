@@ -5,19 +5,19 @@ const DEBUGS = {
 // Render rounded graphics
 //
 
-const test = new roundedGraphics(document.getElementById("background"), 1);
-document.querySelectorAll(".illustration").forEach(illustration => test.addElement(illustration));
-document.querySelectorAll("button").forEach(button => test.addElement(button));
-test.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
-test.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
+const renderer = new roundedGraphics(document.getElementById("background"), 1);
+document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
+document.querySelectorAll("button").forEach(button => renderer.addElement(button));
+renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
 let sin=0;
 setInterval(() => {
     sin+=0.01;
     const val = (Math.sin(sin) + 1) / 2;
-    test.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
+    renderer.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
 }, 10);
-test.render();
+renderer.render();
 
 // Glitched elements
 //
@@ -143,18 +143,56 @@ UTIL.addNotification = function(date,message) {
 
 UTIL.countDownInterval = false;
 UTIL.setCoundDown = function(date, time) {
+
+    document.getElementById("nextevent-date").innerHTML = date;
+    document.getElementById("nextevent-time").innerHTML = time;
+
     const days = document.getElementById("label-countdown-days");
     const hours = document.getElementById("label-countdown-hours");
     const minutes = document.getElementById("label-countdown-minutes");
 
     const countDownDateTime = new Date(date + ' ' + time).getTime();
-    UTIL.countDownInterval = setInterval(() => {
+
+    const updateCountDown = () => {
         const now = new Date().getTime();
         const distance = countDownDateTime - now;
         days.innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
         hours.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    }
+    
+    clearInterval(UTIL.countDownInterval);
+    updateCountDown();
+    UTIL.countDownInterval = setInterval(() => {
+        updateCountDown();
     }, 1000);
+}
+
+UTIL.countDown = function(countDownDateTime) {
+    const now = new Date().getTime();
+    const distance = new Date(countDownDateTime).getTime() - now;
+    return {
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+    }
+}
+
+UTIL.addIncomingEvent = function(evenement) {
+    const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
+    eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
+    const countDown = UTIL.countDown(evenement.starting_at);
+    eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
+    
+    renderer.addElement(eventDom);
+
+    document.getElementById("event-list").appendChild(eventDom);
+    
+    eventDom.addEventListener("click", () => {
+        PAGES.goto("event-countdown");
+
+        UTIL.setCoundDown(...evenement.starting_at.split("T"));
+    });
 }
 
 // Cookies

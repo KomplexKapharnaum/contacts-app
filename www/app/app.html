@@ -270,6 +270,21 @@
         </div>
     </div>
 
+    <template id="event-list-item">
+        <button class="event-list-item">
+            <div class="event-list-item-title"></div>
+            <div class="event-list-item-date"></div>
+        </button>
+    </template>
+    
+    <div class="page" data-page-id="event-list">
+        <div class="txt secondary">
+            Des évènements sont à venir !
+        </div>
+
+        <div id="event-list"></div>
+    </div>
+
     <div class="page" data-page-id="event-countdown">
 
         <div class="flex-group">
@@ -297,7 +312,8 @@
         <img class="illustration" src="./img/clock.png" alt="clock">
 
         <div class="buttons">
-            <button>Me notifier 1 jour avant l'évènement</button>
+            <button class="button-sm" onclick="PAGES.goto('event-list')">Retour</button>
+            <!-- button>Me notifier 1 jour avant l'évènement</button -->
         </div>
     </div>
 
