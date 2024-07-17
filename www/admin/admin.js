@@ -253,6 +253,12 @@ function updateEvents() {
                     ctrl("image", {images: promptText, params: { random: autoselect }})
                 });
 
+                $('<button>').text('info').appendTo(actions).on('click', () => {
+                    const promptText = prompt("Image", "Ecrivez votre message ici...");
+
+                    ctrl("info", {message: promptText, params: {}})
+                });
+
                 $('<button>').text('end').appendTo(actions).on('click', () => {
                     ctrl("end")
                 });

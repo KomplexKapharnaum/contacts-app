@@ -83,13 +83,15 @@ NETWORK.loadUser = function () {
                     
                     if (!session) {
                         console.log("User not registered to next session");
-
+                        
+                        /*
                         // check if user declined to register
                         if (Cookies.get('session_declined_' + nextSession)) {
                             console.log("User declined to register");
                             pages.goto("main");
                             return;
                         }
+                        */
 
                         // Get session details
                         NETWORK.query('Session.get', nextSession)
@@ -223,6 +225,10 @@ NETWORK.receiveSessionEvent = function (event) {
                     container.appendChild(div);
                 });
             })();
+            break;
+        case "info":
+            PAGES.goto("event-info");
+            document.getElementById("event-info-message").innerHTML = event.args.message; 
             break;
         case "flash":
             PAGES.goto("event-flash");

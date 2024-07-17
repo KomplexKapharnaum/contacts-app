@@ -9,6 +9,8 @@ const renderer = new roundedGraphics(document.getElementById("background"), 1);
 document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
 document.querySelectorAll("button").forEach(button => renderer.addElement(button));
 renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim());
+
 renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
 let sin=0;
