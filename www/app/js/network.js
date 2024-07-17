@@ -7,8 +7,7 @@ var socket = io();
 
 // MODELS QUERY
 //
-NETWORK.query = function (name, args) 
-{
+NETWORK.query = function (name, args) {
     var resid = Math.random().toString(36).substring(2);
     socket.emit('query', {
         name: name,
@@ -16,106 +15,126 @@ NETWORK.query = function (name, args)
         resid: resid
     });
     var p = new Promise((resolve, reject) => {
-        socket.once('ok-'+resid, (data) => { resolve(data) })
-        socket.once('ko-'+resid, (data) => { reject(data)} )
+        socket.once('ok-' + resid, (data) => { resolve(data) })
+        socket.once('ko-' + resid, (data) => { reject(data) })
     })
     return p
 }
 
-NETWORK.requestAvatar = async function() {
+NETWORK.requestAvatar = async function () {
     return new Promise((resolve, reject) => {
-        NETWORK.query("Avatar.new", {user_id: userData.id, url: "https://picsum.photos/256/256"}).then((data) => {
-           resolve(data);
+        NETWORK.query("Avatar.new", { user_id: userData.id, url: "https://picsum.photos/256/256" }).then((data) => {
+            resolve(data);
         });
     });
 }
 
-NETWORK.loadUser = function() {
+NETWORK.loadUser = function () {
 
     // Load USER from UUID token
     const token = Cookies.get('token');
     console.log("User token :", token)
     // console.log("User token :", token)
 
-    NETWORK.query('User.getfull', {uuid: token})
-                .then((data) => {
-                    userData = data;
+    NETWORK.query('User.getfull', { uuid: token })
+        .then((data) => {
+            userData = data;
 
-                    log('User loaded', data);
-                    // log('auth successful.');
+            log('User loaded', data);
+            // log('auth successful.');
 
-                    //
-                    // Routing based on user status
-                    //
+            // Inform server that user is connected
+            socket.emit("identify", token)
 
-                    // name is missing
-                    if (!userData.name) 
-                        return PAGES.goto("pseudonyme_register");
-                    
-                    // genjobs are pending or running -> wait !
-                    if (userData.genjobs.filter((job) => job.status == "pending" || job.status == "running").length > 0) 
-                        return PAGES.goto("create_avatar_processing"); 
+            //
+            // Routing based on user status
+            //
 
-                    // no avatar created yet
-                    if (userData.avatars.length == 0) 
-                        return PAGES.goto("create_avatar_photo"); 
-                                                                
-                    // no avatar selected
-                    if (!userData.selected_avatar) 
-                        return PAGES.selectAvatar(userData.avatars);
+            // name is missing
+            if (!userData.name) 
+                return PAGES.goto("pseudonyme_register");
+            
+            // genjobs are pending or running -> wait !
+            if (userData.genjobs.filter((job) => job.status == "pending" || job.status == "running").length > 0) 
+                return PAGES.goto("create_avatar_processing"); 
 
-                    // all good
-                    PAGES.goto("main");          // profile page
-                    UTIL.shownav(true);
+            // no avatar created yet
+            if (userData.avatars.length == 0) 
+                return PAGES.goto("create_avatar_photo"); 
+                                                        
+            // no avatar selected
+            if (!userData.selected_avatar) 
+                return PAGES.selectAvatar(userData.avatars);
 
-                    // Load next session and offers to register
-                    NETWORK.query('Session.next')
-                            .then((id) => {
-                                // check if user is already registered from userData
-                                nextSession = id;
+            // all good
+            PAGES.goto("main");          // profile page
+            UTIL.shownav(true);
 
-                                if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
-                                    console.log("User not registered to next session");
+            // Load next session and offers to register
+            NETWORK.query('Session.next')
+                .then((id) => {
+                    // check if user is already registered from userData
+                    nextSession = id;
 
-                                    // check if user declined to register
-                                    if (Cookies.get('session_declined_'+nextSession)) {
-                                        console.log("User declined to register");
-                                        pages.goto("main");
-                                        return;
-                                    }
+                    console.log("Sessions User", userData.sessions)
 
-                                    // Get session details
-                                    NETWORK.query('Session.get', nextSession)
-                                        .then((session) => {
-                                            UTIL.promptForSubscribingEvent(session, nextSession);
-                                        });
-                                }
-                            })
-                            .catch((err) => {
-                                console.log("No next session found");
-                            });
+                    // if (!userData.sessions.map((s) => s.fields.id).includes(nextSession)) {
+                    //     console.log("User not registered to next session");
+
+                    //     // check if user declined to register
+                    //     if (Cookies.get('session_declined_' + nextSession)) {
+                    //         console.log("User declined to register");
+                    //         pages.goto("main");
+                    //         return;
+                    //     }
+
+                    //     // Get session details
+                    //     NETWORK.query('Session.get', nextSession)
+                    //         .then((session) => {
+                    //             UTIL.promptForSubscribingEvent(session, nextSession);
+                    //         });
+                    // } else {
+                    //     let events = userData.sessions[0].events;
+                    //     if (events.length > 0) {
+                    //         if (isEventActive()) return;
+                    //         PAGES.goto("event-list");
+                    //         events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
+                    //         events.forEach(evenement => {
+                    //             UTIL.addIncomingEvent(evenement.fields);
+                    //         })
+                    //     }
+                    // }
                     
                 })
                 .catch((err) => {
-                    log('Auth failed.', err);
-                    Cookies.set('token', "", 30)
-                    PAGES.goto("home");
+                    console.log("No next session found");
                 });
+        })
+        .catch((err) => {
+            log('Auth failed.', err);
+            Cookies.set('token', "", 30)
+            PAGES.goto("home");
+        });
 }
 
-socket.on('hello', () => 
-{
+socket.on('hello', () => {
     console.log("Connexion established with server");
 
     NETWORK.loadUser();
+
+
+    // console.log(Cookies.get('token'))
+
+
+
 });
 
-NETWORK.receiveSessionEvent = function(event) {
+NETWORK.receiveSessionEvent = function (event) {
     if (!isEventActive()) return;
     console.log("Received event", event);
     let container;
     switch (event.name) {
-        case "color" :
+        case "color":
             PAGES.goto("event-color");
             container = document.getElementById("color-selection");
             container.innerHTML = "";
@@ -128,20 +147,20 @@ NETWORK.receiveSessionEvent = function(event) {
                 container.appendChild(div);
             });
             break;
-        case "text" :
+        case "text":
             PAGES.goto("event-text");
             container = document.getElementById("text-selection");
             container.innerHTML = "";
             event.args.forEach((text) => {
                 const div = document.createElement("div");
-                div.innerHTML = text;   
+                div.innerHTML = text;
                 div.addEventListener("click", () => {
                     UTIL.showOverlay(true, "black", text);
                 });
                 container.appendChild(div);
             });
             break;
-        case "flash" :
+        case "flash":
             PAGES.goto("event-flash");
             break;
     }
@@ -152,3 +171,4 @@ socket.on('end-event', () => {
     PAGES.goto("main");
     UTIL.showOverlay(false);
 });
+

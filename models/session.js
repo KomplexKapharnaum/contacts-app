@@ -10,6 +10,8 @@
 import db from '../tools/db.js';
 import Model from './model.js';
 import Event from './event.js';
+import User from './user.js';
+import Group from './group.js';
 
 class Session extends Model {
 
@@ -24,11 +26,15 @@ class Session extends Model {
         })
 
         this.events = [];
+        this.groups = [];
+        this.messages = []
     }
 
     clear() {
         super.clear();
         this.events = [];
+        this.groups = [];
+        this.messages = []
     }
 
     async load(w)
@@ -37,6 +43,12 @@ class Session extends Model {
 
         let events = await db('events').where({ session_id: this.fields.id }).select('id');
         this.events = events.map(e => {e.id})
+
+        let groups = await db('groups').where({ session_id: this.fields.id }).select('id');
+        this.groups = groups.map(e => {e.id})
+
+        let messages = await db('messages').where({ session_id: this.fields.id }).select('id');
+        this.messages = messages.map(e => {e.id})
 
         return this.get()
     }
@@ -57,6 +69,7 @@ class Session extends Model {
     {
         await super.delete(w);
         await db('events').where({ session_id: this.fields.id }).del();
+        await db('groups').where({ session_id: this.fields.id }).del();
     }
 
     async get(w, full = false)
@@ -64,6 +77,7 @@ class Session extends Model {
         if (w) await this.load(w);
         let s = await super.get();
         s.events = full ? await this.getevents() : this.events;
+        s.groupe = full ? await this.getgroups() : this.groups;
         return s;
     }
 
@@ -83,6 +97,14 @@ class Session extends Model {
         let event = new Event();
         return await Promise.all(this.events.map(async e => {
             return await event.get(e);
+        }))
+    }
+    async getgroups(w)
+    {
+        if (w) await this.load(w);
+        let groupe = new Group();
+        return await Promise.all(this.groups.map(async e => {
+            return await groupe.get(e);
         }))
     }
 

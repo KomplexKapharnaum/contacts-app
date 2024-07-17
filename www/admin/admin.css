@@ -41,3 +41,23 @@ hr {
 .db table tr:nth-child(odd) {
     background-color: #111;
 }
+/* ///////////////////////////////////// */
+/* SMS */
+/* //////////////////////////////////////// */
+
+
+.hidden {
+    display: none;
+}
+.contain {
+    max-width: 200px;
+}
+.flex{
+    display: flex;
+    flex-flow: wrap;
+}
+fieldset.contain *{
+    padding: 3px;
+    margin: 2px;
+}
+

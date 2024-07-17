@@ -32,7 +32,10 @@ class User extends Model {
             name:           null,
             phone:          null,
             uuid:           null,
-            selected_avatar: null
+            selected_avatar: null,
+            groupe_id:      null,
+            last_read:      null,
+            is_connected:   null
         });
 
         this.sessions = [];
@@ -124,6 +127,12 @@ class User extends Model {
         // Delete genjobs
         await db('genjobs').where({ userid: this.fields.id }).del();
 
+        // Delete groupe_id
+        await db('groupe_id').where({ user_id: this.fields.id }).del();
+
+        // Delete last_read
+        await db('last_read').where({ user_id: this.fields.id }).del();
+
         console.log('User', this.fields.id, 'deleted');
     }
 
@@ -138,7 +147,6 @@ class User extends Model {
         if (user_session) throw new Error('User already registered to session');
 
         await db('users_sessions').insert({ user_id: this.fields.id, session_id: session_id });
-        
         console.log('User', this.fields.id, 'registered to session', session_id);
     }
 
@@ -218,6 +226,13 @@ class User extends Model {
         return u;
     }
     
+    async switch_connect(w, state){
+        if (state == true) {
+            await db('users').update("is_connected", 1).where(w);
+        } else{
+            await db('users').update("is_connected", 0).where(w);
+        }
+    }
 }
 
 
@@ -230,6 +245,10 @@ db.schema.hasTable('users').then(exists => {
             table.string('phone');
             table.string('uuid');
             table.integer('selected_avatar');
+            table.integer('groupe_id');
+            table.integer('last_read');
+            table.integer('is_connected');
+
         }).then(() => {
             console.log('created users table');
         });
