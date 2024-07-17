@@ -104,6 +104,7 @@ NETWORK.loadUser = function () {
                             if (isEventActive()) return;
                             PAGES.goto("event-list");
                             events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
+                            UTIL.clearIncomingEvents();
                             events.forEach(evenement => {
                                 UTIL.addIncomingEvent(evenement);
                             })

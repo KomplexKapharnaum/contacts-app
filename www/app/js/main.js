@@ -188,6 +188,10 @@ UTIL.countDown = function(countDownDateTime) {
     }
 }
 
+UTIL.clearIncomingEvents = function() {
+    document.getElementById("event-list").innerHTML = "";   
+}
+
 UTIL.addIncomingEvent = function(evenement) {
     const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
     eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
