@@ -43,26 +43,26 @@ NETWORK.loadUser = function () {
             log('User loaded', data);
             // log('auth successful.');
 
-            socket.emit("identify",token)
+            socket.emit("identify", token)
 
-                    // Routing based on user status
-                    //
-                    if (!userData.name) {                       // name is missing
-                        PAGES.goto("pseudonyme_register");
-                    } else if (userData.genjobs.length > 0) {
-                        PAGES.goto("create_avatar_processing");
-                    }
-                    // COMMENTAIRES A ENLEVER CAR DEBUG
-                    /*else if (userData.avatars.length == 0) {    // avatars are missing
-                        PAGES.goto("create_avatar_photo"); 
-                    }
-                                                                // no avatar selected
-                    else if (!userData.selected_avatar) {
-                        PAGES.selectAvatar(userData.avatars);
-                    }*/
-                    else {
-                        PAGES.goto("main");          // profile page
-                        UTIL.shownav(true);
+            // Routing based on user status
+            //
+            if (!userData.name) {                       // name is missing
+                PAGES.goto("pseudonyme_register");
+            } else if (userData.genjobs.length > 0) {
+                PAGES.goto("create_avatar_processing");
+            }
+            // COMMENTAIRES A ENLEVER CAR DEBUG
+            /*else if (userData.avatars.length == 0) {    // avatars are missing
+                PAGES.goto("create_avatar_photo"); 
+            }
+                                                        // no avatar selected
+            else if (!userData.selected_avatar) {
+                PAGES.selectAvatar(userData.avatars);
+            }*/
+            else {
+                PAGES.goto("main");          // profile page
+                UTIL.shownav(true);
 
                 // Load next session and offers to register
                 NETWORK.query('Session.next')
@@ -72,46 +72,46 @@ NETWORK.loadUser = function () {
 
                         if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
                             console.log("User not registered to next session");
-                                    // console.log("NEXT SESSION INFO", nextSession, userData);
+                            // console.log("NEXT SESSION INFO", nextSession, userData);
 
-                                    if (!userData.sessions.map((s) => s.fields.id).includes(nextSession)) {
-                                        console.log("User not registered to next session");
+                            if (!userData.sessions.map((s) => s.fields.id).includes(nextSession)) {
+                                console.log("User not registered to next session");
 
-                            // check if user declined to register
-                            if (Cookies.get('session_declined_' + nextSession)) {
-                                console.log("User declined to register");
-                                pages.goto("main");
-                                return;
+                                // check if user declined to register
+                                if (Cookies.get('session_declined_' + nextSession)) {
+                                    console.log("User declined to register");
+                                    pages.goto("main");
+                                    return;
+                                }
+
+                                // Get session details
+                                NETWORK.query('Session.get', nextSession)
+                                    .then((session) => {
+                                        UTIL.promptForSubscribingEvent(session, nextSession);
+                                    });
+                            } else {
+                                let events = userData.sessions[0].events;
+                                if (events.length > 0) {
+                                    if (isEventActive()) return;
+                                    PAGES.goto("event-list");
+                                    events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
+                                    events.forEach(evenement => {
+                                        UTIL.addIncomingEvent(evenement.fields);
+                                    })
+                                }
                             }
+                        })
+                    .catch((err) => {
+                        console.log("No next session found");
+                    });
+            }
 
-                                        // Get session details
-                                        NETWORK.query('Session.get', nextSession)
-                                            .then((session) => {
-                                                UTIL.promptForSubscribingEvent(session, nextSession);
-                                            });
-                                    } else {
-                                        let events = userData.sessions[0].events;
-                                        if (events.length > 0) {
-                                            if (isEventActive()) return;
-                                            PAGES.goto("event-list");
-                                            events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
-                                            events.forEach(evenement => {
-                                                UTIL.addIncomingEvent(evenement.fields);
-                                            })
-                                        }
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.log("No next session found");
-                                });
-                    }    
-                    
-                })
-                .catch((err) => {
-                    log('Auth failed.', err);
-                    Cookies.set('token', "", 30)
-                    PAGES.goto("home");
-                });
+        })
+        .catch((err) => {
+            log('Auth failed.', err);
+            Cookies.set('token', "", 30)
+            PAGES.goto("home");
+        });
 }
 
 socket.on('hello', () => {
@@ -120,8 +120,8 @@ socket.on('hello', () => {
     NETWORK.loadUser();
 
 
-        // console.log(Cookies.get('token'))
-        
+    // console.log(Cookies.get('token'))
+
 
 
 });
