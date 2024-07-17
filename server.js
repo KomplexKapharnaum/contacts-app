@@ -457,7 +457,8 @@ function sendNotif(subscription, payload, ttl, delay) {
 
 // JOBS Processing : 
 //
-function processJobs() {
+function processJobs() 
+{
   // Get next job (pending status, older date first)
   GENJOB.next()
     .then((job) => {

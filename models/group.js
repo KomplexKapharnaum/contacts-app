@@ -73,10 +73,10 @@ class Group extends Model {
 
 }
 
-// delete table if exists
-db.schema.dropTableIfExists('Groupes').then(() => {
-    console.log('dropped Groupes table');
-});
+// // delete table if exists
+// db.schema.dropTableIfExists('groups').then(() => {
+//     console.log('dropped groups table');
+// });
 
 // Create Table if not exists
 db.schema.hasTable('groups').then(exists => {
