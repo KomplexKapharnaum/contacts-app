@@ -231,14 +231,28 @@ function updateEvents() {
                 $('<button>').text('flash').appendTo(actions).on('click', () => {
                     ctrl("flash", true)
                 })
+
                 $('<button>').text('color').appendTo(actions).on('click', () => {
                     const promptColor = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
-                    ctrl("color", promptColor)
+                    const flashing = confirm("Flashing ?");
+                    const autoselect = confirm("Random autoselect ?");
+                    ctrl("color", {colors: promptColor, params: {flash: flashing, random: autoselect}})
                 });
+
                 $('<button>').text('text').appendTo(actions).on('click', () => {
                     const promptText = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
-                    ctrl("text", promptText)
+                    const autoselect = confirm("Random autoselect ?");
+
+                    ctrl("text", {texts: promptText, params: { random: autoselect }})
                 });
+
+                $('<button>').text('image').appendTo(actions).on('click', () => {
+                    const promptText = prompt("Image", "Séparez chaques URL par un ';'").split(";").map(c => c.trim());
+                    const autoselect = confirm("Random autoselect ?");
+
+                    ctrl("image", {images: promptText, params: { random: autoselect }})
+                });
+
                 $('<button>').text('end').appendTo(actions).on('click', () => {
                     ctrl("end")
                 });
