@@ -81,6 +81,10 @@ NETWORK.loadUser = function () {
                     // get session from userData.sessions where id = nextSession
                     let session = userData.sessions.filter((s) => s.id == nextSession)[0];
                     
+                    UTIL.getMessages(userData.id, nextSession).then((messages) => {
+                        console.log("messages : ",  messages);
+                    })
+                    
                     if (!session) {
                         console.log("User not registered to next session");
                         
@@ -112,7 +116,6 @@ NETWORK.loadUser = function () {
                             })
                         }
                     }
-                    
                 })
                 .catch((err) => {
                     console.log("No next session found");

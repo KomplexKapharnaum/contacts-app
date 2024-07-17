@@ -212,6 +212,14 @@ UTIL.addIncomingEvent = function(evenement) {
     });
 }
 
+UTIL.getMessages = async function(user_id, session_id) {
+    return new Promise(async (resolve, reject) => {
+        // const messages = await NETWORK.query('Message.list', {user_id: user_id, session_id: session_id});
+        const messages = await NETWORK.query("User.getMessages", user_id, session_id);
+        resolve(messages);
+    })
+}
+
 // Cookies
 //
 
