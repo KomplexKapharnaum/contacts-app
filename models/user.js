@@ -235,7 +235,6 @@ class User extends Model {
     }
 }
 
-
 // Create Table if not exists
 db.schema.hasTable('users').then(exists => {
     if (!exists) {
