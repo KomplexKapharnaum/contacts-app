@@ -126,12 +126,18 @@ UTIL.shownav = function(bool) {
 }
 UTIL.shownav(false);
 
-UTIL.showOverlay = function(bool, color, message) {
+UTIL.showOverlay = function(bool, color, message, image = false, flashing = false) {
     const overlay = document.getElementById("overlay");
+    overlay.classList.remove("flashing");
     if (bool) {
         overlay.classList.add("active");
+        if (flashing) overlay.classList.add("flashing");
         overlay.style.backgroundColor = color;
         overlay.innerHTML = message;
+
+        if (image) {
+            overlay.innerHTML = `<img src="${image}">`;
+        }
     } else {
         overlay.classList.remove("active");
     }
@@ -190,7 +196,7 @@ UTIL.addIncomingEvent = function(evenement) {
     
     renderer.addElement(eventDom);
     glitchElementInit(eventDom);
-    
+
     document.getElementById("event-list").appendChild(eventDom);
     
     eventDom.addEventListener("click", () => {

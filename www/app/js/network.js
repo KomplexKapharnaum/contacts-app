@@ -120,34 +120,92 @@ socket.on('hello', () =>
 
 NETWORK.receiveSessionEvent = function(event) {
     if (!isEventActive()) return;
-    console.log("Received event", event);
     let container;
     switch (event.name) {
         case "color" :
-            PAGES.goto("event-color");
-            container = document.getElementById("color-selection");
-            container.innerHTML = "";
-            event.args.forEach((color) => {
-                const div = document.createElement("div");
-                div.style.backgroundColor = color;
-                div.addEventListener("click", () => {
-                    UTIL.showOverlay(true, color, "");
+            (() => {
+                const colors = event.args.colors;
+                const flashing = event.args.params.flash;
+                const randomSelect = event.args.params.random;
+                
+                if (colors.length==1) {
+                    UTIL.showOverlay(true, colors[0], "", flashing);
+                    return;
+                }
+
+                if (randomSelect) {
+                    UTIL.showOverlay(true, colors[Math.floor(Math.random()*colors.length)], "", false, flashing);
+                    return;
+                }
+
+                PAGES.goto("event-color");
+                container = document.getElementById("color-selection");
+                container.innerHTML = "";
+                colors.forEach((color) => {
+                    const div = document.createElement("div");
+                    div.style.backgroundColor = color;
+                    div.addEventListener("click", () => {
+                        UTIL.showOverlay(true, color, "", false, flashing);
+                    });
+                    container.appendChild(div);
                 });
-                container.appendChild(div);
-            });
+            })()
             break;
         case "text" :
-            PAGES.goto("event-text");
-            container = document.getElementById("text-selection");
-            container.innerHTML = "";
-            event.args.forEach((text) => {
-                const div = document.createElement("div");
-                div.innerHTML = text;   
-                div.addEventListener("click", () => {
-                    UTIL.showOverlay(true, "black", text);
+            (() => {
+                const texts = event.args.texts;
+                const randomSelect = event.args.params.random;
+
+                if (texts.length==1) {
+                    UTIL.showOverlay(true, "black", texts[0]);
+                    return;
+                }
+
+                if (randomSelect) {
+                    UTIL.showOverlay(true, texts[Math.floor(Math.random()*texts.length)], "");
+                    return;
+                }
+
+                PAGES.goto("event-text");
+                container = document.getElementById("text-selection");
+                container.innerHTML = "";
+                texts.forEach((text) => {
+                    const div = document.createElement("div");
+                    div.innerHTML = text;   
+                    div.addEventListener("click", () => {
+                        UTIL.showOverlay(true, "black", text);
+                    });
+                    container.appendChild(div);
                 });
-                container.appendChild(div);
-            });
+            })();
+            break;
+        case "image" :
+            (()=>{
+                const images = event.args.images;
+                const randomSelect = event.args.params.random;
+
+                if (images.length==1) {
+                    UTIL.showOverlay(true, "", "",images[0]);
+                    return;
+                }
+
+                if (randomSelect) {
+                    UTIL.showOverlay(true, "", "",images[Math.floor(Math.random()*images.length)]);
+                    return;
+                }
+
+                PAGES.goto("event-image");
+                container = document.getElementById("image-selection");
+                container.innerHTML = "";
+                images.forEach((image) => {
+                    const div = document.createElement("div");
+                    div.style.backgroundImage = "url("+image+")";
+                    div.addEventListener("click", () => {
+                        UTIL.showOverlay(true, "", "",image);
+                    });
+                    container.appendChild(div);
+                });
+            })();
             break;
         case "flash" :
             PAGES.goto("event-flash");

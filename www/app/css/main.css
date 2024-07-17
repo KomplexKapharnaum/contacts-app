@@ -239,11 +239,36 @@ input[type="text"] {
     font-size: 3em;
 }
 
+#overlay img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    background-color: var(--color-background);
+}
+
 #overlay.active {
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--color-text-primary);
+}
+
+@keyframes flashing {
+    0%, 25% {
+        background-color: auto;
+    }
+    25%, 75% {
+        background-color: var(--color-background);
+    }
+    100% {
+        background-color: auto;
+    }
+}
+
+#overlay.flashing {
+    animation: flashing 300ms step-end infinite;
 }
 
 #nextevent-countdown {
@@ -349,6 +374,23 @@ input[type="text"] {
     border: solid 1px var(--color-text-primary);
     padding: 8px;
     border-radius: 8px;
+}
+
+#image-selection {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#image-selection>div {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-background);
+    background-size: cover;
+    background-position: center;
 }
 
 /* Sub pages */
