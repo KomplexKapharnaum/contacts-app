@@ -265,4 +265,15 @@ db.schema.hasTable('users_sessions').then(exists => {
     }
 });
 
+db.schema.hasTable('users_groups').then(exists => {
+    if (!exists) {
+        db.schema.createTable('users_groups', table => {
+            table.integer('user_id');
+            table.integer('group_id');
+        }).then(() => {
+            console.log('created users_groups table');
+        });
+    }
+});
+
 export default User;

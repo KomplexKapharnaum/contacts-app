@@ -10,7 +10,8 @@ class Message extends Model {
                 data: null,
                 emit_time: null,
                 message: null,
-                session: null
+                session: null,
+                groupe_id: null
             });
     }
 
