@@ -41,14 +41,14 @@ class Session extends Model {
     {
         await super.load(w);
 
-        let events = await db('events').where({ session_id: this.fields.id }).select('id');
-        this.events = events.map(e => {e.id})
+        let events = await db('events').where({ 'session_id': this.fields.id }).select('id');
+        this.events = events.map(e => e.id)
 
-        let groups = await db('groups').where({ session_id: this.fields.id }).select('id');
-        this.groups = groups.map(e => {e.id})
+        let groups = await db('groups').where({ 'session_id': this.fields.id }).select('id');
+        this.groups = groups.map(e => e.id)
 
-        let messages = await db('messages').where({ session_id: this.fields.id }).select('id');
-        this.messages = messages.map(e => {e.id})
+        let messages = await db('messages').where({ 'session_id': this.fields.id }).select('id');
+        this.messages = messages.map(e => e.id)
 
         return this.get()
     }
