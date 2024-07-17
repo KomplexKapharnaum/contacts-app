@@ -77,7 +77,12 @@ SOCKET.startEvent = function (name, args) {
     name: name,
     args: args
   };
-  SOCKET.io.emit('start-event', SOCKET.lastEvent);
+
+  if (args.params.grpChoice != ''){
+    SOCKET.io.to(args.params.grpChoice).emit(SOCKET.lastEvent);
+  }else {
+    SOCKET.io.emit('start-event', SOCKET.lastEvent);
+  }
 };
 
 SOCKET.endEvent = function () {
