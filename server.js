@@ -307,10 +307,10 @@ function processJobs() {
     .then((job) => {
         job.run()
           .then(() => {
-            if (job.fields.id >= 0) console.log('Job done', job.fields.id);
+            // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
           })
           .catch((err) => {
-            console.error('Job error', job.fields.id, err);
+            // console.error('Job error', job.fields.id, err);
           })
           .finally(() => {
             processJobs();

@@ -82,28 +82,15 @@ class User extends Model {
     {
         await super.load(w);
 
-        // TODO: LAZY OR CONCURRENT LOAD...
+        let sessions = await db('users_sessions').where({ user_id: this.fields.id }).select('session_id');
+        this.sessions = sessions.map(s => s.session_id);
 
-        // let sessions = await db('users_sessions').where({ user_id: this.fields.id });
-        // for (let s of sessions) {
-        //     let session = new Session();
-        //     await session.load(s.session_id);
-        //     this.sessions.push(session);
-        // }
 
-        // let avatars = await db('avatars').where({ user_id: this.fields.id });
-        // for (let a of avatars) {
-        //     let avatar = new Avatar();
-        //     await avatar.load(a.id);
-        //     this.avatars.push(avatar);
-        // }
+        let avatars = await db('avatars').where({ user_id: this.fields.id }).select('id');
+        this.avatars = avatars.map(a => a.id);
 
-        // let genjobs = await db('genjobs').where({ userid: this.fields.id });
-        // for (let g of genjobs) {
-        //     let genjob = new Genjob();
-        //     await genjob.load(g.id);
-        //     this.genjobs.push(genjob);
-        // }
+        let genjobs = await db('genjobs').where({ userid: this.fields.id }).whereNot('status', 'done').select('id');
+        this.genjobs = genjobs.map(g => g.id);
 
         return this.get()
     }
@@ -203,10 +190,31 @@ class User extends Model {
             }
         }
 
-        u.sessions = await Promise.all(this.sessions.map(s => (full ? s.get(null,true) : s.id())));
-        u.avatars = await Promise.all(this.avatars.map(a => (full ? a.get() : a.id())));
-        u.genjobs = await Promise.all(this.genjobs.map(g => (full ? g.get() : g.id())));
+        u.sessions = this.sessions;
+        u.avatars = this.avatars;
+        u.genjobs = this.genjobs;
 
+        if (full === true || (Array.isArray(full) && full.includes('sessions')))
+            u.sessions = await Promise.all(this.sessions.map(async s => {
+                let session = new Session();
+                await session.load(s);
+                return session.get(null, true);
+            }))
+        
+        if (full === true || (Array.isArray(full) && full.includes('avatars')))
+            u.avatars = await Promise.all(this.avatars.map(async a => {
+                let avatar = new Avatar();
+                await avatar.load(a);
+                return avatar.get();
+            }))
+
+        if (full === true || (Array.isArray(full) && full.includes('genjobs')))
+            u.genjobs = await Promise.all(this.genjobs.map(async g => {
+                let genjob = new Genjob();
+                await genjob.load(g);
+                return genjob.get();
+            }))
+        
         return u;
     }
     

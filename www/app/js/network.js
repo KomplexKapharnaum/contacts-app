@@ -44,51 +44,56 @@ NETWORK.loadUser = function() {
                     log('User loaded', data);
                     // log('auth successful.');
 
+                    //
                     // Routing based on user status
                     //
-                    if (!userData.name) {                       // name is missing
-                        PAGES.goto("pseudonyme_register");
-                    } else if (userData.genjobs.length > 0) {
-                        PAGES.goto("create_avatar_processing");
-                    }
-                    else if (userData.avatars.length == 0) {    // avatars are missing
-                        PAGES.goto("create_avatar_photo"); 
-                    }
-                                                                // no avatar selected
-                    else if (!userData.selected_avatar) {
-                        PAGES.selectAvatar(userData.avatars);
-                    }
-                    else {
-                        PAGES.goto("main");          // profile page
-                        UTIL.shownav(true);
 
-                        // Load next session and offers to register
-                        NETWORK.query('Session.next')
-                                .then((id) => {
-                                    // check if user is already registered from userData
-                                    nextSession = id;
+                    // name is missing
+                    if (!userData.name) 
+                        return PAGES.goto("pseudonyme_register");
+                    
+                    // genjobs are pending or running -> wait !
+                    if (userData.genjobs.filter((job) => job.status == "pending" || job.status == "running").length > 0) 
+                        return PAGES.goto("create_avatar_processing"); 
 
-                                    if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
-                                        console.log("User not registered to next session");
+                    // no avatar created yet
+                    if (userData.avatars.length == 0) 
+                        return PAGES.goto("create_avatar_photo"); 
+                                                                
+                    // no avatar selected
+                    if (!userData.selected_avatar) 
+                        return PAGES.selectAvatar(userData.avatars);
 
-                                        // check if user declined to register
-                                        if (Cookies.get('session_declined_'+nextSession)) {
-                                            console.log("User declined to register");
-                                            pages.goto("main");
-                                            return;
-                                        }
+                    // all good
+                    PAGES.goto("main");          // profile page
+                    UTIL.shownav(true);
 
-                                        // Get session details
-                                        NETWORK.query('Session.get', nextSession)
-                                            .then((session) => {
-                                                UTIL.promptForSubscribingEvent(session, nextSession);
-                                            });
+                    // Load next session and offers to register
+                    NETWORK.query('Session.next')
+                            .then((id) => {
+                                // check if user is already registered from userData
+                                nextSession = id;
+
+                                if (!userData.sessions.map((s) => s.id).includes(nextSession)) {
+                                    console.log("User not registered to next session");
+
+                                    // check if user declined to register
+                                    if (Cookies.get('session_declined_'+nextSession)) {
+                                        console.log("User declined to register");
+                                        pages.goto("main");
+                                        return;
                                     }
-                                })
-                                .catch((err) => {
-                                    console.log("No next session found");
-                                });
-                    }    
+
+                                    // Get session details
+                                    NETWORK.query('Session.get', nextSession)
+                                        .then((session) => {
+                                            UTIL.promptForSubscribingEvent(session, nextSession);
+                                        });
+                                }
+                            })
+                            .catch((err) => {
+                                console.log("No next session found");
+                            });
                     
                 })
                 .catch((err) => {

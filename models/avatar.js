@@ -96,30 +96,25 @@ class Avatar extends Model {
             let genjob = new Genjob();
             await genjob.new({ userid: user.id(), workflow: wName, input: JSON.stringify({ pic: filename, seed: i }) });
 
-            genjob.on('done', (job) => {
-                console.log('Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.output);
+            genjob.on('done', async (job) => {
+                console.log('Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.fields.output);
+
+                try {
+                    let fname = JSON.parse(job.fields.output)[0]
+                    let avatar = new Avatar();
+                    await avatar.new({ user_id: user.id(), url: '/outputs/'+ path.basename(fname) });
+                }
+                catch (e) {
+                    console.error('Avatar Genjob', job.id(), 'error', e);
+                }
+                // TODO signal that an avatar has been generated..
             })
 
             genjob.on('error', (job) => {
-                console.error('Genjob', job.id(), 'error', job.fields.workflow, job.output);
+                console.error('Avatar Genjob', job.id(), 'error', job.fields.workflow, job.fields.output);
             })
-            
-            // TODO: subscribe to completed event for this genjob
         }
 
-        // // add original pic
-        // let avatar = new Avatar();
-        // await avatar.new({ user_id: user.id(), url: '/upload/'+ path.basename(filename) });
-        // avatars.push(avatar);
-
-        // // complete with new avatars to reach AVATAR_GEN_SIZE
-        // for (let i = avatars.length; i < AVATAR_GEN_SIZE; i++) {
-        //     let avatar = new Avatar();
-        //     await avatar.new({ user_id: user.id(), url: 'https://picsum.photos/1024/1024' });
-        //     avatars.push(avatar);
-        // }
-
-        // return await Promise.all(avatars.map(a => a.get()));
     }
 }
 

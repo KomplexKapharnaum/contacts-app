@@ -35,12 +35,8 @@ class Session extends Model {
     {
         await super.load(w);
 
-        let events = await db('events').where({ session_id: this.fields.id });
-        for (let e of events) {
-            let event = new Event();
-            event.fields = e;
-            this.events.push(event);
-        }
+        let events = await db('events').where({ session_id: this.fields.id }).select('id');
+        this.events = events.map(e => {e.id})
 
         return this.get()
     }
@@ -67,27 +63,27 @@ class Session extends Model {
     {
         if (w) await this.load(w);
         let s = await super.get();
-        s.events = await Promise.all(this.events.map(e => (full) ? e.get() : e.id()));
-        s.users = await this.getusers();
+        s.events = full ? await this.getevents() : this.events;
         return s;
     }
 
-    async getusers(w)
+    async getusers(w, full = false)
     {
         if (w) await this.load(w);
-        let users = await db('users_sessions').where({ session_id: this.fields.id });
+        let users = await db('users_sessions').where({ session_id: this.fields.id }).select('user_id');
+        let user = new User();
         return await Promise.all(users.map(async u => {
-                let user = new User();
-                await user.load(u.user_id);
-                return await user.get();
-            })
-        ) 
+            return await user.get(u.user_id, full);
+        }))
     }
 
     async getevents(w)
     {
         if (w) await this.load(w);
-        return await Promise.all(this.events.map(e.get()));
+        let event = new Event();
+        return await Promise.all(this.events.map(async e => {
+            return await event.get(e);
+        }))
     }
 
     async next()
