@@ -120,7 +120,7 @@ SOCKET.io.on('connection', (socket) => {
   socket.emit('hello');
 
   socket.on('identify', (uuid) => {
-    
+
     // update user is_connected
     USER.isConnected({ uuid: uuid }, true)
 
@@ -128,10 +128,10 @@ SOCKET.io.on('connection', (socket) => {
     socket.user_uuid = USER.fields.uuid
     socket.user_id = USER.fields.id
 
-    // join ( or create ) room on groupId // FG
-    db.select("groups.id")
-      .from("groups")
-      .join("users", "users.groupe_id", "=", "groups.id")
+    db.select("*")
+      .from("users_groups")
+      .join("users", "users.id", "=", "user_groups.groups_id")
+      .join("groups", "groups.id", "=", "user_groups.groups_id")
       .where("users.uuid", "=", uuid)
       .then((groupe) => {
         groupe.forEach((g) => {
@@ -146,10 +146,11 @@ SOCKET.io.on('connection', (socket) => {
       USER.isConnected({ uuid: uuid }, false)
 
       // leave room when disconect // FG
-      db.select("groups.id")
-        .from("groups")
-        .join("users", "users.groupe_id", "=", "groups.id")
-        .where("users.uuid", "=", socket.user_uuid)
+      db.select("*")
+        .from("users_groups")
+        .join("users", "users.id", "=", "user_groups.groups_id")
+        .join("groups", "groups.id", "=", "user_groups.groups_id")
+        .where("users.uuid", "=", uuid)
         .then((groupe) => {
           groupe.forEach((g) => {
             socket.leave(g.id)
@@ -244,29 +245,29 @@ SOCKET.io.on('connection', (socket) => {
       console.log("requete : " + request)
 
       db('users').select().then((users) => {
-        db.select("phone")
-          .from("users")
-          .join('users_sessions', 'users.id', '=', 'user_sessions.user_id')
+        db.select("*")
+          .from("users_sessions")
+          .join('users', 'users.id', '=', 'users_sessions.user_id')
+          .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
           .where({ "users_sessions.session_id": request })
           .then((phone) => {
             phone.forEach((p) => {
               console.log(p)
-              sendSMS([p], msg)
+              sendSMS([p.phone], msg)
             })
           })
       })
 
       // @ balise de reco pour groupe
     } else if (/@/.test(request)) {
-      /////////////// SET GROUP FOR USER => DELETE WHEN FRONT READY
-      db('users').where({ id: 1 }).update({
-        groupe_id: 1,
-      }).then((res) => console.log(res)).catch((err) => console.log(err))
-      ///////////////
       request = request.replace(/@/, '')
-      db.select("phone")
-        .from("users")
-        .where({ "groupe_id": request })
+
+      //  TODO FIX XML ERROR PARSING
+      db.select("*")
+        .from("users_groups")
+        .join("users", "users_groups.group_id", "=", "groups.id")
+        .join("groups", "groups.id", "=", "users_groups.group_id")
+        .where({ "groups.id": request })
         .then((users) => {
           users.forEach((u) => {
             console.log(u.phone)
@@ -280,7 +281,7 @@ SOCKET.io.on('connection', (socket) => {
 
   //groupe create
   socket.on("groupe_create", (s_id, g_name, u_id, g_desc) => {
-    db('groups').insert({ name: g_name, description: g_desc, user_id: u_id, session_id: s_id }).then(
+    db('groups').insert({ name: g_name, description: g_desc, session_id: s_id }).then(
       db('groups').select().then((groupe) => {
         groupe.forEach((g) => {
           console.log([g.name])
@@ -290,9 +291,9 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   // insert msg
-  socket.on("chat_msg", (message, session, checked) => {
+  socket.on("chat_msg", (message, session, group, checked) => {
     let time_stamp = Date.now()
-    db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session }).then();
+    db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
     if (checked == true) {
       db("users").select("is_connected", "phone").then((users) => {
         users.forEach((u) => {
@@ -302,7 +303,7 @@ SOCKET.io.on('connection', (socket) => {
         })
       })
     }
-    SOCKET.io.emit('new_chatMessage', message)
+    SOCKET.io.emit('new_chatMessage', message, group)
   })
 
   //set last read
@@ -321,7 +322,11 @@ SOCKET.io.on('connection', (socket) => {
       is_connected: 0
     }).then()
   })
-  ///////////////////////
+  // db('users_sessions').insert({ user_id: 1 , session_id: 1})
+  // .then((res) => console.log(res)).catch((err) => console.log(err))
+  //  db('users_groups').insert({ user_id: 1 , group_id: 1})
+  //  .then((res) => console.log(res)).catch((err) => console.log(err))
+  ///////////////////////`
 
 });
 
@@ -457,41 +462,39 @@ function sendNotif(subscription, payload, ttl, delay) {
 
 // JOBS Processing : 
 //
-function processJobs() 
-{
+function processJobs() {
   // Get next job (pending status, older date first)
   GENJOB.next()
     .then((job) => {
-        job.run()
-          .then(() => {
-            // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
-          })
-          .catch((err) => {
-            // console.error('Job error', job.fields.id, err);
-          })
-          .finally(() => {
-            
-            // check if there is still job to process for this user
-            if (job.fields.id >= 0) 
-            {
-              USER.load({ id: job.fields.user_id }).then(() => {
-                if (USER.genjobs.length == 0) {
-                  console.log('All jobs done for user', USER.fields.name);
-                  // send notification to user
-                  SOCKET.findID(USER.fields.id).then((client) => {
-                    if (client) client.emit('reload');
-                  })
-                } 
-              })
-  
-  
-              SOCKET.findID(job.fields.user_id).then((client) => {
-                if (client) client.emit('job', job.get());
-              })
-            }
+      job.run()
+        .then(() => {
+          // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
+        })
+        .catch((err) => {
+          // console.error('Job error', job.fields.id, err);
+        })
+        .finally(() => {
 
-            processJobs();
-          });
+          // check if there is still job to process for this user
+          if (job.fields.id >= 0) {
+            USER.load({ id: job.fields.user_id }).then(() => {
+              if (USER.genjobs.length == 0) {
+                console.log('All jobs done for user', USER.fields.name);
+                // send notification to user
+                SOCKET.findID(USER.fields.id).then((client) => {
+                  if (client) client.emit('reload');
+                })
+              }
+            })
+
+
+            SOCKET.findID(job.fields.user_id).then((client) => {
+              if (client) client.emit('job', job.get());
+            })
+          }
+
+          processJobs();
+        });
     })
 }
 

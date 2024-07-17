@@ -63,15 +63,12 @@ function clean_select(groupe, session) {
         let have_child = document.getElementById("groupe_sms").childNodes
         while (have_child.length > 1) {
             have_child[1].remove();
-            console.log('removed G')
-            console.log(have_child.length)
         }
     }
     if (session) {
         have_child = document.getElementById("session_choice").childNodes
         while (have_child.length > 1) {
             have_child[1].remove();
-            console.log('removed S')
         }
     }
 }
