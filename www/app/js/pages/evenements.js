@@ -18,7 +18,7 @@ function getClosestEvent() {
     if (userData.sessions.length == 0) return false;
 
     const events = userData.sessions[0].events;
-    const incomingEvents = events.filter(event => new Date(event.fields.ending_at) > new Date());
+    const incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
 
     if (incomingEvents.length == 0) return false;
 
@@ -26,7 +26,7 @@ function getClosestEvent() {
         const minDate = new Date(minEvent.starting_at);
         const currentDate = new Date(currentEvent.starting_at);
         return currentDate < minDate ? currentEvent : minEvent;
-    }).fields;
+    });
 }
 
 function isEventActive() {
