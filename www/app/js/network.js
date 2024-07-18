@@ -246,3 +246,8 @@ socket.on('end-event', () => {
     UTIL.showOverlay(false);
 });
 
+// Chat message
+
+socket.on("new_chatMessage", (msg, emit_time) => {
+    UTIL.displayUnreadMessages([{emit_time: emit_time, message: msg}]);
+})

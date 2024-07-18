@@ -361,7 +361,7 @@ SOCKET.io.on('connection', (socket) => {
             })
           })
         }
-        SOCKET.io.emit('new_chatMessage', message, group)
+        SOCKET.io.emit('new_chatMessage', message, time_stamp, group)
       }
     }
       , 200)
