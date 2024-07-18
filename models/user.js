@@ -232,13 +232,13 @@ class User extends Model {
         if (w) await this.load(w);
 
         // check if user is registered to session
-        console.log("session_id", session_id)
         session_id = parseInt(session_id)
-        console.log("session_id", session_id, this.sessions)
         if (!this.sessions.includes(session_id)) throw new Error('User not registered to session');
 
-        let groupList = ['NULL'].concat(this.groups)
+        let groupList = [null].concat(this.groups)
+
         console.log("start", groupList)
+        
         if (last){
             let m = await db("messages").select("*")
             .where( { session_id: session_id } )
@@ -248,13 +248,13 @@ class User extends Model {
             .limit(1)
             return m
         } else {
-        let m = await db("messages").select("*")
-            .where( { session_id: session_id } )
-            .groupBy('id')
-            .havingIn('group_id', groupList)
-            return m
+            let m = await db("messages").select("*")
+                .where( { session_id: session_id } )
+                .where(qb => { qb.whereIn('group_id', []).orWhereNull('group_id'); })
+
+                console.log("MESSAGES", m)
+                return m
         }
-        // get messages with group_id null or group_id in this.groups
     }
 
     async isConnected(w, state) {

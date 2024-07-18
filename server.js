@@ -329,6 +329,13 @@ SOCKET.io.on('connection', (socket) => {
   // insert msg
   socket.on("chat_msg", (message, session, group, checked) => {
     let time_stamp = Date.now()
+    
+    if (!group || group == '') group = null
+
+    // TODO: check group is null or exists !
+    // TODO: check session exists !
+    // TODO: check message is not empty !
+
     db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
     if (checked == true) {
       db("users").select("is_connected", "phone").then((users) => {

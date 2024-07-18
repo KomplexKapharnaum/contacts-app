@@ -30,6 +30,7 @@ class Message extends Model {
     async save() {
         // mandatory fields
         if (!this.fields.message) throw new Error('Message is required');
+        if (this.fields.groupe_id == '') this.fields.groupe_id = null
 
         super.save();
     }
@@ -49,10 +50,6 @@ class Message extends Model {
     }
 }
 
-// delete table if exists
-db.schema.dropTableIfExists('Messages').then(() => {
-    console.log('dropped Messages table');
-});
 
 // Create Table if not exists
 db.schema.hasTable('messages').then(exists => {
@@ -64,6 +61,7 @@ db.schema.hasTable('messages').then(exists => {
             table.string('message');
             table.integer('session_id')
             table.integer('group_id')
+
         }).then(() => {
             console.log('created messages table');
         });
