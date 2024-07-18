@@ -23,7 +23,7 @@ session.on('connect', function(){
   session.bind_transceiver({
       system_id: process.env.OVH_SYSTEMID,
       password: process.env.OVH_PASSWORD,
-    //   interface_version: 1,
+    //   interface_version: 1, 
     //   system_type: '380666000600',
     //   address_range: '+380666000600',
     //   addr_ton: 1,
@@ -84,7 +84,7 @@ function sendSMS(to, text) {
 //
 session.on('pdu', function(pdu){
 
-    // incoming SMS from SMSC
+    // incoming SMS from SMSC 
     if (pdu.command == 'deliver_sm') {
          
         // no '+' here
