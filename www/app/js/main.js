@@ -173,7 +173,7 @@ UTIL.setCountDown = function(date, time) {
         minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
         if (distance < 1000 * 60 * 60) {
-            window.location.reload();
+            // window.location.reload();
         }
     }
     

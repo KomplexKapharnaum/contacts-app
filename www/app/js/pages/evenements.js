@@ -90,7 +90,7 @@ PAGES.addCallback("event-location", function() {
     setInterval(() => {
         eventTime = new Date(closest.starting_at);
         if (new Date() > eventTime) {
-            // location.reload();
+            location.reload();
         }
     }, 1000);    
 });
