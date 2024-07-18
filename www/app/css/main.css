@@ -454,7 +454,7 @@ input[type="text"] {
     height: fit-content;
 }
 
-#qr-code img {
+#qr-code img, #qr-code canvas {
     width: 100%;
 }
 
