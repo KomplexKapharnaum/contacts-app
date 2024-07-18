@@ -1,3 +1,13 @@
+PAGES.addCallback("main", () => {
+    UTIL.shownav(true);
+    
+    if (!userData) return;
+    if (userData.sessions.length==0) return;
+    if (userData.sessions[0].events.length==0) return;
+    
+    PAGES.goto("event-list");
+})
+
 PAGES.addCallback("event-list", () => {
     UTIL.shownav(true);
     
