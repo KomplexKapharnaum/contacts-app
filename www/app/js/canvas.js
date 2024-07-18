@@ -10,14 +10,6 @@ class roundedGraphics {
         this.width = canvas.width;
         this.height = canvas.height;
 
-        window.addEventListener('resize', () => {
-            canvas.width = parent.offsetWidth;
-            canvas.height = parent.offsetHeight;
-
-            this.width = canvas.width;
-            this.height = canvas.height;
-        });
-        
         const buffer = document.createElement('canvas');
         buffer.width = this.width;
         buffer.height = this.height;
@@ -25,6 +17,17 @@ class roundedGraphics {
 
         const renderedImage = document.createElement('canvas');
         this.renderedImage = renderedImage;
+
+        window.addEventListener('resize', () => {
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+
+            this.width = canvas.width;
+            this.height = canvas.height;
+
+            buffer.width = this.width;
+            buffer.height = this.height;
+        });
 
         this.res = resolution;
         this.color = 'white';
