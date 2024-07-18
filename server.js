@@ -124,8 +124,7 @@ SOCKET.io.on('connection', (socket) => {
   socket.on('identify', (uuid) => {
 
     // update user is_connected
-    console.log("user : ")
-    console.log(USER)
+    if (!uuid) return
     USER.isConnected({ uuid: uuid }, true)
       .then(() => {
         // store user info in socket
@@ -151,6 +150,7 @@ SOCKET.io.on('connection', (socket) => {
   socket.on('disconnect', () => {
 
     // update user is_connected
+    if (!socket.user_uuid) return
     USER.isConnected({ uuid: socket.user_uuid }, false)
       .then(() => {
         // leave room when disconect // FG

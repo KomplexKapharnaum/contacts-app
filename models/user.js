@@ -177,7 +177,7 @@ class User extends Model {
         if (!this.fields.phone) throw new Error('User phone is required');
         return cipher.encrypt(this.fields.phone);
     }
-
+    
     async get(w, full = false) {
         if (w) await this.load(w);
         let u = await super.get();
@@ -225,6 +225,7 @@ class User extends Model {
                 await genjob.load(g);
                 return genjob.get();
             }))
+
 
         return u;
     }

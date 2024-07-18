@@ -36,6 +36,8 @@ class Model {
 
     async load(w) {
         this.clear();
+        if (!w || (typeof w === "object" && Object.keys(w).length === 0)) 
+            throw new Error('Cannot load item without condition');
         if (typeof w === 'number') w = { id: w };
         let item = await db(this.table).where(w).first();
         if (item) this.fields = item;
