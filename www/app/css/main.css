@@ -451,6 +451,7 @@ input[type="text"] {
 
 #qr-code {
     width: 100%;
+    max-width: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
