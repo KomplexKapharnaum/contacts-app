@@ -434,7 +434,9 @@ app.use(express.json({ limit: '50mb' }));
 // Serve index.html
 //
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/www/index.html');
+  // res.sendFile(__dirname + '/www/index.html');
+  // redirect to app
+  res.redirect('/app');
 });
 
 
