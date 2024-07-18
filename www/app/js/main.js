@@ -405,6 +405,9 @@ UTIL.promptForSubscribingEvent = function(evenement) {
         NETWORK.query('User.register', [userData.uuid, evenement.id]).then(()=>{
             NETWORK.loadUser();
             PAGES.goto("event-countdown");
+        }).catch((err)=>{
+            NETWORK.loadUser();
+            PAGES.goto("event-countdown");
         });
     }
 

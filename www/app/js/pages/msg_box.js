@@ -5,9 +5,11 @@ socket.on('hello', () => {
     socket.emit("identify", Cookies.get('token'))
 });
 
+/*
 socket.on("new_chatMessage", (data, group) => {
     right(true, group)
 })
+*/
 
 socket.on("listed_msg", (msg_list) => {
 
@@ -136,7 +138,7 @@ function fill_select_group(id_html) {
         })
     })
 }
-right()
+// right()
 
 
 ///////////////////////////////////////////////////////////////

@@ -54,6 +54,7 @@ NETWORK.loadUser = function () {
             if (!userData.name) 
                 return PAGES.goto("pseudonyme_register");
             
+            /*
             // genjobs are pending or running -> wait !
             if (userData.genjobs.filter((job) => job.status == "pending" || job.status == "running").length > 0) 
                 return PAGES.goto("create_avatar_processing"); 
@@ -65,7 +66,8 @@ NETWORK.loadUser = function () {
             // no avatar selected
             if (!userData.selected_avatar) 
                 return PAGES.selectAvatar(userData.avatars);
-
+            */
+           
             // all good
             PAGES.goto("main");          // profile page
             UTIL.shownav(true);
