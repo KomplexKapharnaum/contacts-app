@@ -109,6 +109,7 @@ NETWORK.loadUser = function () {
                         if (incomingEvents.length==1) {
                             PAGES.goto("event-countdown");
                             UTIL.setCountDown(...incomingEvents[0].starting_at.split("T"));
+                            UTIL.addIncomingEvent(incomingEvents[0]);
                         } else if (incomingEvents.length > 1) {
                             
                             PAGES.goto("event-list");
