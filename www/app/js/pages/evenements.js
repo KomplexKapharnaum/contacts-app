@@ -6,6 +6,7 @@ PAGES.addCallback("main", () => {
 
     if (isEventActive()) {
         PAGES.goto("event-idle");
+        UTIL.shownav(false);
     } else {
         const date = eventWithLowestDate.starting_at.split('T');
         UTIL.setCoundDown(date[0], date[1]);
