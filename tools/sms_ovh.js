@@ -86,7 +86,7 @@ session.on('pdu', function(pdu){
 
     // incoming SMS from SMSC
     if (pdu.command == 'deliver_sm') {
-        
+         
         // no '+' here
         var fromNumber = pdu.source_addr.toString();
         var toNumber = pdu.destination_addr.toString();
