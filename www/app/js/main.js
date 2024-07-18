@@ -173,7 +173,7 @@ UTIL.setCountDown = function(date, time) {
         minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
         if (distance < 1000 * 60 * 60) {
-            // window.location.reload();
+            if (UTIL.countDownInterval) window.location.reload();
         }
     }
     
@@ -183,6 +183,10 @@ UTIL.setCountDown = function(date, time) {
         updateCountDown();
     }, 1000);
 }
+
+PAGES.addCallback("event-idle", () => {
+    UTIL.countDownInterval = false;
+})
 
 UTIL.countDown = function(countDownDateTime) {
     const now = new Date().getTime();
