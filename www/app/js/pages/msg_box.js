@@ -55,6 +55,7 @@ function right(last, group) {
             (message) => {
                 message.forEach((msg) => {
 
+                    console.log(msg)
                     console.log(msg.group_id)
                     if(msg.group_id == group){
                     let inbox = document.getElementById("inbox")
@@ -114,17 +115,17 @@ function fill_select_session(id_html) {
     })
 }
 
-let select = document.getElementById("listGroup")
-$('<option>').text("-----------").val("").appendTo(select)
 function fill_select_group(id_html) {
-
+    
     let have_child = document.getElementById(id_html).childNodes
     while (have_child.length > 1) {
         have_child[1].remove();
         console.log('removed G')
         console.log(have_child.length)
     }
-    /// TODOF recuperer celont group !!!!!!!!!!!!!
+
+    let select = document.getElementById("listGroup")
+    $('<option>').text("-----------").val("").appendTo(select)
     let session_id = document.getElementById("listSess").value
 
     query("Group.list", { "session_id": session_id }).then((groupe) => {
