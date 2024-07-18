@@ -491,7 +491,7 @@ input[type="text"] {
 #media-reload {
     position:absolute;
     left: 50%;
-    bottom: 0;
+    top: 0;
 }
 
 #create-avatar-preview {

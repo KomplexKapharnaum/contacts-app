@@ -6,6 +6,11 @@ class roundedGraphics {
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
         
+        window.addEventListener('resize', () => {
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+        });
+
         this.canvas = canvas;
         this.width = canvas.width;
         this.height = canvas.height;
