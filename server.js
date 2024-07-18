@@ -467,12 +467,12 @@ function processJobs()
             // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
           })
           .catch((err) => {
-            // console.error('Job error', job.fields.id, err);
+            console.error('Job error', job.fields.id, err);
           })
           .finally(() => {
             
             // check if there is still job to process for this user
-            if (job.fields.id >= 0) 
+            if (job.fields.id >= 0 && job.fields.user_id) 
             {
               USER.load({ id: job.fields.user_id }).then(() => {
                 if (USER.genjobs.length == 0) {

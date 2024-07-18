@@ -5,7 +5,7 @@
 // - user_id: the user id
 // - url: the avatar image url
 
-const AVATAR_GEN_SIZE = 2;
+const AVATAR_GEN_SIZE = 4;
 
 import db from '../tools/db.js';
 import Model from './model.js';

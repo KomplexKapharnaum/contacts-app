@@ -1,6 +1,7 @@
 import { writeFile } from "fs/promises"
 import { join } from "path"
 import WebSocket from "ws"
+import fs from "fs"
 
 
 
@@ -154,13 +155,15 @@ export class ComfyUIClient {
     }
   }
 
-  async uploadImage(image, filename, overwrite) {
+  async uploadImage(path, filename) {
     const formData = new FormData()
-    formData.append("image", new Blob([image]), filename)
 
-    if (overwrite !== undefined) {
-      formData.append("overwrite", overwrite.toString())
-    }
+    // load blob from local file
+    const data = fs.readFileSync(path)
+
+    // append blob to formdata
+    formData.append("image", new Blob([data]), filename)
+    formData.append("overwrite", "true")
 
     const res = await fetch(`http://${this.serverAddress}/upload/image`, {
       method: "POST",
