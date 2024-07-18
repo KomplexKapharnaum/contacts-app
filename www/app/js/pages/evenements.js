@@ -3,12 +3,13 @@ PAGES.addCallback("main", () => {
     
     if (!userData) return;
     if (userData.sessions.length==0) return;
-    
-    if (userData.sessions[0].events.length==0) return;
-    
-    if (userData.sessions[0].events.length==1) {
+
+    let incomingEvents = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
+
+    if (incomingEvents.length==0) return;
+    if (incomingEvents.length==1) {
         PAGES.goto("event-countdown");
-        UTIL.setCountDown(...userData.sessions[0].events[0].starting_at.split("T"));
+        UTIL.setCountDown(...incomingEvents[0].starting_at.split("T"));
     } else {
         PAGES.goto("event-list");
     }
@@ -94,6 +95,10 @@ PAGES.addCallback("event-location", function() {
         }
     }, 1000);    
 });
+
+PAGES.addCallback("event-idle", () => {
+    UTIL.countDownInterval = false;
+})
 
 var customIcon = L.icon({
     iconUrl: './img/pin.png',
