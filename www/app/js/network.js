@@ -67,7 +67,7 @@ NETWORK.loadUser = function () {
             if (!userData.selected_avatar) 
                 return PAGES.selectAvatar(userData.avatars);
             */
-           
+
             // all good
             PAGES.goto("main");          // profile page
             UTIL.shownav(true);
