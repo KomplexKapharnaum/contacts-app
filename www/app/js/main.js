@@ -154,7 +154,7 @@ UTIL.addNotification = function(date,message) {
 }
 
 UTIL.countDownInterval = false;
-UTIL.setCoundDown = function(date, time) {
+UTIL.setCountDown = function(date, time) {
 
     document.getElementById("nextevent-date").innerHTML = date;
     document.getElementById("nextevent-time").innerHTML = time;
@@ -171,6 +171,10 @@ UTIL.setCoundDown = function(date, time) {
         days.innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
         hours.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         minutes.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (distance < 1000 * 60 * 60) {
+            window.location.reload();
+        }
     }
     
     clearInterval(UTIL.countDownInterval);
@@ -208,13 +212,14 @@ UTIL.addIncomingEvent = function(evenement) {
     eventDom.addEventListener("click", () => {
         PAGES.goto("event-countdown");
 
-        UTIL.setCoundDown(...evenement.starting_at.split("T"));
+        UTIL.setCountDown(...evenement.starting_at.split("T"));
     });
 }
 
 UTIL.getMessages = async function(user_id, session_id) {
     return new Promise(async (resolve, reject) => {
         const messages = await NETWORK.query("User.getMessages", user_id, session_id);
+        if (messages.length==0) return resolve([]); 
         lastTimeRead = userData.last_read ? userData.last_read : 0;
         let unread_messages = [];
         messages.forEach(message => {
@@ -345,44 +350,6 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
 });
-
-// Leaflet map
-//
-
-var leafletMap = L.map('coords-map').setView([51.505, -0.09], 13);
-
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    attribution: '&copy; Stadia Maps'
-}).addTo(leafletMap);
-
-const attributionControl = leafletMap.attributionControl;
-leafletMap.removeControl(attributionControl);
-
-PAGES.addCallback("event-location", function() {
-    leafletMap.invalidateSize(false);
-});
-
-var customIcon = L.icon({
-    iconUrl: './img/pin.png',
-    // shadowUrl: 'leaf-shadow.png',
-
-    iconSize:     [64, 64], // size of the icon
-    // shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [32, 64], // point of the icon which will correspond to marker's location
-    // shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [0, -64] // point from which the popup should open relative to the iconAnchor
-});
-
-UTIL.setMapCoords = function(lat, lon, popupText) {
-    leafletMap.setView([lat, lon], 13);
-    leafletMap.eachLayer(function (layer) {
-        if (layer instanceof L.Marker) {
-            leafletMap.removeLayer(layer);
-        }
-    });
-    L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
-}
 
 UTIL.getCssRootVar = function(variable) {
     return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();

@@ -105,7 +105,7 @@ class Avatar extends Model {
                     await avatar.new({ user_id: user.id(), url: '/outputs/'+ path.basename(fname) });
                 }
                 catch (e) {
-                    console.error('Avatar Genjob', job.id(), 'error', e);
+                    console.error('Avatar Genjob', job.id(), 'error', e, job.fields.output);
                 }
             })
 

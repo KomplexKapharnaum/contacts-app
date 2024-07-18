@@ -1,4 +1,4 @@
-PAGES.addCallback("main", () => {
+PAGES.addCallback("event-list", () => {
     UTIL.shownav(true);
     
     const eventWithLowestDate = getClosestEvent();
@@ -8,9 +8,20 @@ PAGES.addCallback("main", () => {
         PAGES.goto("event-idle");
         UTIL.shownav(false);
     } else {
-        const date = eventWithLowestDate.starting_at.split('T');
-        UTIL.setCoundDown(date[0], date[1]);
-        PAGES.goto("event-countdown")
+        const now = new Date();
+        const start = new Date(eventWithLowestDate.starting_at);
+        const diff = start - now;
+        if (diff > 0 && diff < 1 * 60 * 60 * 1000) {
+            if (eventWithLowestDate.location) {
+                const coords = eventWithLowestDate.location.split(',');
+                UTIL.setMapCoords(coords[0], coords[1], eventWithLowestDate.description);
+            }
+            PAGES.goto("event-location");
+        } /*else {
+            const date = eventWithLowestDate.starting_at.split('T');
+            UTIL.setCoundDown(date[0], date[1]);
+            PAGES.goto("event-countdown")    
+        }*/
     }
 });
 
@@ -38,4 +49,51 @@ function isEventActive() {
     const start = new Date(event.starting_at);
     const end = new Date(event.ending_at);
     return now > start && now < end;
+}
+
+// Leaflet map
+//
+
+var leafletMap = L.map('coords-map').setView([51.505, -0.09], 13);
+
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: '&copy; Stadia Maps'
+}).addTo(leafletMap);
+
+const attributionControl = leafletMap.attributionControl;
+leafletMap.removeControl(attributionControl);
+
+PAGES.addCallback("event-location", function() {
+    UTIL.shownav(false);
+    leafletMap.invalidateSize(false);
+    
+    const closest = getClosestEvent();
+    setInterval(() => {
+        eventTime = new Date(closest.starting_at);
+        if (new Date() > eventTime) {
+            location.reload();
+        }
+    }, 1000);    
+});
+
+var customIcon = L.icon({
+    iconUrl: './img/pin.png',
+    // shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [64, 64], // size of the icon
+    // shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [32, 64], // point of the icon which will correspond to marker's location
+    // shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [0, -64] // point from which the popup should open relative to the iconAnchor
+});
+
+UTIL.setMapCoords = function(lat, lon, popupText) {
+    leafletMap.setView([lat, lon], 13);
+    leafletMap.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+            leafletMap.removeLayer(layer);
+        }
+    });
+    L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
 }

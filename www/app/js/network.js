@@ -107,7 +107,6 @@ NETWORK.loadUser = function () {
                     else {
                         let events = session.events;
                         if (events.length > 0) {
-                            if (isEventActive()) return;
                             PAGES.goto("event-list");
                             events.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
                             UTIL.clearIncomingEvents();
