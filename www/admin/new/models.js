@@ -28,7 +28,10 @@ class EvenementCard {
         
         dom.querySelector('.title').innerText = title;
         dom.querySelector('.date').innerText = date;
-        dom.querySelector('.hours').innerText = hours;
+        
+        const [start, end] = [evenement.starting_at.split("T")[1], evenement.ending_at.split("T")[1]];
+        dom.querySelector('.hours').innerText = `${start} - ${end}`;
+
         dom.querySelector('.location').innerText = location;
 
         this.button = dom.querySelector(".model-evenement");
@@ -133,9 +136,10 @@ models.SessionPage = SessionPage;
 
 class EvenementPage {
     constructor(evenement, button, parent) {
+        console.log(evenement)
         const dom = docId('template-page-evenement').cloneNode(true).content;
 
-        dom.querySelector('.title').innerHTML = evenement.title;
+        dom.querySelector('.title').innerHTML = evenement.name;
 
         this.evenement = evenement;
         this.logsContainer = dom.querySelector('.logs');
@@ -148,20 +152,21 @@ class EvenementPage {
         let editStart = this.editform.querySelector('input[name="start-date"]');
         let editEnd = this.editform.querySelector('input[name="end-date"]');
 
-        editName.value = evenement.title;
-        editStart.value = evenement.starting_at.split('T')[0];
-        editEnd.value = evenement.ending_at.split('T')[0];
+        editName.value = evenement.name;
+        editStart.value = evenement.starting_at;
+        editEnd.value = evenement.ending_at;
 
         this.editform.querySelector('button').addEventListener('click', () => {
 
             query("Event.update", [evenement.id, {
-                title: editName.value,
-                starting_at: `${editStart.value}T${editStart.value.split('-')[2]}`,
-                ending_at: `${editEnd.value}T${editEnd.value.split('-')[2]}`
+                name: editName.value,
+                starting_at: editStart.value,
+                ending_at: editEnd.value
             }]).then(() => {
                 this.dom.classList.remove('active');
-                updateEvenements();
+                location.reload();
             });
+
         });
 
         dom.querySelector('.close').addEventListener('click', () => {
@@ -172,6 +177,7 @@ class EvenementPage {
             if (!confirm("Are you sure you want to delete this event?")) return;
             query("Event.delete", evenement.id).then(() => {
                 this.dom.remove();
+                button.remove();
             });
         });
 
@@ -206,7 +212,8 @@ class AddEventModal {
             const end = dom.querySelector('.new-event-end').value;
 
             query("Event.new", { name: title, session_id: this.sessionID, starting_at: start, ending_at: end }).then(() => {
-                closeModal('modal-new-session');
+                closeModal(this.id);
+                location.reload();
             })
         });
 
