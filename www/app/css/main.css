@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
     display:none;
 
     height: 100%;
-    width: 100%;
+    width: 100vw;
 
     padding: 16px;
     padding-bottom: calc(32px + 16px);
