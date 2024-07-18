@@ -23,8 +23,9 @@ PAGES.addCallback("event-list", () => {
         const diff = start - now;
         if (diff > 0 && diff < 1 * 60 * 60 * 1000) {
             if (eventWithLowestDate.location) {
-                const coords = eventWithLowestDate.location.split(',');
-                UTIL.setMapCoords(coords[0], coords[1], eventWithLowestDate.description);
+                const coords = eventWithLowestDate.location.split('/');
+                UTIL.setMapCoords(coords[0], coords[1], coords[2], eventWithLowestDate.description);
+
             }
             PAGES.goto("event-location");
         } /*else {
@@ -64,12 +65,12 @@ function isEventActive() {
 // Leaflet map
 //
 
-var leafletMap = L.map('coords-map').setView([51.505, -0.09], 13);
+var leafletMap = L.map('coords-map').setView([42.71885, 1.83801], 18);
 
 // L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; Stadia Maps'
+    attribution: ''
 }).addTo(leafletMap);
 
 const attributionControl = leafletMap.attributionControl;
@@ -99,14 +100,17 @@ var customIcon = L.icon({
     popupAnchor:  [0, -64] // point from which the popup should open relative to the iconAnchor
 });
 
-UTIL.setMapCoords = function(lat, lon, popupText) {
-    leafletMap.setView([lat, lon], 13);
+UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
+    leafletMap.setView([lat, lon], zoom);
     leafletMap.eachLayer(function (layer) {
         if (layer instanceof L.Marker) {
             leafletMap.removeLayer(layer);
         }
     });
-    L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
+    var p = L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText)
     const btn = document.getElementById("event-location-coords-button");
     btn.href = "geo:" + lat + "," + lon;
+    setTimeout(() => {
+        p.openPopup();
+    }, 700);
 }
