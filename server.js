@@ -130,8 +130,8 @@ SOCKET.io.on('connection', (socket) => {
 
     db.select("*")
       .from("users_groups")
-      .join("users", "users.id", "=", "user_groups.groups_id")
-      .join("groups", "groups.id", "=", "user_groups.groups_id")
+      .join("users", "users.id", "=", "users_groups.group_id")
+      .join("groups", "groups.id", "=", "users_groups.group_id")
       .where("users.uuid", "=", uuid)
       .then((groupe) => {
         groupe.forEach((g) => {
@@ -148,8 +148,8 @@ SOCKET.io.on('connection', (socket) => {
       // leave room when disconect // FG
       db.select("*")
         .from("users_groups")
-        .join("users", "users.id", "=", "user_groups.groups_id")
-        .join("groups", "groups.id", "=", "user_groups.groups_id")
+        .join("users", "users.id", "=", "users_groups.group_id")
+        .join("groups", "groups.id", "=", "users_groups.group_id")
         .where("users.uuid", "=", uuid)
         .then((groupe) => {
           groupe.forEach((g) => {

@@ -506,3 +506,32 @@ input[type="text"] {
 .leaflet-popup-close-button {
     color: var(--color-background) !important;
 }
+
+/* Messages overlay */
+
+#unread-notifications-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: var(--color-background);
+    overflow: hidden;
+}
+
+#unread-notifications-container.hidden {
+    display: none;
+}
+
+.unread-notification {
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    justify-content: center;
+    align-items: center;
+}
