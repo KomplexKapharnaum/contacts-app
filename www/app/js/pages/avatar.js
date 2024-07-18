@@ -323,14 +323,14 @@ document.getElementById("question3-suivant").addEventListener("click", function(
     document.getElementById("avatar-preview-text").innerText = "Ton avatar est en cours de création...";
     document.getElementById("create-avatar-preview").innerHTML = "";
     
-    NETWORK.query('Avatar.generate', [userData.uuid ,
+    NETWORK.query('Avatar.generate', userData.uuid ,
         {
             pic: AVATAR_DATA.photo,
             mask: getMaskDistance(),
             cow: cowData.current,
             height: buddyResizable.offsetHeight,
             weight: buddyResizable.offsetWidth
-        }])
+        })
         .then((data) => { 
             PAGES.goto("create_avatar_processing") 
         }); // TODO: don't go directly to results since generation is in queue ! Thus data is empty for now..
@@ -349,7 +349,7 @@ PAGES.selectAvatar = function(avatars) {
         img.addEventListener("click", ()=> {
             if (lock) return;
             lock = true;
-            NETWORK.query("Avatar.select", [userData.uuid, avatars[i].id])
+            NETWORK.query("Avatar.select", userData.uuid, avatars[i].id)
                         .then( () => { NETWORK.loadUser(); });
         })
     }
@@ -377,7 +377,7 @@ document.getElementById("change-avatar").addEventListener("click", () => {
         img.src = avatar.url;
         container_changeavatar.appendChild(img);
         img.addEventListener("click", ()=> {
-            NETWORK.query("Avatar.select", [userData.uuid, avatar.id]).then(() => {
+            NETWORK.query("Avatar.select", userData.uuid, avatar.id).then(() => {
                 userData.selected_avatar = avatar
                 document.querySelector("#mon-avatar-container>img").src = avatar.url;
 

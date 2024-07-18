@@ -400,7 +400,7 @@ UTIL.promptForSubscribingEvent = function(evenement) {
     eventname_label.innerText = evenement.name;
 
     confirm_button.onclick = function() {
-        NETWORK.query('User.register', [userData.uuid, evenement.id]).then(()=>{
+        NETWORK.query('User.register', userData.uuid, evenement.id).then(()=>{
             NETWORK.loadUser();
             PAGES.goto("event-countdown");
         }).catch((err)=>{

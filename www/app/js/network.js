@@ -7,7 +7,7 @@ var socket = io();
 
 // MODELS QUERY
 //
-NETWORK.query = function (name, args) {
+NETWORK.query = function (name, ...args) {
     var resid = Math.random().toString(36).substring(2);
     socket.emit('query', {
         name: name,

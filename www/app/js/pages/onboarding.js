@@ -44,7 +44,7 @@ function register_pseudo() {
     } else {
 
         // Save pseudo
-        NETWORK.query('User.set_name', [userData.uuid, input_pseudo])
+        NETWORK.query('User.set_name', userData.uuid, input_pseudo)
             .then((data) => {
                 console.log("User updated:", data);
                 userData = data;
