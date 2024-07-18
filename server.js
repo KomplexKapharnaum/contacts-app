@@ -130,23 +130,31 @@ SOCKET.io.on('connection', (socket) => {
     socket.user_id = USER.fields.id
 
     db.select("*")
-    .from('users')
-    .where("users.uuid", "=", uuid).then((user)=>{
-      user.forEach((u)=>{
-        db.select("*")
-        .from("sessions")
-        .orderBy("id", "desc")
-        .limit(1)
-        .then((user_sess)=>{
-          user_sess.forEach((u_s)=>{
-            db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
-            .then((res) => console.log(res)).catch((err) => console.log(err))
-          })
-        })
+      .from("users_sessions")
+      .join("users", "users.id", "=", "users_sessions.user_id")
+      .where("users.uuid", "=", uuid)
+      .then((users) => {
+        console.log(users)
+        if (!users) {
+          db.select("*")
+            .from('users')
+            .where("users.uuid", "=", uuid).then((user) => {
+              user.forEach((u) => {
+                db.select("*")
+                  .from("sessions")
+                  .orderBy("id", "desc")
+                  .limit(1)
+                  .then((user_sess) => {
+                    user_sess.forEach((u_s) => {
+                      db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
+                        .then((res) => console.log(res)).catch((err) => console.log(err))
+                    })
+                  })
+              })
+            })
+        }
       })
-        
-      })
-    
+
 
     db.select("*")
       .from("users_groups")
