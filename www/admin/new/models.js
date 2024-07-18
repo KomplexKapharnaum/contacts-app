@@ -2,7 +2,7 @@ let models = {};
 
 const docId=(id) => {return document.getElementById(id)};
 
-class SessionModel {
+class SessionCard {
     constructor(id, title, dates, subscribed_users, events_count, parent) {
         this.id = id;
         
@@ -18,10 +18,12 @@ class SessionModel {
         parent.appendChild(dom);
     }
 }
-models.Session = SessionModel;
+models.SessionCard = SessionCard;
 
-class EvenementModel {
-    constructor(title, date, hours, location, parent) {
+class EvenementCard {
+    constructor(sessionID, evenement, parent) {
+        console.log(evenement)
+        const [title, date, hours, location] = [evenement.name, evenement.starting_at.split("T")[0], `${evenement.starting_at.split("T")[1]} - ${evenement.ending_at.split("T")[1]}`, evenement.location]
         const dom = docId('model-evenement').cloneNode(true).content;
         
         dom.querySelector('.title').innerText = title;
@@ -29,10 +31,12 @@ class EvenementModel {
         dom.querySelector('.hours').innerText = hours;
         dom.querySelector('.location').innerText = location;
 
+        this.button = dom.querySelector(".model-evenement");
+
         parent.appendChild(dom);
     }
 }
-models.Evenement = EvenementModel;
+models.EvenementCard = EvenementCard;
 
 class SessionPage {
     constructor(session, button) {
@@ -40,6 +44,7 @@ class SessionPage {
 
         dom.querySelector('.title').innerHTML = session.name;
 
+        this.session = session;
         this.logsContainer = dom.querySelector('.logs');
         this.evenementsContainer = dom.querySelector('.evenements');
 
@@ -77,11 +82,16 @@ class SessionPage {
         });
 
         dom.querySelector(".remove-session").addEventListener('click', () => {
+            if (!confirm("Are you sure you want to delete this session?")) return;
             query("Session.delete", session.id).then(() => {
                 this.dom.remove();
-                updateSessions();
+                this.listEvents(session.events)
             });
         });
+
+        this.eventPagesContainer = dom.querySelector('.evenements-pages');
+
+        new AddEventModal(dom.querySelector(".session-add-event"), session.id);
 
         document.querySelector("#session-pages").appendChild(this.dom);
     }
@@ -90,9 +100,16 @@ class SessionPage {
         let container = this.dom.querySelector('.evenements');
         container.innerHTML = "";
         events.forEach(event => {
-            new models.Evenement(event.name, event.starting_at.split("T")[0], `${event.starting_at.split("T")[1]} - ${event.ending_at.split("T")[1]}`, event.location, container);
+
+            const eventCard = new models.EvenementCard(this.session.id, event, container);
+            const page = new models.EvenementPage(event, eventCard.button, this.eventPagesContainer);
+
+            eventCard.button.addEventListener('click', () => {
+                page.dom.classList.toggle('active');
+            });
+
         });
-        // models.Evenement
+        // models.EvenementCard
     }
 
     addLog(log) {
@@ -102,7 +119,98 @@ class SessionPage {
     }
 
     addEvenement(evenement) {
-        models.Evenement(evenement.title, evenement.date, evenement.hours, evenement.location, this.evenementsContainer);
+        models.EvenementCard(this.session.id, evenement, this.evenementsContainer);
     }
 }
 models.SessionPage = SessionPage;
+
+class EvenementPage {
+    constructor(evenement, button, parent) {
+        const dom = docId('template-page-evenement').cloneNode(true).content;
+
+        dom.querySelector('.title').innerHTML = evenement.title;
+
+        this.evenement = evenement;
+        this.logsContainer = dom.querySelector('.logs');
+
+        this.dom = dom.firstElementChild;
+
+        this.editform = this.dom.querySelector('.form-edit');
+
+        let editName = this.editform.querySelector('input[name="title"]');
+        let editStart = this.editform.querySelector('input[name="start-date"]');
+        let editEnd = this.editform.querySelector('input[name="end-date"]');
+
+        editName.value = evenement.title;
+        editStart.value = evenement.starting_at.split('T')[0];
+        editEnd.value = evenement.ending_at.split('T')[0];
+
+        this.editform.querySelector('button').addEventListener('click', () => {
+
+            query("Event.update", [evenement.id, {
+                title: editName.value,
+                starting_at: `${editStart.value}T${editStart.value.split('-')[2]}`,
+                ending_at: `${editEnd.value}T${editEnd.value.split('-')[2]}`
+            }]).then(() => {
+                this.dom.classList.remove('active');
+                updateEvenements();
+            });
+        });
+
+        dom.querySelector('.close').addEventListener('click', () => {
+            this.dom.classList.remove('active');
+        });
+
+        dom.querySelector(".remove-evenement").addEventListener('click', () => {
+            if (!confirm("Are you sure you want to delete this event?")) return;
+            query("Event.delete", evenement.id).then(() => {
+                this.dom.remove();
+            });
+        });
+
+        parent.appendChild(this.dom);
+    }
+
+    addLog(log) {
+        const logElement = document.createElement('div');
+        logElement.innerText = log;
+        this.logsContainer.appendChild(logElement);
+    }
+}
+models.EvenementPage = EvenementPage;
+
+class AddEventModal {
+    constructor(button, sessionID) {
+        
+        this.sessionID = sessionID;
+        this.id = 'modal-new-event-' + sessionID;
+
+        const dom = docId('template-modal-addevent').cloneNode(true).content.querySelector(".modal-bg");
+        // console.log(dom)
+        dom.id = this.id;
+
+        button.addEventListener('click', () => {
+            openModal(this.id);
+        });
+
+        dom.querySelector('.new-event-submit').addEventListener('click', () => {            
+            const title = dom.querySelector('.new-event-title').value;
+            const start = dom.querySelector('.new-event-start').value;
+            const end = dom.querySelector('.new-event-end').value;
+
+            query("Event.new", { name: title, session_id: this.sessionID, starting_at: start, ending_at: end }).then(() => {
+                closeModal('modal-new-session');
+            })
+        });
+
+        // const bg = dom.querySelector(".modal-bg");
+        dom.addEventListener("click", (event) => {
+            if (event.target === dom) {
+                closeModal(this.id);
+            }
+        });
+
+        document.body.appendChild(dom);
+    }
+}
+models.AddEventModal = AddEventModal;
