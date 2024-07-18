@@ -42,7 +42,7 @@ function sendSMS(dest, txt)
     // convert the XML tree to string
     let xml = doc.end({ prettyPrint: false })
     // console.log(doc.end({ prettyPrint: true }))
-
+    
     // POST
     var postData = 'xml='+encodeURIComponent(xml);
     var options = {
@@ -57,19 +57,18 @@ function sendSMS(dest, txt)
     };
 
     // return // TODO; remove me !!!
-
     var req = https.request(options, (res) => {
         console.log('statusCode:', res.statusCode);
         // console.log('headers:', res.headers);
         res.on('data', (d) => {
-          process.stdout.write(d);
+            process.stdout.write(d);
         });
-      });
-      
+    });
+    
     req.on('error', (e) => {
         console.error(e);
     });
-    
+
     req.write(postData);
     req.end();
 }

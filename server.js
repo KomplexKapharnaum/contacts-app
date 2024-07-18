@@ -130,241 +130,246 @@ SOCKET.io.on('connection', (socket) => {
         socket.user_uuid = USER.fields.uuid
         socket.user_id = USER.fields.id
 
-        db.select("*")
-          .from("users_sessions")
-          .join("users", "users.id", "=", "users_sessions.user_id")
-          .where("users.uuid", "=", uuid)
-          .then((users) => {
-            console.log(users)
-            if (!users) {
-              db.select("*")
-                .from('users')
-                .where("users.uuid", "=", uuid).then((user) => {
-                  user.forEach((u) => {
-                    db.select("*")
-                      .from("sessions")
-                      .orderBy("id", "desc")
-                      .limit(1)
-                      .then((user_sess) => {
-                        user_sess.forEach((u_s) => {
-                          db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
-                            .then((res) => console.log(res)).catch((err) => console.log(err))
-                        })
-                      })
-                  })
-                })
-            }
-          })
+        // db.select("*")
+        // .from("users_sessions")
+        // .join("users", "users.id", "=", "users_sessions.user_id")
+        // .where("users.uuid", "=", uuid)
+        // .then((users) => {
+        //   console.log("checkpoint")
+        //   console.log(users)
+        //   users.forEach((u) => {
+        //       if (u) {
+        //         db.select("*")
+        //         .from('users')
+        //         .where("users.uuid", "=", uuid).then((user) => {
+        //           user.forEach((u) => {
+        //               db.select("*")
+        //                 .from("sessions")
+        //                 .orderBy("id", "desc")
+        //                 .limit(1)
+        //                 .then((user_sess) => {
+        //                   user_sess.forEach((u_s) => {
+        //                     db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
+        //                       .then((res) => console.log(res)).catch((err) => console.log(err))
+        //                   })
+        //                 })
+        //             })
+        //           })
+        //       } else {
+        //         console.log("sess3" + users)
+        //       }
+        //     })
+        //   })
 
 
-        db.select("*")
-          .from("users_groups")
-          .join("users", "users.id", "=", "users_groups.group_id")
-          .join("groups", "groups.id", "=", "users_groups.group_id")
-          .where("users.uuid", "=", uuid)
-          .then((groupe) => {
-            groupe.forEach((g) => {
-              socket.join(g.id)
-            })
-          })
-      })
-      .catch((err) => {
-        console.error('ERROR on SIO.identify', err);
+    db.select("*")
+      .from("users_groups")
+      .join("users", "users.id", "=", "users_groups.group_id")
+      .join("groups", "groups.id", "=", "users_groups.group_id")
+      .where("users.uuid", "=", uuid)
+      .then((groupe) => {
+        groupe.forEach((g) => {
+          socket.join(g.id)
+        })
       })
   })
-  socket.on('disconnect', () => {
+    .catch((err) => {
+      console.error('ERROR on SIO.identify', err);
+    })
+})
+socket.on('disconnect', () => {
 
-      // update user is_connected
-      USER.isConnected({ uuid: socket.user_uuid }, false)
-        .then(() => {
-          // leave room when disconect // FG
-          db.select("*")
-            .from("users_groups")
-            .join("users", "users.id", "=", "users_groups.group_id")
-            .join("groups", "groups.id", "=", "users_groups.group_id")
-            .where("users.uuid", "=", uuid)
-            .then((groupe) => {
-              groupe.forEach((g) => {
-                socket.leave(g.id)
-              })
-            })
-        })
-        .catch((err) => {
-          console.error('ERROR on SIO.disconnect', err);
-        })
-
-  })
-
-
-  // Partie de Maigre, je touche pas
-  //
-
-  // login admin
-  socket.on('login', (password) => {
-    if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
-    if (password === process.env.ADMIN_PASSWORD) {
-      socket.emit('auth', 'ok');
-      socket.join('admin');
-
-      console.log('admin connected');
-    }
-    else socket.emit('auth', 'failed');
-  });
-
-  // ctrl
-  socket.on('ctrl', (data) => {
-
-    console.log('ctrl', data);
-    if (!SOCKET.auth(socket)) return;   // check if admin
-
-    if (data.name == "end") SOCKET.endEvent();
-    else SOCKET.startEvent(data.name, data.args);
-
-  });
-
-  // query
-  socket.on('query', (data) => {
-
-    // if (!SOCKET.auth(socket)) {
-    //   console.log('unauthorized query', data);
-    //   return;   // check if admin
-    // }
-    console.log('query', data);
-
-    let model = data.name.split('.')[0]
-    let action = data.name.split('.')[1]
-
-    // Check if Model Class exists
-    if (MODELS[model] === undefined) {
-      console.error('Model not found', model);
-      SOCKET.io.emit('log', 'Model not found ' + model);
-      return;
-    }
-
-    // Load object model
-    let m = new MODELS[model]();
-
-    // Check if Method exists
-    if (m[action] === undefined) {
-      console.log(m)
-      console.error('Action not found ' + model + '.' + action);
-      SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
-      return;
-    }
-
-    // marke args a list if not already
-    if (!Array.isArray(data.args)) data.args = [data.args]
-
-    // Call method and send response to client
-    m[action](...data.args)
-      .then((answer) => {
-        // console.log('answer', answer)
-        if (data.resid) SOCKET.io.emit('ok-' + data.resid, answer)  // send response to client Promise
-        if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
-      })
-      .catch((err) => {
-        if (data.resid) SOCKET.io.emit('ko-' + data.resid, err.message)  // send response to client Promise
-        SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
-        console.error(err);
-      })
-  });
-
-  // last event
-  if (SOCKET.lastEvent) {
-    socket.emit('start-event', SOCKET.lastEvent);
-  }
-
-  socket.on("sms", (msg, request) => {
-
-    if (/\|/.test(request)) {
-      request = request.replace(/\|/, '')
-      console.log("requete : " + request)
-
-      db('users').select().then((users) => {
-        db.select("*")
-          .from("users_sessions")
-          .join('users', 'users.id', '=', 'users_sessions.user_id')
-          .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
-          .where({ "users_sessions.session_id": request })
-          .then((phone) => {
-            phone.forEach((p) => {
-              console.log(p)
-              sendSMS([p.phone], msg)
-            })
-          })
-      })
-
-      // @ balise de reco pour groupe
-    } else if (/@/.test(request)) {
-      request = request.replace(/@/, '')
-
-      //  TODO FIX XML ERROR PARSING
+  // update user is_connected
+  USER.isConnected({ uuid: socket.user_uuid }, false)
+    .then(() => {
+      // leave room when disconect // FG
       db.select("*")
         .from("users_groups")
-        .join("users", "users_groups.group_id", "=", "groups.id")
+        .join("users", "users.id", "=", "users_groups.group_id")
         .join("groups", "groups.id", "=", "users_groups.group_id")
-        .where({ "groups.id": request })
-        .then((users) => {
-          users.forEach((u) => {
-            console.log(u.phone)
-            sendSMS([u.phone], msg)
+        .where("users.uuid", "=", uuid)
+        .then((groupe) => {
+          groupe.forEach((g) => {
+            socket.leave(g.id)
           })
         })
-    } else {
-      sendSMS([request], msg)
-    }
-  })
+    })
+    .catch((err) => {
+      console.error('ERROR on SIO.disconnect', err);
+    })
 
-  //groupe create
-  socket.on("groupe_create", (s_id, g_name, u_id, g_desc) => {
-    db('groups').insert({ name: g_name, description: g_desc, session_id: s_id }).then(
-      db('groups').select().then((groupe) => {
-        groupe.forEach((g) => {
-          console.log([g.name])
+})
+
+
+// Partie de Maigre, je touche pas
+//
+
+// login admin
+socket.on('login', (password) => {
+  if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
+  if (password === process.env.ADMIN_PASSWORD) {
+    socket.emit('auth', 'ok');
+    socket.join('admin');
+
+    console.log('admin connected');
+  }
+  else socket.emit('auth', 'failed');
+});
+
+// ctrl
+socket.on('ctrl', (data) => {
+
+  console.log('ctrl', data);
+  if (!SOCKET.auth(socket)) return;   // check if admin
+
+  if (data.name == "end") SOCKET.endEvent();
+  else SOCKET.startEvent(data.name, data.args);
+
+});
+
+// query
+socket.on('query', (data) => {
+
+  // if (!SOCKET.auth(socket)) {
+  //   console.log('unauthorized query', data);
+  //   return;   // check if admin
+  // }
+  console.log('query', data);
+
+  let model = data.name.split('.')[0]
+  let action = data.name.split('.')[1]
+
+  // Check if Model Class exists
+  if (MODELS[model] === undefined) {
+    console.error('Model not found', model);
+    SOCKET.io.emit('log', 'Model not found ' + model);
+    return;
+  }
+
+  // Load object model
+  let m = new MODELS[model]();
+
+  // Check if Method exists
+  if (m[action] === undefined) {
+    console.log(m)
+    console.error('Action not found ' + model + '.' + action);
+    SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
+    return;
+  }
+
+  // marke args a list if not already
+  if (!Array.isArray(data.args)) data.args = [data.args]
+
+  // Call method and send response to client
+  m[action](...data.args)
+    .then((answer) => {
+      // console.log('answer', answer)
+      if (data.resid) SOCKET.io.emit('ok-' + data.resid, answer)  // send response to client Promise
+      if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
+    })
+    .catch((err) => {
+      if (data.resid) SOCKET.io.emit('ko-' + data.resid, err.message)  // send response to client Promise
+      SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
+      console.error(err);
+    })
+});
+
+// last event
+if (SOCKET.lastEvent) {
+  socket.emit('start-event', SOCKET.lastEvent);
+}
+
+socket.on("sms", (msg, request) => {
+
+  if (/\|/.test(request)) {
+    request = request.replace(/\|/, '')
+    console.log("requete : " + request)
+
+    db('users').select().then((users) => {
+      db.select("*")
+        .from("users_sessions")
+        .join('users', 'users.id', '=', 'users_sessions.user_id')
+        .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
+        .where({ "users_sessions.session_id": request })
+        .then((phone) => {
+          phone.forEach((p) => {
+            console.log(p)
+            sendSMS([p.phone], msg)
+          })
         })
-      })
-    );
-  })
+    })
 
-  // insert msg
-  socket.on("chat_msg", (message, session, group, checked) => {
-    let time_stamp = Date.now()
-    
-    if (!group || group == '') group = null
+    // @ balise de reco pour groupe
+  } else if (/@/.test(request)) {
+    request = request.replace(/@/, '')
 
-    // TODO: check group is null or exists !
-    // TODO: check session exists !
-    // TODO: check message is not empty !
-
-    db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
-    if (checked == true) {
-      db("users").select("is_connected", "phone").then((users) => {
+    //  TODO FIX XML ERROR PARSING
+    db.select("*")
+      .from("users_groups")
+      .join("users", "users_groups.group_id", "=", "groups.id")
+      .join("groups", "groups.id", "=", "users_groups.group_id")
+      .where({ "groups.id": request })
+      .then((users) => {
         users.forEach((u) => {
-          if (u.is_connected == 0) {
-            sendSMS([u.phone], "contacts.kxkm.net")
-          }
+          console.log(u.phone)
+          sendSMS([u.phone], msg)
         })
       })
-    }
-    SOCKET.io.emit('new_chatMessage', message, group)
-  })
+  } else {
+    sendSMS([request], msg)
+  }
+})
 
-  //set last read
-  socket.on("last_read", (uuid) => {
-    db('users').where({ id: 1 }).update({
-      last_read: Date.now()
-    }).then((res) => console.log(res)).catch((err) => console.log(err))
-  })
+//groupe create
+socket.on("groupe_create", (s_id, g_name, g_desc) => {
+  db('groups').insert({ name: g_name, description: g_desc, session_id: s_id }).then(
+    db('groups').select().then((groupe) => {
+      groupe.forEach((g) => {
+        console.log([g.name])
+      })
+    })
+  );
+})
 
-  ///////////////////// delete quand finit
-  socket.on("addU", (u) => {
-    db("users").insert({
-      name: "userTest",
-      phone: "0674287959",
-      uuid: "TEST",
-      is_connected: 0
-    }).then()
-  })
+// insert msg
+socket.on("chat_msg", (message, session, group, checked) => {
+  let time_stamp = Date.now()
+
+  if (!group || group == '') group = null
+
+  // TODO: check group is null or exists !
+  // TODO: check session exists !
+  // TODO: check message is not empty !
+
+  db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
+  if (checked == true) {
+    db("users").select("is_connected", "phone").then((users) => {
+      users.forEach((u) => {
+        if (u.is_connected == 0) {
+          sendSMS([u.phone], "nouveau message ! contacts.kxkm.net")
+        }
+      })
+    })
+  }
+  SOCKET.io.emit('new_chatMessage', message, group)
+})
+
+//set last read
+socket.on("last_read", (uuid) => {
+  db('users').where({ id: 1 }).update({
+    last_read: Date.now()
+  }).then((res) => console.log(res)).catch((err) => console.log(err))
+})
+
+///////////////////// delete quand finit
+socket.on("addU", (u) => {
+  db("users").insert({
+    name: "userTest",
+    phone: "0674287959",
+    uuid: "TEST",
+    is_connected: 0
+  }).then()
+})
 
   //  db('users_groups').insert({ user_id: 1 , group_id: 1})
   //  .then((res) => console.log(res)).catch((err) => console.log(err))
@@ -508,33 +513,33 @@ function processJobs() {
   // Get next job (pending status, older date first)
   GENJOB.next()
     .then((job) => {
-        job.run()
-          .then(() => {
-            // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
-          })
-          .catch((err) => {
-            console.error('Job error', job.fields.id, err);
-          })
-          .finally(() => {
-            
-            // // check if there is still job to process for this user
-            // if (job.fields.id >= 0 && job.fields.user_id) 
-            // {
-            //   USER.load({ id: job.fields.user_id }).then(() => {
-            //     if (USER.genjobs.length == 0) {
-            //       console.log('All jobs done for user', USER.fields.name);
-            //       // send notification to user
-            //       SOCKET.findID(USER.fields.id).then((client) => {
-            //         if (client) client.emit('reload');
-            //       })
-            //     } 
-            //   })
-  
-  
-            //   SOCKET.findID(job.fields.user_id).then((client) => {
-            //     if (client) client.emit('job', job.get());
-            //   })
-            // }
+      job.run()
+        .then(() => {
+          // if (job.fields.id >= 0) console.log('Job done', job.fields.id);
+        })
+        .catch((err) => {
+          console.error('Job error', job.fields.id, err);
+        })
+        .finally(() => {
+
+          // // check if there is still job to process for this user
+          // if (job.fields.id >= 0 && job.fields.user_id) 
+          // {
+          //   USER.load({ id: job.fields.user_id }).then(() => {
+          //     if (USER.genjobs.length == 0) {
+          //       console.log('All jobs done for user', USER.fields.name);
+          //       // send notification to user
+          //       SOCKET.findID(USER.fields.id).then((client) => {
+          //         if (client) client.emit('reload');
+          //       })
+          //     } 
+          //   })
+
+
+          //   SOCKET.findID(job.fields.user_id).then((client) => {
+          //     if (client) client.emit('job', job.get());
+          //   })
+          // }
 
           processJobs();
         });
