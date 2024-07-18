@@ -106,9 +106,10 @@ NETWORK.loadUser = function () {
                         let events = session.events;
                         let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
 
-                        if (incomingEvents.length > 0) {
-
-                            alert(incomingEvents.length)
+                        if (incomingEvents.length==1) {
+                            PAGES.goto("event-countdown");
+                            UTIL.setCountDown(...incomingEvents[0].starting_at.split("T"));
+                        } else if (incomingEvents.length > 1) {
                             
                             PAGES.goto("event-list");
 
