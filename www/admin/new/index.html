@@ -190,6 +190,48 @@
     <div id="sessions-container" class="flex-container"></div>
     <div id="session-pages"></div>
 
+    <template id="model-session-page">
+        <div class="session-page page">
+            <h2><button class="close">X</button><span class="title"></span></h2>
+            <form class="form-edit">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" placeholder="Title">
+                </div>
+                <div>
+                    <label for="start-date">Start Date</label>
+                    <input type="date" name="start-date" placeholder="Start Date">
+                </div>
+                <div>
+                    <label for="end-date">End Date</label>
+                    <input type="date" name="end-date" placeholder="End Date">
+                </div>
+                <button type="button">Update</button>
+            </form>
+            <button class="remove-session">Delete session</button>
+            <hr>
+            <div class="logs"></div>
+            <div class="msg">
+                <h2>send notifications</h2>
+                <select name="msgSendType" id="sendType">
+                    <option value="msg">Quick messages</option>
+                    <option value="msg">sms</option>
+                </select>
+                <select name="msgGrpChoice" id="msgGrpChoice">
+                    <option value="">-- all --</option>
+                </select>
+                <input type="checkbox" name="checkbox_addSendSms" id="checkbox_addSendSms">send sms to disconnected users
+                <input type="text" name="smsMsgText" id="smsMsgText">
+                <button>send</button>
+            </div>
+
+            <h2><button>+</button> Events</h2>
+            <div class="flex-container evenements">
+
+            </div>
+        </div>
+    </template>
+
     <h2>Users</h2>
     <div id="users" class="db"></div>
 
