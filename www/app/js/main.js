@@ -215,7 +215,20 @@ UTIL.addIncomingEvent = function(evenement) {
 UTIL.getMessages = async function(user_id, session_id) {
     return new Promise(async (resolve, reject) => {
         const messages = await NETWORK.query("User.getMessages", user_id, session_id);
-        resolve(messages);
+        lastTimeRead = userData.last_read ? userData.last_read : 0;
+        let unread_messages = [];
+        messages.forEach(message => {
+            UTIL.addNotification(new Date(message.emit_time).toLocaleString(), message.message);
+            if (message.emit_time > lastTimeRead) {
+                unread_messages.push(message);
+            }
+        })
+        const mostRecentTime = messages.sort((a, b) => b.emit_time - a.emit_time)[0].emit_time;
+        
+        NETWORK.query("User.setLastRead", user_id, mostRecentTime).then(() => {     
+            if (unread_messages.length > 0) UTIL.displayUnreadMessages(unread_messages);
+            resolve(messages);
+        });
     })
 }
 

@@ -258,6 +258,12 @@ class User extends Model {
         }
     }
 
+    async setLastRead(w, last) {
+        if (w) await this.load(w);
+        this.fields.last_read = last;
+        this.save();
+    }
+
     async isConnected(w, state) {
         if (w) await this.load(w);
         if (state !== undefined && state != this.fields.is_connected) {
