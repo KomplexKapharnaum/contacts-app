@@ -124,67 +124,75 @@ SOCKET.io.on('connection', (socket) => {
 
     // update user is_connected
     USER.isConnected({ uuid: uuid }, true)
+      .then(() => {
 
-    // store user info in socket
-    socket.user_uuid = USER.fields.uuid
-    socket.user_id = USER.fields.id
+        // store user info in socket
+        socket.user_uuid = USER.fields.uuid
+        socket.user_id = USER.fields.id
 
-    db.select("*")
-      .from("users_sessions")
-      .join("users", "users.id", "=", "users_sessions.user_id")
-      .where("users.uuid", "=", uuid)
-      .then((users) => {
-        console.log(users)
-        if (!users) {
-          db.select("*")
-            .from('users')
-            .where("users.uuid", "=", uuid).then((user) => {
-              user.forEach((u) => {
-                db.select("*")
-                  .from("sessions")
-                  .orderBy("id", "desc")
-                  .limit(1)
-                  .then((user_sess) => {
-                    user_sess.forEach((u_s) => {
-                      db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
-                        .then((res) => console.log(res)).catch((err) => console.log(err))
-                    })
+        db.select("*")
+          .from("users_sessions")
+          .join("users", "users.id", "=", "users_sessions.user_id")
+          .where("users.uuid", "=", uuid)
+          .then((users) => {
+            console.log(users)
+            if (!users) {
+              db.select("*")
+                .from('users')
+                .where("users.uuid", "=", uuid).then((user) => {
+                  user.forEach((u) => {
+                    db.select("*")
+                      .from("sessions")
+                      .orderBy("id", "desc")
+                      .limit(1)
+                      .then((user_sess) => {
+                        user_sess.forEach((u_s) => {
+                          db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
+                            .then((res) => console.log(res)).catch((err) => console.log(err))
+                        })
+                      })
                   })
-              })
+                })
+            }
+          })
+
+
+        db.select("*")
+          .from("users_groups")
+          .join("users", "users.id", "=", "users_groups.group_id")
+          .join("groups", "groups.id", "=", "users_groups.group_id")
+          .where("users.uuid", "=", uuid)
+          .then((groupe) => {
+            groupe.forEach((g) => {
+              socket.join(g.id)
             })
-        }
+          })
       })
-
-
-    db.select("*")
-      .from("users_groups")
-      .join("users", "users.id", "=", "users_groups.group_id")
-      .join("groups", "groups.id", "=", "users_groups.group_id")
-      .where("users.uuid", "=", uuid)
-      .then((groupe) => {
-        groupe.forEach((g) => {
-          socket.join(g.id)
-        })
+      .catch((err) => {
+        console.error('ERROR on SIO.identify', err);
       })
   })
   socket.on('disconnect', () => {
-    if (socket.user_uuid) {
 
       // update user is_connected
-      USER.isConnected({ uuid: uuid }, false)
-
-      // leave room when disconect // FG
-      db.select("*")
-        .from("users_groups")
-        .join("users", "users.id", "=", "users_groups.group_id")
-        .join("groups", "groups.id", "=", "users_groups.group_id")
-        .where("users.uuid", "=", uuid)
-        .then((groupe) => {
-          groupe.forEach((g) => {
-            socket.leave(g.id)
-          })
+      USER.isConnected({ uuid: socket.user_uuid }, false)
+        .then(() => {
+          // leave room when disconect // FG
+          db.select("*")
+            .from("users_groups")
+            .join("users", "users.id", "=", "users_groups.group_id")
+            .join("groups", "groups.id", "=", "users_groups.group_id")
+            .where("users.uuid", "=", uuid)
+            .then((groupe) => {
+              groupe.forEach((g) => {
+                socket.leave(g.id)
+              })
+            })
         })
-    }
+        .catch((err) => {
+          console.error('ERROR on SIO.disconnect', err);
+        })
+
   })
 
 
@@ -502,42 +510,24 @@ function processJobs() {
           })
           .finally(() => {
             
-            // check if there is still job to process for this user
-            if (job.fields.id >= 0 && job.fields.user_id) 
-            {
-              USER.load({ id: job.fields.user_id }).then(() => {
-                if (USER.genjobs.length == 0) {
-                  console.log('All jobs done for user', USER.fields.name);
-                  // send notification to user
-                  SOCKET.findID(USER.fields.id).then((client) => {
-                    if (client) client.emit('reload');
-                  })
-                } 
-              })
+            // // check if there is still job to process for this user
+            // if (job.fields.id >= 0 && job.fields.user_id) 
+            // {
+            //   USER.load({ id: job.fields.user_id }).then(() => {
+            //     if (USER.genjobs.length == 0) {
+            //       console.log('All jobs done for user', USER.fields.name);
+            //       // send notification to user
+            //       SOCKET.findID(USER.fields.id).then((client) => {
+            //         if (client) client.emit('reload');
+            //       })
+            //     } 
+            //   })
   
   
-              SOCKET.findID(job.fields.user_id).then((client) => {
-                if (client) client.emit('job', job.get());
-              })
-            }
-
-          // check if there is still job to process for this user
-          if (job.fields.id >= 0) {
-            USER.load({ id: job.fields.user_id }).then(() => {
-              if (USER.genjobs.length == 0) {
-                console.log('All jobs done for user', USER.fields.name);
-                // send notification to user
-                SOCKET.findID(USER.fields.id).then((client) => {
-                  if (client) client.emit('reload');
-                })
-              }
-            })
-
-
-            SOCKET.findID(job.fields.user_id).then((client) => {
-              if (client) client.emit('job', job.get());
-            })
-          }
+            //   SOCKET.findID(job.fields.user_id).then((client) => {
+            //     if (client) client.emit('job', job.get());
+            //   })
+            // }
 
           processJobs();
         });
