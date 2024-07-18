@@ -335,31 +335,64 @@ socket.on("groupe_create", (s_id, g_name, g_desc) => {
 socket.on("chat_msg", (message, session, group, checked) => {
   let time_stamp = Date.now()
 
-  // TODO: check group is null or exists !
-  if (!group || group == '') group = null
-
-  // TODO: check session exists !
+  let verif_check = true
+  // check group is null or exists !
+  db.select("groups.id")
+  .from("groups")
+  .where({ id: group })
+  .then((groups)=>{
+    if (groups.length > 0) {
+      groups.forEach((g)=>{
+        console.log("groups : "+g.id)
+      })
+    } else if (!group || group == '') {
+      group = null
+      console.log("group_id is set to null")
+    } else {
+      verif_check = false
+      console.log(verif_check)
+      return (console.log("group not found"));
+    }
+  })
+  
+  // check session exists !
   db.select("sessions.id")
   .from("sessions")
   .where({ id: session })
   .then((res) => {
-    if (res.length == 0) return ("session not found");
+    if (res.length == 0) {
+      verif_check = false
+      console.log(verif_check)
+      return (console.log("session not found"));
+    }
   })
+  
+  // check message is not empty !
+  if (message == '') {
+    verif_check = false
+    console.log(verif_check)
+    return (console.log("message empty"))
+  };
+  
+  setTimeout( ()=>{
+    if (verif_check == true){
 
-  // TODO: check message is not empty !
-  if (message == '') return ("message empty");
-
-  db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
-  if (checked == true) {
-    db("users").select("is_connected", "phone").then((users) => {
-      users.forEach((u) => {
-        if (u.is_connected == 0) {
-          sendSMS([u.phone], "nouveau message ! contacts.kxkm.net")
-        }
+    console.log(verif_check)
+    db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then(
+      console.log("msg send : " + message)
+    );
+    if (checked == true) {
+      db("users").select("is_connected", "phone").then((users) => {
+        users.forEach((u) => {
+          if (u.is_connected == 0) {
+            sendSMS([u.phone], "nouveau message ! contacts.kxkm.net")
+          }
+        })
       })
-    })
-  }
-  SOCKET.io.emit('new_chatMessage', message, group)
+    }
+    SOCKET.io.emit('new_chatMessage', message, group)
+  }}
+  , 200)  
 })
 
 //set last read
