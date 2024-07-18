@@ -455,11 +455,10 @@ input[type="text"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 64px;
 }
 
 #qr-code img {
-    max-width: 90vh;
+    width: 100%;
 }
 
 #mon-avatar-container {
