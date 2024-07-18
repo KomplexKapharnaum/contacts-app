@@ -18,17 +18,6 @@ class roundedGraphics {
         const renderedImage = document.createElement('canvas');
         this.renderedImage = renderedImage;
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            this.width = canvas.width;
-            this.height = canvas.height;
-
-            buffer.width = this.width;
-            buffer.height = this.height;
-        });
-
         this.res = resolution;
         this.color = 'white';
         this.backgroundColor = 'black';
@@ -54,6 +43,20 @@ class roundedGraphics {
         shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
         shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
         this.shader = shader;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            this.width = canvas.width;
+            this.height = canvas.height;
+
+            buffer.width = this.width;
+            buffer.height = this.height;
+
+            shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
+            shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
+        });
 
         parent.appendChild(canvas);
 
