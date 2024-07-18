@@ -53,6 +53,7 @@ var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET })
 // Express
 //
 import bodyParser from 'body-parser';
+
 var app = express();
 app.use(bodyParser.json());
 app.use(webhookHandler);
@@ -127,6 +128,25 @@ SOCKET.io.on('connection', (socket) => {
     // store user info in socket
     socket.user_uuid = USER.fields.uuid
     socket.user_id = USER.fields.id
+
+    db.select("*")
+    .from('users')
+    .where("users.uuid", "=", uuid).then((user)=>{
+      user.forEach((u)=>{
+        db.select("*")
+        .from("sessions")
+        .orderBy("id", "desc")
+        .limit(1)
+        .then((user_sess)=>{
+          user_sess.forEach((u_s)=>{
+            db("users_sessions").insert({ user_id: u.id, session_id: u_s.id })
+            .then((res) => console.log(res)).catch((err) => console.log(err))
+          })
+        })
+      })
+        
+      })
+    
 
     db.select("*")
       .from("users_groups")
@@ -322,8 +342,7 @@ SOCKET.io.on('connection', (socket) => {
       is_connected: 0
     }).then()
   })
-  // db('users_sessions').insert({ user_id: 1 , session_id: 1})
-  // .then((res) => console.log(res)).catch((err) => console.log(err))
+
   //  db('users_groups').insert({ user_id: 1 , group_id: 1})
   //  .then((res) => console.log(res)).catch((err) => console.log(err))
   ///////////////////////`
