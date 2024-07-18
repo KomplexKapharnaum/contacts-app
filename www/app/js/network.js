@@ -67,7 +67,6 @@ NETWORK.loadUser = function () {
                 return PAGES.selectAvatar(userData.avatars);
 
             // all good
-            PAGES.goto("main");          // profile page
             UTIL.shownav(true);
 
             // Load next session and offers to register
@@ -87,7 +86,7 @@ NETWORK.loadUser = function () {
                     
                     if (!session) {
                         console.log("User not registered to next session");
-                        
+                        PAGES.goto("main");
                         /*
                         // check if user declined to register
                         if (Cookies.get('session_declined_' + nextSession)) {
@@ -116,6 +115,8 @@ NETWORK.loadUser = function () {
                             incomingEvents.forEach(evenement => {
                                 UTIL.addIncomingEvent(evenement);
                             })
+                        } else {
+                            PAGES.goto("main");
                         }
                     }
                 })

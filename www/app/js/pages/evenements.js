@@ -93,7 +93,7 @@ PAGES.addCallback("event-location", function() {
         if (new Date() > eventTime) {
             location.reload();
         }
-    }, 1000);    
+    }, 1000);
 });
 
 PAGES.addCallback("event-idle", () => {
