@@ -109,8 +109,34 @@ UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
     });
     var p = L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText)
     const btn = document.getElementById("event-location-coords-button");
-    btn.href = "geo:" + lat + "," + lon;
+    // btn.href = "geo:" + lat + "," + lon;
+
+    if (UTIL.getMobileOperatingSystem() == "iOS") 
+        btn.href = "maps://maps.apple.com/?q="+lat+","+lon+"&z="+zoom;
+    else
+        btn.href = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom;
+    
     setTimeout(() => {
         p.openPopup();
     }, 700);
+}
+
+UTIL.getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // // Windows Phone must come first because its UA also contains "Android"
+    // if (/windows phone/i.test(userAgent)) {
+    //     return "Windows Phone";
+    // }
+
+    // if (/android/i.test(userAgent)) {
+    //     return "Android";
+    // }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "Android";
 }
