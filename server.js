@@ -335,11 +335,19 @@ socket.on("groupe_create", (s_id, g_name, g_desc) => {
 socket.on("chat_msg", (message, session, group, checked) => {
   let time_stamp = Date.now()
 
+  // TODO: check group is null or exists !
   if (!group || group == '') group = null
 
-  // TODO: check group is null or exists !
   // TODO: check session exists !
+  db.select("sessions.id")
+  .from("sessions")
+  .where({ id: session })
+  .then((res) => {
+    if (res.length == 0) return ("session not found");
+  })
+
   // TODO: check message is not empty !
+  if (message == '') return ("message empty");
 
   db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then();
   if (checked == true) {
@@ -356,7 +364,7 @@ socket.on("chat_msg", (message, session, group, checked) => {
 
 //set last read
 socket.on("last_read", (uuid) => {
-  db('users').where({ id: 1 }).update({
+  db('users').where({ uuid: uuid }).update({
     last_read: Date.now()
   }).then((res) => console.log(res)).catch((err) => console.log(err))
 })
