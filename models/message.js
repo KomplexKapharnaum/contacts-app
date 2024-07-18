@@ -63,6 +63,7 @@ db.schema.hasTable('messages').then(exists => {
             table.integer('emit_time');
             table.string('message');
             table.integer('session_id')
+            table.integer('group_id')
         }).then(() => {
             console.log('created messages table');
         });

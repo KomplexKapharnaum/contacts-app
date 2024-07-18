@@ -24,36 +24,33 @@ import parsePhoneNumber from 'libphonenumber-js/mobile'
 
 class User extends Model {
 
-    constructor() 
-    {
+    constructor() {
         super('users',
-        {
-            id:             null,
-            name:           null,
-            phone:          null,
-            uuid:           null,
-            selected_avatar: null,
-            last_read:      null,
-            is_connected:   null
-        });
+            {
+                id: null,
+                name: null,
+                phone: null,
+                uuid: null,
+                selected_avatar: null,
+                last_read: null,
+                is_connected: null
+            });
     }
 
     clear() {
         super.clear();
         this.sessions = [];     // TODO: remove sessions association since already linked to groups
-        this.groups =  [];
+        this.groups = [];
         this.avatars = [];
         this.genjobs = [];
     }
 
-    async new(f) 
-    {
+    async new(f) {
         if (f.phone) f.phone = this.phoneParse(f.phone);
         return super.new(f);
     }
 
-    async init_byphone(phone) 
-    {
+    async init_byphone(phone) {
         // load or create user by phone number
         let phoneNumber = this.phoneParse(phone);
         let user = await db('users').where({ phone: phoneNumber }).first();
@@ -61,24 +58,22 @@ class User extends Model {
         else return this.new({ phone: phoneNumber });
     }
 
-    async save() 
-    {
+    async save() {
         // mandatory fields
         if (!this.fields.phone) throw new Error('User phone is required');
 
         // phone + uuid
-        this.phoneParse(this.fields.phone); 
+        this.phoneParse(this.fields.phone);
         this.fields.uuid = this.generate_uuid();
 
         // check if uuid not already used
         let user = await db('users').where({ uuid: this.fields.uuid }).first();
         if (user && user.id != this.fields.id) throw new Error('User already exists with this phone number');
-        
+
         await super.save();
     }
-    
-    async load(w)
-    {
+
+    async load(w) {
         await super.load(w);
 
         let sessions = await db('users_sessions').where({ user_id: this.fields.id }).select('session_id');
@@ -91,9 +86,9 @@ class User extends Model {
         this.avatars = avatars.map(a => a.id);
 
         let genjobs = await db('genjobs').where({ userid: this.fields.id })
-                                            .whereNot('status', 'done')
-                                            .whereNot('status', 'error')
-                                            .select('id');
+            .whereNot('status', 'done')
+            .whereNot('status', 'error')
+            .select('id');
 
         this.genjobs = genjobs.map(g => g.id);
 
@@ -113,7 +108,7 @@ class User extends Model {
         console.log('User', this.fields.id, 'updated with name', name);
         return this.get()
     }
-    
+
     async delete(uuid) {
         await this.load({ uuid: uuid });
 
@@ -140,7 +135,7 @@ class User extends Model {
         if (!this.fields.id) throw new Error('User does not exist');
         let session = new Session();
         await session.load(session_id);
-        
+
         // check if already registered
         let user_session = await db('users_sessions').where({ user_id: this.fields.id, session_id: session_id }).first();
         if (user_session) throw new Error('User already registered to session');
@@ -167,7 +162,7 @@ class User extends Model {
     async select_avatar(uuid, avatar_id) {
         if (uuid) await this.load({ uuid: uuid });
         if (!this.fields.id) throw new Error('User does not exist');
-        await db('users').where({ id: this.fields.id }).update({ selected_avatar: avatar_id }); 
+        await db('users').where({ id: this.fields.id }).update({ selected_avatar: avatar_id });
         console.log('User', this.fields.id, 'selected avatar', avatar_id);
     }
 
@@ -215,7 +210,7 @@ class User extends Model {
                 await group.load(g);
                 return group.get();
             }))
-        
+
         if (full === true || (Array.isArray(full) && full.includes('avatars')))
             u.avatars = await Promise.all(this.avatars.map(async a => {
                 let avatar = new Avatar();
@@ -229,22 +224,38 @@ class User extends Model {
                 await genjob.load(g);
                 return genjob.get();
             }))
-        
+
         return u;
     }
 
-    async getMessages(w, session_id) {
+    async getMessages(w, session_id, last) {
         if (w) await this.load(w);
-        
+
         // check if user is registered to session
+        session_id = parseInt(session_id)
+        if (!this.sessions.includes(session_id)) throw new Error('User not registered to session');
 
-        // get messages with group_id null or group_id in user.groups
-        
-
+        let groupList = ['NULL'].concat(this.groups)
+        console.log("start", groupList)
+        if (last){
+            let m = await db("messages").select("*")
+            .where( { session_id: session_id } )
+            .groupBy('id')
+            .havingIn('group_id', groupList)
+            .orderBy("id", "desc")
+            .limit(1)
+            return m
+        } else {
+        let m = await db("messages").select("*")
+            .where( { session_id: session_id } )
+            .groupBy('id')
+            .havingIn('group_id', groupList)
+            return m
+        }
+        // get messages with group_id null or group_id in this.groups
     }
-    
-    async isConnected(w, state) 
-    {
+
+    async isConnected(w, state) {
         if (w) await this.load(w);
         if (state !== undefined && state != this.fields.is_connected) {
             this.fields.is_connected = state ? 1 : 0;

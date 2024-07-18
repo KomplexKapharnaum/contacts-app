@@ -216,8 +216,30 @@ UTIL.getMessages = async function(user_id, session_id) {
     return new Promise(async (resolve, reject) => {
         // const messages = await NETWORK.query('Message.list', {user_id: user_id, session_id: session_id});
         const messages = await NETWORK.query("User.getMessages", user_id, session_id);
+        console.log(messages);
         resolve(messages);
     })
+}
+
+UTIL.displayUnreadMessages = function(messages) {
+    const unreadOverlay = document.getElementById("unread-notifications-container");
+    unreadOverlay.classList.remove("hidden");
+    messages.forEach(message => {
+        const notif = document.getElementById("unread-notification-template").cloneNode(true).content.querySelector(".unread-notification");
+        notif.querySelector(".unread-notification-content").innerHTML = message.message;
+
+        unreadOverlay.appendChild(notif);
+
+        notif.querySelector(".close").addEventListener("click", () => {
+            UTIL.readMessage(message.emit_time);
+            notif.remove();
+            if (unreadOverlay.childElementCount == 0) unreadOverlay.classList.add("hidden");
+        })
+    })
+}
+
+UTIL.readMessage = function(time) {
+    console.log(time);
 }
 
 // Cookies

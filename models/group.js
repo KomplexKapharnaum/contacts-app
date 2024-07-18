@@ -1,5 +1,6 @@
 import db from '../tools/db.js';
 import Model from './model.js';
+import Session from './session.js';
 
 class Group extends Model {
 
@@ -12,19 +13,6 @@ class Group extends Model {
                 session_id: null
             });
         this.user = [];
-    }
-
-    async load(w) {
-        await super.load(w);
-
-        let user = await db('user').where({ groupe_id: this.fields.id });
-        for (let e of user) {
-            let groupe = new Group();
-            groupe.fields = e;
-            this.user.push(groupe);
-        }
-
-        return this.get()
     }
 
     clear() {
@@ -45,27 +33,8 @@ class Group extends Model {
 
     async delete(w) {
         await super.delete(w);
-        await db('user').where({ groupe_id: this.fields.id }).del();
     }
-
-    async get(w, full = false) {
-        if (w) await this.load(w);
-        let s = await super.get();
-        s.user = await Promise.all(this.user.map(e => (full) ? e.get() : e.id()));
-        s.users = await this.getusers();
-        return s;
-    }
-
-    async getusers(w) {
-        if (w) await this.load(w);
-
-        // find Sessions
-        let groupe = new Session();
-        await groupe.load(this.fields.user_id);
-
-        return await groupe.getusers();
-    }
-
+    
     async list(w) {
         if (w) return db(this.table).where(w);
         else return db(this.table).select();
