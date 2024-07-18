@@ -102,8 +102,7 @@ NETWORK.loadUser = function () {
                             .then((session) => {
                                 UTIL.promptForSubscribingEvent(session, nextSession);
                             });
-
-                    } 
+                    }
                     else {
                         let events = session.events;
                         let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
