@@ -42,6 +42,7 @@ class SessionPage {
 
         this.logsContainer = dom.querySelector('.logs');
         this.evenementsContainer = dom.querySelector('.evenements');
+        this.msgCard = dom.querySelector('.msg');
 
         this.dom = dom.firstElementChild;
 
@@ -99,6 +100,12 @@ class SessionPage {
         const logElement = document.createElement('div');
         logElement.innerText = log;
         this.logsContainer.appendChild(logElement);
+    }
+
+    addMsgbox(msg) {
+        const msgCard = document.createElement('div');
+        msgCard.innerText = msg;
+        this.msgCard.appendChild(msgCard);
     }
 
     addEvenement(evenement) {

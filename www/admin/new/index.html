@@ -117,6 +117,19 @@
             <button class="remove-session">Delete session</button>
             <hr>
             <div class="logs"></div>
+            <div class="msg">
+                <h2>send notifications</h2>
+                <select name="msgSendType" id="sendType">
+                    <option value="msg">Quick messages</option>
+                    <option value="msg">sms</option>
+                </select>
+                <select name="msgGrpChoice" id="msgGrpChoice">
+                    <option value="">-- all --</option>
+                </select>
+                <input type="checkbox" name="checkbox_addSendSms" id="checkbox_addSendSms">send sms to disconnected users
+                <input type="text" name="smsMsgText" id="smsMsgText">
+                <button>send</button>
+            </div>
 
             <h2><button>+</button> Events</h2>
             <div class="flex-container evenements">
