@@ -20,10 +20,12 @@ await loadModel('Avatar');
 await loadModel('Genjob');
 await loadModel('Group');
 await loadModel('Message');
+await loadModel('Sms');
 
 // MODELS HANDLER
 var GENJOB = new MODELS['Genjob']()
 var USER = new MODELS['User']()
+var SMS = new MODELS['Sms']()
 
 // HTTPS / HTTP
 import http from 'http';
@@ -124,14 +126,11 @@ SOCKET.io.on('connection', (socket) => {
   socket.on('identify', (uuid) => {
 
     // update user is_connected
-    console.log("user : ")
-    console.log(USER)
     USER.isConnected({ uuid: uuid }, true)
       .then(() => {
         // store user info in socket
         socket.user_uuid = USER.fields.uuid
         socket.user_id = USER.fields.id
-        console.log("user groups " + USER.fields.groups)
 
         db.select("*")
           .from("users_groups")
@@ -251,44 +250,10 @@ SOCKET.io.on('connection', (socket) => {
   }
 
   socket.on("sms", (msg, request) => {
-
-    if (/\|/.test(request)) {
-      request = request.replace(/\|/, '')
-      console.log("requete : " + request)
-
-      db('users').select().then((users) => {
-        db.select("*")
-          .from("users_sessions")
-          .join('users', 'users.id', '=', 'users_sessions.user_id')
-          .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
-          .where({ "users_sessions.session_id": request })
-          .then((phone) => {
-            phone.forEach((p) => {
-              console.log(p)
-              sendSMS([p.phone], msg)
-            })
-          })
-      })
-
-      // @ balise de reco pour groupe
-    } else if (/@/.test(request)) {
-      request = request.replace(/@/, '')
-
-      //  TODO FIX XML ERROR PARSING
-      db.select("*")
-        .from("users_groups")
-        .join("users", "users_groups.group_id", "=", "groups.id")
-        .join("groups", "groups.id", "=", "users_groups.group_id")
-        .where({ "groups.id": request })
-        .then((users) => {
-          users.forEach((u) => {
-            console.log(u.phone)
-            sendSMS([u.phone], msg)
-          })
-        })
-    } else {
-      sendSMS([request], msg)
-    }
+    
+    SMS.register(msg)
+    SMS.sendSms(msg, request)
+    
   })
 
   //groupe create
