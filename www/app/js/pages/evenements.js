@@ -107,7 +107,10 @@ UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
             leafletMap.removeLayer(layer);
         }
     });
-    L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
+    var p = L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText)
     const btn = document.getElementById("event-location-coords-button");
     btn.href = "geo:" + lat + "," + lon;
+    setTimeout(() => {
+        p.openPopup();
+    }, 700);
 }
