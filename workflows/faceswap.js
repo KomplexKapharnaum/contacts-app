@@ -11,7 +11,7 @@ export const run =
         // prompt['1'].inputs.codeformer_weight = Math.random(0, 0.1)
 
         // set user pic
-        let picname = 'app/'+input.pic.split('/').pop();
+        let picname = 'app/'+input.pic.split('/').pop().split('\\').pop();
         prompt['2'].inputs.image = picname;
 
         // set avatar pic
