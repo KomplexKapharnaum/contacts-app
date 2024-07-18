@@ -26,6 +26,7 @@ await loadModel('Sms');
 var GENJOB = new MODELS['Genjob']()
 var USER = new MODELS['User']()
 var SMS = new MODELS['Sms']()
+var MESSAGE = new MODELS['Message']()
 
 // HTTPS / HTTP
 import http from 'http';
@@ -135,212 +136,158 @@ SOCKET.io.on('connection', (socket) => {
         socket.join(USER.groups)
 
       })
-  
-    .catch((err) => {
-      console.error('ERROR on SIO.identify', err);
-    })
-})
-socket.on('disconnect', () => {
 
-  // update user is_connected
-  USER.isConnected({ uuid: socket.user_uuid }, false)
-    .then(() => {
-      // leave room when disconect // FG
-      socket.leave(USER.groups)
-    })
-    .catch((err) => {
-      console.error('ERROR on SIO.disconnect', err);
-    })
-
-})
-
-
-// Partie de Maigre, je touche pas
-//
-
-// login admin
-socket.on('login', (password) => {
-  if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
-  if (password === process.env.ADMIN_PASSWORD) {
-    socket.emit('auth', 'ok');
-    socket.join('admin');
-
-    console.log('admin connected');
-  }
-  else socket.emit('auth', 'failed');
-});
-
-// ctrl
-socket.on('ctrl', (data) => {
-
-  console.log('ctrl', data);
-  if (!SOCKET.auth(socket)) return;   // check if admin
-
-  if (data.name == "end") SOCKET.endEvent();
-  else SOCKET.startEvent(data.name, data.args);
-
-});
-
-// query
-socket.on('query', (data) => {
-
-  // if (!SOCKET.auth(socket)) {
-  //   console.log('unauthorized query', data);
-  //   return;   // check if admin
-  // }
-  console.log('query', data);
-
-  let model = data.name.split('.')[0]
-  let action = data.name.split('.')[1]
-
-  // Check if Model Class exists
-  if (MODELS[model] === undefined) {
-    console.error('Model not found', model);
-    SOCKET.io.emit('log', 'Model not found ' + model);
-    return;
-  }
-
-  // Load object model
-  let m = new MODELS[model]();
-
-  // Check if Method exists
-  if (m[action] === undefined) {
-    console.log(m)
-    console.error('Action not found ' + model + '.' + action);
-    SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
-    return;
-  }
-
-  // marke args a list if not already
-  if (!Array.isArray(data.args)) data.args = [data.args]
-
-  // Call method and send response to client
-  m[action](...data.args)
-    .then((answer) => {
-      // console.log('answer', answer)
-      if (data.resid) SOCKET.io.emit('ok-' + data.resid, answer)  // send response to client Promise
-      if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
-    })
-    .catch((err) => {
-      if (data.resid) SOCKET.io.emit('ko-' + data.resid, err.message)  // send response to client Promise
-      SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
-      console.error(err);
-    })
-});
-
-// last event
-if (SOCKET.lastEvent) {
-  socket.emit('start-event', SOCKET.lastEvent);
-}
-
-socket.on("sms", (msg, request) => {
-
-  SMS.register(msg)
-  SMS.sendSms(msg, request)
-
-})
-
-//groupe create
-socket.on("groupe_create", (s_id, g_name, g_desc) => {
-  db('groups').insert({ name: g_name, description: g_desc, session_id: s_id }).then(
-    db('groups').select().then((groupe) => {
-      groupe.forEach((g) => {
-        console.log([g.name])
+      .catch((err) => {
+        console.error('ERROR on SIO.identify', err);
       })
-    })
-  );
-})
+  })
+  socket.on('disconnect', () => {
 
-// insert msg
-socket.on("chat_msg", (message, session, group, checked) => {
-  let time_stamp = Date.now()
+    // update user is_connected
+    USER.isConnected({ uuid: socket.user_uuid }, false)
+      .then(() => {
+        // leave room when disconect // FG
+        socket.leave(USER.groups)
+      })
+      .catch((err) => {
+        console.error('ERROR on SIO.disconnect', err);
+      })
 
-  let verif_check = true
-  // check group is null or exists !
-  db.select("groups.id")
-    .from("groups")
-    .where({ id: group })
-    .then((groups) => {
-      if (groups.length > 0) {
-        groups.forEach((g) => {
-          console.log("groups : " + g.id)
-        })
-      } else if (!group || group == '') {
-        group = null
-        console.log("group_id is set to null")
-      } else {
-        verif_check = false
-        console.log(verif_check)
-        return (console.log("group not found"));
-      }
-    })
+  })
 
-  // check session exists !
-  db.select("sessions.id")
-    .from("sessions")
-    .where({ id: session })
-    .then((res) => {
-      if (res.length == 0) {
-        verif_check = false
-        console.log(verif_check)
-        return (console.log("session not found"));
-      }
-    })
 
-  // check message is not empty !
-  if (message == '') {
-    verif_check = false
-    console.log(verif_check)
-    return (console.log("message empty"))
-  };
+  // Partie de Maigre, je touche pas
+  //
 
-  setTimeout(() => {
-    if (verif_check == true) {
+  // login admin
+  socket.on('login', (password) => {
+    if (!process.env.ADMIN_PASSWORD) console.warn('- WARNING - ADMIN_PASSWORD not set in .env file !');
+    if (password === process.env.ADMIN_PASSWORD) {
+      socket.emit('auth', 'ok');
+      socket.join('admin');
 
-      console.log(verif_check)
-      db('Messages').insert({ message: message, emit_time: time_stamp, session_id: session, group_id: group }).then(
-        console.log("msg send : " + message)
-      );
-      if (checked == true) {
-        db("users").select("is_connected", "phone").then((users) => {
-          users.forEach((u) => {
-            if (u.is_connected == 0) {
-              sendSMS([u.phone], "nouveau message ! contacts.kxkm.net")
-            }
-          })
-        })
-      }
-      SOCKET.io.emit('new_chatMessage', message, group)
+      console.log('admin connected');
     }
+    else socket.emit('auth', 'failed');
+  });
+
+  // ctrl
+  socket.on('ctrl', (data) => {
+
+    console.log('ctrl', data);
+    if (!SOCKET.auth(socket)) return;   // check if admin
+
+    if (data.name == "end") SOCKET.endEvent();
+    else SOCKET.startEvent(data.name, data.args);
+
+  });
+
+  // query
+  socket.on('query', (data) => {
+
+    // if (!SOCKET.auth(socket)) {
+    //   console.log('unauthorized query', data);
+    //   return;   // check if admin
+    // }
+    console.log('query', data);
+
+    let model = data.name.split('.')[0]
+    let action = data.name.split('.')[1]
+
+    // Check if Model Class exists
+    if (MODELS[model] === undefined) {
+      console.error('Model not found', model);
+      SOCKET.io.emit('log', 'Model not found ' + model);
+      return;
+    }
+
+    // Load object model
+    let m = new MODELS[model]();
+
+    // Check if Method exists
+    if (m[action] === undefined) {
+      console.log(m)
+      console.error('Action not found ' + model + '.' + action);
+      SOCKET.io.emit('log', 'Action not found ' + model + '.' + action);
+      return;
+    }
+
+    // marke args a list if not already
+    if (!Array.isArray(data.args)) data.args = [data.args]
+
+    // Call method and send response to client
+    m[action](...data.args)
+      .then((answer) => {
+        // console.log('answer', answer)
+        if (data.resid) SOCKET.io.emit('ok-' + data.resid, answer)  // send response to client Promise
+        if (answer === undefined) SOCKET.io.emit('log', model + '.' + action + '(' + JSON.stringify(data.args) + ') \tOK')
+      })
+      .catch((err) => {
+        if (data.resid) SOCKET.io.emit('ko-' + data.resid, err.message)  // send response to client Promise
+        SOCKET.io.emit('log', model + '.' + action + '(' + data.args + ') \tERROR : ' + err.message)
+        console.error(err);
+      })
+  });
+
+  // last event
+  if (SOCKET.lastEvent) {
+    socket.emit('start-event', SOCKET.lastEvent);
   }
-    , 200)
-})
 
-//set last read
-socket.on("last_read", (uuid) => {
-  db('users').where({ uuid: uuid }).update({
-    last_read: Date.now()
-  }).then((res) => console.log(res)).catch((err) => console.log(err))
-})
+  socket.on("sms", (msg, request) => {
 
-///////////////////// delete quand finit
-socket.on("addU", (u) => {
-  db("users").insert({
-    name: "userTest",
-    phone: "0674287959",
-    uuid: "TEST",
-    is_connected: 0
-  }).then()
-})
+    SMS.register(msg)
+    SMS.sendSms(msg, request)
 
-///////////////////////  delete quand finit 
-function temp_insert() {
-  db('users_groups').insert({ user_id: 1, group_id: 1 })
-    .then()
-  db('users_sessions').insert({ user_id: 1, session_id: 1 })
-    .then()
-  // db.select("*").from("users_sessions").where("user_id", "=", 1).limit(1).del()
-}
+  })
+
+  //groupe create
+  socket.on("groupe_create", (s_id, g_name, g_desc) => {
+    db('groups').insert({ name: g_name, description: g_desc, session_id: s_id }).then(
+      db('groups').select().then((groupe) => {
+        groupe.forEach((g) => {
+          console.log([g.name])
+        })
+      })
+    );
+  })
+
+  // insert msg
+  socket.on("chat_msg", (message, session, group, checked) => {
+
+    MESSAGE.verify(message, session, group)
+      .then((result) => {
+        if (result === true) {
+          SOCKET.io.emit('new_chatMessage', message, group)
+        }
+      })
+  })
+
+  //set last read
+  socket.on("last_read", (uuid) => {
+    db('users').where({ uuid: uuid }).update({
+      last_read: Date.now()
+    }).then((res) => console.log(res)).catch((err) => console.log(err))
+  })
+
+  ///////////////////// delete quand finit
+  socket.on("addU", (u) => {
+    db("users").insert({
+      name: "userTest",
+      phone: "0674287959",
+      uuid: "TEST",
+      is_connected: 0
+    }).then()
+  })
+
+  ///////////////////////  delete quand finit 
+  function temp_insert() {
+    db('users_groups').insert({ user_id: 1, group_id: 1 })
+      .then()
+    db('users_sessions').insert({ user_id: 1, session_id: 1 })
+      .then()
+    // db.select("*").from("users_sessions").where("user_id", "=", 1).limit(1).del()
+  }
   // temp_insert()
   ///////////////////////
   ///////////////////////`
