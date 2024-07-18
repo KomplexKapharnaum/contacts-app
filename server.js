@@ -1,6 +1,7 @@
 import express from 'express';
 import { exec } from 'child_process';
-import sendSMS from './tools/sms_test.js';
+import sendSMS from './tools/sms_hico.js';
+// import sendSMS from './tools/sms_ovh.js';
 
 // MODELS / DB
 import db from './tools/db.js';
@@ -433,7 +434,9 @@ app.use(express.json({ limit: '50mb' }));
 // Serve index.html
 //
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/www/index.html');
+  // res.sendFile(__dirname + '/www/index.html');
+  // redirect to app
+  res.redirect('/app');
 });
 
 
