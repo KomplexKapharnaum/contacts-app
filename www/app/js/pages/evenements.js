@@ -95,6 +95,10 @@ PAGES.addCallback("event-location", function() {
     }, 1000);    
 });
 
+PAGES.addCallback("event-idle", () => {
+    UTIL.countDownInterval = false;
+})
+
 var customIcon = L.icon({
     iconUrl: './img/pin.png',
     // shadowUrl: 'leaf-shadow.png',

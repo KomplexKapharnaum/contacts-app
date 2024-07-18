@@ -184,10 +184,6 @@ UTIL.setCountDown = function(date, time) {
     }, 1000);
 }
 
-PAGES.addCallback("event-idle", () => {
-    UTIL.countDownInterval = false;
-})
-
 UTIL.countDown = function(countDownDateTime) {
     const now = new Date().getTime();
     const distance = new Date(countDownDateTime).getTime() - now;
