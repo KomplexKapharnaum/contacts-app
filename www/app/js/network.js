@@ -107,6 +107,9 @@ NETWORK.loadUser = function () {
                         let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
 
                         if (incomingEvents.length > 0) {
+
+                            alert(incomingEvents.length)
+                            
                             PAGES.goto("event-list");
 
                             incomingEvents.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));

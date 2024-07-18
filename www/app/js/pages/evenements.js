@@ -6,8 +6,6 @@ PAGES.addCallback("main", () => {
     
     let incomingEvents = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
 
-    alert(incomingEvents.length)
-
     if (incomingEvents.length==0) return;
     if (incomingEvents.length==1) {
         PAGES.goto("event-countdown");
