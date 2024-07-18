@@ -1,5 +1,6 @@
 import db from '../tools/db.js';
 import Model from './model.js';
+import sendSMS from '../tools/sms_hico.js';
 
 class Sms extends Model {
 
@@ -47,40 +48,44 @@ class Sms extends Model {
     }
 
     async sendSms(msg, request) {
+        console.log("into sendsms")
         if (/\|/.test(request)) {
-
+            console.log("into sendsms all")
+            
             request = request.replace(/\|/, '')
             console.log("requete : " + request)
-
+            
             db.select("*")
-                .from("users_sessions")
-                .join('users', 'users.id', '=', 'users_sessions.user_id')
-                .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
-                .where({ "users_sessions.session_id": request })
-                .then((phone) => {
-                    phone.forEach((p) => {
-                        console.log(p)
-                        sendSMS([p.phone], msg)
-                    })
+            .from("users_sessions")
+            .join('users', 'users.id', '=', 'users_sessions.user_id')
+            .join('sessions', 'sessions.id', '=', 'users_sessions.session_id')
+            .where({ "users_sessions.session_id": request })
+            .then((phone) => {
+                phone.forEach((p) => {
+                    console.log(p)
+                    sendSMS([p.phone], msg)
                 })
-
+            })
+            
             // @ balise de reco pour groupe
         } else if (/@/.test(request)) {
+            console.log("into sendsms group")
             request = request.replace(/@/, '')
-
+            
             //  TODO FIX XML ERROR PARSING
             db.select("*")
-                .from("users_groups")
-                .join("users", "users_groups.group_id", "=", "groups.id")
-                .join("groups", "groups.id", "=", "users_groups.group_id")
-                .where({ "groups.id": request })
-                .then((users) => {
-                    users.forEach((u) => {
-                        console.log(u.phone)
-                        sendSMS([u.phone], msg)
-                    })
+            .from("users_groups")
+            .join("users", "users_groups.group_id", "=", "groups.id")
+            .join("groups", "groups.id", "=", "users_groups.group_id")
+            .where({ "groups.id": request })
+            .then((users) => {
+                users.forEach((u) => {
+                    console.log(u.phone)
+                    sendSMS([u.phone], msg)
                 })
+            })
         } else {
+            console.log("into sendsms SIMPLE")
             sendSMS([request], msg)
         }
     }
