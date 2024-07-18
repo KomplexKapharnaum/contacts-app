@@ -97,6 +97,7 @@ PAGES.addCallback("event-location", function() {
 });
 
 PAGES.addCallback("event-idle", () => {
+    UTIL.shownav(false);
     UTIL.countDownInterval = false;
 })
 
