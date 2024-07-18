@@ -106,13 +106,14 @@ NETWORK.loadUser = function () {
                     } 
                     else {
                         let events = session.events;
-                        if (events.length > 0) {
+                        let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
+
+                        if (incomingEvents.length > 0) {
                             PAGES.goto("event-list");
 
-                            let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
                             incomingEvents.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
                             UTIL.clearIncomingEvents();
-                            
+
                             incomingEvents.forEach(evenement => {
                                 UTIL.addIncomingEvent(evenement);
                             })
