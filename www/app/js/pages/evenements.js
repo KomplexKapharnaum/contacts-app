@@ -15,32 +15,34 @@ PAGES.addCallback("main", () => {
     }
 })
 
-PAGES.addCallback("event-list", () => {
-    UTIL.shownav(true);
-    
+function eventInAnHour() {
     const eventWithLowestDate = getClosestEvent();
     if (!eventWithLowestDate) return;
+
+    const now = new Date();
+    const start = new Date(eventWithLowestDate.starting_at);
+    const diff = start - now;
+    if (diff > 0 && diff < 1 * 60 * 60 * 1000) {
+        if (eventWithLowestDate.location) {
+            const coords = eventWithLowestDate.location.split('/');
+            UTIL.setMapCoords(coords[0], coords[1], coords[2], eventWithLowestDate.description);
+            PAGES.goto("event-location");
+            return true;
+        }
+    }
+    return false;
+}
+
+PAGES.addCallback("event-list", () => {
+    UTIL.shownav(true);
 
     if (isEventActive()) {
         PAGES.goto("event-idle");
         UTIL.shownav(false);
     } else {
-        const now = new Date();
-        const start = new Date(eventWithLowestDate.starting_at);
-        const diff = start - now;
-        if (diff > 0 && diff < 1 * 60 * 60 * 1000) {
-            if (eventWithLowestDate.location) {
-                const coords = eventWithLowestDate.location.split('/');
-                UTIL.setMapCoords(coords[0], coords[1], coords[2], eventWithLowestDate.description);
-
-            }
-            PAGES.goto("event-location");
-        } /*else {
-            const date = eventWithLowestDate.starting_at.split('T');
-            UTIL.setCoundDown(date[0], date[1]);
-            PAGES.goto("event-countdown")    
-        }*/
+        eventInAnHour();
     }
+    
 });
 
 function getClosestEvent() {
