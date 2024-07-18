@@ -392,7 +392,6 @@ document.getElementById('session-new').addEventListener('click', () => {
     query("Session.new", { name: name }).then(updateSessions)
 })
 
-
 // EVENTS
 //
 

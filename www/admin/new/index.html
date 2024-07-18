@@ -13,7 +13,12 @@
 
 </head>
 <body>
-    <!-- Templates -->
+    
+    <!-- 
+    ============= Templates =============
+    -->
+
+    <!-- Cards -->
     <template id="model-session">
         <div class="model-session">
             <h2 class="title"></h2>
@@ -43,6 +48,95 @@
                 <span class="location"></span>
             </div>
         </div>
+    </template>
+
+    <!-- pages -->
+    <template id="model-session-page">
+        <div class="session-page page">
+            <h2><button class="close">X</button><span class="title"></span></h2>
+            <form class="form-edit">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" placeholder="Title">
+                </div>
+                <div>
+                    <label for="start-date">Start Date</label>
+                    <input type="datetime-local" name="start-date" placeholder="Start Date">
+                </div>
+                <div>
+                    <label for="end-date">End Date</label>
+                    <input type="datetime-local" name="end-date" placeholder="End Date">
+                </div>
+                <button type="button">Update</button>
+            </form>
+            <button class="remove-session">Delete session</button>
+            <hr>
+            <div class="logs"></div>
+
+            <h2><button class="session-add-event">+</button> Events</h2>
+            <div class="flex-container evenements">
+
+            </div>
+
+            <div class="evenements-pages"></div>
+        </div>
+    </template>
+
+    <template id="template-page-evenement">
+        <div class="evenement-page page">
+            <h2><button class="close">X</button><span class="title"></span></h2>
+            <form class="form-edit">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" placeholder="Title">
+                </div>
+                <div>
+                    <label for="start-date">Start Date</label>
+                    <input type="datetime-local" name="start-date" placeholder="Start Date">
+                </div>
+                <div>
+                    <label for="end-date">End Date</label>
+                    <input type="datetime-local" name="end-date" placeholder="End Date">
+                </div>
+                <button type="button">Update</button>
+            </form>
+            <button class="remove-evenement">Delete event</button>
+
+            <hr>
+            
+            <h2>Event logs</h2>
+            <div class="logs"></div>
+
+            <hr>
+
+            <h2>User events</h2>
+
+            </div>
+        </div>
+    </template>
+
+    <!-- Modals -->
+    <template id="template-modal-addevent">
+        <div class="modal-bg hidden">
+            <div class="modal">
+                <h2>New event</h2>
+                <form>
+                    <div>
+                        <label for="title">Title</label>
+                        <input class="new-event-title" type="text" name="title" placeholder="Title">
+                    </div>
+                    <div>
+                        <label for="start-date">Start Date</label>
+                        <input class="new-event-start" type="datetime-local" name="start-date" placeholder="Start Date">
+                    </div>
+                    <div>
+                        <label for="end-date">End Date</label>
+                        <input class="new-event-end" type="datetime-local" name="end-date" placeholder="End Date">
+                    </div>
+                    <button class="new-event-submit" type="button">Create</button>
+                </form>
+            </div>
+    </div>
     </template>
 
     <!--
@@ -83,11 +177,11 @@
                 </div>
                 <div>
                     <label for="start-date">Start Date</label>
-                    <input id="new-session-start" type="date" name="start-date" placeholder="Start Date">
+                    <input id="new-session-start" type="datetime-local" name="start-date" placeholder="Start Date">
                 </div>
                 <div>
                     <label for="end-date">End Date</label>
-                    <input id="new-session-end" type="date" name="end-date" placeholder="End Date">
+                    <input id="new-session-end" type="datetime-local" name="end-date" placeholder="End Date">
                 </div>
                 <button id="new-session-submit" type="button">Create</button>
             </form>
@@ -106,11 +200,11 @@
                 </div>
                 <div>
                     <label for="start-date">Start Date</label>
-                    <input type="date" name="start-date" placeholder="Start Date">
+                    <input type="datetime-local" name="start-date" placeholder="Start Date">
                 </div>
                 <div>
                     <label for="end-date">End Date</label>
-                    <input type="date" name="end-date" placeholder="End Date">
+                    <input type="datetime-local" name="end-date" placeholder="End Date">
                 </div>
                 <button type="button">Update</button>
             </form>
