@@ -545,24 +545,19 @@ function processJobs() {
         })
         .finally(() => {
 
-          // // check if there is still job to process for this user
-          // if (job.fields.id >= 0 && job.fields.user_id) 
-          // {
-          //   USER.load({ id: job.fields.user_id }).then(() => {
-          //     if (USER.genjobs.length == 0) {
-          //       console.log('All jobs done for user', USER.fields.name);
-          //       // send notification to user
-          //       SOCKET.findID(USER.fields.id).then((client) => {
-          //         if (client) client.emit('reload');
-          //       })
-          //     } 
-          //   })
-
-
-          //   SOCKET.findID(job.fields.user_id).then((client) => {
-          //     if (client) client.emit('job', job.get());
-          //   })
-          // }
+          // check if there is still job to process for this user
+          if (job.fields.id >= 0 && job.fields.user_id) 
+          {
+            USER.load({ id: job.fields.user_id }).then(() => {
+              if (USER.genjobs.length == 0) {
+                console.log('All jobs done for user', USER.fields.name);
+                // send notification to user
+                SOCKET.findID(USER.fields.id).then((client) => {
+                  if (client) client.emit('reload');
+                })
+              } 
+            })
+          }
 
           processJobs();
         });
