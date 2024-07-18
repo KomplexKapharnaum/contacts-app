@@ -71,3 +71,9 @@ Ajout à l'historique de messagerie
 Envoi de SMS spécifiquement
 Envoi d'EVENT CMDS (cf. ci-dessus)
 Filtrage ALL ou par Tribu
+
+
+
+FG
+externalise using User.groups
+module dedier sms ?
