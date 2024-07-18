@@ -125,7 +125,7 @@ UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
     }, 700);
 }
 
-UTIL.getMobileOperatingSystem() {
+UTIL.getMobileOperatingSystem() = function() {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
     // Windows Phone must come first because its UA also contains "Android"
