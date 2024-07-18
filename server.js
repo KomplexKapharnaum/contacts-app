@@ -124,6 +124,8 @@ SOCKET.io.on('connection', (socket) => {
   socket.on('identify', (uuid) => {
 
     // update user is_connected
+    console.log("user : ")
+    console.log(USER)
     USER.isConnected({ uuid: uuid }, true)
       .then(() => {
         // store user info in socket
@@ -383,12 +385,13 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   ///////////////////////  delete quand finit 
-  // function temp_insert() {
-  //    db('users_groups').insert({ user_id: 1 , group_id: 1})
-  //    .then()
-  //    db('users_sessions').insert({ user_id: 1 , session_id: 1})
-  //    .then()
-  // }
+  function temp_insert() {
+     db('users_groups').insert({ user_id: 1 , group_id: 1})
+     .then()
+     db('users_sessions').insert({ user_id: 1 , session_id: 1})
+     .then()
+    // db.select("*").from("users_sessions").where("user_id", "=", 1).limit(1).del()
+  }
   // temp_insert()
   ///////////////////////
   ///////////////////////`
