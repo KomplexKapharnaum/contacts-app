@@ -66,7 +66,8 @@ function isEventActive() {
 
 var leafletMap = L.map('coords-map').setView([51.505, -0.09], 13);
 
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+// L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; Stadia Maps'
 }).addTo(leafletMap);
