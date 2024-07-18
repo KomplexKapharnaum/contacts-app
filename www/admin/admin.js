@@ -221,8 +221,17 @@ function updateEvents() {
                         query("Event.update", [event.id, { ending_at: e.target.value }]).then(updateEvents)
                     })
                 )
-                $('<td>').text(event.location).appendTo(tr)
-                $('<td>').text(event.description).appendTo(tr)
+
+                $('<td>').text(event.location).appendTo(tr).on('click', () => {
+                    var location = prompt("Location", event.location).trim()
+                    if (location) query("Event.update", [event.id, { location: location }]).then(updateEvents)
+                })
+
+                $('<td>').text(event.description).appendTo(tr).on('click', () => {
+                    var description = prompt("Description", event.description).trim()
+                    if (description) query("Event.update", [event.id, { description: description }]).then(updateEvents)
+                })
+            
                 $('<td>').text(event.session_id).appendTo(tr)
 
                 var actions = $('<td>').appendTo(tr)
