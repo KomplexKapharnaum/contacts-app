@@ -3,9 +3,15 @@ PAGES.addCallback("main", () => {
     
     if (!userData) return;
     if (userData.sessions.length==0) return;
+    
     if (userData.sessions[0].events.length==0) return;
     
-    PAGES.goto("event-list");
+    if (userData.sessions[0].events.length==1) {
+        PAGES.goto("event-countdown");
+        UTIL.setCountDown(...userData.sessions[0].events[0].starting_at.split("T"));
+    } else {
+        PAGES.goto("event-list");
+    }
 })
 
 PAGES.addCallback("event-list", () => {
