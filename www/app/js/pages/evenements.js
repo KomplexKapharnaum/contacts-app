@@ -3,8 +3,10 @@ PAGES.addCallback("main", () => {
     
     if (!userData) return;
     if (userData.sessions.length==0) return;
-
+    
     let incomingEvents = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
+
+    alert(incomingEvents.length)
 
     if (incomingEvents.length==0) return;
     if (incomingEvents.length==1) {
