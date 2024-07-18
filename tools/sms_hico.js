@@ -11,9 +11,9 @@ import {create} from 'xmlbuilder2'
 import https from 'https'
 
 var hico = {
-    "accountid" : "EUREKA",
-    "password" : "zes6yt76et",
-    "email" : "sms@kxkm.net"
+    "accountid" : process.env.HICO_ACCOUNTID,
+    "password" : process.env.HICO_PASSWORD,
+    "email" : process.env.HICO_EMAIL
   }
 
 function sendSMS(dest, txt)

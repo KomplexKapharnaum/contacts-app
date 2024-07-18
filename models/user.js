@@ -18,6 +18,7 @@ import cipher from '../tools/cipher.js';
 import Session from './session.js';
 import Avatar from './avatar.js';
 import Genjob from './genjob.js';
+import Group from './group.js';
 
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 
