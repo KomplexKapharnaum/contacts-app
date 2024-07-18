@@ -5,7 +5,8 @@ DEBUG MGR:
 - SAISIE Telephone / pseudo: scroll down on focus (sinon le champs est invisible derrière le clavier)
 - SAISIE Telephone / pseudo: bouton non accessible tant qu'il y a le clavier
 
-- Generation avatar: broken !
+- SELFIE preview not displayed
+- AVATAR: callback after create not working..
 
 - REGENERAT AVATAR: not implemented
 - PSEUDO change: not implemented
