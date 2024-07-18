@@ -430,5 +430,5 @@ UTIL.promptForSubscribingEvent = function(evenement) {
 
 // Debug
 PAGES.addCallback("share_link", function() { 
-    UTIL.generateShareLink("https://www.google.com");
+    UTIL.generateShareLink("https://contacts.kxkm.net");
 });
