@@ -126,7 +126,15 @@ class roundedGraphics {
 
                     ctx.save();
                     ctx.translate(coords.x + coords.width / 2, coords.y + coords.height / 2);
-                    ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 30);
+
+                    const renderer_rotate = domElement.dataset.rendererRotate;
+                    if (renderer_rotate) {
+                        let r = parseInt(renderer_rotate);
+                        ctx.rotate((Date.now() / 5000 * r) % (2 * Math.PI));
+                    } else {
+                        ctx.rotate(Math.sin(Date.now() / 1000) * Math.PI / 30);
+                    }
+                    
                     ctx.drawImage(domElement, -coords.width / 2, -coords.height / 2, coords.width, coords.height);
                     ctx.restore();
                     domElement.style.opacity = 0;

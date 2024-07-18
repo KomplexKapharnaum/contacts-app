@@ -123,7 +123,7 @@ body.navhidden .page {
 }
 
 nav {
-    background-color: var(--color-text-primary);
+    /* background-color: var(--color-text-primary); */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -137,7 +137,7 @@ nav {
 nav>button {
     background: none;
     border: none;
-    padding: 0;
+    padding: 8px;
 }
 
 .caption {
@@ -213,6 +213,23 @@ input[type="text"] {
     max-width: 100%;
     max-height: 100%;
     aspect-ratio: 1/1;
+}
+
+.illustration-clock {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+}
+
+.illustration-clock>img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .box {

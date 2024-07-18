@@ -1,12 +1,27 @@
 /* Global */
 /* */
 
+* {
+
+}
+
 .title {
     margin: 0;
 }
 
 hr {
     width: 100%;
+}
+
+button {
+    border-radius: 8px;
+    border: 1px solid #D9D9D9;
+    background: #2E2E2E;
+    padding: 8px;
+    cursor: pointer;
+
+    font-size: 18px;
+    color: #D9D9D9;
 }
 
 /* Session */
