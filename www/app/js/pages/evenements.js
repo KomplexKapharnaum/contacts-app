@@ -107,4 +107,6 @@ UTIL.setMapCoords = function(lat, lon, popupText) {
         }
     });
     L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText).openPopup();
+    const btn = document.getElementById("event-location-coords-button");
+    btn.href = "geo:" + lat + "," + lon;
 }
