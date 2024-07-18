@@ -237,8 +237,6 @@ class User extends Model {
 
         let groupList = [null].concat(this.groups)
 
-        console.log("start", groupList)
-
         if (last) {
             let m = await db("messages")
                 .select("*")
@@ -246,14 +244,14 @@ class User extends Model {
                 .where(qb => { qb.whereIn('group_id', groupList).orWhereNull('group_id'); })
                 .orderBy("emit_time","desc")
                 .limit(1)
-            console.log("new msg", m)
+            // console.log("new msg", m)
             return m
         } else {
             let m = await db("messages").select("*")
                 .where({ session_id: session_id })
                 .where(qb => { qb.whereIn('group_id', groupList).orWhereNull('group_id'); })
 
-            console.log("MESSAGES", m)
+            // console.log("MESSAGES", m)
             return m
         }
     }
