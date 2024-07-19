@@ -54,6 +54,7 @@ var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET })
 // Express
 //
 import bodyParser from 'body-parser';
+import { Console } from 'console';
 
 var app = express();
 app.use(bodyParser.json());
@@ -84,7 +85,7 @@ SOCKET.startEvent = function (name, args) {
   };
 
   if (args.params.grpChoice != '') {
-    SOCKET.io.to(args.params.grpChoice).emit(SOCKET.lastEvent);
+    SOCKET.io.to(args.params.grpChoice).emit('start-event',SOCKET.lastEvent);
   } else {
     SOCKET.io.emit('start-event', SOCKET.lastEvent);
   }
@@ -189,7 +190,7 @@ SOCKET.io.on('connection', (socket) => {
 
   // ctrl
   socket.on('ctrl', (data) => {
-
+    
     console.log('ctrl', data);
     if (!SOCKET.auth(socket)) return;   // check if admin
 

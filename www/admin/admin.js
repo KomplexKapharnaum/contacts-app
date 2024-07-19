@@ -39,10 +39,13 @@ const socket = io();
 
 // SOCKET SEND
 //
-function ctrl(name, args) {
+function ctrl(name, args = false) {
+
+    if (args && !args.params.grpChoice) args.params.grpChoice = '';
+
     socket.emit('ctrl', {
         name: name,
-        args: args
+        args: args?args:{}
     });
 }
 
@@ -256,33 +259,32 @@ function updateEvents() {
                     const flashing = confirm("Flashing ?");
                     const autoselect = confirm("Random autoselect ?");
 
-                    let grpChoice = document.getElementById("grp").value
-                    if (grpChoice != "") {
-                        ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice}})
-                    } else {
-                        ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice: ''}})
-                    }
+                    const grpChoice = document.getElementById("grp").value
+                    ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice: grpChoice}})
 
                 });
 
                 $('<button>').text('text').appendTo(actions).on('click', () => {
-                    const promptText = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
+                    const promptText = prompt("Textes", "Séparez chaque textes par un ';'").split(";").map(c => c.trim());
                     const autoselect = confirm("Random autoselect ?");
 
-                    ctrl("text", { texts: promptText, params: { random: autoselect } })
+                    const grpChoice = document.getElementById("grp").value
+                    ctrl("text", { texts: promptText, params: { random: autoselect, grpChoice: grpChoice } })
                 });
 
                 $('<button>').text('image').appendTo(actions).on('click', () => {
                     const promptText = prompt("Image", "Séparez chaques URL par un ';'").split(";").map(c => c.trim());
                     const autoselect = confirm("Random autoselect ?");
 
-                    ctrl("image", { images: promptText, params: { random: autoselect } })
+                    const grpChoice = document.getElementById("grp").value
+                    ctrl("image", { images: promptText, params: { random: autoselect, grpChoice: grpChoice } })
                 });
 
                 $('<button>').text('info').appendTo(actions).on('click', () => {
                     const promptText = prompt("Image", "Ecrivez votre message ici...");
 
-                    ctrl("info", {message: promptText, params: {}})
+                    const grpChoice = document.getElementById("grp").value
+                    ctrl("info", {message: promptText, params: {grpChoice: grpChoice}})
                 });
 
                 $('<button>').text('end').appendTo(actions).on('click', () => {

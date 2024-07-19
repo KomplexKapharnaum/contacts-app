@@ -220,6 +220,7 @@ NETWORK.receiveSessionEvent = function (event) {
             break;
         case "info":
             PAGES.goto("event-info");
+            UTIL.showOverlay(false);
             document.getElementById("event-info-message").innerHTML = event.args.message; 
             break;
         case "flash":
@@ -230,8 +231,8 @@ NETWORK.receiveSessionEvent = function (event) {
 
 socket.on('start-event', NETWORK.receiveSessionEvent);
 socket.on('end-event', () => {
-    PAGES.goto("main");
     UTIL.showOverlay(false);
+    PAGES.goto("event-idle");
 });
 
 // Chat message

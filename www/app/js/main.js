@@ -126,7 +126,6 @@ UTIL.shownav = function(bool) {
     if (!bool) document.body.classList.add("navhidden");
     else document.body.classList.remove("navhidden");
 }
-UTIL.shownav(false);
 
 UTIL.showOverlay = function(bool, color, message, image = false, flashing = false) {
     const overlay = document.getElementById("overlay");
