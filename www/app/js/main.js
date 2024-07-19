@@ -198,6 +198,7 @@ UTIL.clearIncomingEvents = function() {
     document.getElementById("event-list").innerHTML = "";   
 }
 
+UTIL.selectedEvent = null;
 UTIL.addIncomingEvent = function(evenement) {
     const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
     eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
@@ -210,9 +211,9 @@ UTIL.addIncomingEvent = function(evenement) {
     document.getElementById("event-list").appendChild(eventDom);
     
     eventDom.addEventListener("click", () => {
+        UTIL.selectedEvent = evenement;
         PAGES.goto("event-countdown");
-
-        UTIL.setCountDown(...evenement.starting_at.split("T"));
+        // UTIL.setCountDown(...evenement.starting_at.split("T"));
     });
 }
 
@@ -381,17 +382,20 @@ UTIL.promptForSubscribingEvent = function(evenement) {
 
     confirm_button.onclick = function() {
         NETWORK.query('User.register', userData.uuid, evenement.id).then(()=>{
-            NETWORK.loadUser();
-            PAGES.goto("event-countdown");
+            NETWORK.loadUser().then(()=>{
+                processEventRouting();
+            });
+            
         }).catch((err)=>{
-            NETWORK.loadUser();
-            PAGES.goto("event-countdown");
+            NETWORK.loadUser().then(()=>{
+                processEventRouting();
+            });
         });
     }
 
     decline_button.onclick = function() {
         Cookies.set('session_declined_'+evenement.id, true, 30);
-        PAGES.goto("event-countdown");
+        processEventRouting();
     }
 }
 

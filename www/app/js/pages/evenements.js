@@ -1,75 +1,105 @@
-PAGES.addCallback("main", () => {
-    UTIL.shownav(true);
-    
-    if (!userData) return;
-    if (userData.sessions.length==0) return;
-    
-    let incomingEvents = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
+let EVENT_INFO = false;
 
-    if (incomingEvents.length==0) return;
-    if (incomingEvents.length==1) {
-        PAGES.goto("event-countdown");
-        UTIL.setCountDown(...incomingEvents[0].starting_at.split("T"));
-    } else {
-        PAGES.goto("event-list");
-    }
-})
-
-function eventInAnHour() {
-    const eventWithLowestDate = getClosestEvent();
-    if (!eventWithLowestDate) return;
-
-    const now = new Date();
-    const start = new Date(eventWithLowestDate.starting_at);
-    const diff = start - now;
-    if (diff > 0 && diff < 1 * 60 * 60 * 1000) {
-        if (eventWithLowestDate.location) {
-            const coords = eventWithLowestDate.location.split('/');
-            UTIL.setMapCoords(coords[0], coords[1], coords[2], eventWithLowestDate.description);
-            PAGES.goto("event-location");
-            return true;
-        }
-    }
-    return false;
+function isEventActive() {
+    return EVENT_INFO && EVENT_INFO.active;
 }
 
-PAGES.addCallback("event-list", () => {
-    UTIL.shownav(true);
+function processEventRouting() {
+    PAGES.goto(getEventRoute());
+}
 
-    if (isEventActive()) {
-        PAGES.goto("event-idle");
-        UTIL.shownav(false);
-    } else {
-        eventInAnHour();
-    }
+function getEventRoute() {
 
-});
+    if (!userData) return "main";
+    if (!userData.sessions) return "main";
+    if (!userData.sessions[0].events) return "main";
 
-function getClosestEvent() {
-    if (!userData) return;
-    if (userData.sessions.length == 0) return false;
+    // Only get incoming events
+    let evenements = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
 
-    const events = userData.sessions[0].events;
-    const incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
+    // Update incoming events list
+    UTIL.clearIncomingEvents();
+    evenements.forEach(evenement => UTIL.addIncomingEvent(evenement));
 
-    if (incomingEvents.length == 0) return false;
+    // No events = main
+    if (evenements.length==0) return "main";
 
-    return incomingEvents.reduce((minEvent, currentEvent) => {
+    // Get closest event
+    const closest = evenements.reduce((minEvent, currentEvent) => {
         const minDate = new Date(minEvent.starting_at);
         const currentDate = new Date(currentEvent.starting_at);
         return currentDate < minDate ? currentEvent : minEvent;
     });
-}
 
-function isEventActive() {
-    const event = getClosestEvent();
-    if (!event) return false;
+    EVENT_INFO = {
+        active: false,
+        closest: closest
+    };
 
+    // Get the time state of the closest event
+    let eventState;
     const now = new Date();
-    const start = new Date(event.starting_at);
-    const end = new Date(event.ending_at);
-    return now > start && now < end;
+    const start = new Date(closest.starting_at);
+    const diff = start - now;
+    const one_hour = 60 * 60 * 1000;
+
+    // If the event is in an hour
+    if (diff > 0 && diff < one_hour) {
+        eventState = "inAnHour"; // The event is in an hour or less
+    } else if (diff > one_hour) {
+        eventState = "inFuture"; // The event is in more than an hour
+    } else {
+        EVENT_INFO.active = true;
+        eventState = "active"; // The event is active
+    }
+
+    // If there is only one event
+    if (evenements.length==1) {
+        switch (eventState) {
+            case "inAnHour":
+                return "event-location";
+            case "inFuture":
+                UTIL.selectedEvent = closest;
+                return "event-countdown";
+            case "active":
+                return "event-idle";
+        }       
+    }
+
+    // If there are multiple events
+    switch (eventState) {
+        case "inAnHour":
+            return "event-location";
+        case "inFuture":
+            return "event-list";
+        case "active":
+            return "event-idle";
+    }
 }
+
+/* Events pages callbacks */
+/* */
+
+PAGES.addCallback("event-countdown", function() {
+    UTIL.setCountDown(...UTIL.selectedEvent.starting_at.split("T"));
+})
+
+PAGES.addCallback("event-location", function() {
+    // UTIL.shownav(false);
+    leafletMap.invalidateSize(false);
+    
+    setInterval(() => {
+        eventTime = new Date(EVENT_INFO.closest.starting_at);
+        if (new Date() > eventTime) {
+            location.reload();
+        }
+    }, 1000);
+});
+
+PAGES.addCallback("event-idle", () => {
+    UTIL.shownav(false);
+    UTIL.countDownInterval = false;
+})
 
 // Leaflet map
 //
@@ -84,24 +114,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const attributionControl = leafletMap.attributionControl;
 leafletMap.removeControl(attributionControl);
-
-PAGES.addCallback("event-location", function() {
-    UTIL.shownav(false);
-    leafletMap.invalidateSize(false);
-    
-    const closest = getClosestEvent();
-    setInterval(() => {
-        eventTime = new Date(closest.starting_at);
-        if (new Date() > eventTime) {
-            location.reload();
-        }
-    }, 1000);
-});
-
-PAGES.addCallback("event-idle", () => {
-    UTIL.shownav(false);
-    UTIL.countDownInterval = false;
-})
 
 var customIcon = L.icon({
     iconUrl: './img/pin.png',

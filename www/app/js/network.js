@@ -102,32 +102,7 @@ NETWORK.loadUser = function () {
                                 UTIL.promptForSubscribingEvent(session, nextSession);
                             });
                     }
-                    else {
-                        let events = session.events;
-                        let incomingEvents = events.filter(event => new Date(event.ending_at) > new Date());
-
-                        if (isEventActive()) {
-                            PAGES.goto("event-idle");
-                        } else if (eventInAnHour()) {
-                            return;
-                        } else if (incomingEvents.length==1) {
-                            PAGES.goto("event-countdown");
-                            UTIL.setCountDown(...incomingEvents[0].starting_at.split("T"));
-                            UTIL.addIncomingEvent(incomingEvents[0]);
-                        } else if (incomingEvents.length > 1) {
-                            
-                            PAGES.goto("event-list");
-
-                            incomingEvents.sort((a, b) => new Date(a.starting_at) - new Date(b.starting_at));
-                            UTIL.clearIncomingEvents();
-
-                            incomingEvents.forEach(evenement => {
-                                UTIL.addIncomingEvent(evenement);
-                            })
-                        } else {
-                            PAGES.goto("main");
-                        }
-                    }
+                    else { processEventRouting() }
                 })
                 .catch((err) => {
                     console.log("No next session found");
