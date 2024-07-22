@@ -43,7 +43,9 @@
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 <span>Bienvenue au carnaval CONTACTS</span>
                 <span>Rejoignez notre monde virtuel</span>
@@ -76,7 +78,9 @@
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <img class="illustration" src="./img/phone.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/phone.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 <span>Validez votre numéro de téléphone</span>
             </div>
@@ -120,7 +124,9 @@
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <img class="illustration" src="./img/crayon.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/crayon.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 <span>Rentrez un pseudonyme</span>
             </div>
@@ -141,7 +147,9 @@
     <div class="page" data-page-id="create_avatar_photo">
 
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 Il est l'heure de concevoir ton identité virtuelle. Réponds à un petit formulaire pour avoir un avatar qui te sera unique. 
             </div>
@@ -160,7 +168,9 @@
     <div class="page" data-page-id="create_avatar_question1">
 
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 A quel point souhaites-tu rester anonyme ?
             </div>
@@ -170,16 +180,18 @@
             <img src="img/questions/mask_man.png" alt="face" class="center" draggable="false">
             <img src="img/questions/mask.png" alt="face mask" id="anonymity-mask" draggable="false">
         </div>
-        
+
         <div class="buttons">
             <button id="question1-suivant">Suivant</button>
         </div>
     </div>
-    
+
     <div class="page" data-page-id="create_avatar_question2">
 
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 Consommes-tu beaucoup de viande ?
             </div>
@@ -200,7 +212,9 @@
     <div class="page" data-page-id="create_avatar_question3">
 
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 Quel est ton poids & ta taille ?
             </div>
@@ -219,7 +233,9 @@
     </div>
     <div class="page" data-page-id="create_avatar_processing">
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 Ton avatar est en cours de création...
             </div>
@@ -232,7 +248,9 @@
     <div class="page" data-page-id="create_avatar_results">
 
         <div class="caption" style="margin:0; height:auto;">
-            <img class="illustration" style="max-height: 25vh;" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary" id="avatar-preview-text">
                 Ton avatar est en cours de création...
             </div>
@@ -247,7 +265,9 @@
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/mask.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 <span>Bienvenue au carnaval CONTACTS</span>
                 <span>Aucun évènement est à venir.</span>
@@ -279,8 +299,9 @@
         <div class="txt secondary">
             Des évènements sont à venir !
         </div>
-        <img class="illustration" src="./img/mask.png" alt="image test">
-
+        <div class="illustration-container">
+            <img class="illustration" src="./img/mask.png" alt="image test">
+        </div>
         <div id="event-list"></div>
     </div>
 
@@ -308,7 +329,7 @@
             </div>
         </div>
 
-        <div class="illustration-clock">
+        <div class="illustration-container">
             <img class="illustration" src="./img/clock/bg.png" alt="clock">
             <img class="illustration" data-renderer-rotate="3" src="./img/clock/big.png" alt="clock">
             <img class="illustration" data-renderer-rotate="1" src="./img/clock/small.png" alt="clock">
@@ -332,19 +353,20 @@
 
     <!-- SPECIAL EVENTS -->
     <div class="page" data-page-id="event-idle">
-
+        
         <div class="caption">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
+            <h1>Un évènement est en cours</h1>
             <div class="txt secondary">
                 Des notifications vous seront envoyé dès que vous aurez besoin d'utiliser votre téléphone.
             </div>
-            <img class="illustration" src="./img/party.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/party.png" alt="image test">
+            </div>
             <div class="txt secondary">
                 Profitez du carnaval pirate !
             </div>
         </div>
-
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
 
     <div class="page" data-page-id="event-flashlight">
@@ -356,11 +378,10 @@
                 <span>Gardez l'application ouverte<br>pour garder la lampe allumée.</span>
                 <span>Sinon, allumez la manuellement.</span>
             </div>
-
-            <img class="illustration" src="./img/sun.png" alt="image test">
+            <div class="illustration-container">
+                <img class="illustration" src="./img/sun.png" alt="image test">
+            </div>
         </div>
-
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
     
     <div class="page" data-page-id="event-color">
@@ -378,8 +399,6 @@
             </div>
 
         </div>
-
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
 
     <div class="page" data-page-id="event-image">
@@ -395,8 +414,6 @@
             </div>
 
         </div>
-
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
     
     <div class="page" data-page-id="event-text">
@@ -416,8 +433,6 @@
             </div>
 
         </div>
-        
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
 
     <div class="page" data-page-id="event-info">
@@ -430,8 +445,6 @@
                 Profitez du carnaval pirate !
             </div>
         </div>
-
-        <button class="button-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Je suis parti de l'évènement</button>
     </div>
 
     <!-- Sub pages -->
@@ -462,13 +475,13 @@
             <button id="change-avatar">Changer mon avatar</button>
         </div>
 
-        <div id="change-avatar-container">
+        <div id="change-avatar-container" style="display: none;">
 
         </div>
 
         <div class="buttons">
-            <button>Changer mon pseudo</button>
-            <button>Supprimer mes données</button>
+            <button id="btn-regenerate-avatar" style="display: none;">Re-générer des avatars</button>
+            <button id="btn-delete-user">Supprimer mes données</button>
         </div>
 
     </div>
@@ -511,6 +524,8 @@
     </div>
 
     <div id="overlay"></div>
+
+    <script src="./js/nosleep.js"></script>
 
     <script src="./js/shader.js"></script>
     <script src="./js/canvas.js"></script>

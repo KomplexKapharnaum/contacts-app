@@ -367,6 +367,9 @@ const container_changeavatar = document.getElementById("change-avatar-container"
 
 document.getElementById("change-avatar").addEventListener("click", () => {
 
+    document.querySelector("#btn-regenerate-avatar").style.display = "block";
+    document.querySelector("#btn-delete-user").style.display = "none";
+
     container_avatar.style.display = "none";
 
     container_changeavatar.innerHTML = "";
@@ -382,6 +385,10 @@ document.getElementById("change-avatar").addEventListener("click", () => {
                 document.querySelector("#mon-avatar-container>img").src = avatar.url;
 
                 container_changeavatar.style.display = "none";
+
+                document.querySelector("#btn-regenerate-avatar").style.display = "none";
+                document.querySelector("#btn-delete-user").style.display = "block";
+
                 container_avatar.style.display = "block";
             });
         })
