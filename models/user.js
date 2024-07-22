@@ -48,7 +48,19 @@ class User extends Model {
 
     async new(f) {
         if (f.phone) f.phone = this.phoneParse(f.phone);
-        return super.new(f);
+        let res = await super.new(f);
+
+        // add link to next session
+        try {
+            let session = new Session();
+            let nextSession = await session.next();
+            if (nextSession) await this.register(null, nextSession);
+        }
+        catch (e) {
+            console.error('Error registering user to next session', e);
+        }
+
+        return res;
     }
 
     async init_byphone(phone) {

@@ -124,6 +124,7 @@ function updateUsers() {
             $('<th>').text('phone').appendTo(tr)
             $('<th>').text('selected_avatar').appendTo(tr)
             $('<th>').text('sessions').appendTo(tr)
+            $('<th>').text('is_connected').appendTo(tr)
             $('<th>').text('').appendTo(tr)
 
             users.forEach((user) => {
@@ -143,6 +144,8 @@ function updateUsers() {
                         })
                     })
                 })
+
+                $('<td>').text(user.is_connected).appendTo(tr)
 
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
@@ -350,8 +353,8 @@ socket.on('hello', () => {
     updateSessions()
     updateEvents()
     updateUsers()
-    updateAvatars()
-    updateGenjobs()
+    // updateAvatars()
+    // updateGenjobs()
 })
 
 socket.on('log', (msg) => { log(msg) })
@@ -413,13 +416,9 @@ document.getElementById('event-new').addEventListener('click', () => {
     query("Event.new", { name: name, session_id: session_id }).then(updateEvents)
 })
 
-// WORKFLOWS
-//
 
-document.getElementById('workflow-new').addEventListener('click', () => {
-    var name = prompt("Workflow name", "").trim()
-    var path = prompt("Workflow path", "").trim()
+// LOAD AVATARS
+document.getElementById('avatar-load').addEventListener('click', updateAvatars)
 
-    query("Workflow.new", { name: name, path: path }).then(updateWorkflows)
-})
-
+// LOAD GENJOBS
+document.getElementById('genjob-load').addEventListener('click', updateGenjobs)

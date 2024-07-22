@@ -22,6 +22,8 @@ const vid = document.getElementById("media-stream");
 
 function startMediaStream() {
     snapState = 3;
+    vid.style.display = "block";
+    snapImg.style.display = "none";
     reloadButton.style.visibility = "hidden";
     snapshotButton.textContent = "Chargement...";
     navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 640 } } })
@@ -38,6 +40,7 @@ function startMediaStream() {
 
 const snapshotButton = document.getElementById("media-stream-snapshot");
 const reloadButton = document.getElementById("media-reload");
+const snapImg = document.getElementById("media-snapshot");
 let snapState = 0;
 let dataURL_media;
 
@@ -52,7 +55,9 @@ snapshotButton.addEventListener("click", function() {
             canvas.getContext("2d").drawImage(vid, 0, 0, canvas.width, canvas.height);
             dataURL_media = canvas.toDataURL("image/png");
 
-            vid.src = dataURL_media;
+            snapImg.src = dataURL_media;
+            snapImg.style.display = "block";
+            vid.style.display = "none";
             snapshotButton.textContent = "Valider"
             reloadButton.style.visibility = "visible";
 
