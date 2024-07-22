@@ -402,3 +402,11 @@ UTIL.promptForSubscribingEvent = function(evenement) {
 PAGES.addCallback("share_link", function() { 
     UTIL.generateShareLink("https://contacts.kxkm.net");
 });
+
+// Nosleep
+
+var noSleep = new NoSleep();
+document.addEventListener('click', function enableNoSleep() {
+    document.removeEventListener('click', enableNoSleep, false);
+    noSleep.enable();
+  }, false);

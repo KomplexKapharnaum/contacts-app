@@ -101,6 +101,12 @@ PAGES.addCallback("event-idle", () => {
     UTIL.countDownInterval = false;
 })
 
+document.addEventListener("click", () => {
+    if (PAGES.active().dataset.pageId == "event-idle") {
+        document.documentElement.requestFullscreen();
+    }
+})
+
 // Leaflet map
 //
 
