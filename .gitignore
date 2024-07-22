@@ -2,7 +2,7 @@
 uploads/*
 outputs/*
 database.json
-*.sqlite
+*.sqlite*
 
 # UPLOAD
 upload/*.png

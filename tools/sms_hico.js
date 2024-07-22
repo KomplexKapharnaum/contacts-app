@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 function encodeUCS2(str)
 {
     let data = ""
@@ -12,7 +15,7 @@ import https from 'https'
 
 var hico = {
     "accountid" : process.env.HICO_ACCOUNTID,
-    "password" : process.env.HICO_PASSWORD,
+    "password" : process.env.HICO_PASS,
     "email" : process.env.HICO_EMAIL
   }
 
