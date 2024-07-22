@@ -15,18 +15,6 @@ class Message extends Model {
             });
     }
 
-    async load(w) {
-        await super.load(w);
-
-        for (let e of user) {
-            let message = new Message();
-            message.fields = e;
-            this.user.push(message);
-        }
-
-        return this.get()
-    }
-
     async save() {
         // mandatory fields
         if (!this.fields.message) throw new Error('Message is required');

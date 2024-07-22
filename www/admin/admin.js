@@ -124,6 +124,7 @@ function updateUsers() {
             $('<th>').text('phone').appendTo(tr)
             $('<th>').text('selected_avatar').appendTo(tr)
             $('<th>').text('sessions').appendTo(tr)
+            $('<th>').text('last_read').appendTo(tr)
             $('<th>').text('is_connected').appendTo(tr)
             $('<th>').text('').appendTo(tr)
 
@@ -145,6 +146,7 @@ function updateUsers() {
                     })
                 })
 
+                $('<td>').text(user.last_read).appendTo(tr)
                 $('<td>').text(user.is_connected).appendTo(tr)
 
                 $('<td>').text('delete').appendTo(tr).on('click', () => {
@@ -184,6 +186,39 @@ function updateAvatars() {
             })
         }
         )
+}
+
+function updateMessages() {
+    query("Message.list")
+        .then((messages) => {
+            $('#messages').empty()
+            var table = $('<table>').appendTo('#messages')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('data').appendTo(tr)
+            $('<th>').text('emit_time').appendTo(tr)
+            $('<th>').text('message').appendTo(tr)
+            $('<th>').text('session_id').appendTo(tr)
+            $('<th>').text('group_id').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            messages.forEach((message) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(message.id).appendTo(tr)
+                $('<td>').text(message.data).appendTo(tr)
+                $('<td>').text(message.emit_time).appendTo(tr)
+                $('<td>').text(message.message).appendTo(tr)
+                $('<td>').text(message.session_id).appendTo(tr)
+                $('<td>').text(message.group_id).appendTo(tr)
+                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete message " + message.message + " ?") &&
+                        query("Message.delete", message.id).then(updateMessages)
+                })
+            })
+        })
 }
 
 
@@ -353,6 +388,7 @@ socket.on('hello', () => {
     updateSessions()
     updateEvents()
     updateUsers()
+    updateMessages()
     // updateAvatars()
     // updateGenjobs()
 })
