@@ -133,7 +133,24 @@
     </div>
     
     <h2>Messagerie</h2>
+    
+    <h3>Derniers messages</h3>
     <div id="messages" class="db"></div>
+    
+    <h3>Nouveau message</h3>
+    <div class="new-message-container">
+        <!-- Group selection-->
+        <select name="select_group" id="sendmessgae-group"></select>
+
+        <!-- Message params -->
+        <textarea name="message" id="sendmessage-input"></textarea>
+        <div class="input_field">
+            <input type="checkbox" name="checkbox-param-random" id="message-param-checked">
+            <label for="message-param-checked">Checked</label>
+        </div>
+
+        <button id="sendmessage-send">Send new message</button>
+    </div>
 
     <h2>Autres</h2>
 

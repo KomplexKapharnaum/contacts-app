@@ -444,6 +444,7 @@ socket.on('hello', () => {
     updateEvents()
     updateUsers()
     updateMessages()
+    updateGroups()
     // updateAvatars()
     // updateGenjobs()
 })
@@ -458,36 +459,6 @@ socket.on('auth', (msg) => {
         location.reload()
     }
 })
-
-
-// CONTROLS
-//
-
-/*
-document.getElementById('color-event').addEventListener('click', () => {
-    ctrl("color", ["red", "blue", "green"])
-});
-
-document.getElementById('text-event').addEventListener('click', () => {
-    ctrl("text", ["Hello world !", "Goodbye world !"])
-});
-
-document.getElementById('end-event').addEventListener('click', () => {
-    ctrl("end")
-});
-
-document.getElementById('flash-on').addEventListener('click', () => {
-    ctrl("flash", true)
-});
-
-document.getElementById('flash-off').addEventListener('click', () => {
-    ctrl("flash", false)
-});
-
-document.getElementById('vibrate').addEventListener('click', () => {
-    ctrl("vibrate", [500, 100, 200, 50, 100])
-});
-*/
 
 
 // SESSIONS
@@ -658,3 +629,32 @@ document.getElementById("send-info-event").addEventListener("click", () => {
 document.getElementById("end-event").addEventListener("click", () => {
     ctrl("end");
 })
+
+// MESSAGERIE
+//
+
+function sendMsg(msg, session, group, checked) {
+    socket.emit("chat_msg", msg, session, group, checked)
+}
+let CURRENT_SESSION = 1;
+
+query("Session.next")
+.then((val) => {
+    CURRENT_SESSION = val
+});
+
+query("Group.list").then((group) => {
+    $('<option>', { text: "*",value: "" }).appendTo("#sendmessgae-group")
+    group.forEach((g) => {
+        $('<option>', { text: g.name,value: g.id }).appendTo("#sendmessgae-group")
+    })
+})
+
+document.getElementById("sendmessage-send").addEventListener("click", () => {
+    const message = document.getElementById("sendmessage-input").value
+    const checked = document.getElementById("message-param-checked").checked
+
+    sendMsg(message, CURRENT_SESSION, document.getElementById("sendmessgae-group").value, checked)
+})
+
+
