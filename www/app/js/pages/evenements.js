@@ -86,8 +86,10 @@ PAGES.addCallback("event-countdown", function() {
 
 PAGES.addCallback("event-location", function() {
     // UTIL.shownav(false);
+
     leafletMap.invalidateSize(false);
-    
+    UTIL.setMapCoords(EVENT_INFO.closest);
+
     setInterval(() => {
         eventTime = new Date(EVENT_INFO.closest.starting_at);
         if (new Date() > eventTime) {
@@ -132,7 +134,32 @@ var customIcon = L.icon({
     popupAnchor:  [0, -64] // point from which the popup should open relative to the iconAnchor
 });
 
-UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
+//Bjørnøya 17/63.58860/9.17471
+
+
+UTIL.setMapCoords = function(evenement) 
+{
+    let zoom, lat, lon;
+    let popupText = evenement.name;
+
+    if (!evenement.location) evenement.location = "63.58860,9.17471,17";
+
+    // parse either lat,lon,(zoom) or (zoom)/lat/lon
+    let loc = evenement.location.split(",")
+    if (loc.length>=2) {
+        lat = loc[0];
+        lon = loc[1];
+        zoom = (loc.length==3) ? loc[2] : 18;
+    } 
+    else {
+        loc = evenement.location.split("/")
+        if (loc.length>=2) {
+            zoom = (loc.length==3) ? loc[0] : 18;
+            lat = (loc.length==3) ? loc[1] : loc[0];
+            lon = (loc.length==3) ? loc[2] : loc[1];
+        }
+    }  
+
     leafletMap.setView([lat, lon], zoom);
     leafletMap.eachLayer(function (layer) {
         if (layer instanceof L.Marker) {
@@ -141,11 +168,15 @@ UTIL.setMapCoords = function(zoom, lat, lon, popupText) {
     });
     var p = L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText)
     const btn = document.getElementById("event-location-coords-button");
-    if (UTIL.getMobileOperatingSystem() == "iOS") 
-        btn.href = "maps://maps.apple.com/?q="+lat+","+lon+"&z="+zoom;
-    else
-        btn.href = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom;
+    // if (UTIL.getMobileOperatingSystem() == "iOS") 
+    //     btn.href = "maps://maps.apple.com/?q="+lat+","+lon+"&z="+zoom;
+    // else
+        btn.href = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom; 
     
+    // href: "geo:<" + myLatitude  + ">,<" + myLongitude + ">?q=<" + myLatitude  + ">,<" + myLongitude + ">(" + labelLocation + ")"));
+    
+    // btn.href = "geo:"+lat+","+lon+"?q="+lat+","+lon
+
     setTimeout(() => {
         p.openPopup();
     }, 700);

@@ -1,7 +1,7 @@
-<html lang="en">
+<html lang="fr" >
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>CONTACTS</title>
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/avatar_questions.css">
@@ -86,7 +86,7 @@
             </div>
 
             <div class="input-text">
-                <input type="text" id="input_register_phone">
+                <input type="text" id="input_register_phone" onchange="register_phone()">
                 <div class="err"></div>
             </div>
         
@@ -132,7 +132,7 @@
             </div>
 
             <div class="input-text">
-                <input type="text" id="input_register_pseudo">
+                <input type="text" id="input_register_pseudo" onchange="register_pseudo()">
                 <div class="err"></div>
             </div>
         </div>
@@ -536,7 +536,7 @@
 
     <div id="overlay"></div>
 
-    <script src="./js/nosleep.js"></script>
+    <script src="./js/libs/nosleep.js"></script>
 
     <script src="./js/shader.js"></script>
     <script src="./js/canvas.js"></script>

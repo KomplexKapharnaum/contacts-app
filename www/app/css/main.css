@@ -38,6 +38,9 @@ html {
 body, html {
     margin: 0;
     padding: 0;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
