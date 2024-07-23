@@ -399,3 +399,7 @@ document.getElementById("change-avatar").addEventListener("click", () => {
         })
     });
 })
+
+document.getElementById("btn-regenerate-avatar").addEventListener("click", () => {
+    PAGES.goto("create_avatar_photo");
+})

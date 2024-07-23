@@ -72,7 +72,7 @@ class Avatar extends Model {
 
         // delete all not selected avatars for this user
         let req = db('avatars').where({ user_id: user.id() })
-        if (user.selected_avatar) req.whereNot({ id: user.selected_avatar });
+        // if (user.selected_avatar) req.whereNot({ id: user.selected_avatar });
         await req.del();
         
         // add selected avatar if exists
