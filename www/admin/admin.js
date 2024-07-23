@@ -317,65 +317,6 @@ function updateEvents() {
                 })
             
                 $('<td>').text(event.session_id).appendTo(tr)
-                
-                /*
-                var actions = $('<td>').appendTo(tr)
-                $('<button>').text('flash').appendTo(actions).on('click', () => {
-                    ctrl("flash", true)
-                })
-
-                $('<select>', { id: 'grp' }).appendTo(actions)
-
-                
-                //////////////// tempo
-                $('<option>', { text: " ------ ",value: "" }).appendTo("#grp")
-                query("Group.list").then((group) => {
-                    group.forEach((g) => {
-                        $('<option>', { text: g.name,value: g.id }).appendTo("#grp")
-                    })
-                })
-                //////////////
-                
-
-                
-                $('<button>').text('color').appendTo(actions).on('click', () => {
-                    const promptColor = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
-                    const flashing = confirm("Flashing ?");
-                    const autoselect = confirm("Random autoselect ?");
-
-                    const grpChoice = document.getElementById("grp").value
-                    ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice: grpChoice}})
-
-                });
-
-                $('<button>').text('text').appendTo(actions).on('click', () => {
-                    const promptText = prompt("Textes", "Séparez chaque textes par un ';'").split(";").map(c => c.trim());
-                    const autoselect = confirm("Random autoselect ?");
-
-                    const grpChoice = document.getElementById("grp").value
-                    ctrl("text", { texts: promptText, params: { random: autoselect, grpChoice: grpChoice } })
-                });
-
-                $('<button>').text('image').appendTo(actions).on('click', () => {
-                    const promptText = prompt("Image", "Séparez chaques URL par un ';'").split(";").map(c => c.trim());
-                    const autoselect = confirm("Random autoselect ?");
-
-                    const grpChoice = document.getElementById("grp").value
-                    ctrl("image", { images: promptText, params: { random: autoselect, grpChoice: grpChoice } })
-                });
-
-                $('<button>').text('info').appendTo(actions).on('click', () => {
-                    const promptText = prompt("Image", "Ecrivez votre message ici...");
-
-                    const grpChoice = document.getElementById("grp").value
-                    ctrl("info", {message: promptText, params: {grpChoice: grpChoice}})
-                });
-
-                $('<button>').text('end').appendTo(actions).on('click', () => {
-                    ctrl("end")
-                });
-
-                */
 
                 $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete event " + event.name + " ?") &&

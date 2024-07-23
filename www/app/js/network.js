@@ -80,9 +80,9 @@ NETWORK.loadUser = function () {
                     // get session from userData.sessions where id = nextSession
                     let session = userData.sessions.filter((s) => s.id == nextSession)[0];
                     
-                    // UTIL.getMessages(userData.id, nextSession).then((messages) => {
-                    //     console.log("messages : ",  messages);
-                    // })
+                    UTIL.getMessages(userData.id, nextSession).then((messages) => {
+                        console.log("messages : ",  messages);
+                    })
                     
                     if (!session) {
                         console.log("User not registered to next session");
@@ -240,4 +240,6 @@ socket.on('end-event', () => {
 
 socket.on("new_chatMessage", (msg, emit_time) => {
     UTIL.displayUnreadMessages([{emit_time: emit_time, message: msg}]);
+    UTIL.addNotification(new Date(emit_time).toLocaleString(), msg);
+    NETWORK.query("User.setLastRead", userData.id, emit_time)
 })
