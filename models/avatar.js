@@ -5,7 +5,11 @@
 // - user_id: the user id
 // - url: the avatar image url
 
-const AVATAR_GEN_SIZE = 2;
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+const AVATAR_GEN_SIZE = process.env.AVATAR_GEN_SIZE || 2;
 
 import db from '../tools/db.js';
 import Model from './model.js';
