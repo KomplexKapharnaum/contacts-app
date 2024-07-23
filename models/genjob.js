@@ -31,7 +31,8 @@ class Genjob extends Model {
             status: null,
             workflow: null,
             input: null,
-            output: null
+            output: null,
+            callback: null
         });
     }
 
@@ -50,6 +51,7 @@ class Genjob extends Model {
         this.fields.last_modified = new Date();
         this.fields.workflow = f.workflow;
         this.fields.input = f.input;
+        this.fields.callback = f.callback;
 
         await this.save();
         return this.fields.id;
@@ -110,10 +112,19 @@ class Genjob extends Model {
         // reload status
         await this.load({ id: this.fields.id });
 
-        // callback
+        // hot callback
         if (jobsCallbacks[this.fields.id] && jobsCallbacks[this.fields.id][this.fields.status]) {
             jobsCallbacks[this.fields.id][this.fields.status](this);
         }
+
+        // cold callback
+        if (this.fields.callback) {
+            console.log('Genjob', this.fields.id, 'COLD CALLBACK', this.fields.callback);
+            let cb = this.fields.callback.split('.');
+            let model = await import('./' + cb[0].toLowerCase() + '.js');
+            let M = new model.default();
+            await M[cb[1]](this);
+        } 
 
         return this.fields.status;
     }
@@ -169,6 +180,7 @@ db.schema.hasTable('genjobs').then(exists => {
             table.string('userdata');
             table.string('input');
             table.string('output');
+            table.string('callback');
         })
         .then(() => {
             console.log('Table genjobs created');
@@ -176,6 +188,17 @@ db.schema.hasTable('genjobs').then(exists => {
     }
 });
 
+// modify table: add field callback if not exists
+db.schema.hasColumn('genjobs', 'callback').then(exists => {
+    if (!exists) {
+        db.schema.table('genjobs', table => {
+            table.string('callback');
+        })
+        .then(() => {
+            console.log('Table genjobs modified');
+        });
+    }
+});
 
 
 export default Genjob;

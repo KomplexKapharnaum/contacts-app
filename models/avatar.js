@@ -5,7 +5,7 @@
 // - user_id: the user id
 // - url: the avatar image url
 
-const AVATAR_GEN_SIZE = 4;
+const AVATAR_GEN_SIZE = 2;
 
 import db from '../tools/db.js';
 import Model from './model.js';
@@ -15,6 +15,7 @@ import Genjob from './genjob.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { callbackify } from 'util';
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 const uploadDir = path.join(__dirname, '../upload');
@@ -94,26 +95,47 @@ class Avatar extends Model {
         // build Genjob for each avatar
         for (let i = already; i < AVATAR_GEN_SIZE; i++) {
             let genjob = new Genjob();
-            await genjob.new({ userid: user.id(), workflow: wName, input: JSON.stringify({ pic: filename, seed: i }) });
+            await genjob.new({ 
+                userid: user.id(), 
+                workflow: wName, 
+                input: JSON.stringify({ pic: filename, seed: i }),
+                callback: 'Avatar.jobCallback' 
+            });
 
-            genjob.on('done', async (job) => {
-                console.log('Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.fields.output);
+            // genjob.on('done', async (job) => {
+            //     console.log('Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.fields.output);
 
-                try {
-                    let fname = JSON.parse(job.fields.output)[0]
-                    let avatar = new Avatar();
-                    await avatar.new({ user_id: user.id(), url: '/outputs/'+ path.basename(fname) });
-                }
-                catch (e) {
-                    console.error('Avatar Genjob', job.id(), 'error', e, job.fields.output);
-                }
-            })
+            //     try {
+            //         let fname = JSON.parse(job.fields.output)[0]
+            //         let avatar = new Avatar();
+            //         await avatar.new({ user_id: user.id(), url: '/outputs/'+ path.basename(fname) });
+            //     }
+            //     catch (e) {
+            //         console.error('Avatar Genjob', job.id(), 'error', e, job.fields.output);
+            //     }
+            // })
 
-            genjob.on('error', (job) => {
-                console.error('Avatar Genjob', job.id(), 'error', job.fields.workflow, job.fields.output);
-            })
+            // genjob.on('error', (job) => {
+            //     console.error('Avatar Genjob', job.id(), 'error', job.fields.workflow, job.fields.output);
+            // })
         }
 
+    }
+
+    async jobCallback(job) 
+    {
+        try {
+            if (job.fields.status == 'error') throw new Error(job.fields.output);
+            if (job.fields.status != 'done') return;
+
+            console.log('AVATAR callback: Genjob', job.id(), 'completed workflow', job.fields.workflow, 'output', job.fields.output);
+            
+            let fname = JSON.parse(job.fields.output)[0]
+            await this.new({ user_id: job.fields.userid, url: '/outputs/'+ path.basename(fname) });
+        }
+        catch (e) {
+            console.error('AVATAR callback: Genjob', job.id(), 'ERROR', e);
+        }
     }
 }
 
@@ -129,5 +151,7 @@ db.schema.hasTable('avatars').then((exists) => {
         });
     }
 });
+
+
 
 export default Avatar;

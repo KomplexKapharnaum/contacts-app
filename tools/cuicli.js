@@ -33,7 +33,7 @@ export class ComfyUIClient {
   }
 
   connect() {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve,reject) => {
       if (this.ws) {
         await this.disconnect()
       }
@@ -57,6 +57,7 @@ export class ComfyUIClient {
 
       this.ws.on("error", err => {
         this.log('error', { err }, "WebSockets error")
+        reject(err)
       })
 
       this.ws.on("message", (data, isBinary) => {
