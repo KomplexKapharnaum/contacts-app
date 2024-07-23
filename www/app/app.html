@@ -264,7 +264,7 @@
     <!-- Main menu -->
     <div class="page" data-page-id="main">
         <h1>CONTACTS</h1>
-
+        <br />
         <div class="caption">
             <div class="illustration-container">
                 <img class="illustration" src="./img/mask.png" alt="image test">
@@ -279,6 +279,8 @@
     <!-- Event -->
 
     <div class="page" data-page-id="event-subscribe-prompt">
+        <h1>CONTACTS</h1>
+        <br />
         <div class="txt secondary">
             <span>L'évènement <span id="subscribe-label-event"></span> va arriver bientôt !</span>
             <span>Voulez-vous y participer ?</span>
@@ -297,6 +299,8 @@
     </template>
     
     <div class="page" data-page-id="event-list">
+        <h1>CONTACTS</h1>
+        <br />
         <div class="txt secondary">
             Des évènements sont à venir !
         </div>
@@ -307,11 +311,12 @@
     </div>
 
     <div class="page" data-page-id="event-countdown">
-
+        <h1 id="nextevent-name"></h1>
+        <br />
         <div class="flex-group">
             <div class="txt secondary">
                 <span>Le prochain évènement aura lieu <br>
-                le <span id="nextevent-date">25/06/2024</span> à <span id="nextevent-time">20:00</span></span>
+                le <span id="nextevent-date"></span></span>
             </div>
 
             <div id="nextevent-countdown">
@@ -330,7 +335,7 @@
             </div>
         </div>
 
-        <div class="illustration-container">
+        <div class="illustration-container" onclick="PAGES.goto('event-list')">
             <img class="illustration" src="./img/clock/bg.png" alt="clock">
             <img class="illustration" data-renderer-rotate="3" src="./img/clock/big.png" alt="clock">
             <img class="illustration" data-renderer-rotate="1" src="./img/clock/small.png" alt="clock">
@@ -343,6 +348,8 @@
     </div>
 
     <div class="page" data-page-id="event-location">
+        <h1 id="event-location-name"></h1>
+        <br />
         <div id="coords-map"></div>
         <div id="coords-map-overlay">
             <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
@@ -354,7 +361,8 @@
 
     <!-- SPECIAL EVENTS -->
     <div class="page" data-page-id="event-idle">
-        
+        <h1>CONTACTS</h1>
+        <br />
         <div class="caption">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
             <h1>Un évènement est en cours</h1>
@@ -463,7 +471,8 @@
     </template>
 
     <div class="page" data-page-id="notifications">
-        <h1>Mes notifications</h1>
+        <h1>Mes messages</h1>
+        <br />
         <div id="notifications">
         </div>
     </div>

@@ -54,17 +54,17 @@ function getEventRoute() {
     }
 
     // If there is only one event
-    if (evenements.length==1) {
-        switch (eventState) {
-            case "inAnHour":
-                return "event-location";
-            case "inFuture":
-                UTIL.selectedEvent = closest;
-                return "event-countdown";
-            case "active":
-                return "event-idle";
-        }       
-    }
+    // if (evenements.length==1) {
+    //     switch (eventState) {
+    //         case "inAnHour":
+    //             return "event-location";
+    //         case "inFuture":
+    //             UTIL.selectedEvent = closest;
+    //             return "event-countdown";
+    //         case "active":
+    //             return "event-idle";
+    //     }       
+    // }
 
     // If there are multiple events
     switch (eventState) {
@@ -81,7 +81,7 @@ function getEventRoute() {
 /* */
 
 PAGES.addCallback("event-countdown", function() {
-    UTIL.setCountDown(...UTIL.selectedEvent.starting_at.split("T"));
+    UTIL.setCountDown(UTIL.selectedEvent);
 })
 
 PAGES.addCallback("event-location", function() {
