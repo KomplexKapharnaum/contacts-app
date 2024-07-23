@@ -149,6 +149,11 @@ UTIL.addNotification = function(date,message) {
     const notif = notif_template.content.cloneNode(true);
     notif.querySelector(".bold").innerText = message;
     notif.querySelector(".light").innerText = date;
+
+    notif.querySelector(".notification").addEventListener("click", () => {
+        UTIL.displayUnreadMessages([{emit_time: new Date(date).getMilliseconds(), message: message}]);
+    })
+
     document.getElementById("notifications").appendChild(notif);
 }
 
@@ -257,15 +262,10 @@ UTIL.displayUnreadMessages = function(messages) {
         unreadOverlay.appendChild(notif);
 
         notif.querySelector(".close").addEventListener("click", () => {
-            UTIL.readMessage(message.emit_time);
             notif.remove();
             if (unreadOverlay.childElementCount == 0) unreadOverlay.classList.add("hidden");
         })
     })
-}
-
-UTIL.readMessage = function(time) {
-    console.log(time);
 }
 
 // Cookies
