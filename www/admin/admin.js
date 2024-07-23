@@ -161,6 +161,7 @@ function updateUsers() {
             $('<th>').text('uuid').appendTo(tr)
             $('<th>').text('name').appendTo(tr)
             $('<th>').text('phone').appendTo(tr)
+            $('<th>').text('group').appendTo(tr)
             $('<th>').text('selected_avatar').appendTo(tr)
             $('<th>').text('sessions').appendTo(tr)
             $('<th>').text('last_read').appendTo(tr)
@@ -173,6 +174,13 @@ function updateUsers() {
                 $('<td>').text(user.uuid).appendTo(tr)
                 $('<td>').text(user.name).appendTo(tr)
                 $('<td>').text(user.phone).appendTo(tr)
+
+                // $('<td>').text(user.groups).appendTo(tr).on('click', () => {
+                //     var group = prompt("Group", user.group).trim()
+                //     if (group) query("User.update", [user.uuid, { group: group }]).then(updateUsers)
+                // })
+                var groups = $('<td>').appendTo(tr)
+
                 $('<td>').text(user.selected_avatar).appendTo(tr)
 
                 var sessions = $('<td>').appendTo(tr)
@@ -182,6 +190,10 @@ function updateUsers() {
                             if (confirm("Unregister user " + user.name + " from session " + session.name + " ?"))
                                 query("User.unregister", [user.uuid, session.id]).then(updateUsers)
                         })
+                    })
+
+                    data.groups.forEach((group) => {
+                        $('<span>').text(group.name + ' ').appendTo(groups)
                     })
                 })
 
@@ -437,7 +449,9 @@ document.getElementById('avatar-load').addEventListener('click', updateAvatars)
 
 // LOAD GENJOBS
 document.getElementById('genjob-load').addEventListener('click', updateGenjobs)
-
+document.getElementById('genjob-clear').addEventListener('click', () => {
+    // query("Genjob.clear").then(updateGenjobs)
+})
 // USER-EVENTS REGIE
 // 
 
@@ -571,6 +585,10 @@ document.getElementById("end-event").addEventListener("click", () => {
     ctrl("end");
 })
 
+document.getElementById("reload-event").addEventListener("click", () => {
+    ctrl("reload");
+})
+
 // MESSAGERIE
 //
 
@@ -580,9 +598,9 @@ function sendMsg(msg, session, group, checked) {
 let CURRENT_SESSION = 1;
 
 query("Session.next")
-.then((val) => {
-    CURRENT_SESSION = val
-});
+    .then((val) => {
+        CURRENT_SESSION = val
+    });
 
 query("Group.list").then((group) => {
     $('<option>', { text: "*",value: "" }).appendTo("#sendmessgae-group")
@@ -598,4 +616,7 @@ document.getElementById("sendmessage-send").addEventListener("click", () => {
     sendMsg(message, CURRENT_SESSION, document.getElementById("sendmessgae-group").value, checked)
 })
 
+socket.on("new_chatMessage", (msg, emit_time) => {
+    updateMessages()
+})
 

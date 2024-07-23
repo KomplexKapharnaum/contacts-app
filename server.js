@@ -195,6 +195,7 @@ SOCKET.io.on('connection', (socket) => {
     if (!SOCKET.auth(socket)) return;   // check if admin
 
     if (data.name == "end") SOCKET.endEvent();
+    else if (data.name == "reload") SOCKET.io.emit('reload');
     else SOCKET.startEvent(data.name, data.args);
 
   });
@@ -247,9 +248,16 @@ SOCKET.io.on('connection', (socket) => {
   });
 
   // last event
-  if (SOCKET.lastEvent) {
-    socket.emit('start-event', SOCKET.lastEvent);
-  }
+  // if (SOCKET.lastEvent) {
+  //   socket.emit('start-event', SOCKET.lastEvent);
+  // }
+
+  socket.on('get-last-event', () => {
+    console.log('get-last-event', SOCKET.lastEvent);
+    if (SOCKET.lastEvent) {
+      socket.emit('start-event', SOCKET.lastEvent);
+    }
+  })
 
   socket.on("sms", (msg, request) => {
 

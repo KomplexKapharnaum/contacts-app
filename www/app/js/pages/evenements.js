@@ -1,5 +1,7 @@
 let EVENT_INFO = false;
 
+let EVENT_WATCHER = null
+
 function isEventActive() {
     return EVENT_INFO && EVENT_INFO.active;
 }
@@ -90,17 +92,31 @@ PAGES.addCallback("event-location", function() {
     leafletMap.invalidateSize(false);
     UTIL.setMapCoords(EVENT_INFO.closest);
 
-    setInterval(() => {
-        eventTime = new Date(EVENT_INFO.closest.starting_at);
-        if (new Date() > eventTime) {
-            location.reload();
-        }
-    }, 1000);
+    // Watch for event time
+    if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
+        EVENT_WATCHER = setInterval(() => {
+            eventTime = new Date(EVENT_INFO.closest.starting_at);
+            if (new Date() > eventTime) {
+                location.reload();
+            }
+        }, 1000);
 });
 
 PAGES.addCallback("event-idle", () => {
     UTIL.shownav(false);
     UTIL.countDownInterval = false;
+
+    // check if an event is active
+    socket.emit("get-last-event")
+
+    // Watch for event end
+    if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
+        EVENT_WATCHER = setInterval(() => {
+            let eventEnd = new Date(EVENT_INFO.closest.ending_at);
+            if (new Date() > eventEnd) {
+                location.reload();
+            }
+        }, 1000);
 })
 
 document.addEventListener("click", () => {

@@ -70,9 +70,18 @@ class Avatar extends Model {
         let dataURL = data.pic.replace(/^data:image\/png;base64,/, '');
         fs.writeFileSync(filename, dataURL, 'base64');
 
-        // delete all not selected avatars for this user
+        // parse data.weirdness / data.tribe / data.anonymity
+        var input = {
+            pic: filename,
+            weirdness: data.weirdness || Math.floor(Math.random() * 100),
+            tribe: data.tribe || ['Animal', 'Vegetal', 'Techno'][Math.floor(Math.random() * 3)],
+            anonymity: data.anonymity || Math.floor(Math.random() * 100),
+            increment: 0,
+        }
+
+        // delete all avatars
         let req = db('avatars').where({ user_id: user.id() })
-        // if (user.selected_avatar) req.whereNot({ id: user.selected_avatar });
+        // if (user.selected_avatar) req.whereNot({ id: user.selected_avatar }); // keep selected avatar
         await req.del();
         
         // add selected avatar if exists
@@ -86,6 +95,12 @@ class Avatar extends Model {
                 await user.update(null, { selected_avatar: null });
             }
         }
+
+        // find group corresponding to tribe 
+        let group = await db('groups').where({ name: input.tribe }).first();
+        if (group) group = group.id;
+
+        user.setGroup(null, group, true);
 
         // find workflow id for avatar generation
         let wName = 'faceswap';
@@ -102,8 +117,8 @@ class Avatar extends Model {
             await genjob.new({ 
                 userid: user.id(), 
                 workflow: wName, 
-                input: JSON.stringify({ pic: filename, seed: i }),
-                callback: 'Avatar.jobCallback' 
+                input: JSON.stringify(input),
+                callback: 'Avatar.jobCallback'  
             });
 
             // genjob.on('done', async (job) => {
@@ -122,6 +137,8 @@ class Avatar extends Model {
             // genjob.on('error', (job) => {
             //     console.error('Avatar Genjob', job.id(), 'error', job.fields.workflow, job.fields.output);
             // })
+
+            input.increment += 1;
         }
 
     }
@@ -155,6 +172,8 @@ db.schema.hasTable('avatars').then((exists) => {
         });
     }
 });
+
+
 
 
 
