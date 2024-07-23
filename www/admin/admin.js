@@ -109,6 +109,45 @@ function updateSessions() {
         })
 }
 
+function updateGroups() {
+    query("Group.list")
+        .then((groups) => {
+            $('#groups').empty()
+            var table = $('<table>').appendTo('#groups')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('description').appendTo(tr)
+            $('<th>').text('session_id').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            groups.forEach((group) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(group.id).appendTo(tr)
+
+                $('<td>').text(group.name).appendTo(tr).on('click', () => {
+                    var name = prompt("Group name", group.name).trim()
+                    if (name) query("Group.update", [group.id, { name: name }]).then(updateGroups)
+                })
+
+                $('<td>').text(group.description).appendTo(tr).on('click', () => {
+                    var description = prompt("Description", group.description).trim()
+                    if (description) query("Group.update", [group.id, { description: description }]).then(updateGroups)
+                })
+
+                $('<td>').text(group.session_id).appendTo(tr)
+
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete group " + group.name + " ?") &&
+                        query("Group.delete", group.id).then(updateGroups)
+                })
+            })
+        })
+}
+
 function updateUsers() {
     query("User.list")
         .then((users) => {
@@ -458,6 +497,16 @@ document.getElementById('session-new').addEventListener('click', () => {
     var name = prompt("Session name", "").trim()
 
     query("Session.new", { name: name }).then(updateSessions)
+})
+
+// GROUPS
+//
+
+document.getElementById('group-new').addEventListener('click', () => {
+    var name = prompt("Group name", "").trim()
+    var session_id = prompt("Session id", "").trim()
+
+    query("Group.new", { name: name, session_id: session_id }).then(updateGroups)
 })
 
 // EVENTS
