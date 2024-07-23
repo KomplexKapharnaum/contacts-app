@@ -341,8 +341,18 @@ PAGES.goto = function(pageID) {
     PAGES.active().classList.remove("active");
     page.classList.add("active");
 
+    // save nav history (except for create_avatar and register pages)
+    if (!pageID.startsWith("create_avatar") && !pageID.includes("_register"))
+        history.pushState({pageID: pageID}, "", "");
+
     PAGES.callback(pageID);
 }
+
+// Call history on back
+addEventListener("popstate", (event) => {
+    if (!event.state) return;
+    PAGES.goto(event.state.pageID);
+});
 
 PAGES.random = function(...routes) {
     let index = Math.floor(Math.random() * routes.length);
