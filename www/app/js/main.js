@@ -13,12 +13,31 @@ renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPro
 
 renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
-let sin=0;
-setInterval(() => {
-    sin+=0.01;
-    const val = (Math.sin(sin) + 1) / 2;
+
+lastUpdate = 0;
+function updateCanvasRender() {
+    const t = performance.now();
+    
+    if (lastUpdate > t%3000) {
+        if (userData.selected_avatar) { 
+            document.querySelectorAll(".maskSwitch").forEach(mask => {
+                // console.log(mask.src)
+                if (mask.src.includes("mask.png")) {
+                    mask.src = userData.selected_avatar.url
+                } else {
+                    mask.src = "./img/mask.png"
+                }
+            });
+        }
+    }
+
+    lastUpdate = t%3000;
+
+    const val = (Math.sin((t * Math.PI)/1500 + Math.PI*1.5) + 1) / 2;
     renderer.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
-}, 10);
+    requestAnimationFrame(updateCanvasRender);
+}
+updateCanvasRender();
 renderer.render();
 
 // Glitched elements
