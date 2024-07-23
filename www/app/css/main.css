@@ -38,6 +38,9 @@ html {
 body, html {
     margin: 0;
     padding: 0;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -488,16 +491,18 @@ input[type="text"] {
 }
 
 #media-snapshot {
-    width: 100%;
+    width: 80%;
     height: auto;
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+    margin: auto;
+    margin-bottom: 10%;
 }
 
 #media-reload {
     position:absolute;
     left: 50%;
-    top: 0;
+    bottom: 5%;
 }
 
 #create-avatar-preview {

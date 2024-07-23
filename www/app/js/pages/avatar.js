@@ -18,18 +18,23 @@ function constrain(value, min, max) {
 // Media stream photo 
 //
 
-const vid = document.getElementById("media-stream");
+const snapVid = document.getElementById("media-stream");
+const snapshotButton = document.getElementById("media-stream-snapshot");
+const reloadButton = document.getElementById("media-reload");
+const snapImg = document.getElementById("media-snapshot");
+let snapState = 0;
+let dataURL_media;
 
 function startMediaStream() {
     snapState = 3;
-    vid.style.display = "block";
+    snapVid.style.display = "block";
     snapImg.style.display = "none";
     reloadButton.style.visibility = "hidden";
     snapshotButton.textContent = "Chargement...";
     navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 640 }, height: { ideal: 640 } } })
     .then((stream) => {
-        vid.srcObject = stream;
-        vid.play();
+        snapVid.srcObject = stream;
+        snapVid.play();
         snapshotButton.textContent = "Capturer";
         snapState = 0;
     })
@@ -38,26 +43,19 @@ function startMediaStream() {
     });
 }
 
-const snapshotButton = document.getElementById("media-stream-snapshot");
-const reloadButton = document.getElementById("media-reload");
-const snapImg = document.getElementById("media-snapshot");
-let snapState = 0;
-let dataURL_media;
-
-snapshotButton.addEventListener("click", function() {
-    
+function takeSnapshot() {
     switch (snapState) {
         case 0: 
             const canvas = document.createElement("canvas");
-            canvas.width = vid.videoWidth;
-            canvas.height = vid.videoHeight;
+            canvas.width = snapVid.videoWidth;
+            canvas.height = snapVid.videoHeight;
 
-            canvas.getContext("2d").drawImage(vid, 0, 0, canvas.width, canvas.height);
+            canvas.getContext("2d").drawImage(snapVid, 0, 0, canvas.width, canvas.height);
             dataURL_media = canvas.toDataURL("image/png");
 
             snapImg.src = dataURL_media;
             snapImg.style.display = "block";
-            vid.style.display = "none";
+            snapVid.style.display = "none";
             snapshotButton.textContent = "Valider"
             reloadButton.style.visibility = "visible";
 
@@ -65,14 +63,25 @@ snapshotButton.addEventListener("click", function() {
             break;
         case 1:         
             AVATAR_DATA.photo = dataURL_media;
-            vid.srcObject.getTracks().forEach(track => track.stop());
+            snapVid.srcObject.getTracks().forEach(track => track.stop());
             PAGES.goto("create_avatar_question1");
             break;
     }
+}
+
+
+snapshotButton.addEventListener("click", function() {
+    takeSnapshot();
 });
 
+snapVid.addEventListener("click", function() {
+    takeSnapshot();
+})
+
+
+
 reloadButton.addEventListener("click", function() {
-    vid.srcObject.getTracks().forEach(track => track.stop());
+    snapVid.srcObject.getTracks().forEach(track => track.stop());
     startMediaStream();
 });
 
