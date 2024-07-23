@@ -18,6 +18,7 @@
     
     <div id="logs"></div>
 
+    <!-- 
     <h3>Controls:</h3>
     <a href="/admin/sms"><button>sms</button></a>
     <button id="color-event">Color event</button>
@@ -26,26 +27,63 @@
     <button id="flash-off">Turn off flashlights</button>
     <button id="vibrate">Vibrate devices</button>
     <button id="end-event">End current event</button>
-
-    <hr>
+    -->
     
-    <h3>Sessions:</h3>
-    <button id="session-new">New Session</button><br />
-    <br />
+    <h2>Evenements & Régie</h2>
+    
+    <h3> <button id="session-new">+</button>Sessions</h3>
     <div id="sessions" class="db"></div>
 
-    <h3>Events:</h3>
-    <button id="event-new">New Event</button><br />
-    <br />
+    <h3> <button id="event-new">+</button>Events</h3>
     <div id="events" class="db"></div>
+
+    <h3>Régie</h3>
+
+    <div id="regie">
+        <!-- Group selection-->
+        <select name="select_group" id="grp"></select>
+
+        <!-- Buttons -->
+        <div id="regie-buttons">
+            <button id="color-event" data-event-bloc="color-selection">Color event</button>
+            <button id="text-event">Text event</button>
+            <button id="image-event">Image event</button>
+            <button id="info-event">Display info</button>
+            <button id="end-event">End current event</button>
+        </div>
+
+        <!-- Regie events -->
+        <div id="regie-events">
+
+            <!-- Color event -->
+            <div id="color-selection">
+                <div id="color-list"></div>
     
-    <h3>Messages:</h3>
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-param-random" id="color-event-param-random">
+                    <label for="color-event-param-random">Random select</label>
+                </div>
+    
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-param-flash" id="color-event-param-flash">
+                    <label for="color-event-param-flash">Is flashing</label>
+                </div>
+    
+                <button id="send-color-event" class="send">Send color event</button>
+            </div>
+
+        </div>
+    </div>
+    
+    <h2>Messagerie</h2>
     <div id="messages" class="db"></div>
 
-    <h3>Users:</h3>
+    <h2>Autres</h2>
+
+    <h3>Users</h3>
     <div id="users" class="db"></div>
 
-    <h3>Avatars:</h3>
+    <h3>Avatars</h3>
     <button id="avatar-load">Load Avatars</button><br />
     <div id="avatars" class="db"></div>
 

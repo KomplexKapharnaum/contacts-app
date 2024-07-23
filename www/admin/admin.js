@@ -101,7 +101,7 @@ function updateSessions() {
                     }
                     ))
 
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete session " + session.name + " ?") &&
                         query("Session.delete", session.id).then(updateSessions)
                 })
@@ -149,7 +149,7 @@ function updateUsers() {
                 $('<td>').text(user.last_read).appendTo(tr)
                 $('<td>').text(user.is_connected).appendTo(tr)
 
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
                         query("User.delete", user.uuid).then(() => {
                             updateAvatars()
@@ -179,7 +179,7 @@ function updateAvatars() {
                 $('<td>').text(avatar.id).appendTo(tr)
                 $('<td>').text(avatar.user_id).appendTo(tr)
                 $('<td>').text(avatar.url).appendTo(tr)
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete avatar " + avatar.url + " ?") &&
                         query("Avatar.delete", avatar.id).then(updateAvatars)
                 })
@@ -213,7 +213,7 @@ function updateMessages() {
                 $('<td>').text(message.message).appendTo(tr)
                 $('<td>').text(message.session_id).appendTo(tr)
                 $('<td>').text(message.group_id).appendTo(tr)
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete message " + message.message + " ?") &&
                         query("Message.delete", message.id).then(updateMessages)
                 })
@@ -238,8 +238,10 @@ function updateEvents() {
             $('<th>').text('location').appendTo(tr)
             $('<th>').text('description').appendTo(tr)
             $('<th>').text('session_id').appendTo(tr)
-            $('<th>').text('actions').appendTo(tr)
+            /*$('<th>').text('actions').appendTo(tr)*/
             $('<th>').text('').appendTo(tr)
+
+            let enableRegie = false;
 
             events.forEach((event) => {
                 var tr = $('<tr>').appendTo(tbody)
@@ -248,6 +250,8 @@ function updateEvents() {
                 const end = new Date(event.ending_at);
                 const now = new Date();
                 const isEventLive = start < now && now < end;
+                enableRegie = enableRegie || isEventLive;
+                
                 if (isEventLive) tr.css('background-color', 'darkgreen');
 
                 $('<td>').text(event.id).appendTo(tr)
@@ -274,7 +278,8 @@ function updateEvents() {
                 })
             
                 $('<td>').text(event.session_id).appendTo(tr)
-
+                
+                /*
                 var actions = $('<td>').appendTo(tr)
                 $('<button>').text('flash').appendTo(actions).on('click', () => {
                     ctrl("flash", true)
@@ -291,6 +296,8 @@ function updateEvents() {
                     })
                 })
                 //////////////
+                
+
                 
                 $('<button>').text('color').appendTo(actions).on('click', () => {
                     const promptColor = prompt("Color", "Séparez chaque couleur par un ';'").split(";").map(c => c.trim());
@@ -329,11 +336,20 @@ function updateEvents() {
                     ctrl("end")
                 });
 
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                */
+
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete event " + event.name + " ?") &&
                         query("Event.delete", event.id).then(updateEvents)
                 })
             })
+
+            if (enableRegie) {
+                $('#regie').addClass('active')
+            } else {
+                $('#regie').removeClass('active')
+            }
+
         })
 }
 
@@ -369,7 +385,7 @@ function updateGenjobs() {
                 $('<td>').text(genjob.input).appendTo(tr)
                 $('<td>').text(genjob.output).appendTo(tr)
 
-                $('<td>').text('delete').appendTo(tr).on('click', () => {
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete genjob " + genjob.id + " ?") &&
                         query("Genjob.delete", genjob.id).then(updateGenjobs)
                 })
@@ -408,6 +424,7 @@ socket.on('auth', (msg) => {
 // CONTROLS
 //
 
+/*
 document.getElementById('color-event').addEventListener('click', () => {
     ctrl("color", ["red", "blue", "green"])
 });
@@ -431,6 +448,7 @@ document.getElementById('flash-off').addEventListener('click', () => {
 document.getElementById('vibrate').addEventListener('click', () => {
     ctrl("vibrate", [500, 100, 200, 50, 100])
 });
+*/
 
 
 // SESSIONS
@@ -458,3 +476,55 @@ document.getElementById('avatar-load').addEventListener('click', updateAvatars)
 
 // LOAD GENJOBS
 document.getElementById('genjob-load').addEventListener('click', updateGenjobs)
+
+// USER-EVENTS REGIE
+// 
+
+const event_buttons = document.querySelectorAll("#regie-buttons>button")
+const event_blocs = document.querySelectorAll("#regie-events>div")
+
+event_buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        
+        event_blocs.forEach((bloc) => {
+            bloc.classList.remove('active')
+        })
+
+        const target = button.dataset.eventBloc;
+        if (!target) return;
+        document.getElementById(target).classList.add('active')
+
+    });
+});
+
+query("Group.list").then((group) => {
+    group.forEach((g) => {
+        $('<option>', { text: g.name,value: g.id }).appendTo("#grp")
+    })
+})
+
+// Color event
+
+const param_colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white", "purple"];
+
+param_colors.forEach((color) => {
+    const btn = document.createElement("div");
+    btn.classList.add("color");
+    btn.style.backgroundColor = color;
+    btn.onclick = () => {
+        btn.classList.toggle("selected");
+    }
+    document.getElementById("color-list").appendChild(btn);
+});
+
+document.getElementById('send-color-event').addEventListener('click', () => {
+    const random = document.getElementById('color-event-param-random').checked
+    const flash = document.getElementById('color-event-param-flash').checked
+    
+    let colors = []
+    document.getElementById("color-list").querySelectorAll(".selected").forEach((color) => {
+        colors.push(color.style.backgroundColor)
+    })
+
+    ctrl("color", colors, random, flash)
+})
