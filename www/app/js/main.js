@@ -153,16 +153,16 @@ UTIL.addNotification = function(date,message) {
 }
 
 UTIL.countDownInterval = false;
-UTIL.setCountDown = function(date, time) {
+UTIL.setCountDown = function(evenement) {
 
-    document.getElementById("nextevent-date").innerHTML = date;
-    document.getElementById("nextevent-time").innerHTML = time;
+    document.getElementById("nextevent-name").innerHTML = evenement.name;
+    document.getElementById("nextevent-date").innerHTML = UTIL.dateTime(evenement.starting_at);
 
     const days = document.getElementById("label-countdown-days");
     const hours = document.getElementById("label-countdown-hours");
     const minutes = document.getElementById("label-countdown-minutes");
 
-    const countDownDateTime = new Date(date + ' ' + time).getTime();
+    const countDownDateTime = new Date(evenement.starting_at).getTime();
 
     const updateCountDown = () => {
         const now = new Date().getTime();
@@ -193,6 +193,14 @@ UTIL.countDown = function(countDownDateTime) {
     }
 }
 
+UTIL.dateTime = function(datetime, short=false) {
+    const dayName = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+    const date = new Date(datetime);
+
+    if (short) return dayName[date.getDay()] + " " + date.getDate() + ", " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
+    else return dayName[date.getDay()] + " " + date.toLocaleDateString() + " à " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
+}
+
 UTIL.clearIncomingEvents = function() {
     document.getElementById("event-list").innerHTML = "";   
 }
@@ -201,8 +209,10 @@ UTIL.selectedEvent = null;
 UTIL.addIncomingEvent = function(evenement) {
     const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
     eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
-    const countDown = UTIL.countDown(evenement.starting_at);
-    eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
+
+    // const countDown = UTIL.countDown(evenement.starting_at);
+    // eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
+    eventDom.querySelector(".event-list-item-date").innerText = UTIL.dateTime(evenement.starting_at, true);
     
     renderer.addElement(eventDom);
     glitchElementInit(eventDom);
@@ -212,7 +222,7 @@ UTIL.addIncomingEvent = function(evenement) {
     eventDom.addEventListener("click", () => {
         UTIL.selectedEvent = evenement;
         PAGES.goto("event-countdown");
-        // UTIL.setCountDown(...evenement.starting_at.split("T"));
+        // UTIL.setCountDown(evenement);
     });
 }
 
