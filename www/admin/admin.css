@@ -192,3 +192,14 @@ fieldset.contain *{
 #color-list>div.selected {
     outline: solid 3px #FFF;
 }
+
+#image-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#image-list>img {
+    max-width: 128px;
+    max-height: 128px;
+}

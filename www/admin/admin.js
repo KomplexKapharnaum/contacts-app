@@ -547,6 +547,7 @@ event_buttons.forEach((button) => {
 });
 
 query("Group.list").then((group) => {
+    $('<option>', { text: "*",value: "" }).appendTo("#grp")
     group.forEach((g) => {
         $('<option>', { text: g.name,value: g.id }).appendTo("#grp")
     })
@@ -554,7 +555,7 @@ query("Group.list").then((group) => {
 
 // Color event
 
-const param_colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white", "purple"];
+const param_colors = ["#F00", "#0F0", "#00F", "#FF0", "#F0F", "#0FF", "#FFF"];
 
 param_colors.forEach((color) => {
     const btn = document.createElement("div");
@@ -574,6 +575,86 @@ document.getElementById('send-color-event').addEventListener('click', () => {
     document.getElementById("color-list").querySelectorAll(".selected").forEach((color) => {
         colors.push(color.style.backgroundColor)
     })
+    // ctrl("color", { colors: promptColor, params: { flash: flashing, random: autoselect , grpChoice: grpChoice}})
 
-    ctrl("color", colors, random, flash)
+    const grpChoice = document.getElementById("grp").value
+    ctrl("color", { colors: colors, params: { flash: flash, random: random , grpChoice: grpChoice}})
+})
+
+// Text event
+
+const addtext_btn = document.querySelector("#input_addtext button")
+const input_txt = document.getElementById("text-event-input")
+const template_text = document.getElementById("template_text_input")
+const textlist = document.getElementById("text-list")
+
+addtext_btn.addEventListener('click', () => {
+    const txt = input_txt.value
+    const tem = template_text.cloneNode(true).content.querySelector(".input_text_item");
+    console.log(tem)
+    tem.querySelector("input").value = txt
+    tem.querySelector("button").addEventListener('click', () => {
+        textlist.removeChild(tem)
+    })
+    textlist.appendChild(tem)
+})
+
+document.getElementById("send-text-event").addEventListener("click", () => {
+    let txts = []
+    textlist.querySelectorAll(".input_text_item").forEach(t => {
+        const val = t.querySelector("input").value;
+        txts.push(val)
+    })
+
+    const random = document.getElementById("text-event-param-random").checked;
+
+    const grpChoice = document.getElementById("grp").value
+    ctrl("text", { texts: txts, params: {random: random , grpChoice: grpChoice}})
+})
+
+// Image event
+
+const addimageURL_btn = document.querySelector("#input_add_image_url button")
+const input_image = document.getElementById("image-event-input")
+const imgList = document.getElementById("image-list")
+
+addimageURL_btn.addEventListener('click', () => {
+    const txt = input_image.value
+
+    const img = document.createElement("img");
+    img.src = txt
+    imgList.appendChild(img);
+
+    img.addEventListener('click', () => {
+        imgList.removeChild(img)
+    })
+    imgList.appendChild(img)
+})
+
+document.getElementById("send-image-event").addEventListener("click", () => {
+    let imgs = []
+    imgList.querySelectorAll("img").forEach(i => {
+        const val = i.src;
+        imgs.push(val)
+    })
+
+    const random = document.getElementById("image-event-param-random").checked;
+
+    const grpChoice = document.getElementById("grp").value
+    ctrl("image", { images: imgs, params: {random: random , grpChoice: grpChoice}})
+})
+
+// Info event
+
+document.getElementById("send-info-event").addEventListener("click", () => {
+    const val = document.getElementById("info_event_input").value;
+
+    const grpChoice = document.getElementById("grp").value
+    ctrl("info", { message: val, params: {grpChoice: grpChoice}})
+})
+
+// End event
+
+document.getElementById("end-event").addEventListener("click", () => {
+    ctrl("end");
 })

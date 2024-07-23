@@ -131,6 +131,7 @@ socket.on('reload', () => {
 
 NETWORK.receiveSessionEvent = function (event) {
     if (!isEventActive()) return;
+    UTIL.showOverlay(false);
     let container;
     switch (event.name) {
         case "color" :
@@ -173,7 +174,7 @@ NETWORK.receiveSessionEvent = function (event) {
                 }
 
                 if (randomSelect) {
-                    UTIL.showOverlay(true, texts[Math.floor(Math.random()*texts.length)], "");
+                    UTIL.showOverlay(true, "black", texts[Math.floor(Math.random()*texts.length)]);
                     return;
                 }
 

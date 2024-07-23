@@ -49,9 +49,9 @@
         <!-- Buttons -->
         <div id="regie-buttons">
             <button id="color-event" data-event-bloc="color-selection">Color event</button>
-            <button id="text-event">Text event</button>
-            <button id="image-event">Image event</button>
-            <button id="info-event">Display info</button>
+            <button id="text-event" data-event-bloc="text-selection">Text event</button>
+            <button id="image-event" data-event-bloc="image-selection">Image event</button>
+            <button id="info-event" data-event-bloc="info-selection">Display info</button>
             <button id="end-event">End current event</button>
         </div>
 
@@ -75,7 +75,61 @@
                 <button id="send-color-event" class="send">Send color event</button>
             </div>
 
-        </div>
+            <!-- Text event -->
+            <div id="text-selection">
+                <div id="input_addtext">
+                    <input type="text" id="text-event-input"> 
+                    <button>Ajouter</button>
+                </div>
+
+                <template id="template_text_input">
+                    <div class="input_text_item">
+                        <input type="text"> <button>X</button>
+                    </div>
+                </template>
+
+                <div id="text-list">
+
+                </div>
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-param-random" id="text-event-param-random">
+                    <label for="color-event-param-random">Random select</label>
+                </div>
+
+                <button id="send-text-event" class="send">Send text event</button>
+            </div>
+
+            <!-- Image event -->
+            <div id="image-selection">
+                <div id="input_add_image_url">
+                    <input type="text" id="image-event-input"> 
+                    <button>Ajouter URL</button>
+                </div>
+
+                <div id="image-list">
+
+                </div>
+
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-param-random" id="image-event-param-random">
+                    <label for="image-event-param-random">Random select</label>
+                </div>
+
+                <!--div class="input_field">
+                    <input type="checkbox" name="checkbox-param-flash" id="image-event-param-flash">
+                    <label for="image-event-param-flash">Flashing</label>
+                </div-->
+
+                <button id="send-image-event" class="send">Send image event</button>
+            </div>
+
+            <!-- Message info event-->
+            <div id="info-selection">
+                <textarea name="text" id="info_event_input"></textarea>
+                <button id="send-info-event" class="send">Send info event</button>
+            </div>
+
+        </div>        
     </div>
     
     <h2>Messagerie</h2>
