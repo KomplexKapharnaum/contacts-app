@@ -23,14 +23,14 @@ hr {
 }
 
 button:not(h3 button, #regie-buttons button) {
-    min-width: 256px;
+    min-width: 128px;
     min-height: 64px;
     font-size: 22px;
 }
 
 input[type="text"], textarea {
     min-height: 64px;
-    min-width: 512px;
+    min-width: 128px;
     font-size: 22px;
 }
 
