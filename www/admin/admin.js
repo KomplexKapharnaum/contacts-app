@@ -211,7 +211,11 @@ function updateUsers() {
                     })
                 })
 
-                $('<td>').text(user.last_read).appendTo(tr)
+                $('<td>').text(user.last_read).appendTo(tr).on('click', () => {
+                    query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
+                })
+
+
                 $('<td>').text(user.is_connected).appendTo(tr)
 
                 $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
