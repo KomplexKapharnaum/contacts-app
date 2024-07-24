@@ -56,7 +56,23 @@
 
 #slider-weirdness {
     width: 100%;
-    margin: 16px 0;
+    margin-top: 8px;
+    margin-bottom: 64px;
+
+    -webkit-appearance: none;
+    height: 6px;
+    background: var(--color-background);
+    outline: solid 1px var(--color-primary);
+}
+
+#slider-weirdness::-webkit-slider-thumb, #slider-weirdness::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--color-primary);
+    border: solid 1px var(--color-background);
+    cursor: pointer;
 }
 
 /* Results */

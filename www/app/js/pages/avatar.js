@@ -292,6 +292,10 @@ slider_weirdness.addEventListener("input", function() {
     val_weirdness = Math.round(parseInt(this.value)*2);
 });
 
+PAGES.addCallback("create_avatar_question3", function() {
+    slider_weirdness.value = 0;
+})
+
 document.getElementById("question2-suivant").addEventListener("click", function() {
     PAGES.goto("create_avatar_question3");
 });
