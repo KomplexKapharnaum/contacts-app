@@ -176,7 +176,7 @@ UTIL.showOverlay = function(bool, color, message, image = false, flashing = fals
 const notif_template = document.getElementById("notif-template");
 UTIL.addNotification = function(date,message) {
     const notif = notif_template.content.cloneNode(true);
-    notif.querySelector(".bold").innerText = message;
+    notif.querySelector(".bold").innerHTML =  message.split("\n")[0]
     notif.querySelector(".light").innerText = date;
 
     notif.querySelector(".notification").addEventListener("click", () => {
@@ -303,7 +303,7 @@ UTIL.displayUnreadMessages = function(messages) {
     unreadOverlay.classList.remove("hidden");
     messages.forEach(message => {
         const notif = document.getElementById("unread-notification-template").cloneNode(true).content.querySelector(".unread-notification");
-        notif.querySelector(".unread-notification-content").innerHTML = message.message;
+        notif.querySelector(".unread-notification-content").innerHTML = message.message.replace(/\n/g, "<br>");
 
         unreadOverlay.appendChild(notif);
 

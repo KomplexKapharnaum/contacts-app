@@ -279,7 +279,20 @@ function updateMessages() {
                 $('<td>').text(message.id).appendTo(tr)
                 $('<td>').text(message.data).appendTo(tr)
                 $('<td>').text(message.emit_time).appendTo(tr)
-                $('<td>').text(message.message).appendTo(tr)
+
+                var msg = $('<td>').text(message.message).appendTo(tr)
+                msg.on('click', () => {
+                    msg.off('click')
+                    msg.empty()
+
+                    var textarea = $('<textarea cols="100" rows="3">').val(message.message).appendTo(msg)
+                    textarea.focus()
+
+                    textarea.on('blur', () => {
+                        query("Message.update", [message.id, { message: textarea.val() }]).then(updateMessages)
+                    })
+                })
+
                 $('<td>').text(message.session_id).appendTo(tr)
                 $('<td>').text(message.group_id).appendTo(tr)
                 $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {

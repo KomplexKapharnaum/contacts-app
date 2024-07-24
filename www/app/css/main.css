@@ -452,6 +452,7 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    margin: auto 5px;
 }
 
 #notifications>div .light {
@@ -463,6 +464,14 @@ input[type="text"] {
     font-family: var(--font-secondary);
     color: var(--color-background);
 }
+
+.notification > .more {
+    font-family: var(--font-secondary);
+    color: var(--color-background);
+    font-style: italic;
+    margin-left: auto;
+    margin-top: auto;
+} 
 
 .unread-notification-content {
     font-size: 24px;
