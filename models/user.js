@@ -67,8 +67,8 @@ class User extends Model {
         // load or create user by phone number
         let phoneNumber = this.phoneParse(phone);
         let user = await db('users').where({ phone: phoneNumber }).first();
-        if (user) return this.load({ uuid: user.uuid });
-        else return this.new({ phone: phoneNumber });
+        if (user) return await this.load({ uuid: user.uuid });
+        else return await this.new({ phone: phoneNumber });
     }
 
     async save() {
