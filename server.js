@@ -7,7 +7,7 @@ import sendSMS from './tools/sms_hico.js';
 import db from './tools/db.js';
 
 // VERSION
-const VERSION = '1.0.3';  // AX mercredi matin
+const VERSION = '1.0.5';  // AX mercredi matin
 
 var MODELS = {};
 async function loadModel(name) {

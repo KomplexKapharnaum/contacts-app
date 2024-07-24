@@ -71,11 +71,16 @@ class Avatar extends Model {
         fs.writeFileSync(filename, dataURL, 'base64');
 
         // parse data.weirdness / data.tribe / data.anonymity
+        if (data.tribe === undefined) data.tribe = ['Animal', 'Vegetal', 'Techno'][Math.floor(Math.random() * 3)]
+        if (data.anonymity === undefined) data.anonymity = Math.floor(Math.random() * 100)
+        if (data.weirdness === undefined) data.weirdness = data.anonymity
+
+        // build input for genjob
         var input = {
             pic: filename,
-            weirdness: data.weirdness || Math.floor(Math.random() * 100),
-            tribe: data.tribe || ['Animal', 'Vegetal', 'Techno'][Math.floor(Math.random() * 3)],
-            anonymity: data.anonymity || Math.floor(Math.random() * 100),
+            tribe: data.tribe,
+            anonymity: data.anonymity,
+            weirdness: data.weirdness,
             increment: 0,
         }
 

@@ -229,10 +229,12 @@ UTIL.countDown = function(countDownDateTime) {
 
 UTIL.dateTime = function(datetime, short=false) {
     const dayName = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+    const monthName = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     const date = new Date(datetime);
 
     if (short) return dayName[date.getDay()] + " " + date.getDate() + ", " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
-    else return dayName[date.getDay()] + " " + date.toLocaleDateString() + " à " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
+    else return dayName[date.getDay()] + " " + date.getDate() + " " + monthName[date.getMonth()] + " à " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
+    //date.toLocaleDateString() + " à " + date.toLocaleTimeString("fr-FR", {hour: '2-digit', minute:'2-digit'});
 }
 
 UTIL.clearIncomingEvents = function() {
