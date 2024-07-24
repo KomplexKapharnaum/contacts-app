@@ -201,7 +201,7 @@ function updateUsers() {
                 $('<td>').text(user.is_connected).appendTo(tr)
 
                 $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
-                    confirm("Delete user " + user.name + " ?") &&
+                    confirm("Delete user id = " + user.id + " ?") &&
                         query("User.delete", {
                             id: user.id
                         }).then(() => {
