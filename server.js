@@ -1,13 +1,17 @@
 import express from 'express';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import sendSMS from './tools/sms_hico.js';
 // import sendSMS from './tools/sms_ovh.js';
 
 // MODELS / DB
 import db from './tools/db.js';
 
-// VERSION
-const VERSION = '1.0.6';  // AX mercredi début daprem
+// VERSION : get commit hash from git 
+const VERSION = execSync('git rev-parse --short HEAD').toString().trim();
+
+console.log("\n\n=====================================");
+console.log("   =  CONTACTS SERVER v." + VERSION + " =");
+console.log("=====================================\n\n");
 
 var MODELS = {};
 async function loadModel(name) {
