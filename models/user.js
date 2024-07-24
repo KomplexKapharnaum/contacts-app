@@ -122,8 +122,8 @@ class User extends Model {
         return this.get()
     }
 
-    async delete(uuid) {
-        await this.load({ uuid: uuid });
+    async delete(w) {
+        if (w) await this.load(w);
 
         // Delete user
         await db('users').where({ id: this.fields.id }).del();
