@@ -148,9 +148,20 @@ function updateGroups() {
         })
 }
 
+var usersCounter = {}
+
 function updateUsers() {
+    
+    usersCounter = {
+        total: 0,
+        connected: 0,
+    }
+
     query("User.list")
         .then((users) => {
+
+            usersCounter.total = users.length
+
             $('#users').empty()
             var table = $('<table>').appendTo('#users')
             var thead = $('<thead>').appendTo(table)
@@ -169,6 +180,9 @@ function updateUsers() {
             $('<th>').text('').appendTo(tr)
 
             users.forEach((user) => {
+
+                if (user.is_connected) usersCounter.connected++
+
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(user.id).appendTo(tr)
                 $('<td>').text(user.uuid).appendTo(tr)
@@ -210,6 +224,8 @@ function updateUsers() {
                         })
                 })
             })
+
+            $('#user-counter').text(usersCounter.connected + "/" + usersCounter.total)
         })
 }
 
