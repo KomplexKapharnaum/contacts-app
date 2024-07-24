@@ -105,6 +105,7 @@ function getMaskDistance() {
     return distance(centerX, centerY, centerMX, centerMY);
 }
 
+var val_anonymity = 0;
 anonymityMask.addEventListener("touchstart", function(event) {
     const bounds = anonymityMask.getBoundingClientRect();
     const offsetX = event.touches[0].clientX - bounds.left;
@@ -123,7 +124,7 @@ anonymityMask.addEventListener("touchstart", function(event) {
 
         const distance = getMaskDistance();
         const mapped = map(distance, 70, 5, 0, 100);
-        const clamped = constrain(mapped, 0, 100);
+        val_anonimity = constrain(mapped, 0, 100);
     }
 
     function stopMovingAnonymityMask() {
@@ -139,97 +140,148 @@ document.getElementById("question1-suivant").addEventListener("click", function(
     PAGES.goto("create_avatar_question2");
 });
 
-// Cow eating question
-// 
+// Choose your tribe question
+//
 
-const cowCanvas = document.getElementById("cow-canvas");
-const cowToMask = document.getElementById("cow-to-mask");
-const cowCtx = cowCanvas.getContext("2d");
-
-let cowData = {
-    default: 0,
-    current: 0
+let tdata = {
+    angle: 0,
+    dist: 0
 }
 
-function getOpaquePixels() {
-    const STEPS = 20;
-    let opaque = 0;
-    const imageData = cowCtx.getImageData(0, 0, cowCanvas.width, cowCanvas.height).data;
-    
-    for (let i = 0; i < imageData.length; i += 4 * STEPS) {
-        const alpha = imageData[i + 3];
-        if (alpha !== 0) {
-            opaque++;
+const tribeCanvas = document.getElementById("tribe-canvas");
+const tribeCtx = tribeCanvas.getContext("2d");
+const tribeTriangle = new Image()
+tribeTriangle.src = "./img/triangle.png";
+
+
+const tribes = [
+    {
+    id: 1,
+    name: "Vegetal"
+    },
+    {
+    id: 2,
+    name: "Animal"
+    },
+    {
+    id: 3,
+    name: "Techno"
+    }
+]
+
+function drawTriangle() {
+    const w = tribeCanvas.width;
+    const h = tribeCanvas.height;
+
+    if (tribeTriangle.complete) {
+        tribeCtx.drawImage(tribeTriangle, 0, 0, w, h);
+    } else {
+        tribeCtx.strokeStyle = "white";
+
+        let points = [];
+        for (let i = 0; i < 3; i++) {
+            const a = Math.PI * 2 / 3 * i;
+            const x = Math.sin(a) * w/2 + w/2;
+            const y = Math.cos(a) * h/2 + h/2;
+            points.push({x, y});
         }
+
+        tribeCtx.beginPath();
+        tribeCtx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < 3; i++) {
+            tribeCtx.lineTo(points[i].x, points[i].y);
+        }
+        tribeCtx.lineTo(points[0].x, points[0].y);
+        tribeCtx.stroke();
     }
-    
-    return opaque;
+
+    for (let i = 0; i < 3; i++) {
+        const a = Math.PI * 2 / 3 * i;
+        const x = Math.sin(a) * w/2 + w/2;
+        const y = Math.cos(a) * h/2 + h/2;
+
+        tribeCtx.save();
+
+        tribeCtx.fillStyle = "white";
+        tribeCtx.strokeStyle = "#0D0D0D";
+
+        tribeCtx.translate(x, y);
+        tribeCtx.rotate(Math.PI - a);
+        
+        tribeCtx.font = `22px Verdana`
+        tribeCtx.textAlign = "center";
+        tribeCtx.lineWidth = 6;
+
+        tribeCtx.strokeText(tribes[i].name, 0, 22*2);
+        tribeCtx.fillText(tribes[i].name, 0, 22*2);
+
+        tribeCtx.restore();
+    }
 }
 
+function drawDot() {
+    const w = tribeCanvas.width;
+    const h = tribeCanvas.height;
 
-let cowPrevCoords = false;
-function drawCow(event) {
-    const bounds = cowCanvas.getBoundingClientRect();
+    tribeCtx.fillStyle = "white"; 
+    const x = Math.sin(tdata.angle) * tdata.dist;
+    const y = Math.cos(tdata.angle) * tdata.dist;
 
-    cowCtx.beginPath();
-        cowCtx.moveTo(cowPrevCoords.x - bounds.left, cowPrevCoords.y - bounds.top);
-        cowCtx.lineTo(event.touches[0].clientX - bounds.left, event.touches[0].clientY - bounds.top);
-        cowCtx.globalCompositeOperation = "destination-out";
-    cowCtx.stroke();
-    
-    cowCtx.globalCompositeOperation = "source-over";
-     
-
-    cowData.current = getOpaquePixels();
-
-    cowPrevCoords = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
-    }
+    tribeCtx.fillStyle = "white";
+    tribeCtx.strokeStyle = "#0D0D0D";
+    tribeCtx.lineWidth = 3;
+    tribeCtx.beginPath();
+    tribeCtx.arc(w/2 + x, h/2 + y, 16, 0, Math.PI * 2);
+    tribeCtx.fill();
+    tribeCtx.stroke();
 }
 
-cowCanvas.addEventListener("touchstart", function(event) {
-    cowCtx.lineWidth = 32;
-    cowCtx.strokeStyle = "red";
-    cowCtx.lineCap = "round";
+function handleDotMove(event) {
+    const bounds = tribeCanvas.getBoundingClientRect();
+    const x = event.touches[0].clientX - bounds.left;
+    const y = event.touches[0].clientY - bounds.top;
 
-    cowPrevCoords = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
-    }
-    cowCanvas.addEventListener("touchmove", drawCow);
-});
+    tdata.angle = Math.atan2(x - tribeCanvas.width/2, y - tribeCanvas.height/2);
+    let dist = distance(x, y, tribeCanvas.width/2, tribeCanvas.height/2);
 
-cowCanvas.addEventListener("touchend", function() {
-    cowCanvas.removeEventListener("touchmove", drawCow);
-});
+    const a = tdata.angle % (Math.PI * 2 / 3);
+      
+    const mappedmax = (-Math.abs(Math.sin(a*1.5)) / 2 + 1) * tribeCanvas.width / 2;
+    
+    // (Math.abs(Math.sin(a*1.5)) / 2 + 1) * tribeCanvas.width/Math.PI;
 
-document.getElementById("cow-reset").addEventListener("click", function() {
-    cowCtx.clearRect(0, 0, cowCanvas.width, cowCanvas.height);
-    cowCtx.drawImage(cowToMask, 0, 0, cowCanvas.width, cowCanvas.height);
-    cowData.current = getOpaquePixels();
-});
+    tdata.dist = constrain(dist, 0, mappedmax) 
 
-PAGES.addCallback("create_avatar_question2", () => {
-    cowCanvas.width = cowCanvas.offsetWidth;
-    cowCanvas.height = cowCanvas.offsetHeight;
+    tribeCtx.clearRect(0, 0, tribeCanvas.width, tribeCanvas.height);
+    drawTriangle();
+    drawDot();
+}
 
-    cowToMask.onload = function() {
-        cowCtx.drawImage(cowToMask, 0, 0, cowCanvas.width, cowCanvas.height);
-        cowData.default = getOpaquePixels();
-    }
+tribeCanvas.addEventListener("touchstart", function(event) {
+    handleDotMove(event);
+})
 
-    cowToMask.src = "img/questions/cow.png";
-});
+tribeCanvas.addEventListener("touchmove", function(event) {
+    handleDotMove(event);
+})
 
-document.getElementById("question2-suivant").addEventListener("click", function() {
-    // USER.addPrompt("viande", cowSlider.value);
-    PAGES.goto("create_avatar_question3");
-});
+let val_tribute = 0
+tribeCanvas.addEventListener("touchend", function(event) {
+    const val = Math.round((tdata.angle / Math.PI + 1/3) * 1.5 + 0.5 + 2) % 3;
+    val_tribute = Math.abs(val);
+    console.log(val_tribute)
+})
+
+PAGES.addCallback("create_avatar_question2", function() {
+    tribeCanvas.width = tribeCanvas.offsetWidth;
+    tribeCanvas.height = tribeCanvas.offsetHeight;
+
+    drawTriangle();
+    drawDot();
+})
 
 // Taille & poids / Height & weight
 //
-
 
 
 const buddyContainer = document.getElementById("tallfat-container");
@@ -340,10 +392,8 @@ document.getElementById("question3-suivant").addEventListener("click", function(
     NETWORK.query('Avatar.generate', userData.uuid ,
         {
             pic: AVATAR_DATA.photo,
-            mask: getMaskDistance(),
-            cow: cowData.current,
-            height: buddyResizable.offsetHeight,
-            weight: buddyResizable.offsetWidth
+            anonymity: val_anonymity,
+            tribe: tribes[val_tribute].name
         })
         .then((data) => { 
             PAGES.goto("create_avatar_processing") 

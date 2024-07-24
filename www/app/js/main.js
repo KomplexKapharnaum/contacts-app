@@ -13,12 +13,12 @@ renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPro
 
 renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
-
+const speed = 10000;
 lastUpdate = 0;
 function updateCanvasRender() {
     const t = performance.now();
     
-    if (lastUpdate > t%3000) {
+    if (lastUpdate > t%speed) {
         if (userData.selected_avatar) { 
             document.querySelectorAll(".maskSwitch").forEach(mask => {
                 // console.log(mask.src)
@@ -31,9 +31,9 @@ function updateCanvasRender() {
         }
     }
 
-    lastUpdate = t%3000;
+    lastUpdate = t%speed;
 
-    const val = (Math.sin((t * Math.PI)/1500 + Math.PI*1.5) + 1) / 2;
+    const val = (Math.sin((t * Math.PI)/(speed/2) + Math.PI*1.5) + 1) / 2;
     renderer.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
     requestAnimationFrame(updateCanvasRender);
 }
