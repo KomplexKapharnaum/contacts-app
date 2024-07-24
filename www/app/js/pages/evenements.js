@@ -92,6 +92,11 @@ PAGES.addCallback("event-location", function() {
     leafletMap.invalidateSize(false);
     UTIL.setMapCoords(EVENT_INFO.closest);
 
+    // Set event time
+    let eventTime = new Date(EVENT_INFO.closest.starting_at);
+    let eventTimeStr = eventTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    document.getElementById("event-location-hour").innerHTML = eventTimeStr;
+
     // Watch for event time
     if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
         EVENT_WATCHER = setInterval(() => {
