@@ -208,12 +208,12 @@ function drawTriangle() {
         tribeCtx.translate(x, y);
         tribeCtx.rotate(Math.PI - a);
         
-        tribeCtx.font = `22px Verdana`
+        tribeCtx.font = `32px Verdana`
         tribeCtx.textAlign = "center";
         tribeCtx.lineWidth = 6;
 
-        tribeCtx.strokeText(tribes[i].name, 0, 22*2);
-        tribeCtx.fillText(tribes[i].name, 0, 22*2);
+        tribeCtx.strokeText(tribes[i].name, 0, 32*2);
+        tribeCtx.fillText(tribes[i].name, 0, 32*2);
 
         tribeCtx.restore();
     }
@@ -269,7 +269,7 @@ let val_tribute = 0
 tribeCanvas.addEventListener("touchend", function(event) {
     const val = Math.round((tdata.angle / Math.PI + 1/3) * 1.5 + 0.5 + 2) % 3;
     val_tribute = Math.abs(val);
-    console.log(val_tribute)
+    // console.log(val_tribute)
 })
 
 PAGES.addCallback("create_avatar_question2", function() {
