@@ -241,3 +241,9 @@ fieldset.contain *{
     flex-direction: column;
     gap: 8px;
 }
+
+#input_addtext, .input_text_item {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+}
