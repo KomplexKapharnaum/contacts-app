@@ -71,8 +71,8 @@ h3 button {
 }
 
 #regie {
-    pointer-events: none;
-    opacity: 0.5;
+    /* pointer-events: none;
+    opacity: 0.5; */
 }
 
 #regie.active {
