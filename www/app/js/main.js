@@ -295,7 +295,7 @@ UTIL.displayUnreadMessages = function(messages) {
 
         unreadOverlay.appendChild(notif);
 
-        notif.querySelector(".close").addEventListener("click", () => {
+        notif.addEventListener("click", () => {
             notif.remove();
             if (unreadOverlay.childElementCount == 0) unreadOverlay.classList.add("hidden");
         })
