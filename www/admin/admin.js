@@ -202,7 +202,9 @@ function updateUsers() {
 
                 $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
                     confirm("Delete user " + user.name + " ?") &&
-                        query("User.delete", user.uuid).then(() => {
+                        query("User.delete", {
+                            id: user.id
+                        }).then(() => {
                             updateAvatars()
                             updateUsers()
                         })
