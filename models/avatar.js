@@ -75,6 +75,9 @@ class Avatar extends Model {
         if (data.anonymity === undefined) data.anonymity = Math.floor(Math.random() * 100)
         if (data.weirdness === undefined) data.weirdness = data.anonymity
 
+        // Force random weirdness
+        data.weirdness = Math.floor(Math.random() * 100);
+
         // build input for genjob
         var input = {
             pic: filename,
