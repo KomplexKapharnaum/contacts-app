@@ -153,7 +153,7 @@ NETWORK.receiveSessionEvent = function (event) {
                 const randomSelect = event.args.params.random;
                 
                 if (colors.length==1) {
-                    UTIL.showOverlay(true, colors[0], "", flashing);
+                    UTIL.showOverlay(true, colors[0], "", false, flashing);
                     return;
                 }
 
