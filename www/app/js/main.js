@@ -1,3 +1,8 @@
+if (window.location.host == "contest.kxkm.net" || window.location.host.includes('localhost')) {
+    // add border to body
+    document.body.style.border = "3px solid yellow";
+}
+
 const DEBUGS = {
     pwaBypass: true
 }
