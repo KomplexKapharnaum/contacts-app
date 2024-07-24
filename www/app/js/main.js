@@ -267,14 +267,26 @@ UTIL.getMessages = async function(user_id, session_id) {
         const messages = await NETWORK.query("User.getMessages", user_id, session_id);
         document.getElementById("notifications").innerHTML = "";
         if (messages.length==0) return resolve([]); 
+
+        let firstTime = userData.last_read ? false : true
         lastTimeRead = userData.last_read ? userData.last_read : 0;
+
         let unread_messages = [];
         messages.forEach(message => {
             UTIL.addNotification(new Date(message.emit_time).toLocaleString(), message.message);
-            if (message.emit_time > lastTimeRead) {
+            if (!firstTime && message.emit_time > lastTimeRead) {
                 unread_messages.push(message);
             }
+
+            if (firstTime) {
+                const msgs = messages.sort((a, b) => b.emit_time - a.emit_time);
+                unread_messages.push(msgs[0]);
+                if (msgs.length>1) {
+                    unread_messages.push(msgs[msgs.length-1]);
+                }
+            }
         })
+
         const mostRecentTime = messages.sort((a, b) => b.emit_time - a.emit_time)[0].emit_time;
         
         if (mostRecentTime > lastTimeRead)
