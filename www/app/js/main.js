@@ -19,7 +19,7 @@ function updateCanvasRender() {
     const t = performance.now();
     
     if (lastUpdate > t%speed) {
-        if (userData.selected_avatar) { 
+        if (userData && userData.selected_avatar) { 
             document.querySelectorAll(".maskSwitch").forEach(mask => {
                 // console.log(mask.src)
                 if (mask.src.includes("mask.png")) {
@@ -253,6 +253,7 @@ UTIL.addIncomingEvent = function(evenement) {
 UTIL.getMessages = async function(user_id, session_id) {
     return new Promise(async (resolve, reject) => {
         const messages = await NETWORK.query("User.getMessages", user_id, session_id);
+        document.getElementById("notifications").innerHTML = "";
         if (messages.length==0) return resolve([]); 
         lastTimeRead = userData.last_read ? userData.last_read : 0;
         let unread_messages = [];
@@ -264,10 +265,12 @@ UTIL.getMessages = async function(user_id, session_id) {
         })
         const mostRecentTime = messages.sort((a, b) => b.emit_time - a.emit_time)[0].emit_time;
         
-        NETWORK.query("User.setLastRead", user_id, mostRecentTime).then(() => {     
-            if (unread_messages.length > 0) UTIL.displayUnreadMessages(unread_messages);
-            resolve(messages);
-        });
+        if (mostRecentTime > lastTimeRead)
+            NETWORK.query("User.setLastRead", user_id, mostRecentTime).then(() => {   
+                userData.last_read = mostRecentTime;  
+                if (unread_messages.length > 0) UTIL.displayUnreadMessages(unread_messages);
+                resolve(messages);
+            });
     })
 }
 
@@ -419,17 +422,10 @@ UTIL.promptForSubscribingEvent = function(evenement) {
     eventname_label.innerText = evenement.name;
 
     confirm_button.onclick = function() {
-        NETWORK.query('User.register', userData.uuid, evenement.id).then(()=>{
-            NETWORK.loadUser().then(()=>{
-                processEventRouting();
-            });
-            
-        }).catch((err)=>{
-            NETWORK.loadUser().then(()=>{
-                processEventRouting();
-            });
-        });
-    }
+        NETWORK.query('User.register', userData.uuid, evenement.id)
+            .then(()=>{}).catch((err)=>{})
+            .finally(() => { location.reload() })
+    }   
 
     decline_button.onclick = function() {
         Cookies.set('session_declined_'+evenement.id, true, 30);

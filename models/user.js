@@ -284,6 +284,24 @@ class User extends Model {
         }
         return this.fields.is_connected;
     }
+
+    async setGroup(w, group_id, remove_others=false) {
+        if (w) await this.load(w);
+        if (!this.fields.id) throw new Error('User does not exist');
+        
+        if (remove_others) await db('users_groups').where({ user_id: this.fields.id }).del();
+
+        if (!group_id) return
+        
+        // check if group exists
+        let group = new Group();
+        await group.load(group_id);
+
+        // attach if not already attached
+        let user_group = await db('users_groups').where({ user_id: this.fields.id, group_id: group_id }).first();
+        if (!user_group) await db('users_groups').insert({ user_id: this.fields.id, group_id: group_id });
+        console.log('User', this.fields.id, 'set to group', group_id);
+    }
 }
 
 // Create Table if not exists

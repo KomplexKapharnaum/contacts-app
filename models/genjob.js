@@ -119,7 +119,7 @@ class Genjob extends Model {
 
         // cold callback
         if (this.fields.callback) {
-            console.log('Genjob', this.fields.id, 'COLD CALLBACK', this.fields.callback);
+            // console.log('Genjob', this.fields.id, 'COLD CALLBACK', this.fields.callback);
             let cb = this.fields.callback.split('.');
             let model = await import('./' + cb[0].toLowerCase() + '.js');
             let M = new model.default();
