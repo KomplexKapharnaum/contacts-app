@@ -274,27 +274,29 @@ UTIL.getMessages = async function(user_id, session_id) {
         let unread_messages = [];
         messages.forEach(message => {
             UTIL.addNotification(new Date(message.emit_time).toLocaleString(), message.message);
+            
             if (!firstTime && message.emit_time > lastTimeRead) {
                 unread_messages.push(message);
             }
-
-            if (firstTime) {
-                const msgs = messages.sort((a, b) => b.emit_time - a.emit_time);
-                unread_messages.push(msgs[0]);
-                if (msgs.length>1) {
-                    unread_messages.push(msgs[msgs.length-1]);
-                }
-            }
         })
+
+        if (firstTime) {
+            const msgs = messages.sort((a, b) => b.emit_time - a.emit_time);
+            unread_messages.push(msgs[msgs.length-1]);
+            if (msgs.length>1) {
+                unread_messages.push(msgs[0]);
+            }
+        }
 
         const mostRecentTime = messages.sort((a, b) => b.emit_time - a.emit_time)[0].emit_time;
         
-        if (mostRecentTime > lastTimeRead)
+        if (mostRecentTime > lastTimeRead) {
             NETWORK.query("User.setLastRead", user_id, mostRecentTime).then(() => {   
                 userData.last_read = mostRecentTime;  
                 if (unread_messages.length > 0) UTIL.displayUnreadMessages(unread_messages);
                 resolve(messages);
             });
+        }
     })
 }
 
