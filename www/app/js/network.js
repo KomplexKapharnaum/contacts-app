@@ -141,7 +141,9 @@ socket.on('reload', () => {
     location.reload();
 });
 
+NETWORK.rotateSchedule = false;
 NETWORK.receiveSessionEvent = function (event) {
+    clearInterval(NETWORK.rotateSchedule);
     if (!isEventActive()) return;
     UTIL.showOverlay(false);
     let container;
@@ -179,12 +181,21 @@ NETWORK.receiveSessionEvent = function (event) {
             (() => {
                 const texts = event.args.texts;
                 const randomSelect = event.args.params.random;
+                const rotate = event.args.params.rotate;
 
                 if (texts.length==1) {
                     UTIL.showOverlay(true, "black", texts[0]);
                     return;
                 }
 
+                if (rotate) {
+                    let curTextIndex = 0;
+                    NETWORK.rotateSchedule = setInterval(() => {
+                        curTextIndex = (curTextIndex+1) % texts.length;
+                        UTIL.showOverlay(true, "black", texts[curTextIndex]);
+                    }, 3000);
+                    return;
+                }
                 if (randomSelect) {
                     UTIL.showOverlay(true, "black", texts[Math.floor(Math.random()*texts.length)]);
                     return;
@@ -245,6 +256,7 @@ NETWORK.receiveSessionEvent = function (event) {
 socket.on('start-event', NETWORK.receiveSessionEvent);
 socket.on('end-event', () => {
     UTIL.showOverlay(false);
+    clearInterval(NETWORK.rotateSchedule);
     PAGES.goto("event-idle");
 });
 
