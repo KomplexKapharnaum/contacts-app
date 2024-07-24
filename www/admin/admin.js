@@ -397,7 +397,7 @@ socket.on('hello', () => {
     socket.emit('login', password);
     updateSessions()
     updateEvents()
-    updateUsers()
+    // updateUsers()
     updateMessages()
     updateGroups()
     // updateAvatars()
@@ -446,13 +446,18 @@ document.getElementById('event-new').addEventListener('click', () => {
 })
 
 
+// LOAD USERS
+document.getElementById('user-load').addEventListener('click', updateUsers)
+
 // LOAD AVATARS
 document.getElementById('avatar-load').addEventListener('click', updateAvatars)
 
 // LOAD GENJOBS
 document.getElementById('genjob-load').addEventListener('click', updateGenjobs)
-document.getElementById('genjob-clear').addEventListener('click', () => {
-    // query("Genjob.clear").then(updateGenjobs)
+document.getElementById('genjob-clear-done').addEventListener('click', () => {
+
+    // delete genjob where status = done
+    query("Genjob.remove", { status: 'done' }).then(updateGenjobs)
 })
 // USER-EVENTS REGIE
 // 

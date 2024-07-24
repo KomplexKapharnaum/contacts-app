@@ -41,6 +41,8 @@ function register_pseudo() {
     const input_pseudo = document.querySelector("#input_register_pseudo").value;
     if (input_pseudo.length < 3) {
         register_pseudo_err("Le pseudo doit faire au moins 3 caractères");
+    } else if (input_pseudo.length > 20) {
+        register_pseudo_err("Le pseudo doit faire moins de 20 caractères");
     } else {
 
         // Save pseudo

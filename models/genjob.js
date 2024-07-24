@@ -165,6 +165,10 @@ class Genjob extends Model {
         jobsCallbacks[this.fields.id] = jobsCallbacks[this.fields.id] || {};
         jobsCallbacks[this.fields.id][e] = cb;
     }
+
+    async remove(w) {
+        await db('genjobs').where(w).del();
+    }
 }
 
 
