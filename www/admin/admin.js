@@ -312,7 +312,7 @@ function updateMessages() {
         })
 }
 
-
+let LIVE_EVENT;
 function updateEvents() {
     query("Event.list")
         .then((events) => {
@@ -341,6 +341,7 @@ function updateEvents() {
                 const end = new Date(event.ending_at);
                 const now = new Date();
                 const isEventLive = start < now && now < end;
+                if (isEventLive) LIVE_EVENT = event;
                 enableRegie = enableRegie || isEventLive;
                 
                 if (isEventLive) tr.css('background-color', 'darkgreen');
@@ -578,9 +579,10 @@ document.getElementById("send-text-event").addEventListener("click", () => {
     })
 
     const random = document.getElementById("text-event-param-random").checked;
+    const rotate = document.getElementById("text-event-param-rotate").checked;
 
     const grpChoice = document.getElementById("grp").value
-    ctrl("text", { texts: txts, params: {random: random , grpChoice: grpChoice}})
+    ctrl("text", { texts: txts, params: {random: random ,rotate: rotate, grpChoice: grpChoice}})
 })
 
 // Image event
@@ -666,3 +668,16 @@ socket.on("new_chatMessage", (msg, emit_time) => {
     updateMessages()
 })
 
+// Stop event button
+
+const terminate_event = document.getElementById("terminate-event");
+
+terminate_event.addEventListener("click", () => {
+    if (!confirm("Are you sure you want to terminate this event ?")) return;
+    if (!LIVE_EVENT) return;
+
+    const time = new Date(Date.now() - 60000).toISOString().slice(0, 16);
+    query("Event.update", [LIVE_EVENT.id, { ending_at: time }]).then(() => {
+        ctrl("reload");
+    })
+});

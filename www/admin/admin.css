@@ -22,6 +22,34 @@ hr {
     border: 1px solid #666;
 }
 
+button:not(h3 button, #regie-buttons button) {
+    min-width: 128px;
+    min-height: 64px;
+    font-size: 22px;
+}
+
+input[type="text"], textarea {
+    min-height: 64px;
+    min-width: 128px;
+    font-size: 22px;
+}
+
+.input_field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+input[type="checkbox"] {
+    width: 64px;
+    height: 64px;
+}
+
+label {
+    font-size: 22px;
+}
+
 h2 {
     display: flex;
     align-items: center;
@@ -189,8 +217,8 @@ fieldset.contain *{
 }
 
 #color-list>div {
-    width: 64px;
-    height: 32px;
+    width: 128px;
+    height: 64px;
 }
 
 #color-list>div.selected {
@@ -211,5 +239,11 @@ fieldset.contain *{
 .new-message-container {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+#input_addtext, .input_text_item {
+    display: flex;
+    flex-wrap: nowrap;
     gap: 8px;
 }

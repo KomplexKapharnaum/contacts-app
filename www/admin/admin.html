@@ -54,6 +54,7 @@
             <button id="info-event" data-event-bloc="info-selection">Display info</button>
             <button id="end-event">End current event</button>
             <button id="reload-event">Reload</button>
+            <button id="terminate-event" style="background-color: darkred;">STOP EVENT</button>
         </div>
 
         <!-- Regie events -->
@@ -95,6 +96,11 @@
                 <div class="input_field">
                     <input type="checkbox" name="checkbox-param-random" id="text-event-param-random">
                     <label for="color-event-param-random">Random select</label>
+                </div>
+
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-param-random" id="text-event-param-rotate">
+                    <label for="color-event-param-random">Rotate text (3s interval)</label>
                 </div>
 
                 <button id="send-text-event" class="send">Send text event</button>
