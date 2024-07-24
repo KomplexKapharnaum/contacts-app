@@ -116,15 +116,15 @@ anonymityMask.addEventListener("touchstart", function(event) {
         let x = event.touches[0].clientX - offsetX - mbounds.left;
         let y = event.touches[0].clientY - offsetY - mbounds.top;
 
-        x = Math.max(- anonymityMask.offsetHeight/2, Math.min(mbounds.width - anonymityMask.offsetWidth/2, x));
+        x = Math.max(- anonymityMask.offsetWidth/2, Math.min(mbounds.width - anonymityMask.offsetWidth/2, x));
         y = Math.max(- anonymityMask.offsetHeight/2, Math.min(mbounds.height - anonymityMask.offsetHeight/2, y));
 
         anonymityMask.style.left = `${x}px`;
         anonymityMask.style.top = `${y}px`;
 
         const distance = getMaskDistance();
-        const mapped = map(distance, 70, 5, 0, 100);
-        val_anonimity = constrain(mapped, 0, 100);
+        const mapped = map(distance, 100, 5, 0, 100);
+        val_anonymity = constrain(mapped, 0, 100);
     }
 
     function stopMovingAnonymityMask() {
@@ -392,7 +392,8 @@ document.getElementById("question3-suivant").addEventListener("click", function(
     NETWORK.query('Avatar.generate', userData.uuid ,
         {
             pic: AVATAR_DATA.photo,
-            anonymity: val_anonymity,
+            anonymity: Math.round(val_anonymity),
+            weirdness: Math.round(val_anonymity),
             tribe: tribes[val_tribute].name
         })
         .then((data) => { 
@@ -429,10 +430,15 @@ PAGES.addCallback("mon_avatar", () => {
 const container_avatar = document.getElementById("mon-avatar-container");
 const container_changeavatar = document.getElementById("change-avatar-container");
 
-document.getElementById("change-avatar").addEventListener("click", () => {
+document.getElementById("btn-change-avatar").addEventListener("click", () => {
 
     document.querySelector("#btn-regenerate-avatar").style.display = "block";
+    document.querySelector("#change-avatar-text").style.display = "block";
+
+    document.querySelector(".btns-avatar").style.flexDirection = "column";
     document.querySelector("#btn-delete-user").style.display = "none";
+    document.querySelector("#btn-change-avatar").style.display = "none";
+
 
     container_avatar.style.display = "none";
 
@@ -451,7 +457,11 @@ document.getElementById("change-avatar").addEventListener("click", () => {
                 container_changeavatar.style.display = "none";
 
                 document.querySelector("#btn-regenerate-avatar").style.display = "none";
+                document.querySelector("#change-avatar-text").style.display = "none";
+
                 document.querySelector("#btn-delete-user").style.display = "block";
+                document.querySelector("#btn-change-avatar").style.display = "block";
+                document.querySelector(".btns-avatar").style.flexDirection = "row";
 
                 container_avatar.style.display = "block";
             });

@@ -179,7 +179,7 @@
 
         <div id="anonymity-container">
             <img src="img/questions/mask_man.png" alt="face" class="center" draggable="false">
-            <img src="img/questions/mask.png" alt="face mask" id="anonymity-mask" draggable="false">
+            <img src="img/questions/mask.png" alt="face mask" id="anonymity-mask" draggable="false" style="top: 135px; left: 70px;">
         </div>
 
         <div class="buttons">
@@ -310,8 +310,10 @@
         <br />
         <div class="flex-group">
             <div class="txt secondary">
-                <span>Le prochain évènement aura lieu <br>
-                le <span id="nextevent-date"></span></span>
+                <span>Le prochain évènement aura lieu<br />
+                <span id="nextevent-date"></span><br />
+                l'emplacement vous sera communiqué 1H avant.
+                </span>
             </div>
 
             <div id="nextevent-countdown">
@@ -336,10 +338,9 @@
             <img class="illustration" data-renderer-rotate="1" src="./img/clock/small.png" alt="clock">
         </div>
         
-        <div class="buttons">
+        <!-- <div class="buttons">
             <button class="button-sm" onclick="PAGES.goto('event-list')">Retour</button>
-            <!-- button>Me notifier 1 jour avant l'évènement</button -->
-        </div>
+        </div> -->
     </div>
 
     <div class="page" data-page-id="event-location">
@@ -475,18 +476,19 @@
     <div class="page" data-page-id="mon_avatar">
         <h1>Mon avatar</h1>
 
-        <div id="mon-avatar-container">
+        <div id="mon-avatar-container" onclick="processEventRouting()">
             <img src="" alt="Avatar">
-            <button id="change-avatar">Changer mon avatar</button>
         </div>
-
+        
+        <div class="txt secondary" id="change-avatar-text" style="display: none;"> Choisis ton avatar favori </div>
         <div id="change-avatar-container" style="display: none;">
-
+            
         </div>
-
-        <div class="buttons">
+        
+        <div class="buttons btns-avatar">
             <button id="btn-regenerate-avatar" style="display: none;">Re-générer des avatars</button>
-            <button id="btn-delete-user">Supprimer mes données</button>
+            <button id="btn-change-avatar" class="button-sm">Changer mon avatar</button>
+            <button id="btn-delete-user" class="button-sm">Supprimer mes données</button>
         </div>
 
     </div>
