@@ -379,7 +379,7 @@ document.getElementById("btn-change-avatar").addEventListener("click", () => {
                 document.querySelector("#btn-regenerate-avatar").style.display = "none";
                 document.querySelector("#change-avatar-text").style.display = "none";
 
-                document.querySelector("#btn-delete-user").style.display = "block";
+                // document.querySelector("#btn-delete-user").style.display = "block";
                 document.querySelector("#btn-change-avatar").style.display = "block";
                 document.querySelector(".btns-avatar").style.flexDirection = "row";
 
