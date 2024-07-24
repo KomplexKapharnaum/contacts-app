@@ -117,8 +117,18 @@ NETWORK.loadUser = function () {
         });
 }
 
-socket.on('hello', () => {
+socket.on('hello', (version) => {
     console.log("Connexion established with server");
+
+    // check server version against cookie
+    if (version && version != Cookies.get('version')) {
+        console.log("Server version has changed. Reloading page");
+        Cookies.set('version', version, 30);
+        location.reload();
+    } else if (version) {
+        console.log("Server version is up to date: ", version);
+    }
+
     NETWORK.loadUser();
 });
 
@@ -248,3 +258,5 @@ socket.on("new_chatMessage", (msg, emit_time) => {
         console.log("messages : ",  messages);
     })
 })
+
+// Version

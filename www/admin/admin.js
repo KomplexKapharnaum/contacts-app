@@ -587,6 +587,7 @@ document.getElementById("end-event").addEventListener("click", () => {
 
 document.getElementById("reload-event").addEventListener("click", () => {
     ctrl("reload");
+    console.log("reload")
 })
 
 // MESSAGERIE

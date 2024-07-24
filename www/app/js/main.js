@@ -14,11 +14,14 @@ renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPro
 renderer.updatePixelSize({ x: window.innerWidth, y: window.innerHeight });
 
 
+var PIX_PERIOD = 4000   // Sinus period in ms
+var PIX_GAIN = 2        // Sinus will go from 0 to PIX_GAIN. Values over 1 will be clamped to 1 => Higher PIX_GAIN = longer "stable" period
+
 lastUpdate = 0;
 function updateCanvasRender() {
     const t = performance.now();
     
-    if (lastUpdate > t%3000) {
+    if (lastUpdate > t%PIX_PERIOD) {
         if (userData && userData.selected_avatar) { 
             document.querySelectorAll(".maskSwitch").forEach(mask => {
                 // console.log(mask.src)
@@ -31,14 +34,22 @@ function updateCanvasRender() {
         }
     }
 
-    lastUpdate = t%3000;
+    lastUpdate = t%PIX_PERIOD;
 
-    const val = (Math.sin((t * Math.PI)/1500 + Math.PI*1.5) + 1) / 2;
+    var val = PIX_GAIN * (Math.sin((t * Math.PI)*2/PIX_PERIOD + Math.PI*1.5) + 1) / 2;
+    if (val > 1) val = 1 
     renderer.updatePixelSize({ x: Math.ceil(window.innerWidth * val), y: Math.ceil(window.innerHeight * val) });
     requestAnimationFrame(updateCanvasRender);
 }
 updateCanvasRender();
 renderer.render();
+
+// MaskSwitch -> go to avatar
+document.querySelectorAll(".maskSwitch").forEach(mask => {
+    mask.addEventListener("click", () => {
+        PAGES.goto('mon_avatar')
+    });
+});
 
 // Glitched elements
 //

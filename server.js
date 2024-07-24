@@ -6,6 +6,9 @@ import sendSMS from './tools/sms_hico.js';
 // MODELS / DB
 import db from './tools/db.js';
 
+// VERSION
+const VERSION = '1.0.3';  // AX mercredi matin
+
 var MODELS = {};
 async function loadModel(name) {
   // load model default using import
@@ -120,7 +123,7 @@ SOCKET.findID = async function (id) {
 SOCKET.io.on('connection', (socket) => {
 
   // Send initial HELLO trigger
-  socket.emit('hello');
+  socket.emit('hello', VERSION);
 
   socket.on('identify', (uuid) => {
 
