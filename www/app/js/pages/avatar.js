@@ -280,108 +280,24 @@ PAGES.addCallback("create_avatar_question2", function() {
     drawDot();
 })
 
-// Taille & poids / Height & weight
+// Weirdness Parameter
 //
 
+const slider_weirdness = document.getElementById("slider-weirdness");
+const filter = document.querySelector("#anonymity-filter feDisplacementMap");
 
-const buddyContainer = document.getElementById("tallfat-container");
-const buddyResizable = document.getElementById("tallfat-buddy");
-const buddyTopLeft = document.getElementById("resize-topleft");
-const buddyBottomRight = document.getElementById("resize-bottomright");
-
-const buddyMargin = 16;
-
-function initBuddy() {
-    buddyResizable.style.top = buddyMargin+"px";
-    buddyResizable.style.left = buddyMargin+"px";
-    buddyResizable.style.right = buddyMargin+"px";
-    buddyResizable.style.bottom = buddyMargin+"px";
-}
-initBuddy();
-
-/*
-function updateBuddySliders() {
-    const containerWidth = buddyContainer.offsetWidth - 2 * buddyMargin;
-    const containerHeight = buddyContainer.offsetHeight - 2 * buddyMargin;
-
-    const w = map(buddyResizable.offsetWidth, 40, containerWidth, 0, 100);
-    const h = map(buddyResizable.offsetHeight, 40, containerHeight, 0, 100);
-
-    buddySliderWeight.value = w;
-    sliders[buddySliderWeight.id].setValue(w);
-
-    buddySliderTall.value = h;
-    sliders[buddySliderTall.id].setValue(h);
-}
-*/
-
-buddyBottomRight.addEventListener("touchstart", function(event) {
-    const bounds = buddyResizable.getBoundingClientRect();
-    const boundsContainer = buddyContainer.getBoundingClientRect();
-    const offsetX =  event.touches[0].clientX - bounds.right + parseInt(buddyResizable.style.right);
-    const offsetY = event.touches[0].clientY - bounds.bottom + parseInt(buddyResizable.style.bottom);
-
-    function resizeBuddy(event) {
-        let x = bounds.width - (event.touches[0].clientX - bounds.left - offsetX);
-        let y = bounds.height - (event.touches[0].clientY - bounds.top - offsetY);
-
-        x = Math.max(buddyMargin, x);
-        y = Math.max(buddyMargin, y);
-
-        const top = parseInt(buddyResizable.style.top) + buddyMargin;
-        const left = parseInt(buddyResizable.style.left) + buddyMargin;
-
-        x = Math.min(boundsContainer.width - left - buddyMargin, x);
-        y = Math.min(boundsContainer.height - top - buddyMargin, y);
-
-        buddyResizable.style.bottom = `${y}px`;
-        buddyResizable.style.right = `${x}px`;
-
-        // updateBuddySliders();
-    }
-
-    function stopResizeBuddy() {
-        document.removeEventListener("touchmove", resizeBuddy);
-        document.removeEventListener("touchend", stopResizeBuddy);
-    }
-
-    document.addEventListener("touchmove", resizeBuddy);
-    document.addEventListener("touchend", stopResizeBuddy);
+let val_weirdness = 0;
+slider_weirdness.addEventListener("input", function() {
+    filter.setAttribute("scale", this.value);
+    val_weirdness = Math.round(parseInt(this.value)*2);
 });
 
-buddyTopLeft.addEventListener("touchstart", function(event) {
-    const bounds = buddyResizable.getBoundingClientRect();
-    const boundsContainer = buddyContainer.getBoundingClientRect();
-    const offsetX =  event.touches[0].clientX - bounds.left - parseInt(buddyResizable.style.left);
-    const offsetY = event.touches[0].clientY - bounds.top - parseInt(buddyResizable.style.top);
-
-    function resizeBuddy(event) {
-        let x = event.touches[0].clientX - bounds.left - offsetX;
-        let y = event.touches[0].clientY - bounds.top - offsetY;
-
-        x = Math.max(buddyMargin, x);
-        y = Math.max(buddyMargin, y);
-
-        const bottom = parseInt(buddyResizable.style.bottom) + buddyMargin;
-        const right = parseInt(buddyResizable.style.right) + buddyMargin;
-
-        x = Math.min(boundsContainer.width - right - buddyMargin, x);
-        y = Math.min(boundsContainer.height - bottom - buddyMargin, y);
-
-        buddyResizable.style.top = `${y}px`;
-        buddyResizable.style.left = `${x}px`;
-
-        // updateBuddySliders();
-    }
-
-    function stopResizeBuddy() {
-        document.removeEventListener("touchmove", resizeBuddy);
-        document.removeEventListener("touchend", stopResizeBuddy);
-    }
-
-    document.addEventListener("touchmove", resizeBuddy);
-    document.addEventListener("touchend", stopResizeBuddy);
+document.getElementById("question2-suivant").addEventListener("click", function() {
+    PAGES.goto("create_avatar_question3");
 });
+
+// Generate avatar
+// 
 
 document.getElementById("question3-suivant").addEventListener("click", function() 
 {
@@ -393,6 +309,7 @@ document.getElementById("question3-suivant").addEventListener("click", function(
         {
             pic: AVATAR_DATA.photo,
             anonymity: val_anonymity,
+            weirdness: val_weirdness,
             tribe: tribes[val_tribute].name
         })
         .then((data) => { 
