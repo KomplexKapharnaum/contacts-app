@@ -195,3 +195,14 @@ click("reload-event", () => {
     if (confirm("Reload page for everyone ?"))
     ctrl("reload")
 })
+
+document.addEventListener("click", () => {
+    const el = document.documentElement;
+    const rfs = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (rfs) {
+        rfs.call(el);
+    }
+    else if (window.parent !== window) {
+        parent.postMessage('fullscreen', '*');
+    }  
+})
