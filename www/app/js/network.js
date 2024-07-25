@@ -51,9 +51,9 @@ NETWORK.loadUser = function () {
             //
 
             // name is missing
-            if (!userData.name) 
+            if (!userData.name) {
                 return PAGES.goto("pseudonyme_register");
-            
+            }
             
             // genjobs are pending or running -> wait !
             if (userData.genjobs.filter((job) => job.status == "pending" || job.status == "running").length > 0) 
@@ -140,7 +140,7 @@ socket.on('hello', (version) => {
 NETWORK.isEventLive = false
 socket.on("getEventState", (state) => {
     if (!userData) return;
-    // if (!userData.selected_avatar) return;
+    if (!userData.selected_avatar) return;
     NETWORK.isEventLive = state
     if (state) {
         UTIL.shownav(false);
