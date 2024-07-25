@@ -358,6 +358,7 @@ document.addEventListener("touchstart", () => {
 // setEventState
 
 click("set-event-state", () => {
+    if (!confirm("Update event state ?")) return;
     current_event_state = !current_event_state
     setEventBtnState(current_event_state)
     socket.emit('setEventState', current_event_state)
