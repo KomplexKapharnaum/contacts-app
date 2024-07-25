@@ -342,8 +342,8 @@ click("reload-event", () => {
     ctrl("reload")
 })
 
-/*
-document.addEventListener("click", () => {
+
+document.addEventListener("touchstart", () => {
     const el = document.documentElement;
     const rfs = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
     if (rfs) {
@@ -353,7 +353,7 @@ document.addEventListener("click", () => {
         parent.postMessage('fullscreen', '*');
     }  
 })
-*/
+
 
 // setEventState
 
