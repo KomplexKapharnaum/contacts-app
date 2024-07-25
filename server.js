@@ -468,6 +468,9 @@ app.get('/app/msg', function (req, res) {
   res.sendFile(__dirname + '/www/app/msg_box.html');
 });
 
+// Régie
+app.use('/regie', express.static('www/regie'));
+
 ///////////////////////// TODELETE
 app.get('/app/addU', function (req, res) {
   res.sendFile(__dirname + '/www/app/add_user_TODELETE.html');
