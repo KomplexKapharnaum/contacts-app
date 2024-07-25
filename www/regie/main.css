@@ -47,6 +47,7 @@ main, .page {
 .page {
     display: none;
     overflow-y: scroll;
+    padding-bottom: 32px;
 }
 
 .page.active {
