@@ -221,7 +221,7 @@ function updateUsers() {
                 else last_read = last_read.toLocaleString()
 
                 $('<td>').text(last_read).appendTo(tr).on('click', () => {
-                    query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
+                    // query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
                 })
 
 
