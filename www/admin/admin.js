@@ -3,6 +3,7 @@ if (window.location.host == "contest.kxkm.net" || window.location.host.includes(
     document.body.style.border = "3px solid yellow";
 }
 
+var LAST_EMIT_TIME = 0;
 
 // PASSWORD
 //
@@ -220,9 +221,11 @@ function updateUsers() {
                 if (!user.last_read) last_read = "never"
                 else last_read = last_read.toLocaleString()
 
-                $('<td>').text(last_read).appendTo(tr).on('click', () => {
+                var lr = $('<td>').text(last_read).appendTo(tr).on('click', () => {
                     // query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
                 })
+
+                if (user.last_read == LAST_EMIT_TIME) lr.css('background-color', 'green')
 
 
                 $('<td>').text(user.is_connected).appendTo(tr)
@@ -335,6 +338,8 @@ function updateMessages() {
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(message.id).appendTo(tr)
                 $('<td>').text(message.data).appendTo(tr)
+
+                if (message.emit_time > LAST_EMIT_TIME) LAST_EMIT_TIME = message.emit_time
 
                 var emit_time = new Date(message.emit_time)
                 emit_time = emit_time.toLocaleString()

@@ -122,7 +122,7 @@ var customIcon = L.icon({
 UTIL.setMapCoords = function(evenement) 
 {
     let zoom, lat, lon;
-    let popupText = evenement.name;
+    let popupText = evenement.description;
 
     if (!evenement.location) evenement.location = "63.58860,9.17471,17";
 
