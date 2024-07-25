@@ -1,6 +1,8 @@
 /* Configuration */
 /* */
 
+import { query } from "express"
+
 const config = {
     base_colors: ["#F00", "#0F0", "#00F", "#FF0", "#0FF", "#F0F", "#FFF"]
 }
@@ -84,6 +86,20 @@ socket.on("adminEventState", (eventState) => {
     current_event_state = eventState
     setEventBtnState(eventState)
 })
+
+query = function (name, ...args) {
+    var resid = Math.random().toString(36).substring(2);
+    socket.emit('query', {
+        name: name,
+        args: args,
+        resid: resid
+    });
+    var p = new Promise((resolve, reject) => {
+        socket.once('ok-' + resid, (data) => { resolve(data) })
+        socket.once('ko-' + resid, (data) => { reject(data) })
+    })
+    return p
+}
 
 /* Event console log */
 /* */
@@ -191,6 +207,50 @@ click("info-send", () => {
     ctrl("info", args)
 })
 
+/* Presets */
+
+function saveAsPresset(type, args, presetName, presetGroup) {
+    
+    const data = JSON.stringify({
+        name: type,
+        args: args
+    })
+
+    // Preset.list
+    query("Preset.new", {
+        name: presetName,
+        group: presetGroup,
+        data: data
+    }).then(() => {
+        alert("Preset '" + presetName + "' saved.")
+    })
+}
+
+const presetList = document.getElementById("select-preset")
+let presetGroups = {};
+
+function loadPresets() {
+    query("Preset.list").then((data) => {
+
+        const groups = data.reduce((acc, elem) => {
+            if (!acc[elem.group]) {
+                acc[elem.group] = []
+            }
+            acc[elem.group].push(elem)
+            return acc
+        }, {})
+
+        presetGroups = groups;
+        
+        groups.forEach((group) => {
+            const opt = document.createElement("option")
+            opt.value = group[0].group
+            opt.innerHTML = group[0].group
+            presetList.appendChild(opt)
+        })
+    })
+}
+
 /* Additional inputs */
 
 click("end-current-event", () => {
@@ -202,6 +262,7 @@ click("reload-event", () => {
     ctrl("reload")
 })
 
+/*
 document.addEventListener("click", () => {
     const el = document.documentElement;
     const rfs = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
@@ -212,6 +273,7 @@ document.addEventListener("click", () => {
         parent.postMessage('fullscreen', '*');
     }  
 })
+*/
 
 // setEventState
 
