@@ -27,6 +27,7 @@ await loadModel('Avatar');
 await loadModel('Genjob');
 await loadModel('Group');
 await loadModel('Message');
+await loadModel('Preset');
 
 // MODELS HANDLER
 var GENJOB = new MODELS['Genjob']()
@@ -160,6 +161,7 @@ SOCKET.io.on('connection', (socket) => {
         console.error('ERROR on SIO.identify', err);
       })
   })
+
   socket.on('disconnect', () => {
 
     // update user is_connected
@@ -183,6 +185,19 @@ SOCKET.io.on('connection', (socket) => {
       })
 
   })
+
+  // Image List
+  socket.on('get-image-list', () => {
+    fs.readdir('imgs', (err, files) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      let images = files.filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i))
+        .map(f => '/imgs/' + f);
+      socket.emit('image-list', images);
+    });
+  });
 
 
   // Partie de Maigre, je touche pas
@@ -486,11 +501,12 @@ app.get('/app/msg', function (req, res) {
 // Régie
 app.use('/regie', express.static('www/regie'));
 
-///////////////////////// TODELETE
-app.get('/app/addU', function (req, res) {
-  res.sendFile(__dirname + '/www/app/add_user_TODELETE.html');
+// img
+app.use('/imgs', express.static('imgs'));
+app.use('/img', express.static('www/img'));
+app.get('/img', function (req, res) {
+  res.sendFile(__dirname + '/www/img/list.html');
 });
-/////////////////////////
 
 // HOOKS
 //
