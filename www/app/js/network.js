@@ -160,114 +160,128 @@ socket.on('reload', () => {
     location.reload();
 });
 
+USEREVENT = {}
+
+USEREVENT.promptColors = function(colors, flashing) {
+    PAGES.goto("event-color");
+    container = document.getElementById("color-selection");
+    container.innerHTML = "";
+    colors.forEach((color) => {
+        const div = document.createElement("div");
+        div.style.backgroundColor = color;
+        div.addEventListener("click", () => {
+            UTIL.showOverlay(true, color, "", false, flashing);
+        });
+        container.appendChild(div);
+    });
+}
+
+USEREVENT.promptTexts = function(texts, flashing) {
+    PAGES.goto("event-text");
+    container = document.getElementById("text-selection");
+    container.innerHTML = "";
+    texts.forEach((text) => {
+        const div = document.createElement("div");
+        div.innerHTML = text;   
+        div.addEventListener("click", () => {
+            UTIL.showOverlay(true, "black", text, false, flashing);
+        });
+        container.appendChild(div);
+    });
+}
+
+USEREVENT.promptImages = function(images, flashing) {
+    PAGES.goto("event-image");
+    container = document.getElementById("image-selection");
+    container.innerHTML = "";
+    images.forEach((image) => {
+        const div = document.createElement("div");
+        div.style.backgroundImage = "url("+image+")";
+        div.addEventListener("click", () => {
+            UTIL.showOverlay(true, "", "", image, flashing);
+        });
+        container.appendChild(div);
+    });
+}
+
+USEREVENT.setOverlay = function(type, args, params) {
+
+    const flashing = params.flash || false;
+    const randomSelect = params.random || false;
+    const switchonclick = params.loop || false;
+
+    const shuffledArgs = args.sort(() => Math.random() - 0.5);
+
+    const show = (val) => {
+        switch (type) {
+            case "color":
+                UTIL.showOverlay(true, val, "", false, flashing);
+                break;
+            case "text":
+                UTIL.showOverlay(true, "black", val, false, flashing);
+                break;
+            case "image":
+                UTIL.showOverlay(true, "black", "", val, flashing);
+                break;
+        }
+    }
+
+    const rndID = () => {
+        const args_len = shuffledArgs.length;
+        return Math.floor(Math.random()*args_len);
+    }
+
+    let id = rndID();
+
+    if (args.length>1) {
+        if (randomSelect) {
+            show(shuffledArgs[id]);
+        } else {
+            switch(type) {
+                case "color":
+                    USEREVENT.promptColors(shuffledArgs, flashing);
+                    break;
+                case "text":
+                    USEREVENT.promptTexts(shuffledArgs, flashing);
+                    break;
+                case "image":
+                    USEREVENT.promptImages(shuffledArgs, flashing);
+                    break;
+            }
+        }
+    } else {
+        show(shuffledArgs[0]);
+    }
+
+    if (switchonclick) {
+        document.getElementById("overlay").onclick = function() {
+            id = (id + 1) % shuffledArgs.length;
+            show(shuffledArgs[id]);
+        };
+    }
+}
+
 NETWORK.rotateSchedule = false;
 NETWORK.receiveSessionEvent = function (event) {
+    document.getElementById("overlay").onclick = null;
     clearInterval(NETWORK.rotateSchedule);
     if (!NETWORK.isEventLive) return;
     UTIL.showOverlay(false);
     let container;
     switch (event.name) {
-        case "color" :
-            (() => {
-                const colors = event.args.colors;
-                const flashing = event.args.params.flash;
-                const randomSelect = event.args.params.random;
-                
-                if (colors.length==1) {
-                    UTIL.showOverlay(true, colors[0], "", false, flashing);
-                    return;
-                }
-
-                if (randomSelect) {
-                    UTIL.showOverlay(true, colors[Math.floor(Math.random()*colors.length)], "", false, flashing);
-                    return;
-                }
-
-                PAGES.goto("event-color");
-                container = document.getElementById("color-selection");
-                container.innerHTML = "";
-                colors.forEach((color) => {
-                    const div = document.createElement("div");
-                    div.style.backgroundColor = color;
-                    div.addEventListener("click", () => {
-                        UTIL.showOverlay(true, color, "", false, flashing);
-                    });
-                    container.appendChild(div);
-                });
-            })()
+        case "color":
+            USEREVENT.setOverlay(event.name, event.args.colors, event.args.params);
             break;
-        case "text" :
-            (() => {
-                const texts = event.args.texts;
-                const randomSelect = event.args.params.random;
-                const rotate = event.args.params.rotate;
-
-                if (texts.length==1) {
-                    UTIL.showOverlay(true, "black", texts[0]);
-                    return;
-                }
-
-                if (rotate) {
-                    let curTextIndex = 0;
-                    NETWORK.rotateSchedule = setInterval(() => {
-                        curTextIndex = (curTextIndex+1) % texts.length;
-                        UTIL.showOverlay(true, "black", texts[curTextIndex]);
-                    }, 3000);
-                    return;
-                }
-                if (randomSelect) {
-                    UTIL.showOverlay(true, "black", texts[Math.floor(Math.random()*texts.length)]);
-                    return;
-                }
-
-                PAGES.goto("event-text");
-                container = document.getElementById("text-selection");
-                container.innerHTML = "";
-                texts.forEach((text) => {
-                    const div = document.createElement("div");
-                    div.innerHTML = text;   
-                    div.addEventListener("click", () => {
-                        UTIL.showOverlay(true, "black", text);
-                    });
-                    container.appendChild(div);
-                });
-            })();
+        case "text":
+            USEREVENT.setOverlay(event.name, event.args.texts, event.args.params);
             break;
-        case "image" :
-            (()=>{
-                const images = event.args.images;
-                const randomSelect = event.args.params.random;
-
-                if (images.length==1) {
-                    UTIL.showOverlay(true, "", "",images[0]);
-                    return;
-                }
-
-                if (randomSelect) {
-                    UTIL.showOverlay(true, "", "",images[Math.floor(Math.random()*images.length)]);
-                    return;
-                }
-
-                PAGES.goto("event-image");
-                container = document.getElementById("image-selection");
-                container.innerHTML = "";
-                images.forEach((image) => {
-                    const div = document.createElement("div");
-                    div.style.backgroundImage = "url("+image+")";
-                    div.addEventListener("click", () => {
-                        UTIL.showOverlay(true, "", "",image);
-                    });
-                    container.appendChild(div);
-                });
-            })();
+        case "image":
+            USEREVENT.setOverlay(event.name, event.args.images, event.args.params);
             break;
         case "info":
             PAGES.goto("event-info");
             UTIL.showOverlay(false);
             document.getElementById("event-info-message").innerHTML = event.args.message; 
-            break;
-        case "flash":
-            PAGES.goto("event-flash");
             break;
     }
 }
