@@ -347,7 +347,11 @@ function updateEvents() {
                 if (isEventLive) tr.css('background-color', 'darkgreen');
 
                 $('<td>').text(event.id).appendTo(tr)
-                $('<td>').text(event.name).appendTo(tr)
+                $('<td>').text(event.name).appendTo(tr).on('click', () => {
+                    var name = prompt("Event name", event.name).trim()
+                    if (name) query("Event.update", [event.id, { name: name }]).then(updateEvents)
+                })
+
                 $('<td>').appendTo(tr).append(
                     $('<input>').attr('type', 'datetime-local').val(event.starting_at).on('change', (e) => {
                         query("Event.update", [event.id, { starting_at: e.target.value }]).then(updateEvents)
