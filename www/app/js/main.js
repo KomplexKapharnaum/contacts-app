@@ -251,10 +251,22 @@ UTIL.addIncomingEvent = function(evenement) {
     const eventDom = document.getElementById("event-list-item").cloneNode(true).content.querySelector(".event-list-item");
     eventDom.querySelector(".event-list-item-title").innerText = evenement.name;
 
-    // const countDown = UTIL.countDown(evenement.starting_at);
-    // eventDom.querySelector(".event-list-item-date").innerText = countDown.days + "d " + countDown.hours + "h " + countDown.minutes + "m";
-    eventDom.querySelector(".event-list-item-date").innerText = UTIL.dateTime(evenement.starting_at, true);
-    
+
+    const now = new Date();
+    const start = new Date(evenement.starting_at);
+    const diff = start - now;
+    const one_hour = 60 * 60 * 1000;
+
+    const is_event_in_an_hour = diff > 0 && diff < one_hour; 
+    const is_event_live = diff < 0;
+
+    // If the event is in an hour
+    if (is_event_live) {
+        eventDom.querySelector(".event-list-item-date").innerText = "EN COURS";
+    } else {
+        eventDom.querySelector(".event-list-item-date").innerText = UTIL.dateTime(evenement.starting_at, true);
+    }
+
     renderer.addElement(eventDom);
     glitchElementInit(eventDom);
 
@@ -262,8 +274,13 @@ UTIL.addIncomingEvent = function(evenement) {
     
     eventDom.addEventListener("click", () => {
         UTIL.selectedEvent = evenement;
-        PAGES.goto("event-countdown");
-        // UTIL.setCountDown(evenement);
+        if (is_event_live && NETWORK.isEventLive) {
+            PAGES.goto("event-idle");
+        } else if (is_event_live || is_event_in_an_hour) { 
+            PAGES.goto("event-location");    
+        } else {
+            PAGES.goto("event-countdown");
+        }
     });
 }
 

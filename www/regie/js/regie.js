@@ -79,6 +79,11 @@ function ctrl(name, args = false) {
     })
 }
 
+let current_event_state = false
+socket.on("adminEventState", (eventState) => {
+    current_event_state = eventState
+})
+
 /* Event console log */
 /* */
 
@@ -206,3 +211,10 @@ document.addEventListener("click", () => {
         parent.postMessage('fullscreen', '*');
     }  
 })
+
+// setEventState
+
+click("set-event-state", () => {
+    current_event_state = !current_event_state
+    socket.emit('setEventState', current_event_state)
+});
