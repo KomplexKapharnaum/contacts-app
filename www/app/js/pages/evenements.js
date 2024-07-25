@@ -1,10 +1,4 @@
-let EVENT_INFO = false;
-
 let EVENT_WATCHER = null
-
-function isEventActive() {
-    return EVENT_INFO && EVENT_INFO.active;
-}
 
 function processEventRouting() {
     PAGES.goto(getEventRoute());
@@ -26,58 +20,21 @@ function getEventRoute() {
     // No events = main
     if (evenements.length==0) return "main";
 
-    // Get closest event
-    const closest = evenements.reduce((minEvent, currentEvent) => {
-        const minDate = new Date(minEvent.starting_at);
-        const currentDate = new Date(currentEvent.starting_at);
-        return currentDate < minDate ? currentEvent : minEvent;
-    });
-
-    EVENT_INFO = {
-        active: false,
-        closest: closest
-    };
-
-    // Get the time state of the closest event
-    let eventState;
-    const now = new Date();
-    const start = new Date(closest.starting_at);
-    const diff = start - now;
-    const one_hour = 60 * 60 * 1000;
-
-    // If the event is in an hour
-    if (diff > 0 && diff < one_hour) {
-        eventState = "inAnHour"; // The event is in an hour or less
-    } else if (diff > one_hour) {
-        eventState = "inFuture"; // The event is in more than an hour
-    } else {
-        EVENT_INFO.active = true;
-        eventState = "active"; // The event is active
-    }
-
-    // If there is only one event
-    // if (evenements.length==1) {
-    //     switch (eventState) {
-    //         case "inAnHour":
-    //             return "event-location";
-    //         case "inFuture":
-    //             UTIL.selectedEvent = closest;
-    //             return "event-countdown";
-    //         case "active":
-    //             return "event-idle";
-    //     }       
-    // }
-
-    // If there are multiple events
-    switch (eventState) {
-        case "inAnHour":
-            return "event-location";
-        case "inFuture":
-            return "event-list";
-        case "active":
-            return "event-idle";
-    }
+    return "event-list";
 }
+
+PAGES.addCallback("event-list", () => {
+    UTIL.shownav(true);
+    
+    // Get events 
+    let evenements = userData.sessions[0].events.filter(event => new Date(event.ending_at) > new Date());
+    evenements = evenements.sort((a,b) => new Date(a.starting_at) - new Date(b.starting_at));
+
+    UTIL.clearIncomingEvents();
+    evenements.forEach(evenement => {
+        UTIL.addIncomingEvent(evenement);
+    });
+});
 
 /* Events pages callbacks */
 /* */
@@ -90,21 +47,23 @@ PAGES.addCallback("event-location", function() {
     // UTIL.shownav(false);
 
     leafletMap.invalidateSize(false);
-    UTIL.setMapCoords(EVENT_INFO.closest);
+    UTIL.setMapCoords(UTIL.selectedEvent);
 
     // Set event time
-    let eventTime = new Date(EVENT_INFO.closest.starting_at);
+    let eventTime = new Date(UTIL.selectedEvent.starting_at);
     let eventTimeStr = eventTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     document.getElementById("event-location-hour").innerHTML = eventTimeStr;
 
     // Watch for event time
+    /*
     if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
         EVENT_WATCHER = setInterval(() => {
-            eventTime = new Date(EVENT_INFO.closest.starting_at);
+            eventTime = new Date(UTIL.selectedEvent.starting_at);
             if (new Date() > eventTime) {
                 location.reload();
             }
         }, 1000);
+    */
 });
 
 PAGES.addCallback("event-idle", () => {
@@ -114,14 +73,16 @@ PAGES.addCallback("event-idle", () => {
     // check if an event is active
     socket.emit("get-last-event")
 
+    /*
     // Watch for event end
     if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
         EVENT_WATCHER = setInterval(() => {
-            let eventEnd = new Date(EVENT_INFO.closest.ending_at);
+            let eventEnd = new Date(UTIL.selectedEvent.ending_at);
             if (new Date() > eventEnd) {
                 location.reload();
             }
         }, 1000);
+    */
 })
 
 document.addEventListener("click", () => {

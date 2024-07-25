@@ -123,6 +123,8 @@ SOCKET.findID = async function (id) {
   return client
 }
 
+let IS_EVENT_LIVE = false;
+
 //  demarage server update all user !!!!!!!!!!!
 SOCKET.io.on('connection', (socket) => {
 
@@ -131,10 +133,13 @@ SOCKET.io.on('connection', (socket) => {
 
   socket.on('identify', (uuid) => {
 
+    socket.emit('getEventState', IS_EVENT_LIVE)
+
     // update user is_connected
     if (!uuid) return
     USER.isConnected({ uuid: uuid }, true)
       .then(() => {
+
         // store user info in socket
         socket.user_uuid = USER.fields.uuid
         socket.user_id = USER.fields.id
@@ -189,6 +194,7 @@ SOCKET.io.on('connection', (socket) => {
     if (password === process.env.ADMIN_PASSWORD) {
       socket.emit('auth', 'ok');
       socket.join('admin');
+      socket.emit("adminEventState", IS_EVENT_LIVE);
 
       console.log('admin connected');
     }
@@ -206,6 +212,15 @@ SOCKET.io.on('connection', (socket) => {
     else SOCKET.startEvent(data.name, data.args);
 
   });
+
+  socket.on('setEventState', (data) => {
+
+    console.log('EVENT STATE HAS CHANGED : ', data);
+    if (!SOCKET.auth(socket)) return;   // check if admin
+
+    IS_EVENT_LIVE = data;
+    SOCKET.io.emit('getEventState', IS_EVENT_LIVE);
+  })
 
   // query
   socket.on('query', (data) => {
@@ -260,7 +275,7 @@ SOCKET.io.on('connection', (socket) => {
   // }
 
   socket.on('get-last-event', () => {
-    console.log('get-last-event', SOCKET.lastEvent);
+    // console.log('get-last-event', SOCKET.lastEvent);
     if (SOCKET.lastEvent) {
       socket.emit('start-event', SOCKET.lastEvent);
     }
