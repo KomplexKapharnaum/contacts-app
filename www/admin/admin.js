@@ -266,6 +266,50 @@ function updateAvatars() {
         )
 }
 
+function updatePresets() {
+    query("Preset.list")
+        .then((presets) => {
+            $('#presets').empty()
+            var table = $('<table>').appendTo('#presets')
+            var thead = $('<thead>').appendTo(table)
+            var tbody = $('<tbody>').appendTo(table)
+            var tr = $('<tr>').appendTo(thead)
+
+            $('<th>').text('id').appendTo(tr)
+            $('<th>').text('name').appendTo(tr)
+            $('<th>').text('data').appendTo(tr)
+            $('<th>').text('group').appendTo(tr)
+            $('<th>').text('').appendTo(tr)
+
+            presets.forEach((preset) => {
+                var tr = $('<tr>').appendTo(tbody)
+                $('<td>').text(preset.id).appendTo(tr)
+                $('<td>').text(preset.name).appendTo(tr)
+                    .on('click', () => {
+                        var name = prompt("Preset name", preset.name).trim()
+                        if (name) query("Preset.update", [preset.id, { name: name }]).then(updatePresets)
+                    })
+                
+                $('<td>').text(preset.data).appendTo(tr)
+                    .on('click', () => {
+                        var data = prompt("Preset data", preset.data).trim()
+                        if (data) query("Preset.update", [preset.id, { data: data }]).then(updatePresets)
+                    })
+
+                $('<td>').text(preset.group).appendTo(tr)
+                    .on('click', () => {
+                        var group = prompt("Preset group", preset.group).trim()
+                        if (group) query("Preset.update", [preset.id, { group: group }]).then(updatePresets)
+                    })
+
+                $('<td>').text('delete').addClass('delete').appendTo(tr).on('click', () => {
+                    confirm("Delete preset " + preset.name + " ?") &&
+                        query("Preset.delete", preset.id).then(updatePresets)
+                })
+            })
+        })
+}
+
 function updateMessages() {
     query("Message.list")
         .then((messages) => {
@@ -440,6 +484,7 @@ socket.on('hello', () => {
     socket.emit('login', password);
     updateSessions()
     updateEvents()
+    updatePresets()
     // updateUsers()
     updateMessages()
     updateGroups()
@@ -486,6 +531,16 @@ document.getElementById('event-new').addEventListener('click', () => {
     var session_id = prompt("Session id", "").trim()
 
     query("Event.new", { name: name, session_id: session_id }).then(updateEvents)
+})
+
+// PRESETS
+//
+
+document.getElementById('preset-new').addEventListener('click', () => {
+    var name = prompt("Preset name", "").trim()
+    var group = prompt("Preset group", "").trim()
+
+    query("Preset.new", { name: name, group: group }).then(updatePresets)
 })
 
 
