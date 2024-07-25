@@ -63,6 +63,8 @@
                 <label for="checkbox-color-autoselect">Random autoselect</label>
             </div>
             <div class="space"></div>
+
+            <button id="btn-color-preset" class="preset">Save as preset...</button>
             <button id="btn-color-send">Send color event</button>
         </div>
 
@@ -89,6 +91,8 @@
                 <label for="checkbox-text-autoselect">Random autoselect</label>
             </div>
             <div class="space"></div>
+
+            <button id="btn-text-preset" class="preset">Save as preset...</button>
             <button id="btn-text-send">Send text event</button>
         </div>
 
@@ -123,12 +127,14 @@
 
             <div class="space"></div>
 
+            <button id="btn-image-preset" class="preset">Save as preset...</button>
             <button id="btn-image-send">Send image event</button>
         </div>
 
         <!-- Info -->
         <div class="page" data-page-id="info">
             <textarea name="textarea-info" id="textarea-info"></textarea>
+            <button id="btn-info-preset" class="preset">Save as preset...</button>
             <button id="btn-info-send">Send info event</button>
         </div>
 
@@ -137,7 +143,13 @@
         </div>
 
         <div class="page" data-page-id="preset">
-            [presets] En construction...
+            <select name="select-preset" id="select-preset"></select>
+            <div class="input_field">
+                <input type="text" name="text-preset-savegroup" id="text-preset-savegroup" placeholder="Group name to save as...">
+            </div>
+            <div id="presets-container">
+
+            </div>
         </div>
 
     </main>

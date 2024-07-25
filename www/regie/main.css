@@ -156,6 +156,17 @@ textarea {
     height: 100%;
 }
 
+select {
+    width: 100%;
+
+    color: var(--col-primary);
+    background-color: var(--col-box-bg);
+    border: solid 2px var(--col-primary);
+
+    padding: 8px;
+    border-radius: 4px;
+}
+
 /* Specific styles */
 /* */
 
@@ -231,4 +242,16 @@ textarea {
 #grid-images>img {
     width: 100%;
     height: 100%;
+}
+
+/* Presets */
+/* */
+
+#presets-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
