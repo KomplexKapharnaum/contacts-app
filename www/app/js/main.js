@@ -189,6 +189,9 @@ UTIL.addNotification = function(date,message) {
     })
 
     document.getElementById("notifications").appendChild(notif);
+
+    // scroll to bottom
+    document.getElementById("notifications").scrollTop = document.getElementById("notifications").scrollHeight;
 }
 
 UTIL.countDownInterval = false;

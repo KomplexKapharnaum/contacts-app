@@ -216,8 +216,12 @@ function updateUsers() {
                     })
                 })
 
-                $('<td>').text(user.last_read).appendTo(tr).on('click', () => {
-                    query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
+                let last_read = new Date(user.last_read)
+                if (!user.last_read) last_read = "never"
+                else last_read = last_read.toLocaleString()
+
+                $('<td>').text(last_read).appendTo(tr).on('click', () => {
+                    // query("User.update", [{id: user.id}, { last_read: null }]).then(updateUsers)
                 })
 
 
@@ -331,7 +335,11 @@ function updateMessages() {
                 var tr = $('<tr>').appendTo(tbody)
                 $('<td>').text(message.id).appendTo(tr)
                 $('<td>').text(message.data).appendTo(tr)
-                $('<td>').text(message.emit_time).appendTo(tr)
+
+                var emit_time = new Date(message.emit_time)
+                emit_time = emit_time.toLocaleString()
+
+                $('<td>').text(emit_time).appendTo(tr)
 
                 var msg = $('<td>').text(message.message).appendTo(tr)
                 msg.on('click', () => {
