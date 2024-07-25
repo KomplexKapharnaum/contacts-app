@@ -82,6 +82,7 @@ function ctrl(name, args = false) {
 let current_event_state = false
 socket.on("adminEventState", (eventState) => {
     current_event_state = eventState
+    setEventBtnState(eventState)
 })
 
 /* Event console log */
@@ -216,5 +217,11 @@ document.addEventListener("click", () => {
 
 click("set-event-state", () => {
     current_event_state = !current_event_state
+    setEventBtnState(current_event_state)
     socket.emit('setEventState', current_event_state)
 });
+
+function setEventBtnState(state) {
+    const btn = document.getElementById("btn-set-event-state");
+    btn.innerHTML = state ? "STOP EVENT" : "START EVENT";
+}
