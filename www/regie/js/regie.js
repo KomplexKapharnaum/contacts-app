@@ -1,8 +1,6 @@
 /* Configuration */
 /* */
 
-import { query } from "express"
-
 const config = {
     base_colors: ["#F00", "#0F0", "#00F", "#FF0", "#0FF", "#F0F", "#FFF"]
 }
@@ -143,6 +141,19 @@ click("color-send", () => {
     ctrl("color", args)
 })
 
+click("color-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-color")
+
+    const colors = [...colors_container.querySelectorAll(".selected")].map(e => e.style.backgroundColor);
+    const args = {
+        colors : colors,
+        params : getParams("color")
+    }
+    
+    saveAsPresset("color", args, name)
+})
+
 /* Text event */
 /* */
 
@@ -167,6 +178,19 @@ click("text-send", () => {
         params : getParams("text")
     }
     ctrl("text", args)
+})
+
+click("text-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-text")
+
+    const texts = [...texts_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
+    const args = {
+        texts : texts,
+        params : getParams("text")
+    }
+    
+    saveAsPresset("text", args, name)
 })
 
 /* Image */
@@ -194,6 +218,19 @@ click("image-send", () => {
     ctrl("image", args)
 })
 
+click("image-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-text")
+
+    const images = [...images_container.querySelectorAll("img")].map(e => e.src)
+    const args = {
+        images : images,
+        params : getParams("image")
+    }
+    
+    saveAsPresset("image", args, name)
+})
+
 /* Info */
 /* */
 
@@ -207,9 +244,22 @@ click("info-send", () => {
     ctrl("info", args)
 })
 
+click("info-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-text")
+
+    const val = document.getElementById("textarea-info").value
+    const args = {
+        message : val,
+        params : {}
+    }
+    
+    saveAsPresset("info", args, name)
+})
+
 /* Presets */
 
-function saveAsPresset(type, args, presetName, presetGroup) {
+function saveAsPresset(type, args, presetName) {
     
     const data = JSON.stringify({
         name: type,
@@ -219,17 +269,22 @@ function saveAsPresset(type, args, presetName, presetGroup) {
     // Preset.list
     query("Preset.new", {
         name: presetName,
-        group: presetGroup,
+        group: document.getElementById("text-preset-savegroup").value,
         data: data
     }).then(() => {
         alert("Preset '" + presetName + "' saved.")
+        loadPresets()
     })
 }
 
+const presets_container = document.getElementById("presets-container")
 const presetList = document.getElementById("select-preset")
 let presetGroups = {};
 
 function loadPresets() {
+    presetList.innerHTML = "";
+    presets_container.innerHTML = "";
+    presetGroups = {};
     query("Preset.list").then((data) => {
 
         const groups = data.reduce((acc, elem) => {
@@ -242,14 +297,39 @@ function loadPresets() {
 
         presetGroups = groups;
         
-        groups.forEach((group) => {
+        for (const group in groups) {
+            const data = groups[group]
             const opt = document.createElement("option")
-            opt.value = group[0].group
-            opt.innerHTML = group[0].group
+            opt.value = group
+            opt.innerHTML = group
             presetList.appendChild(opt)
-        })
+        }
+
+        if (presetList.options.length==1) {
+            loadGroup(presetList.options[0].value)
+        }
     })
 }
+loadPresets();
+
+function loadGroup(name) {
+    const group = presetGroups[name]
+
+    group.forEach((elem) => {
+        const btn = document.createElement("button")
+        btn.innerHTML = elem.name
+        btn.addEventListener("click", () => {
+            const data = JSON.parse(elem.data)
+            ctrl(data.name, data.args)
+        })
+        presets_container.appendChild(btn)
+    })
+}
+
+presetList.addEventListener("change", () => {
+    presets_container.innerHTML = "";
+    loadGroup(presetList.value)
+})
 
 /* Additional inputs */
 
