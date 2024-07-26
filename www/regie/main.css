@@ -30,6 +30,8 @@ body, html {
 body {
     display: flex;
     flex-direction: column;
+
+    padding: 0 8px;
 }
 
 /* Main & pages style */
@@ -55,7 +57,7 @@ main, .page {
 }
 
 main {
-    padding: 8px;
+    padding: 8px 0;
     overflow-y: scroll;
 }
 
@@ -166,13 +168,28 @@ select {
     border-radius: 4px;
 }
 
+option {
+    background-color: var(--col-primary);
+    color:var(--col-bg);
+}
+
+option:hover {
+    background-color: var(--col-txt-gray);
+    color:var(--col-bg);
+}
+
 /* Specific styles */
 /* */
 
 /* Main */
 
 #btn-set-event-state {
-    margin: 8px;
+    margin: 8px 0 0 0;
+}
+
+#select-group {
+    margin: 8px 0;
+    width: 100%;
 }
 
 #pages {
@@ -197,6 +214,7 @@ select {
     color: var(--col-txt-gray);
 
     font-size: 16px;
+    line-height: 150%;
 }
 
 /* Colors */

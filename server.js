@@ -84,25 +84,46 @@ let SOCKET = {};
 
 SOCKET.io = new IoServer(server);;
 
-SOCKET.lastEvent = false;
+SOCKET.lastEvent = {};
+
+// Get all groups as array of names
+async function getGroups() {
+  const grp = new MODELS['Group']();
+  const groups = await grp.list();
+  const groupsArray = groups.map(group => group.name);
+  return groupsArray;
+}
+
+getGroups().then((groups) => {
+  groups.forEach((g) => {
+    SOCKET.lastEvent[g] = false
+  })
+});
 
 SOCKET.startEvent = function (name, args) {
-  SOCKET.lastEvent = {
-    name: name,
-    args: args
-  };
+  
+  const group = args.params.grpChoice
 
-  if (args.params.grpChoice != '') {
-    SOCKET.io.to(args.params.grpChoice).emit('start-event',SOCKET.lastEvent);
+  if (group != '') {
+    // Update last event for a specific group
+    SOCKET.lastEvent[group] = name=="end" ? false : {
+      name: name,
+      args: args,
+      id: Math.floor(Math.random() * 1000000000)
+    };
   } else {
-    SOCKET.io.emit('start-event', SOCKET.lastEvent);
+    // Update last event for every groups
+    for (const key in SOCKET.lastEvent) {
+      SOCKET.lastEvent[key] = name=="end" ? false : {
+        name: name,
+        args: args,
+        id: Math.floor(Math.random() * 1000000000)
+      };
+    }
   }
-};
 
-SOCKET.endEvent = function () {
-  SOCKET.lastEvent = false;
-  SOCKET.io.emit('end-event');
-}
+  SOCKET.io.emit('start-event', SOCKET.lastEvent);
+};
 
 SOCKET.auth = function (socket) {
   if (!socket.rooms.has('admin')) {
@@ -199,7 +220,6 @@ SOCKET.io.on('connection', (socket) => {
     });
   });
 
-
   // Partie de Maigre, je touche pas
   //
 
@@ -217,16 +237,19 @@ SOCKET.io.on('connection', (socket) => {
   });
 
   // ctrl
+  
   socket.on('ctrl', (data) => {
     
+    if (!IS_EVENT_LIVE) return
+
     console.log('ctrl', data);
     if (!SOCKET.auth(socket)) return;   // check if admin
-
-    if (data.name == "end") SOCKET.endEvent();
-    else if (data.name == "reload") SOCKET.io.emit('reload');
+  
+    if (data.name == "reload") SOCKET.io.emit('reload')
     else SOCKET.startEvent(data.name, data.args);
 
-    SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent` );
+    const grp = data.args.params.grpChoice;
+    SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${grp===''?'everyone':grp.toLowerCase()}` );
   });
 
   socket.on('setEventState', (data) => {
@@ -291,10 +314,7 @@ SOCKET.io.on('connection', (socket) => {
   // }
 
   socket.on('get-last-event', () => {
-    // console.log('get-last-event', SOCKET.lastEvent);
-    if (SOCKET.lastEvent) {
-      socket.emit('start-event', SOCKET.lastEvent);
-    }
+    socket.emit('start-event', SOCKET.lastEvent);
   })
 
   socket.on("sms", (msg, request) => {

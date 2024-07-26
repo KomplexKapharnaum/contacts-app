@@ -26,6 +26,9 @@ function getParams(page) {
     return params
 }
 
+function log_time() {
+    return `${new Date().getHours()}:${new Date().getMinutes()} →`
+}
 /* Cookies & Password check */
 /* */
 
@@ -69,10 +72,18 @@ socket.on('hello', () => {
     socket.emit('login', password);
 })
 
-function ctrl(name, args = false) {
+function ctrl(name, args = {params:{}}) {
+
+    if (!current_event_state) {
+        log(log_time() + " Event not live, aborting.")
+    }
 
     var resid = Math.random().toString(36).substring(2);
-    if (args && !args.params.grpChoice) args.params.grpChoice = ''
+
+    const grpChoice = document.getElementById("select-group").value
+    args.params.grpChoice = grpChoice
+
+    // console.log(name,args)
 
     socket.emit('ctrl', {
         name: name,
@@ -402,7 +413,7 @@ function loadPresets() {
             presetList.appendChild(opt)
         }
 
-        if (presetList.options.length==1) {
+        if (presetList.options.length>0) {
             loadGroup(presetList.options[0].value)
         }
     })
@@ -515,7 +526,7 @@ click("set-event-state", () => {
 
 socket.on("getEventState", (state)=> {
     setEventBtnState(state)
-    log(`${new Date().getHours()}:${new Date().getMinutes()} → [EVENT STATE] : ${state}`)
+    log(`${log_time()} [EVENT STATE] : ${state}`)
 })
 
 function setEventBtnState(state) {
@@ -523,3 +534,27 @@ function setEventBtnState(state) {
     const btn = document.getElementById("btn-set-event-state")
     btn.innerHTML = state ? "STOP EVENT" : "START EVENT"
 }
+
+/* Select group */
+
+const select_usergroup = document.getElementById("select-group")
+
+function fill_select_usergroup() {
+    select_usergroup.innerHTML = ""
+
+    const opt = document.createElement("option")
+    opt.value = ""
+    opt.innerHTML = "Everyone"
+    select_usergroup.appendChild(opt)
+
+    query("Group.list").then((data) => {
+        data.forEach((g) => {
+            const opt = document.createElement("option")
+            opt.value = g.name
+            opt.innerHTML = g.name
+            select_usergroup.appendChild(opt)
+        })
+    })
+}
+
+fill_select_usergroup()

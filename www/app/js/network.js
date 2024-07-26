@@ -279,10 +279,11 @@ video_overlay_media.addEventListener("loadeddata", () => {
 });
 
 
-NETWORK.rotateSchedule = false;
 NETWORK.receiveSessionEvent = function (event) {
+
+    if (event.name=="end") NETWORK.endEvent();
+
     document.getElementById("overlay").onclick = null;
-    clearInterval(NETWORK.rotateSchedule);
     if (!NETWORK.isEventLive) return;
     UTIL.showOverlay(false);
     USEREVENT.showVideo(false);
@@ -307,13 +308,33 @@ NETWORK.receiveSessionEvent = function (event) {
     }
 }
 
-socket.on('start-event', NETWORK.receiveSessionEvent);
+let lastevent_id = null;
+socket.on('start-event', (data_pack) => {
+    
+    const userGroup = userData.groups[0].name
+    const data = data_pack[userGroup]
+
+    if (!data) {NETWORK.endEvent(); return}
+
+    if (lastevent_id != data.id) NETWORK.receiveSessionEvent(data)
+    lastevent_id = data.id
+
+});
+
+
+NETWORK.endEvent = function() {
+    UTIL.showOverlay(false);
+    USEREVENT.showVideo(false);
+    PAGES.goto("event-idle");
+}
+
+/*
 socket.on('end-event', () => {
     UTIL.showOverlay(false);
     USEREVENT.showVideo(false);
-    clearInterval(NETWORK.rotateSchedule);
     PAGES.goto("event-idle");
 });
+*/
 
 // Chat message
 
