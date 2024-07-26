@@ -454,11 +454,17 @@ UTIL.generateShareLink = function(link) {
         colorDark : UTIL.getCssRootVar("--color-primary"),
         colorLight : UTIL.getCssRootVar("--color-background"),
         correctLevel : QRCode.CorrectLevel.H
-    });
+    })
+
+    console.log(qrcode)
 
     document.getElementById("copylink").onclick = function() {
         navigator.clipboard.writeText(link);
     }
+
+    qrcode._oDrawing._elCanvas.style.display = "none";
+    qrcode._oDrawing._elImage.dataset.rendererRotate = "0";
+    renderer.addElement(qrcode._oDrawing._elImage);
 }
 
 UTIL.promptForSubscribingEvent = function(evenement) {

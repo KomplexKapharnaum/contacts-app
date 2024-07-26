@@ -30,12 +30,26 @@ class roundedGraphics {
             precision mediump float;
             uniform sampler2D u_texture;
             uniform vec2 u_resolution;
+            uniform float u_time;
             uniform vec2 imageRes;
             void main(void) {
                 vec2 uv = gl_FragCoord.xy / u_resolution;
                 vec2 st = (floor(uv * imageRes) + 0.5) / imageRes;
-                vec4 col = texture2D(u_texture, st);
-                gl_FragColor = col;
+                // vec4 col = texture2D(u_texture, st);
+
+                float t = max(min(fract(sin(u_time)*43758.5453),sin(u_time)),0.) * (floor(sin(u_time/2.))+1.);
+
+                float n = fract(sin(u_time + (uv.x * 155.231) * (uv.y * 154.231))*43758.5453) * 0.4 + .6;
+
+                vec2 d = sin(t)*(vec2(10.,6.)/u_resolution); 
+                vec4 O = vec4(
+                    texture2D(u_texture,st-d).x*n,
+                    texture2D(u_texture,st  ).y*n,
+                    texture2D(u_texture,st+d).z*n,
+                    1
+                );
+                
+                gl_FragColor = O;
             }
         `
 
@@ -195,6 +209,7 @@ class roundedGraphics {
     }
     
     render() {
+        this.shader.updateUniform('u_time', '1f', performance.now() / 1000);
         this.renderBuffer();
         this.shader.update();
         requestAnimationFrame(() => this.render());
