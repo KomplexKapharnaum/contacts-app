@@ -123,6 +123,17 @@ const box_events = document.getElementById("box-events")
 
 function load_events() {
     box_events.innerHTML = ""
+
+    const btn_reload = document.createElement("button")
+    btn_reload.innerHTML = "Rafraichir"
+    btn_reload.classList.add("sm")
+
+    box_events.appendChild(btn_reload)
+
+    btn_reload.addEventListener("click", () => {
+        load_events()
+    })
+
     query("Event.list")
     .then((events) => {
         events = events.filter(event => new Date(event.ending_at) > new Date());
@@ -145,8 +156,33 @@ function load_events() {
             btn.appendChild(name)
             btn.appendChild(starting_at)
 
+            btn.addEventListener("dblclick", () => {
+
+                if (!event.location) return
+
+                let zoom, lat, lon;
+                let loc = event.location.split(",")
+                if (loc.length>=2) {
+                    lat = loc[0]
+                    lon = loc[1]
+                    zoom = (loc.length==3) ? loc[2] : 18
+                } 
+                else {
+                    loc = event.location.split("/")
+                    if (loc.length>=2) {
+                        zoom = (loc.length==3) ? loc[0] : 18
+                        lat = (loc.length==3) ? loc[1] : loc[0]
+                        lon = (loc.length==3) ? loc[2] : loc[1]
+                    }
+                } 
+                const url = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom
+
+                window.open(url)
+            })
+
             btn.addEventListener("click", () => {
                 if (!now) {
+                    /*
                     if (!confirm("Ouvrir le lieu pour l'évènement " + event.name + " ?")) return
                     const localisation = event.location
                     const [lat,lon,zoom] = localisation.split('/')
@@ -154,6 +190,7 @@ function load_events() {
                     if (localisation) {
                         window.open(url)
                     }
+                    */
                     return;
                 } 
                 if (!confirm("Terminer l'évènement " + event.name + " ?")) return
