@@ -261,12 +261,31 @@ USEREVENT.setOverlay = function(type, args, params) {
     }
 }
 
+const video_overlay_media = document.querySelector("#video-overlay video");
+USEREVENT.showVideo = function(show) {
+    const overlay = document.getElementById("video-overlay");
+
+    if (show) {
+       overlay.classList.add("active");
+       video_overlay_media.src = show;
+       video_overlay_media.load();
+    } else {
+       overlay.classList.remove("active");
+    }
+}
+
+video_overlay_media.addEventListener("loadeddata", () => {
+    video_overlay_media.play();
+});
+
+
 NETWORK.rotateSchedule = false;
 NETWORK.receiveSessionEvent = function (event) {
     document.getElementById("overlay").onclick = null;
     clearInterval(NETWORK.rotateSchedule);
     if (!NETWORK.isEventLive) return;
     UTIL.showOverlay(false);
+    USEREVENT.showVideo(false);
     let container;
     switch (event.name) {
         case "color":
@@ -280,8 +299,10 @@ NETWORK.receiveSessionEvent = function (event) {
             break;
         case "info":
             PAGES.goto("event-info");
-            UTIL.showOverlay(false);
             document.getElementById("event-info-message").innerHTML = event.args.message; 
+            break;
+        case "video":
+            USEREVENT.showVideo(event.args.url);
             break;
     }
 }
@@ -289,6 +310,7 @@ NETWORK.receiveSessionEvent = function (event) {
 socket.on('start-event', NETWORK.receiveSessionEvent);
 socket.on('end-event', () => {
     UTIL.showOverlay(false);
+    USEREVENT.showVideo(false);
     clearInterval(NETWORK.rotateSchedule);
     PAGES.goto("event-idle");
 });

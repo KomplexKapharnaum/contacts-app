@@ -138,10 +138,26 @@
             <button id="btn-info-send">Send info event</button>
         </div>
 
+        <!-- Video -->
         <div class="page" data-page-id="video">
-            [video] En construction...
+            <div class="input_field">
+                <input type="text" name="text" id="input-video-addvideo" placeholder="Enter video URL...">
+                <button id="btn-video-add">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+            </div>
+
+            <hr>
+
+            <video src="" id="video-event-preview" loop muted></video>
+
+            <div class="space"></div>
+
+            <button id="btn-video-preset" class="preset">Save as preset...</button>
+            <button id="btn-video-send">Send video event</button>
         </div>
 
+        <!-- Presets -->
         <div class="page" data-page-id="preset">
             <select name="select-preset" id="select-preset"></select>
             <div class="input_field">

@@ -226,6 +226,7 @@ SOCKET.io.on('connection', (socket) => {
     else if (data.name == "reload") SOCKET.io.emit('reload');
     else SOCKET.startEvent(data.name, data.args);
 
+    SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent` );
   });
 
   socket.on('setEventState', (data) => {

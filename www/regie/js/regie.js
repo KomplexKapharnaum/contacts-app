@@ -71,11 +71,17 @@ socket.on('hello', () => {
 
 function ctrl(name, args = false) {
 
+    var resid = Math.random().toString(36).substring(2);
     if (args && !args.params.grpChoice) args.params.grpChoice = ''
 
     socket.emit('ctrl', {
         name: name,
-        args: args?args:{}
+        args: args?args:{},
+        resid: resid
+    })
+
+    socket.once('event-ok-' + resid, (data) => { 
+        log(data)
     })
 }
 
@@ -126,6 +132,8 @@ function add_color(color) {
     })
 
     colors_container.appendChild(div)
+
+    return div
 }
 
 config.base_colors.forEach(col => {
@@ -154,6 +162,18 @@ click("color-preset", () => {
     saveAsPresset("color", args, name)
 })
 
+function load_preset_colors(data) {
+    data=data.args
+    const cols = colors_container.querySelectorAll("div")
+    cols.forEach(e => {e.classList.remove("selected")})
+
+    data.colors.forEach(col => {
+        cols.forEach(e => {
+            if (e.style.backgroundColor == col) e.classList.add("selected")
+        })
+    })
+}
+
 /* Text event */
 /* */
 
@@ -161,14 +181,18 @@ const text_input = document.getElementById("input-text-addtext")
 const tem_textitem = document.getElementById("template-text-item")
 const texts_container = document.getElementById("box-text-items")
 
-click("text-add", () => {
-    const txt = text_input.value
+function add_text(txt) {
+    // const txt = text_input.value
     const tem = tem_textitem.cloneNode(true).content.querySelector(".input_field")
     tem.querySelector("input").value = txt
     tem.querySelector("button").addEventListener("click", () => {
         tem.remove()
     })
     texts_container.appendChild(tem)
+}
+
+click("text-add", () => {
+    add_text(text_input.value)
 })
 
 click("text-send", () => {
@@ -192,6 +216,14 @@ click("text-preset", () => {
     
     saveAsPresset("text", args, name)
 })
+
+function load_preset_text(data) {
+    data=data.args
+    texts_container.innerHTML = ""
+    data.texts.forEach(txt => {
+        add_text(txt)
+    })
+}
 
 /* Image */
 /* */
@@ -231,6 +263,19 @@ click("image-preset", () => {
     saveAsPresset("image", args, name)
 })
 
+function load_preset_images(data) {
+    data=data.args
+    images_container.innerHTML = ""
+    data.images.forEach(image => {
+        const img = document.createElement("img")
+        img.src = image
+        images_container.appendChild(img)
+        img.addEventListener("click", () => {
+            images_container.removeChild(img)
+        })
+    })
+}
+
 /* Info */
 /* */
 
@@ -257,7 +302,59 @@ click("info-preset", () => {
     saveAsPresset("info", args, name)
 })
 
+function load_preset_info(data) {
+    data=data.args
+    document.getElementById("textarea-info").value = data.message
+}
+
+/* Videos */
+/* */
+
+const video_preview = document.getElementById("video-event-preview")
+const video_input = document.getElementById("input-video-addvideo")
+const video_add = document.getElementById("btn-video-add")
+
+click("video-add", () => {
+    const url = video_input.value
+    video_preview.src = url
+    video_preview.load();
+})
+
+video_preview.addEventListener('loadeddata', function() {
+    video_preview.play();
+}, false);
+
+click("video-send", () => {
+    const url = video_input.value
+    const args = {
+        url : url,
+        params : getParams("video")
+    }
+    ctrl("video", args)
+})
+
+click("video-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-video")
+
+    const url = video_input.value
+    const args = {
+        url : url,
+        params : getParams("video")
+    }
+    
+    saveAsPresset("video", args, name)
+})
+
+function load_preset_video(data) {
+    data=data.args
+    video_input.value = data.url
+    video_preview.src = data.url
+    video_preview.load();
+}
+
 /* Presets */
+/* */
 
 function saveAsPresset(type, args, presetName) {
     
@@ -316,13 +413,37 @@ function loadGroup(name) {
     const group = presetGroups[name]
 
     group.forEach((elem) => {
+        const container = document.createElement("div")
+        container.classList.add("input_field")
+
+        // Preset button
         const btn = document.createElement("button")
-        btn.innerHTML = elem.name
+        btn.classList.add("preset-btn")
+
+        const data = JSON.parse(elem.data)
+
+        const icon = document.querySelector("[data-page-id=" + data.name + "]:not(.page)").querySelector("svg").cloneNode(true)
+
+        btn.appendChild(icon)
+        btn.innerHTML += elem.name
+
         btn.addEventListener("click", () => {
-            const data = JSON.parse(elem.data)
             ctrl(data.name, data.args)
         })
-        presets_container.appendChild(btn)
+
+        container.appendChild(btn)
+
+        // Copy button
+        const copyBtn = document.createElement("button")
+        copyBtn.innerHTML = "Copy"
+
+        copyBtn.addEventListener("click", () => {
+            load_preset(data)
+        })
+
+        container.appendChild(copyBtn)
+
+        presets_container.appendChild(container)
     })
 }
 
@@ -330,6 +451,34 @@ presetList.addEventListener("change", () => {
     presets_container.innerHTML = "";
     loadGroup(presetList.value)
 })
+
+function load_preset(data) {
+    PAGES.goto(data.name)
+    switch(data.name) {
+        case "color":
+            load_preset_colors(data)
+            break;
+        case "text":
+            load_preset_text(data)
+            break;
+        case "image":
+            load_preset_images(data)
+            break;
+        case "info":
+            load_preset_info(data)
+            break;
+        case "video":
+            load_preset_video(data)
+            break;
+    }
+
+    const page = document.querySelector(".page[data-page-id='"+ data.name +"']")
+
+    for (const i in data.args.params) {
+        const el = page.querySelector("[data-param='" + i + "']")
+        if (el) el.checked = data.args.params[i]
+    }
+}
 
 /* Additional inputs */
 
@@ -345,12 +494,12 @@ click("reload-event", () => {
 
 document.addEventListener("touchstart", () => {
     const el = document.documentElement;
-    const rfs = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    const rfs = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen
     if (rfs) {
-        rfs.call(el);
+        rfs.call(el)
     }
     else if (window.parent !== window) {
-        parent.postMessage('fullscreen', '*');
+        parent.postMessage('fullscreen', '*')
     }  
 })
 
@@ -358,13 +507,19 @@ document.addEventListener("touchstart", () => {
 // setEventState
 
 click("set-event-state", () => {
-    if (!confirm("Update event state ?")) return;
+    if (!confirm("Update event state ?")) return
     current_event_state = !current_event_state
-    setEventBtnState(current_event_state)
+    // setEventBtnState(current_event_state)
     socket.emit('setEventState', current_event_state)
 });
 
+socket.on("getEventState", (state)=> {
+    setEventBtnState(state)
+    log(`${new Date().getHours()}:${new Date().getMinutes()} → [EVENT STATE] : ${state}`)
+})
+
 function setEventBtnState(state) {
-    const btn = document.getElementById("btn-set-event-state");
-    btn.innerHTML = state ? "STOP EVENT" : "START EVENT";
+    current_event_state = state
+    const btn = document.getElementById("btn-set-event-state")
+    btn.innerHTML = state ? "STOP EVENT" : "START EVENT"
 }
