@@ -119,6 +119,47 @@ query = function (name, ...args) {
 /* Event console log */
 /* */
 
+const box_events = document.getElementById("box-events")
+
+function load_events() {
+    box_events.innerHTML = ""
+    query("Event.list")
+    .then((events) => {
+        events = events.filter(event => new Date(event.ending_at) > new Date());
+        events.forEach(event => {
+            const btn = document.createElement("button")
+            btn.classList.add("sm","event-btn")
+            const name = document.createElement("span")
+            name.innerHTML = event.name
+
+            const starting_at = document.createElement("span")
+            starting_at.innerHTML = new Date(event.starting_at).toLocaleString()
+
+            let now = false;
+
+            if (new Date(event.starting_at) < new Date()) {
+                starting_at.innerHTML = "Maintenant"
+                now = true;
+            }
+
+            btn.appendChild(name)
+            btn.appendChild(starting_at)
+
+            btn.addEventListener("click", () => {
+                if (!now) return;
+                if (!confirm("Terminer l'évènement " + event.name + " ?")) return;
+                query("Event.update", event.id, {ending_at: new Date(Date.now() - 60000).toISOString().slice(0, 16) }).then(() => {
+                    alert("Évènement terminé.")
+                    load_events()
+                })
+            });
+
+            box_events.appendChild(btn)
+        })
+    })
+}
+load_events()
+
 const box_log = document.getElementById("box-event-logs")
 function log(...msg) {
     console.log(...msg)

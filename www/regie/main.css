@@ -199,6 +199,19 @@ option:hover {
 
 /* Event logs */
 
+#box-events {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.event-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
 #box-event-logs {
     width: 100%;
     height: 100%;

@@ -32,7 +32,7 @@ class roundedGraphics {
             uniform vec2 u_resolution;
             uniform float u_time;
             uniform vec2 imageRes;
-            void main(void) {
+            void main(void) {  
                 vec2 uv = gl_FragCoord.xy / u_resolution;
                 vec2 st = (floor(uv * imageRes) + 0.5) / imageRes;
                 // vec4 col = texture2D(u_texture, st);
