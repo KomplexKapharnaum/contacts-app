@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>CONTACTS :: Kit Images</title>
+        <title>CONTACTS :: Kit Media</title>
         <style>
             body {
                 background-color: black;
@@ -9,20 +9,30 @@
             }
 
             /* grid view of thumbnails */
-            #image-selection {
+            #media-selection {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+                grid-template-columns: repeat(auto-fill, 220px);
                 grid-gap: 5px;
             }
 
             /* thumbnail */
-            .image-thumbnail {
-                width: 300px;
+            .media-thumbnail {
+                width: 200px;
                 height: 200px;
                 background-size: contain;   
                 background-repeat: no-repeat;
                 background-position: center;
                 border: 1px solid white;
+            }
+
+            /* thumbnail title */
+            .media-thumbnail-title {
+                font-size: 1.4em;
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                background-color: rgba(200, 200, 200, 0.5)
             }
 
             /* copied message */
@@ -46,10 +56,10 @@
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
-        <div id="image-list">
+        <div id="media-list">
             <div id="copied">Copied !</div>
-            <h2>Kit Images</h2>
-            <div id="image-selection"></div>
+            <h2>Kit Media</h2>
+            <div id="media-selection"></div>
         </div>
         <script src="./list.js"></script>
     </body>

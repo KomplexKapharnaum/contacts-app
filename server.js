@@ -188,7 +188,7 @@ SOCKET.io.on('connection', (socket) => {
 
   // Image List
   socket.on('get-media-list', () => {
-    fs.readdir('imgs', (err, files) => {
+    fs.readdir('media', (err, files) => {
       if (err) {
         console.error(err);
         return;

@@ -57,10 +57,16 @@ socket.on('media-list', (media) => {
         const div = document.createElement("div");
         div.classList.add("media-thumbnail");
 
-        const type = mediaType(m.url);
+        // add title
+        const title = document.createElement("div");
+        title.classList.add("media-thumbnail-title");
+        title.innerText = m.split('/').pop();
+        div.appendChild(title);
+
+        const type = mediaType(m);
         if (type === 'image') {
             div.classList.add("media-thumbnail-image");
-            div.style.backgroundImage = "url("+m.url+")";
+            div.style.backgroundImage = "url("+m+")";
         }
         else if (type === 'video') {
             div.classList.add("media-thumbnail-video");
@@ -76,8 +82,8 @@ socket.on('media-list', (media) => {
         }
 
         div.addEventListener("click", () => {
-            navigator.clipboard.writeText(window.location.origin + m.url).then(() => {
-                console.log('URL copied to clipboard', window.location.origin + m.url);
+            navigator.clipboard.writeText(window.location.origin + m).then(() => {
+                console.log('URL copied to clipboard', window.location.origin + m);
                 document.getElementById("copied").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("copied").style.display = "none";
