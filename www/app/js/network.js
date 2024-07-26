@@ -146,7 +146,12 @@ socket.on("getEventState", (state) => {
         UTIL.shownav(false);
         PAGES.goto("event-idle");
     } else {
+        document.getElementById("overlay").onclick = null;
+        UTIL.showOverlay(false);
+        USEREVENT.showVideo(false);
+
         UTIL.shownav(true);
+        
         processEventRouting();
     }
 })
