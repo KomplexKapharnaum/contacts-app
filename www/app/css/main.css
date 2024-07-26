@@ -501,10 +501,10 @@ input[type="text"] {
     font-size: 24px;
 }
 
-#qr-code {
+/*#qr-code {
     width: 100%;
     height: fit-content;
-}
+}*/
 
 #qr-code img, #qr-code canvas {
     width: 100%;

@@ -39,7 +39,7 @@ class roundedGraphics {
 
                 float t = max(min(fract(sin(u_time)*43758.5453),sin(u_time)),0.) * (floor(sin(u_time/2.))+1.);
 
-                float n = fract(sin(u_time + (uv.x * 155.231) * (uv.y * 154.231))*43758.5453) * 0.4 + .6;
+                float n = 1.; //fract(sin(u_time + (uv.x * 155.231) * (uv.y * 154.231))*43758.5453) * 0.4 + .6;
 
                 vec2 d = sin(t)*(vec2(10.,6.)/u_resolution); 
                 vec4 O = vec4(

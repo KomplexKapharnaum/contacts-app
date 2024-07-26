@@ -446,6 +446,7 @@ UTIL.getCssRootVar = function(variable) {
 }
 
 UTIL.generateShareLink = function(link) {
+    /*
     document.getElementById("qr-code").innerHTML = "";
     let qrcode = new QRCode("qr-code", {
         text: link,
@@ -465,6 +466,7 @@ UTIL.generateShareLink = function(link) {
     qrcode._oDrawing._elCanvas.style.display = "none";
     qrcode._oDrawing._elImage.dataset.rendererRotate = "0";
     renderer.addElement(qrcode._oDrawing._elImage);
+    */
 }
 
 UTIL.promptForSubscribingEvent = function(evenement) {
