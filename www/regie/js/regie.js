@@ -146,8 +146,17 @@ function load_events() {
             btn.appendChild(starting_at)
 
             btn.addEventListener("click", () => {
-                if (!now) return;
-                if (!confirm("Terminer l'évènement " + event.name + " ?")) return;
+                if (!now) {
+                    if (!confirm("Ouvrir le lieu pour l'évènement " + event.name + " ?")) return
+                    const localisation = event.location
+                    const [lat,lon,zoom] = localisation.split('/')
+                    const url = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom; 
+                    if (localisation) {
+                        window.open(url)
+                    }
+                    return;
+                } 
+                if (!confirm("Terminer l'évènement " + event.name + " ?")) return
                 query("Event.update", event.id, {ending_at: new Date(Date.now() - 60000).toISOString().slice(0, 16) }).then(() => {
                     alert("Évènement terminé.")
                     load_events()
