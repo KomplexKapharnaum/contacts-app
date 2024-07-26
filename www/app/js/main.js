@@ -189,9 +189,6 @@ UTIL.addNotification = function(date,message) {
     })
 
     document.getElementById("notifications").appendChild(notif);
-
-    // scroll to bottom
-    document.getElementById("notifications").scrollTop = document.getElementById("notifications").scrollHeight;
 }
 
 UTIL.countDownInterval = false;
@@ -487,6 +484,12 @@ UTIL.promptForSubscribingEvent = function(evenement) {
 // Debug
 PAGES.addCallback("share_link", function() { 
     UTIL.generateShareLink("https://contacts.kxkm.net");
+});
+
+// Messages scroll down
+PAGES.addCallback("notifications", function() {
+    document.getElementById("notifications").scrollTop = document.getElementById("notifications").scrollHeight;
+    console.log("scrolling");
 });
 
 // Nosleep
