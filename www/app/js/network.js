@@ -139,19 +139,27 @@ socket.on('hello', (version) => {
 
 NETWORK.isEventLive = false
 socket.on("getEventState", (state) => {
+
+    console.log("event state change : " + state)
+
     if (!userData) return;
     if (!userData.selected_avatar) return;
+
     NETWORK.isEventLive = state
+    
     if (state) {
         UTIL.shownav(false);
         PAGES.goto("event-idle");
+
+        // check if an event is active
+        socket.emit("get-last-event")
     } else {
         document.getElementById("overlay").onclick = null;
         UTIL.showOverlay(false);
         USEREVENT.showVideo(false);
 
         UTIL.shownav(true);
-        
+
         processEventRouting();
     }
 })
