@@ -187,15 +187,15 @@ SOCKET.io.on('connection', (socket) => {
   })
 
   // Image List
-  socket.on('get-image-list', () => {
+  socket.on('get-media-list', () => {
     fs.readdir('imgs', (err, files) => {
       if (err) {
         console.error(err);
         return;
       }
-      let images = files.filter(f => f.match(/\.(jpg|jpeg|png|gif)$/i))
-        .map(f => '/imgs/' + f);
-      socket.emit('image-list', images);
+      let medias = files.filter(f => f.match(/\.(jpg|jpeg|png|gif|mp4|webm|ogg|mp3|wav|aac)$/i))
+        .map(f => '/m/' + f);
+      socket.emit('media-list', medias);
     });
   });
 
@@ -511,10 +511,10 @@ app.get('/app/msg', function (req, res) {
 app.use('/regie', express.static('www/regie'));
 
 // img
-app.use('/imgs', express.static('imgs'));
-app.use('/img', express.static('www/img'));
-app.get('/img', function (req, res) {
-  res.sendFile(__dirname + '/www/img/list.html');
+app.use('/m', express.static('media'));
+app.use('/media', express.static('www/media'));
+app.get('/media', function (req, res) {
+  res.sendFile(__dirname + '/www/media/list.html');
 });
 
 // HOOKS

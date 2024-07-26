@@ -9,6 +9,7 @@ upload/*.png
 
 # IMGS
 imgs/*
+media/*
 
 
 # Logs
