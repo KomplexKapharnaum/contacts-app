@@ -200,6 +200,17 @@ class roundedGraphics {
                     ctx.restore();
                     domElement.style.opacity = 0;
                     break;
+                case 'H1':
+                    domElement.style.color = "transparent";
+                    const cs = getComputedStyle(domElement);
+                    ctx.fillStyle = "white";
+                    ctx.textAlign = 'center';
+                    ctx.font = cs.fontSize + " " + cs.fontFamily;
+
+                    const fontHeight = parseInt(cs.fontSize);
+                    ctx.fillText(domElement.innerText, coords.x + coords.width / 2, coords.y + coords.height / 2 + fontHeight / 2);
+                    break;
+
                 default:
                     console.error('Unsupported element type', domElement.tagName);
                     break;

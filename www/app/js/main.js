@@ -11,8 +11,11 @@ const DEBUGS = {
 //
 
 const renderer = new roundedGraphics(document.getElementById("background"), 1);
-document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
-document.querySelectorAll("button").forEach(button => renderer.addElement(button));
+
+// Add elements here
+const elements_to_render = [".illustration", "button", "h1"];
+document.querySelectorAll(elements_to_render.join(",")).forEach(elm => renderer.addElement(elm));
+
 renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
 renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim());
 
