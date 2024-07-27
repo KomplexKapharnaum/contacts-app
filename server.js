@@ -429,28 +429,6 @@ SOCKET.io.on('connection', (socket) => {
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
 
-  ///////////////////// delete quand finit
-  socket.on("addU", (u) => {
-    db("users").insert({
-      name: "userTest",
-      phone: "0674287959",
-      uuid: "TEST",
-      is_connected: 0
-    }).then()
-  })
-
-  ///////////////////////  delete quand finit 
-  function temp_insert() {
-     db('users_groups').insert({ user_id: 1 , group_id: 1})
-     .then()
-     db('users_sessions').insert({ user_id: 1 , session_id: 1})
-     .then()
-    // db.select("*").from("users_sessions").where("user_id", "=", 1).limit(1).del()
-  }
-  // temp_insert()
-  ///////////////////////
-  ///////////////////////`
-
 });
 
 // Express Server
