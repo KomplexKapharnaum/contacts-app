@@ -248,6 +248,7 @@ class roundedGraphics {
     }
 
     updatePixelSize(size) {
+        if (size.x < 1 || size.y < 1) return;
         this.shader.updateUniform('imageRes', '2f', [size.x, size.y]);
         this.res = { x: size.x, y: size.y };
     }
