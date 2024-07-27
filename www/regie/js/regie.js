@@ -80,9 +80,10 @@ function ctrl(name, args = {params:{}}) {
 
     var resid = Math.random().toString(36).substring(2);
 
-    const grpChoice = document.getElementById("select-group").value
-    args.params.grpChoice = grpChoice
-
+    if (!args.params.grpChoice) {
+        const grpChoice = document.getElementById("select-group").value
+        args.params.grpChoice = grpChoice
+    }
     // console.log(name,args)
 
     socket.emit('ctrl', {
@@ -456,6 +457,9 @@ function load_preset_video(data) {
 
 function saveAsPresset(type, args, presetName) {
     
+    const grpChoice = document.getElementById("select-group").value
+    args.params.grpChoice = grpChoice
+
     const data = JSON.stringify({
         name: type,
         args: args
@@ -568,6 +572,10 @@ function load_preset(data) {
         case "video":
             load_preset_video(data)
             break;
+    }
+
+    if (data.args.params.grpChoice) {
+        document.getElementById("select-group").value = data.args.params.grpChoice
     }
 
     const page = document.querySelector(".page[data-page-id='"+ data.name +"']")
