@@ -224,9 +224,11 @@ class roundedGraphics {
                     domElement.style.opacity = 0;
                     break;
                 case 'H1':
-                    domElement.style.color = "transparent";
+                case 'H2':
+                case 'H3':
+                    domElement.style.opacity = "0";
                     const cs = getComputedStyle(domElement);
-                    ctx.fillStyle = "white";
+                    ctx.fillStyle = cs.color;
                     ctx.textAlign = 'center';
                     ctx.font = cs.fontSize + " " + cs.fontFamily;
 

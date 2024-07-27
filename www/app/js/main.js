@@ -34,7 +34,7 @@ function showFullScreenButton(bool) {
 const renderer = new roundedGraphics(document.getElementById("background"), {x: window.innerWidth, y: window.innerHeight});
 
 // Add elements here
-const elements_to_render = [".illustration", "button", "h1"];
+const elements_to_render = [".illustration", "button", "h1", "h2", "h3"];
 document.querySelectorAll(elements_to_render.join(",")).forEach(elm => renderer.addElement(elm));
 
 renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
