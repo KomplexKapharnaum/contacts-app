@@ -139,14 +139,29 @@ socket.on('hello', (version) => {
 
 NETWORK.isEventLive = false
 socket.on("getEventState", (state) => {
+
+    console.log("event state change : " + state)
+
     if (!userData) return;
     if (!userData.selected_avatar) return;
+
     NETWORK.isEventLive = state
+    
+    showFullScreenButton(!state)
+
     if (state) {
         UTIL.shownav(false);
         PAGES.goto("event-idle");
+
+        // check if an event is active
+        socket.emit("get-last-event")
     } else {
+        document.getElementById("overlay").onclick = null;
+        UTIL.showOverlay(false);
+        USEREVENT.showVideo(false);
+
         UTIL.shownav(true);
+
         processEventRouting();
     }
 })
@@ -261,12 +276,32 @@ USEREVENT.setOverlay = function(type, args, params) {
     }
 }
 
-NETWORK.rotateSchedule = false;
+const video_overlay_media = document.querySelector("#video-overlay video");
+USEREVENT.showVideo = function(show) {
+    const overlay = document.getElementById("video-overlay");
+
+    if (show) {
+       overlay.classList.add("active");
+       video_overlay_media.src = show;
+       video_overlay_media.load();
+    } else {
+       overlay.classList.remove("active");
+    }
+}
+
+video_overlay_media.addEventListener("loadeddata", () => {
+    video_overlay_media.play();
+});
+
+
 NETWORK.receiveSessionEvent = function (event) {
+
+    if (event.name=="end") NETWORK.endEvent();
+
     document.getElementById("overlay").onclick = null;
-    clearInterval(NETWORK.rotateSchedule);
     if (!NETWORK.isEventLive) return;
     UTIL.showOverlay(false);
+    USEREVENT.showVideo(false);
     let container;
     switch (event.name) {
         case "color":
@@ -280,18 +315,41 @@ NETWORK.receiveSessionEvent = function (event) {
             break;
         case "info":
             PAGES.goto("event-info");
-            UTIL.showOverlay(false);
             document.getElementById("event-info-message").innerHTML = event.args.message; 
+            break;
+        case "video":
+            USEREVENT.showVideo(event.args.url);
             break;
     }
 }
 
-socket.on('start-event', NETWORK.receiveSessionEvent);
+let lastevent_id = null;
+socket.on('start-event', (data_pack) => {
+    
+    const userGroup = userData.groups[0].name
+    const data = data_pack[userGroup]
+
+    if (!data) {NETWORK.endEvent(); return}
+
+    if (lastevent_id != data.id) NETWORK.receiveSessionEvent(data)
+    lastevent_id = data.id
+
+});
+
+
+NETWORK.endEvent = function() {
+    UTIL.showOverlay(false);
+    USEREVENT.showVideo(false);
+    PAGES.goto("event-idle");
+}
+
+/*
 socket.on('end-event', () => {
     UTIL.showOverlay(false);
-    clearInterval(NETWORK.rotateSchedule);
+    USEREVENT.showVideo(false);
     PAGES.goto("event-idle");
 });
+*/
 
 // Chat message
 

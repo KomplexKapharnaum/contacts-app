@@ -7,12 +7,36 @@ const DEBUGS = {
     pwaBypass: true
 }
 
+// Fullscreen toggle button
+//
+
+const fullscreen_btn = document.getElementById("toggle_fullscreen");
+
+fullscreen_btn.addEventListener("click", () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen();
+    }
+});
+
+function showFullScreenButton(bool) {
+    if (bool) {
+        fullscreen_btn.style.display = "flex";
+    } else {
+        fullscreen_btn.style.display = "none";
+    }
+}
+
 // Render rounded graphics
 //
 
-const renderer = new roundedGraphics(document.getElementById("background"), 1);
-document.querySelectorAll(".illustration").forEach(illustration => renderer.addElement(illustration));
-document.querySelectorAll("button").forEach(button => renderer.addElement(button));
+const renderer = new roundedGraphics(document.getElementById("background"), {x: window.innerWidth, y: window.innerHeight});
+
+// Add elements here
+const elements_to_render = [".illustration", "button", "h1", "h2", "h3"];
+document.querySelectorAll(elements_to_render.join(",")).forEach(elm => renderer.addElement(elm));
+
 renderer.updateColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
 renderer.updateBackgroundColor(getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim());
 
@@ -446,6 +470,7 @@ UTIL.getCssRootVar = function(variable) {
 }
 
 UTIL.generateShareLink = function(link) {
+    /*
     document.getElementById("qr-code").innerHTML = "";
     let qrcode = new QRCode("qr-code", {
         text: link,
@@ -454,11 +479,18 @@ UTIL.generateShareLink = function(link) {
         colorDark : UTIL.getCssRootVar("--color-primary"),
         colorLight : UTIL.getCssRootVar("--color-background"),
         correctLevel : QRCode.CorrectLevel.H
-    });
+    })
+
+    console.log(qrcode)
 
     document.getElementById("copylink").onclick = function() {
         navigator.clipboard.writeText(link);
     }
+
+    qrcode._oDrawing._elCanvas.style.display = "none";
+    qrcode._oDrawing._elImage.dataset.rendererRotate = "0";
+    renderer.addElement(qrcode._oDrawing._elImage);
+    */
 }
 
 UTIL.promptForSubscribingEvent = function(evenement) {

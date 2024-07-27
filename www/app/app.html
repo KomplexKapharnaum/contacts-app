@@ -321,16 +321,16 @@
 
             <div id="nextevent-countdown">
                 <div class="jours">
-                    <div class="number" id="label-countdown-days">04</div>
-                    <div class="label">Jours</div>
+                    <h1 class="number" id="label-countdown-days">04</h1>
+                    <h3 class="label">Jours</h3>
                 </div>
                 <div class="heures">
-                    <div class="number" id="label-countdown-hours">17</div>
-                    <div class="label">Heures</div>
+                    <h1 class="number" id="label-countdown-hours">17</h1>
+                    <h3 class="label">Heures</h3>
                 </div>
                 <div class="minutes">
-                    <div class="number" id="label-countdown-minutes">11</div>
-                    <div class="label">Minutes</div>
+                    <h1 class="number" id="label-countdown-minutes">11</h1>
+                    <h3 class="label">Minutes</h3>
                 </div>
             </div>
         </div>
@@ -364,7 +364,7 @@
         <h1>CONTACTS</h1>
         <div class="caption">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
-            <h1>Un évènement est en cours</h1>
+            <h1><span>Un évènement</span> <span>est en cours</span></h1>
             <div class="txt secondary">
                 Gardez votre téléphone sous la main..
             </div>
@@ -502,7 +502,9 @@
             Partage l'expérience CONTACT avec tes proches !
         </div>
         
-        <div id="qr-code"></div>
+        <div id="qr-code" class="illustration-container">
+            <img src="./img/qrcode.png" alt="QR CODE" class="illustration" data-renderer-rotate="0">
+        </div>
         
         <div class="buttons">
             <button id="copylink">
@@ -534,7 +536,15 @@
         
     </div>
 
+    <div id="toggle_fullscreen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-expand"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21m0 0h4.8M3 21l6-6"/><path d="M21 7.8V3m0 0h-4.8M21 3l-6 6"/><path d="M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
+    </div>
+
     <div id="overlay"></div>
+
+    <div id="video-overlay">
+        <video src="" loop muted playsinline></video>
+    </div>
 
     <script src="./js/libs/nosleep.js"></script>
 

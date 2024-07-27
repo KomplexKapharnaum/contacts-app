@@ -70,9 +70,6 @@ PAGES.addCallback("event-idle", () => {
     UTIL.shownav(false);
     UTIL.countDownInterval = false;
 
-    // check if an event is active
-    socket.emit("get-last-event")
-
     /*
     // Watch for event end
     if (EVENT_WATCHER) clearInterval(EVENT_WATCHER);
