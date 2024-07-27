@@ -91,14 +91,7 @@ class roundedGraphics {
         shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
         this.shader = shader;
 
-        window.addEventListener('resize', () => {
-            this.resizeUpdate();
-        });
-
-        document.addEventListener('fullscreenchange', this.resizeUpdate.bind(this));
-        document.addEventListener('webkitfullscreenchange', this.resizeUpdate.bind(this));
-        document.addEventListener('mozfullscreenchange', this.resizeUpdate.bind(this));
-        document.addEventListener('MSFullscreenChange', this.resizeUpdate.bind(this));
+        this.resizeUpdate();
 
         parent.appendChild(canvas);
 
@@ -117,6 +110,8 @@ class roundedGraphics {
 
         shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
         shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
+
+        requestAnimationFrame(this.resizeUpdate);
     }
 
     roundRect(
