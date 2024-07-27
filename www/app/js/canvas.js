@@ -92,22 +92,31 @@ class roundedGraphics {
         this.shader = shader;
 
         window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            this.width = canvas.width;
-            this.height = canvas.height;
-
-            buffer.width = this.width;
-            buffer.height = this.height;
-
-            shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
-            shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
+            this.resizeUpdate();
         });
+
+        document.addEventListener('fullscreenchange', this.resizeUpdate.bind(this));
+        document.addEventListener('webkitfullscreenchange', this.resizeUpdate.bind(this));
+        document.addEventListener('mozfullscreenchange', this.resizeUpdate.bind(this));
+        document.addEventListener('MSFullscreenChange', this.resizeUpdate.bind(this));
 
         parent.appendChild(canvas);
 
         this.shader.loadTexture(this.renderedImage, 'u_texture');
+    }
+
+    resizeUpdate() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        this.width = canvas.width;
+        this.height = canvas.height;
+
+        buffer.width = this.width;
+        buffer.height = this.height;
+
+        shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
+        shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
     }
 
     roundRect(
