@@ -285,7 +285,7 @@ class roundedGraphics {
     }
     
     render() {
-        this.shader.updateUniform('u_time', '1f', performance.now() / 1000);
+        this.shader.updateUniform('u_time', '1f', (performance.now() % 30000) / 1000);
         this.renderBuffer();
         this.shader.update();
         requestAnimationFrame(() => this.render());
