@@ -128,4 +128,8 @@ class WebGLShader {
     getUniform(name) {
         return this.gl.getUniformLocation(this.program, name);
     }
+
+    updateSize(width, height) {
+        this.gl.viewport(0, 0, width, height);
+    }
 }

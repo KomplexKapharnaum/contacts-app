@@ -1,28 +1,43 @@
 class roundedGraphics {
     constructor(parent, resolution) {
+        /*
+            canvas : Dom element used to render the final image
+            buffer : buffer containing all rendered dom elements
+            renderedImage : render of the pixelated image
+
+            u_resolution : resolution of the canvas
+            u_time : time in seconds
+
+            imageRes : resolution of the pixelated image
+        */
+
+
+        // Canvas
         const canvas = document.createElement('canvas');
         this.parent = parent;
         
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
-
         this.canvas = canvas;
-        this.width = canvas.width;
-        this.height = canvas.height;
 
+        // Buffer
         const buffer = document.createElement('canvas');
-        buffer.width = this.width;
-        buffer.height = this.height;
+        buffer.width = this.canvas.width;
+        buffer.height = this.canvas.height;
         this.buffer = buffer;
 
+        // RenderedImage
         const renderedImage = document.createElement('canvas');
+        renderedImage.width = this.canvas.width;
+        renderedImage.height = this.canvas.height;
         this.renderedImage = renderedImage;
 
+        // Image resolution
         this.res = resolution;
+
+        // Other parameters
         this.color = 'white';
         this.backgroundColor = 'black';
-
-        // document.body.appendChild(buffer);
 
         this.elements = [];
 
@@ -87,30 +102,32 @@ class roundedGraphics {
         `
 
         const shader = new WebGLShader(canvas, fragmentShaderSource);
+
         shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
         shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
+        
         this.shader = shader;
 
-        // window.addEventListener('resize', () => {
         const updateResize = () => {
             const w = window.innerWidth;
             const h = window.innerHeight;
 
-            canvas.width = w;
-            canvas.height = h;
+            this.canvas.width = w;
+            this.canvas.height = h;
 
-            this.width = w;
-            this.height = h;
+            this.buffer.width = w;
+            this.buffer.height = h;
 
             shader.updateUniform('u_resolution', '2f', [w, h]);
-            // shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
-            
-            requestAnimationFrame(updateResize);
+
+            shader.updateSize(w, h);
         }
 
-        updateResize();
-        // });
-
+        window.addEventListener('resize', updateResize);
+        window.addEventListener('orientationchange', updateResize);
+        
+        document.addEventListener('fullscreenchange', updateResize);
+        
         parent.appendChild(canvas);
 
         this.shader.loadTexture(this.renderedImage, 'u_texture');
@@ -151,8 +168,8 @@ class roundedGraphics {
       }
     
     renderBuffer() {
-        this.buffer.width = this.width;
-        this.buffer.height = this.height;
+        this.buffer.width = this.canvas.width;
+        this.buffer.height = this.canvas.height;
 
         const ctx = this.buffer.getContext('2d');
         ctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
