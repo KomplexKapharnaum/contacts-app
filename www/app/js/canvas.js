@@ -32,6 +32,27 @@ class roundedGraphics {
             uniform vec2 u_resolution;
             uniform float u_time;
             uniform vec2 imageRes;
+
+            float density = 1.3;
+            float opacityScanline = .3;
+            float opacityNoise = .2;
+            float flickering = 0.1;
+
+            float random (vec2 st) {
+                return fract(sin(dot(st.xy,
+                    vec2(12.9898,78.233)))*
+                    43758.5453123);
+            }
+
+            float blend(const in float x, const in float y) {
+                return (x < 0.5) ? (2.0 * x * y) : (1.0 - 2.0 * (1.0 - x) * (1.0 - y));
+            }
+
+            vec3 blend(const in vec3 x, const in vec3 y, const in float opacity) {
+                vec3 z = vec3(blend(x.r, y.r), blend(x.g, y.g), blend(x.b, y.b));
+                return z * opacity + x * (1.0 - opacity);
+            }
+
             void main(void) {  
                 vec2 uv = gl_FragCoord.xy / u_resolution;
                 vec2 st = (floor(uv * imageRes) + 0.5) / imageRes;
@@ -39,17 +60,29 @@ class roundedGraphics {
 
                 float t = max(min(fract(sin(u_time)*43758.5453),sin(u_time)),0.) * (floor(sin(u_time/2.))+1.);
 
-                float n = 1.; //fract(sin(u_time + (uv.x * 155.231) * (uv.y * 154.231))*43758.5453) * 0.4 + .6;
+                // float n = 1.; //fract(sin(u_time + (uv.x * 155.231) * (uv.y * 154.231))*43758.5453) * 0.4 + .6;
 
                 vec2 d = sin(t)*(vec2(10.,6.)/u_resolution); 
-                vec4 O = vec4(
-                    texture2D(u_texture,st-d).x*n,
-                    texture2D(u_texture,st  ).y*n,
-                    texture2D(u_texture,st+d).z*n,
-                    1
+                vec3 col = vec3(
+                    texture2D(u_texture,st-d).x,
+                    texture2D(u_texture,st  ).y,
+                    texture2D(u_texture,st+d).z
                 );
+
+                // float rand = fract(sin(dot(uv + u_time, vec2(12.9898, 78.233))) * 43758.5453) * 0.1 + 0.05;
                 
-                gl_FragColor = O;
+                // gl_FragColor = O + rand;
+
+                float count = u_resolution.y * density;
+                vec2 sl = vec2(sin(uv.y * count), cos(uv.y * count));
+                vec3 scanlines = vec3(sl.x, sl.y, sl.x);
+
+                col += col * scanlines * opacityScanline;
+                col += col * vec3(random( uv * u_time )) * opacityNoise;
+                col += col * sin( 110.0 * u_time ) * flickering;
+
+
+                gl_FragColor = vec4(col,1.0);
             }
         `
 
