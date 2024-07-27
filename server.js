@@ -402,9 +402,9 @@ SOCKET.io.on('connection', (socket) => {
         {
           db("users").select("is_connected", "phone").then((users) => {
             users.forEach((u) => {
-              if (u.is_connected == 0) {
-                sendSMS([u.phone], "Nouveau message ! contacts.kxkm.net")
-              }
+              // if (u.is_connected == 0) {
+                sendSMS([u.phone], "Vous avez reçu un nouveau message sur la webapp .::. contacts.kxkm.net")
+              // }
             })
           })
           // db("users").select("is_connected", "phone").then((users) => {
