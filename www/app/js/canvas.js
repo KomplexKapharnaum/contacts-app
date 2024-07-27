@@ -91,19 +91,25 @@ class roundedGraphics {
         shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
         this.shader = shader;
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // window.addEventListener('resize', () => {
+        const updateResize = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
 
-            this.width = canvas.width;
-            this.height = canvas.height;
+            canvas.width = w;
+            canvas.height = h;
 
-            buffer.width = this.width;
-            buffer.height = this.height;
+            this.width = w;
+            this.height = h;
 
-            shader.updateUniform('u_resolution', '2f', [canvas.width, canvas.height]);
-            shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
-        });
+            shader.updateUniform('u_resolution', '2f', [w, h]);
+            // shader.updateUniform('imageRes', '2f', [canvas.width, canvas.height]);
+            
+            requestAnimationFrame(updateResize);
+        }
+
+        updateResize();
+        // });
 
         parent.appendChild(canvas);
 
@@ -230,11 +236,10 @@ class roundedGraphics {
 
         this.renderedImage.width = this.res.x;
         this.renderedImage.height = this.res.y;
-        renderedCtx.width = this.res.x;
-        renderedCtx.height = this.res.y;
+
         renderedCtx.fillStyle = this.backgroundColor;
         renderedCtx.fillRect(0, 0, this.renderedImage.width, this.renderedImage.height); 
-        // renderedCtx.clearRect(0, 0, this.renderedImage.width, this.renderedImage.height);
+
         renderedCtx.drawImage(this.buffer, 0, 0, this.renderedImage.width, this.renderedImage.height);
         
         this.shader.loadTexture(this.renderedImage, 'u_texture');

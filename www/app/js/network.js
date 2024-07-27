@@ -143,7 +143,7 @@ socket.on("getEventState", (state) => {
     console.log("event state change : " + state)
 
     if (!userData) return;
-    // if (!userData.selected_avatar) return;
+    if (!userData.selected_avatar) return;
 
     NETWORK.isEventLive = state
     

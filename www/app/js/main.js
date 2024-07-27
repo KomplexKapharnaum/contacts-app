@@ -31,7 +31,7 @@ function showFullScreenButton(bool) {
 // Render rounded graphics
 //
 
-const renderer = new roundedGraphics(document.getElementById("background"), 1);
+const renderer = new roundedGraphics(document.getElementById("background"), {x: window.innerWidth, y: window.innerHeight});
 
 // Add elements here
 const elements_to_render = [".illustration", "button", "h1"];
