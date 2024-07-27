@@ -110,7 +110,21 @@ button, .button {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 4px; 
+}
+
+/* Specific styles */
+
+#toggle_fullscreen {
+    position: fixed;
+    top: 6px;
+    left: 6px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    stroke:var(--color-primary);
+    opacity: 0.5;
 }
 
 body.navhidden {
@@ -269,6 +283,8 @@ input[type="text"] {
 
     font-family: var(--font-big);
     font-size: 3em;
+
+    z-index: 10;
 }
 
 #overlay img {
@@ -297,6 +313,8 @@ input[type="text"] {
     height: 100%;
 
     background-color: var(--color-background);
+    
+    z-index: 10;
 }
 
 #video-overlay.active {

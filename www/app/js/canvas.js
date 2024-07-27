@@ -208,7 +208,16 @@ class roundedGraphics {
                     ctx.font = cs.fontSize + " " + cs.fontFamily;
 
                     const fontHeight = parseInt(cs.fontSize);
-                    ctx.fillText(domElement.innerText, coords.x + coords.width / 2, coords.y + coords.height / 2 + fontHeight / 2);
+                    const childs = domElement.querySelectorAll('span');
+                    if (childs.length > 0) {
+                        let id=0
+                        childs.forEach(child => {
+                            ctx.fillText(child.innerText, coords.x + coords.width / 2, coords.y + fontHeight * id + coords.height / 2);
+                            id++
+                        })       
+                    } else {
+                        ctx.fillText(domElement.innerText, coords.x + coords.width / 2, coords.y + coords.height / 2 + fontHeight / 2);
+                    }
                     break;
 
                 default:

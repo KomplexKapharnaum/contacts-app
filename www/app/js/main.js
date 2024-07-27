@@ -7,6 +7,27 @@ const DEBUGS = {
     pwaBypass: true
 }
 
+// Fullscreen toggle button
+//
+
+const fullscreen_btn = document.getElementById("toggle_fullscreen");
+
+fullscreen_btn.addEventListener("click", () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen();
+    }
+});
+
+function showFullScreenButton(bool) {
+    if (bool) {
+        fullscreen_btn.style.display = "flex";
+    } else {
+        fullscreen_btn.style.display = "none";
+    }
+}
+
 // Render rounded graphics
 //
 
