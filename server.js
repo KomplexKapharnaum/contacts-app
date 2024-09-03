@@ -450,7 +450,33 @@ SOCKET.io.on('connection', (socket) => {
     }).then((res) => console.log(res)).catch((err) => console.log(err))
   })
 
+  /* Livechat system */
+  /* */
+
+  socket.on("livechat-send", (uuid, msg) => {
+    if (!uuid) return
+    if (socket.user_uuid !== uuid) return
+
+    db('users').where({ uuid: uuid }).then((user) => {
+      user = user[0]
+      let data = {
+        username: user.name,
+        date: Date.now(),
+        msg: msg,
+        important: false
+      }
+      chat_buffer.push(data)
+      SOCKET.io.emit('livechat-get', data)
+    });
+  })
+
+  socket.on("livechat-getall", () => {
+    socket.emit('livechat-getall', chat_buffer)
+  })
+
 });
+
+let chat_buffer = []
 
 // Express Server
 //

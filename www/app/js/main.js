@@ -166,8 +166,7 @@ UTIL.normalizePhone = function(phone) {
     phone = phone.replace(/ /g, '');
     if (phone[0] === '+') phone = '0' + phone.substring(3);
     return phone;
-  }
-  
+}
 
 UTIL.isPhoneNumberValid = function (str) {
     str = UTIL.normalizePhone(str);

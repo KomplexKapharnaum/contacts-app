@@ -32,6 +32,7 @@ class User extends Model {
                 name: null,
                 phone: null,
                 uuid: null,
+                public_id: null,
                 selected_avatar: null,
                 last_read: null,
                 is_connected: null
