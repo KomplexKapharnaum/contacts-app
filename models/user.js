@@ -47,8 +47,21 @@ class User extends Model {
         this.genjobs = [];
     }
 
+    makeid(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          counter += 1;
+        }
+        return result;
+    }
+
     async new(f) {
         if (f.phone) f.phone = this.phoneParse(f.phone);
+        f.public_id = this.makeid(10);
         let res = await super.new(f);
 
         // add link to next session
@@ -315,6 +328,7 @@ db.schema.hasTable('users').then(exists => {
             table.string('uuid');
             table.integer('selected_avatar');
             table.integer('last_read');
+            table.string('public_id');
             table.integer('is_connected');
 
         }).then(() => {

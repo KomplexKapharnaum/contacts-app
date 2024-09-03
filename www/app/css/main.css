@@ -662,3 +662,12 @@ input[type="text"] {
 .chat-message {
     width: 100%;
 }
+
+.chat-message.important {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 8px;
+    border-radius: 8px 8px 0px 8px;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}

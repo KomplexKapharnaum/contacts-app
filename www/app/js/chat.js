@@ -10,9 +10,9 @@ CHAT.debug = (...args) => {
 
 CHAT.feed = []
 
-CHAT.send = (msg) => {
+CHAT.send = (msg, important) => {
     if (!userData.uuid) return
-    socket.emit('livechat-send', userData.uuid, msg);
+    socket.emit('livechat-send', userData.uuid, msg, important);
 }
 
 CHAT.receive = (packet) => {
@@ -22,6 +22,7 @@ CHAT.receive = (packet) => {
 }
 
 CHAT.load = () => {
+    CHAT.clear()
     if (!userData.uuid) return
     CHAT.debug("loading chat...")
     socket.emit('livechat-getall', userData.uuid)
@@ -55,13 +56,17 @@ CHAT.showMessage = (packet) => {
     message.classList.add('chat-message')
 
     let date = new Date(packet.date)
-    const hour = date.getHours();
-    const min = date.getMinutes();
+    const hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    const min = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 
-    const msg = `[${hour}:${min}] ${packet.username}: ${packet.msg}`
+    let msg = `[${hour}:${min}] ${packet.username}: ${packet.msg}`
+    
+    if (packet.important) { 
+        message.classList.add('important')
+        msg = `[${hour}:${min}] ${packet.msg}`
+    } 
 
     message.innerHTML = msg
-
     chat_messages.appendChild(message)
 }
 

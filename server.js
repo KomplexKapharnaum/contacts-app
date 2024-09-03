@@ -453,7 +453,7 @@ SOCKET.io.on('connection', (socket) => {
   /* Livechat system */
   /* */
 
-  socket.on("livechat-send", (uuid, msg) => {
+  socket.on("livechat-send", (uuid, msg, important) => {
     if (!uuid) return
     if (socket.user_uuid !== uuid) return
 
@@ -463,7 +463,8 @@ SOCKET.io.on('connection', (socket) => {
         username: user.name,
         date: Date.now(),
         msg: msg,
-        important: false
+        public_id: user.public_id,
+        important: important
       }
       chat_buffer.push(data)
       SOCKET.io.emit('livechat-get', data)
