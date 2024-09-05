@@ -543,6 +543,9 @@ app.get('/media', function (req, res) {
   res.sendFile(__dirname + '/www/media/list.html');
 });
 
+// AR tests
+app.use('/ar', express.static('www/ar'));
+
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {
