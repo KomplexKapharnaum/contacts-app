@@ -13,7 +13,7 @@ uniform float timeMsec;
 uniform sampler2D image;
 uniform vec2 u_resolution;
 
-float NOISE_DETAIL = 10.0;
+float NOISE_DETAIL = 20.0;
 
 vec3 mod289(vec3 x)
 {
@@ -182,7 +182,7 @@ float pnoise(vec3 P, vec3 rep)
 
 vec4 displace(float t)
 {
-    vec2 uv = vUv ;
+    vec2 uv = vUv * .5;
     uv.x *= u_resolution.x / u_resolution.y;
     
     float n = cnoise( vec3( uv, cos( t * 0.1 ) ) * NOISE_DETAIL + t * 0.5 );
@@ -198,7 +198,7 @@ void main() {
     vec2 uv = vUv;
 
     uv.x += displace.r * 0.03;
-	uv.y += displace.r * 0.08;
+	  uv.y += displace.r * 0.08;
     
     gl_FragColor = texture2D( image, uv );
 }
@@ -207,11 +207,75 @@ void main() {
 AFRAME.registerShader('displace', {
   schema: {
     timeMsec: {type: 'time', is: 'uniform'},
-    image: {type: 'map', is: 'uniform', default: new THREE.TextureLoader().load('./textures/paint.png')},
-    u_resolution: {type: 'vec2', is: 'uniform', default: new THREE.Vector2(window.innerWidth, window.innerHeight)}
+    image: {type: 'map', is: 'uniform', default: new THREE.TextureLoader().load('./textures/tex_plant.png')},
+    u_resolution: {type: 'vec2', is: 'uniform', default: new THREE.Vector2(512, 512)}
   },
 
   vertexShader: vert,
   fragmentShader: frag
 });
 
+AFRAME.registerComponent('renderer-savable', {
+  init: function () {
+    this.el.sceneEl.renderer.preserveDrawingBuffer = true;
+  }
+})
+
+
+AFRAME.registerComponent('model-shader', {
+  init: function () {
+
+    this.el.addEventListener('model-loaded', () => {
+      const obj = this.el.getObject3D('mesh');
+
+      obj.traverse((child) => {
+        if (child.isMesh) {
+         
+          child.material = new THREE.ShaderMaterial({
+            uniforms: {
+              timeMsec: {type: 'time', value: 0},
+              image: {type: 'map', value: new THREE.TextureLoader().load('./textures/tex_plant.png')},
+              u_resolution: {type: 'vec2', value: new THREE.Vector2(512, 512)}
+            },
+            vertexShader: vert,
+            fragmentShader: frag,
+            depthWrite: false,
+            depthTest: false
+          });
+
+          child.material.uniforms.timeMsec.needsUpdate = true;
+
+          const updateMaterial = () => {
+            child.material.uniforms.timeMsec.value = performance.now();
+            requestAnimationFrame(updateMaterial);  
+          }
+          updateMaterial();
+
+        }
+      });
+
+    });
+  }
+});
+
+function screenshot() {
+  const video = document.querySelector("video");
+  const ar_canvas = document.querySelector("canvas");
+ 
+  const buffer = document.createElement("canvas");
+  buffer.width = video.videoWidth;
+  buffer.height = video.videoHeight;
+
+  const ctx = buffer.getContext("2d");
+
+  // Make it possible to draw images on top of each other (support transparency)
+  ctx.globalCompositeOperation = "destination-over";
+  ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+  ctx.drawImage(ar_canvas, 0, 0, ar_canvas.width, ar_canvas.height);
+
+  const data = buffer.toDataURL("image/png");
+  const link = document.createElement("a");
+  link.download = "screenshot.png";
+  link.href = data;
+  link.click();
+}
