@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="margin : 0px; overflow: hidden;">
-    
-    <a-scene renderer-savable mindar-image="imageTargetSrc: ./markers/qr_code.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene renderer-savable mindar-image="imageTargetSrc: ./markers/qr_code.mind; warmupTolerance: 1; filterMinCF:0.1; filterBeta: 10;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
           <a-asset-item id="mask" src="models/mask_pixel.glb"></a-asset-item>
       </a-assets>
