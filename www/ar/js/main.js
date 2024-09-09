@@ -1,3 +1,6 @@
+navigator.mediaDevices.getUserMedia({audio: false, video: {
+  facingMode: 'environment',
+}})
 
 function buildImage(buffer, video, ar_img) {
 
