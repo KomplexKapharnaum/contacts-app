@@ -1,7 +1,3 @@
-navigator.mediaDevices.getUserMedia({audio: false, video: {
-  facingMode: 'user', // Front camera
-}})
-
 function buildImage(buffer, video, ar_img) {
 
   const ctx = buffer.getContext("2d");
