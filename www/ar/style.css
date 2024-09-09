@@ -1,0 +1,72 @@
+@font-face {
+    font-family: 'ark';
+    src: url(./fonts/ark.otf);
+}
+
+@font-face {
+    font-family: 'avenir';
+    src: url(./fonts/avenir.otf);
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;  
+}
+
+.overlay-text {
+    position: fixed;
+    top:0;
+    left:0;
+
+    display: flex;
+
+    font-family: 'ark';
+    font-size: 3em;
+    padding: 16px;
+
+    color: white;
+    mix-blend-mode: difference;
+
+    pointer-events: none;    
+}
+
+.overlay-text > span {
+    text-orientation: mixed;
+    writing-mode: vertical-lr;
+}
+
+.sm {
+    font-size: 22px;
+}
+
+#qr_code {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    
+    right: 0px;
+    bottom: 0px;
+    
+    margin: 16px;
+}
+
+#take-screenshot {
+    position: fixed;
+    width: auto;
+    height: 32px;
+    padding: 8px;
+
+    left: 50%;
+    bottom: 16px;
+
+    transform: translate(-50%, 0);
+
+    background-color: white;
+    border: solid 2px black;
+    border-radius: 8px;
+
+    font-family: 'avenir';
+}

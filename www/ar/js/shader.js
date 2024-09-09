@@ -1,4 +1,3 @@
-
 const vert = `
 varying vec2 vUv;
 void main() {
@@ -12,8 +11,8 @@ varying vec2 vUv;
 uniform float timeMsec;
 uniform sampler2D image;
 uniform vec2 u_resolution;
-
-float NOISE_DETAIL = 20.0;
+uniform float noise_detail;
+uniform float noise_force;
 
 vec3 mod289(vec3 x)
 {
@@ -185,7 +184,7 @@ vec4 displace(float t)
     vec2 uv = vUv * .5;
     uv.x *= u_resolution.x / u_resolution.y;
     
-    float n = cnoise( vec3( uv, cos( t * 0.1 ) ) * NOISE_DETAIL + t * 0.5 );
+    float n = cnoise( vec3( uv, cos( t * 0.1 ) ) * noise_detail + t * 0.5 ) * noise_force;
     
     vec3 color = vec3( n );
     
@@ -195,7 +194,7 @@ vec4 displace(float t)
 void main() {
     vec4 displace = displace(timeMsec / 400.0);
 
-    vec2 uv = vUv;
+    vec2 uv = vec2(vUv.x, 1.0 - vUv.y);
 
     uv.x += displace.r * 0.03;
 	  uv.y += displace.r * 0.08;
@@ -203,27 +202,26 @@ void main() {
     gl_FragColor = texture2D( image, uv );
 }
 `
-
+/*
 AFRAME.registerShader('displace', {
   schema: {
     timeMsec: {type: 'time', is: 'uniform'},
-    image: {type: 'map', is: 'uniform', default: new THREE.TextureLoader().load('./textures/tex_plant.png')},
+    image: {type: 'map', is: 'uniform', default: new THREE.TextureLoader().load('./textures/fire.png')},
     u_resolution: {type: 'vec2', is: 'uniform', default: new THREE.Vector2(512, 512)}
   },
-
   vertexShader: vert,
-  fragmentShader: frag
+  fragmentShader: frag,
+  preserveDrawingBuffer: true
 });
-
-AFRAME.registerComponent('renderer-savable', {
-  init: function () {
-    this.el.sceneEl.renderer.preserveDrawingBuffer = true;
-  }
-})
-
+*/
 
 AFRAME.registerComponent('model-shader', {
+  schema: {
+    texture: {type: 'string', default: './textures/default.jpg'}
+  },
   init: function () {
+
+    console.log(this.data)
 
     this.el.addEventListener('model-loaded', () => {
       const obj = this.el.getObject3D('mesh');
@@ -234,8 +232,10 @@ AFRAME.registerComponent('model-shader', {
           child.material = new THREE.ShaderMaterial({
             uniforms: {
               timeMsec: {type: 'time', value: 0},
-              image: {type: 'map', value: new THREE.TextureLoader().load('./textures/tex_plant.png')},
-              u_resolution: {type: 'vec2', value: new THREE.Vector2(512, 512)}
+              image: {type: 'map', value: new THREE.TextureLoader().load(this.data.texture)},
+              u_resolution: {type: 'vec2', value: new THREE.Vector2(512, 512)},
+              noise_detail: {type: 'float', value: 25},
+              noise_force: {type: 'float', value: 0.3}
             },
             vertexShader: vert,
             fragmentShader: frag,
@@ -257,25 +257,3 @@ AFRAME.registerComponent('model-shader', {
     });
   }
 });
-
-function screenshot() {
-  const video = document.querySelector("video");
-  const ar_canvas = document.querySelector("canvas");
- 
-  const buffer = document.createElement("canvas");
-  buffer.width = video.videoWidth;
-  buffer.height = video.videoHeight;
-
-  const ctx = buffer.getContext("2d");
-
-  // Make it possible to draw images on top of each other (support transparency)
-  ctx.globalCompositeOperation = "destination-over";
-  ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-  ctx.drawImage(ar_canvas, 0, 0, ar_canvas.width, ar_canvas.height);
-
-  const data = buffer.toDataURL("image/png");
-  const link = document.createElement("a");
-  link.download = "screenshot.png";
-  link.href = data;
-  link.click();
-}

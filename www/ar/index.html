@@ -3,27 +3,18 @@
     <meta charset="UTF-8">
     <title>AR test</title>
 
-    <!-- import aframe and then ar.js with image tracking / location based features -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="js/aframe.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <script src="shader.js"></script>
-    <!-- style for the loader -->
-    <style>
-        body, html {
-            padding: 0;
-            margin: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;  
-        }
-    </style>
+    <script src="js/shader.js"></script>
+    <script src="js/main.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body style="margin : 0px; overflow: hidden;">
     
-    <a-scene renderer-savable mindar-image="imageTargetSrc: targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene renderer-savable mindar-image="imageTargetSrc: ./markers/qr_code.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-          <!-- img id="card" src="./textures/paint.png" / -->
-          <a-asset-item id="mask" src="./mask.glb"></a-asset-item>
+          <a-asset-item id="mask" src="models/mask_pixel.glb"></a-asset-item>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -33,15 +24,24 @@
         
           <a-entity
           gltf-model="#mask"
-          scale="0.5 0.5 0.5"
-          position="0 0 0"
-          material="shader:displace;"
-          model-shader
+          scale="0.6 0.6 0.6"
+          position="0 -1.2 0"
+          model-shader="texture: ./textures/paint.png"
           >
 
         </a-entity>
       </a-entity>
 
     </a-scene>
+
+    <div class="overlay-text">
+      <span class="sm">carnaval digital-pirate</span>
+      <span>CONTACTS</span>
+    </div>
+
+    <button id="take-screenshot">Prendre une photo</button>
+
+    <img id="qr_code" src="./scan_reference.png" alt="scan">
+
   </body>
 </html>
