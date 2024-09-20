@@ -51,11 +51,16 @@ function screenshot() {
     buildImage(buffer, video, ar_img);
 
     const data = buffer.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.download = "screenshot.png";
-    link.href = data;
-    link.click();
+    document.getElementById("overlay").classList.add("active");
+    document.getElementById("image-screenshot").src = data;
 
+    const link = document.getElementById("download");
+    link.onclick = function() {
+      const a = document.createElement("a");
+      a.href = data;
+      a.download = "screenshot.png";
+      a.click();  
+    }
   });
 
   ar_img.src = ar_data.toDataURL("image/png");
@@ -63,4 +68,7 @@ function screenshot() {
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("take-screenshot").addEventListener("click", screenshot)  
+  document.getElementById("retry").addEventListener("click", () => {
+    document.getElementById("overlay").classList.remove("active");
+  });  
 })

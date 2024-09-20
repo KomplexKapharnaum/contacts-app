@@ -8,6 +8,10 @@
     src: url(./fonts/avenir.otf);
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body, html {
     padding: 0;
     margin: 0;
@@ -53,20 +57,72 @@ body, html {
     margin: 16px;
 }
 
-#take-screenshot {
-    position: fixed;
-    width: auto;
-    height: 32px;
+button {
     padding: 8px;
-
-    left: 50%;
-    bottom: 16px;
-
-    transform: translate(-50%, 0);
-
+    
     background-color: white;
     border: solid 2px black;
     border-radius: 8px;
 
     font-family: 'avenir';
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+button.big {
+    font-size: 1.2em;
+}
+
+#take-screenshot {
+    position: fixed;
+    width: auto;
+
+    left: 50%;
+    bottom: 16px;
+
+    transform: translate(-50%, 0);
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+
+    z-index: 10;
+}
+
+#overlay.active {
+    display: flex;
+}
+
+#overlay>img {
+    width: 100vw;
+    height: 100vh;
+
+    z-index: 0;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    
+    object-fit: cover;
+}
+
+#overlay>button {
+    position: relative;
+    z-index: 1;
+}
+
+.mindar-ui-overlay, .mindar-ui-scanning {
+    pointer-events: none;
 }

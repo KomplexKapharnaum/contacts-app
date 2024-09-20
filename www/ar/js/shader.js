@@ -179,25 +179,24 @@ float pnoise(vec3 P, vec3 rep)
 }
 
 
-vec4 displace(float t)
+vec2 displace(float t)
 {
     vec2 uv = vUv * .5;
     uv.x *= u_resolution.x / u_resolution.y;
     
-    float n = cnoise( vec3( uv, cos( t * 0.1 ) ) * noise_detail + t * 0.5 ) * noise_force;
-    
-    vec3 color = vec3( n );
-    
-    return vec4( color, 1.0 );
+    float nx = cnoise( vec3( uv, cos( t * 0.1 ) ) * noise_detail + t * 0.5 ) * noise_force;
+    float ny = cnoise( vec3( uv, cos( t * 0.1 ) ) * noise_detail + t * 0.5 + 10000.0) * noise_force;
+
+    return vec2( nx, ny );
 }
 
 void main() {
-    vec4 displace = displace(timeMsec / 400.0);
+    vec2 displace = (displace(timeMsec / 1000.0) - noise_force / 2.0) * 2.0;
 
     vec2 uv = vec2(vUv.x, 1.0 - vUv.y);
 
-    uv.x += displace.r * 0.03;
-	  uv.y += displace.r * 0.08;
+    uv.x += displace.x * 0.05;
+	  uv.y += displace.y * 0.05;
     
     gl_FragColor = texture2D( image, uv );
 }
@@ -220,9 +219,6 @@ AFRAME.registerComponent('model-shader', {
     texture: {type: 'string', default: './textures/default.jpg'}
   },
   init: function () {
-
-    console.log(this.data)
-
     this.el.addEventListener('model-loaded', () => {
       const obj = this.el.getObject3D('mesh');
 
@@ -234,8 +230,8 @@ AFRAME.registerComponent('model-shader', {
               timeMsec: {type: 'time', value: 0},
               image: {type: 'map', value: new THREE.TextureLoader().load(this.data.texture)},
               u_resolution: {type: 'vec2', value: new THREE.Vector2(512, 512)},
-              noise_detail: {type: 'float', value: 25},
-              noise_force: {type: 'float', value: 0.3}
+              noise_detail: {type: 'float', value: 10},
+              noise_force: {type: 'float', value: 0.8}
             },
             vertexShader: vert,
             fragmentShader: frag,

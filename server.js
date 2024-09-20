@@ -546,6 +546,9 @@ app.get('/media', function (req, res) {
 // AR tests
 app.use('/ar', express.static('www/ar'));
 
+// Static path for testing modules
+app.use('/t', express.static('www/test'));
+
 // HOOKS
 //
 webhookHandler.on('*', function (event, repo, data) {
