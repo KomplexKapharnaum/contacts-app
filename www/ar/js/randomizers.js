@@ -11,7 +11,8 @@ AFRAME.registerComponent('random-model', {
     },
     init: function () {
         this.randomize()
-        /*setInterval(() => {
+        /*
+        setInterval(() => {
             this.randomize()
         }, 2000);*/
     }
