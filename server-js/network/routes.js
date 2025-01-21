@@ -12,8 +12,12 @@ app.get('/', function (req, res) {
 
 app.use('/static', express.static('www'));
 app.use('/app', express.static(__dirname + '/www/app'));
+
+// App web launcher (replace $BASEPATH$ with /app)
 app.get('/app', function (req, res) {
-    res.sendFile(__dirname + '/www/app/app.html');
+    let html = fs.readFileSync(path.join(__dirname, 'www/app/app.html'), 'utf8');
+    html = html.replace(/\$BASEPATH\$/g, '/app');
+    res.send(html);
 });
 
 app.get('/query', async function (req, res) {
