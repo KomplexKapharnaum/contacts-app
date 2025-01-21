@@ -2,6 +2,7 @@ import express from 'express';
 import { app } from '../core/server.js';
 import { query } from './query.js';
 import { __dirname } from '../../path.js';
+import fs from "fs";
 import police from '../core/police.js';
 
 app.use('/static', express.static('www'));
