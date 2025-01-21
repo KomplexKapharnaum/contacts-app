@@ -499,7 +499,10 @@ app.get('/', function (req, res) {
   res.redirect('/app');
 });
 
-
+// Serve EXIT
+app.get('/exit', function (req, res) {
+  res.sendFile(__dirname + '/exit.html');
+});
 
 // Serve static files /static
 // app.use('/static', express.static('www'));
