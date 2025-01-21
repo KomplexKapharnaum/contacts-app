@@ -1,4 +1,16 @@
+# APP
+uploads/*
+outputs/*
+database.json
+*.sqlite*
 data.db
+
+# UPLOAD
+upload/*.png
+
+# IMGS
+imgs/*
+media/*
 
 # Logs
 logs
