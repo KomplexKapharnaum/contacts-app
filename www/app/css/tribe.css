@@ -1,0 +1,84 @@
+#tribe-leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#tribe-leaderboard>.header {
+    color: var(--color-primary);
+    font-size: 22px;
+}
+
+#tribe-leaderboard>.header>span {
+    font-family: var(--font-big);
+    color: var(--color-secondary-3);
+    font-size: 32px;
+}
+
+#tribe-leaderboard>.info {
+    color: var(--color-primary);
+    opacity: 0.75;
+}
+
+#users-podium-top3 {
+    display: flex;
+    justify-content: space-around;
+    align-items: end;
+    gap: 4px;
+}
+
+#users-podium-top3>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+#users-podium-top3>.first {
+    --podium-color: #EAE441;
+    --size: 90px;
+}
+
+#users-podium-top3>.second {
+    --podium-color: #938DAF;
+    --size: 70px;
+}
+
+#users-podium-top3>.third {
+    --podium-color: #C08300;
+    --size: 50px;
+}
+
+#users-podium-top3>div>.avatar {
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background-color: gray;
+}
+
+#users-podium-top3>div>.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--podium-color);
+}
+
+#users-podium-top10 {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.leaderboard-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-primary);
+}
+
+.leaderboard-user>.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: gray;
+}

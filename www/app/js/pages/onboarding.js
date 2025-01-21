@@ -1,58 +1,89 @@
-// Register
-//
+const goto_onboarding_username = document.getElementById("goto-onboarding-username")
 
-let register_params = {
-    "phone": "",
-    "pseudo": ""
-};
+goto_onboarding_username.addEventListener("click", () => {	
+    PAGES.goto("onboarding-username")
+})
 
-function register_phone_err(txt) {
-    document.querySelector("#input_register_phone").parentElement.querySelector(".err").innerHTML = txt;
-}
+const onboarding_username = document.getElementById("onboarding-validate-username")
+const onboarding_input_username = document.getElementById("onboarding-input-username")
+const onboarding_username_error = document.getElementById("onboarding-username-error")
 
-function register_phone() 
-{
-    const input_phone = UTIL.normalizePhone(document.querySelector("#input_register_phone").value);
-    if (!UTIL.isPhoneNumberValid(input_phone)) {
-        register_phone_err("Numéro de téléphone invalide");
-    } else {
+onboarding_username.addEventListener("click", () => {
+    const username = onboarding_input_username.value
 
-         // Create or load user from phone
-         NETWORK.query('User.init_byphone', input_phone)
-            .then((data) => {
-                console.log("User created:", data);
-                userData = data;
-                register_phone_err("Compte créé !");
-                Cookies.set('token', data.uuid, 30);
-                NETWORK.loadUser()
-            })
-            .catch((err) => { 
-                register_phone_err("Numéro de téléphone invalide"); 
-                console.log("Error creating user:", err);
-            })
+    if (isUserNameValid(username)) {
+        QUERY.process("create_user", {name: username}).then((res) => {
+            if (res.status) {
+                if (res.data.uuid) {
+                    userData = res.data
+                    Cookie.set("uuid", res.data.uuid)
+                    subscribeToSession(res.data.uuid)
+                } else {
+                    onboarding_username_error.innerText = "Une erreur est survenue"
+                }
+            } else {
+                onboarding_username_error.innerText = res.data
+            }
+        })
     }
+})
+
+let avatar_creation_data = {}
+
+const onboarding_camera = document.getElementById("onboarding-video")
+const onboarding_video_capture = document.getElementById("onboarding-video-capture")
+const onboarding_video_canvas = document.getElementById("onboarding-video-canvas")
+
+const validate_buttons_container = document.getElementById("onboarding-video-validate-buttons")
+const videovalidate_send = document.getElementById("onboarding-video-send")
+const videovalidate_cancel = document.getElementById("onboarding-video-cancel")
+
+function displayCameraButtons(bool1, bool2) {
+    validate_buttons_container.style.display = bool1 ? "flex" : "none"
+    onboarding_video_capture.style.display = bool2 ? "block" : "none"
 }
 
-function register_pseudo_err(txt) {
-    document.querySelector("#input_register_pseudo").parentElement.querySelector(".err").innerHTML = txt;
-}
+function startCamera() {
 
-function register_pseudo() {
-    const input_pseudo = document.querySelector("#input_register_pseudo").value;
-    if (input_pseudo.length < 3) {
-        register_pseudo_err("Le pseudo doit faire au moins 3 caractères");
-    } else if (input_pseudo.length > 20) {
-        register_pseudo_err("Le pseudo doit faire moins de 20 caractères");
-    } else {
+    displayCameraButtons(false, false)
 
-        // Save pseudo
-        NETWORK.query('User.set_name', userData.uuid, input_pseudo)
-            .then((data) => {
-                console.log("User updated:", data);
-                userData = data;
-                register_pseudo_err("Pseudo enregistré !");
-                NETWORK.loadUser()
-            })
-            .catch((err) => { register_pseudo_err("Erreur lors de l'enregistrement du pseudo"); })
+    avatar_creation_data = {}
+
+    const constraints = {
+        audio: false,
+        video: { width: { ideal: 400 }, height: { ideal: 400 } }
     }
+
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(stream => {
+        onboarding_camera.srcObject = stream
+        onboarding_camera.play()
+        displayCameraButtons(false, true)
+        onboarding_video_capture.addEventListener("click", () => {
+            stream.getTracks().forEach(track => track.stop())
+        })
+    })
+    .catch(error => {
+        console.error('Error opening video camera.', error)
+    })
 }
+
+PAGES.addCallback("onboarding-selfie", () => {
+    startCamera()
+})
+
+onboarding_video_capture.addEventListener("click", () => {
+    const context = onboarding_video_canvas.getContext("2d")
+    context.drawImage(video_debug, 0, 0, onboarding_video_canvas.width, onboarding_video_canvas.height)
+
+    displayCameraButtons(true, false)
+
+    videovalidate_cancel.addEventListener("click", () => {
+        startCamera()
+    })
+
+    videovalidate_send.addEventListener("click", () => {
+        avatar_creation_data.avatar = onboarding_video_canvas.toDataURL("image/png")
+        PAGES.goto("onboarding-questions-01")
+    })
+})

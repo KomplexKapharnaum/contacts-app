@@ -1,0 +1,38 @@
+.page {
+    position: relative;
+    display:none;
+
+    height: 100%;
+    width: 100vw;
+
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+
+    padding: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.page.flex-top {
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.page.active {
+    display: flex;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+section.narrow {
+    max-width: 256px;
+    margin: 0 auto;
+}

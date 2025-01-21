@@ -1,0 +1,59 @@
+#profile-avatar {
+    width: 100%;
+    max-height: 512px;
+    object-fit: cover;
+}
+
+.notification {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--notif-color);
+    color: var(--color-background);
+}
+
+.notification button {
+    color: var(--notif-color);
+    background-color: var(--color-background);
+}
+
+.notification.profile {--notif-color: var(--color-secondary-1);}
+.notification.tribe {--notif-color: var(--color-secondary-3);}
+.notification.cyberspace {--notif-color: var(--color-secondary-2);}
+
+#trophies {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.trophy {
+    background-color: gray;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-size: cover;
+    box-shadow: 0px 0px 0px white;
+}
+
+.trophy.obtained {
+    opacity: 1;
+    box-shadow: 0px 0px 4px white;
+}
+
+.trophy .info {
+    display: none;
+}
+
+.trophy.active .info {
+    display: block;
+    position: absolute;
+    top: -8px;
+    left: 0px;
+    background-color: var(--color-background);
+    color: var(--color-primary);
+    padding: 8px;
+    transform: translateY(-100%);
+}

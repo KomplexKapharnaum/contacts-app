@@ -1,0 +1,26 @@
+.rdv {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+}
+
+.rdv.c1 {--rdv-color: var(--color-secondary-1)}
+.rdv.c2 {--rdv-color: var(--color-secondary-2)}
+.rdv.c3 {--rdv-color: var(--color-secondary-3)}
+.rdv.c4 {--rdv-color: var(--color-secondary-4)}
+
+.rdv::before {
+    content: "";
+    width: 8px;
+    border-radius: 4px;
+    background-color: var(--rdv-color);
+}
+
+.rdv>.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.rdv .date {
+    opacity: 0.75;
+}

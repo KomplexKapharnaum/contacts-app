@@ -1,10 +1,10 @@
-<html lang="fr" >
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CONTACTS</title>
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/avatar_questions.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+
+    <!-- Socket.io -->
     <script src="/socket.io/socket.io.js"></script>
 
     <!-- Leaflet -->
@@ -15,375 +15,148 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
 
-    <!-- Qr code -->
-    <script src="./js/qrcode.min.js"></script>
+    <!-- CSS -->       
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/pages.css">
 
-</head>
-<body class="navhidden">
-    <div id="background"></div>
-    <nav>
-        <button onclick="processEventRouting()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </button>
-        <button onclick="PAGES.goto('notifications')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        </button>
-        <button onclick="PAGES.goto('mon_avatar')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </button>
+    <link rel="stylesheet" href="./css/events.css">
+    <link rel="stylesheet" href="./css/live.css">
+    <link rel="stylesheet" href="./css/chat.css">
 
-        <button onclick="PAGES.goto('chat')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </button>
-
-        <button onclick="PAGES.goto('share_link')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-        </button>
-    </nav>
-    <!-- Onboarding -->
-    <div class="page" data-page-id="unsupported">
-        <h1>PWA NOT COMPATIBLE</h1>
-    </div>
+    <link rel="stylesheet" href="./css/profile.css">
+    <link rel="stylesheet" href="./css/tribe.css">
+    <link rel="stylesheet" href="./css/cyberspace.css">
     
-    <div class="page active" data-page-id="home">
+</head>
+<body>
+    
+    <div class="page active" data-page-id="loading">
+        <div class="center-img">
+            <img src="./img/load.gif" alt="loading...">
+        </div>
+    </div>
+
+    <!-- Onboarding pages -->
+    <div class="page" data-page-id="home">
         <h1>CONTACTS</h1>
 
         <div class="caption">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/mask.png" alt="image test">
+            <div class="illus-container">
+                <img class="illus" src="./img/mask2.png" alt="Carnaval mask">
             </div>
-            <div class="txt secondary">
+            <div class="txt">
                 <span>Bienvenue au carnaval CONTACTS</span>
                 <span>Rejoignez notre monde virtuel</span>
             </div>
         </div>
+
+        <div class="buttons">
+            <button id="goto-onboarding-username" class="c4">S'inscrire</button>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="onboarding-username">
+        <div class="input-container">
+            <span>Rentre ton nom d'utilisateur</span>
+            <input type="text" id="onboarding-input-username" placeholder="Ton nom d'utilisateur">
+            <button id="onboarding-validate-username" class="c4">Valider</button>
+            <span class="error" id="onboarding-username-error"></span>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="onboarding-selfie">
+        <div class="input-container">
+            <span>C'est l'heure de faire ton avatar, prend toi en photo pour commencer !</span>
+            <video src="" id="onboarding-video" autoplay playsinline muted></video>
+            <div class="buttons-horizontal" id="onboarding-video-validate-buttons">
+                <button id="onboarding-video-cancel" class="c3">Recommencer</button>
+                <button id="onboarding-video-send" class="c4">Valider</button>
+            </div>
+            <button id="onboarding-video-capture" class="c2">Capture</button>
+            <canvas id="onboarding-video-canvas"></canvas>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="onboarding-questions-01">
         
-        <div class="buttons">
-            <button onclick="PAGES.goto('phone_register')">Connexion</button>
-            <!-- <button onclick="PAGES.goto('pwa_install')">Créer mon identité virtuelle</button> -->
-            <!-- <button onclick="PAGES.goto('phone_login')">J'ai déjà un compte</button> -->
-        </div>
     </div>
 
-    <!-- <div class="page" data-page-id="pwa_install">
-        <h1>CONTACTS</h1>
+    <!-- Events page -->
 
-        <div class="caption">
-            <img class="illustration" src="./img/install.png" alt="image test">
-            <div class="txt secondary">
-                <span>Veuillez installer l'application pour continuer</span>
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button onclick="PAGES.goto('phone_register')">Installer l'application</button>
-        </div>
-    </div> -->
-
-    <div class="page" data-page-id="phone_register">
-        <h1>CONTACTS</h1>
-
-        <div class="caption">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/phone.png" alt="image test">
-            </div>
-            <div class="txt secondary">
-                <span>Entrez votre numéro de téléphone</span>
-            </div>
-
-            <div class="input-text">
-                <input type="text" id="input_register_phone">
-                <div class="err"></div>
-            </div>
+    <div class="page" data-page-id="events-list">
         
-        </div>
-
-        <div class="buttons">
-            <button id="registerToLogin" style="visibility: hidden;" onclick="PAGES.goto('phone_login')">Se connecter avec un compte existant</button>
-            <button onclick="register_phone()">Valider mon téléphone</button>
-        </div>
-    </div>
-
-    <!-- <div class="page" data-page-id="phone_login">
-        <h1>CONTACTS</h1>
-
-        <div class="caption">
-            <img class="illustration" src="./img/phone.png" alt="image test">
-            <div class="txt secondary">
-                <span>Veuillez rentrer votre numéro de téléphone</span>
+        <template id="event-item-template">
+            <div class="event-item">
+                <div class="event-item-image"></div>
+                <div class="event-item-txt">
+                    <div class="event-item-name">Test name</div>
+                    <div class="event-item-countdown">1d 6h 15m</div>
+                </div>
             </div>
-
-            <div class="input-text">
-                <input type="text" id="input_login_phone">
-                <div class="err"></div>
-            </div>
+        </template>
         
+        <h1>EVENEMENTS</h1>
+        <div id="events-list-container">
+            
         </div>
-
-        <div class="buttons">
-            <button id="loginToRegister" style="visibility: hidden;" onclick="PAGES.goto('phone_register')">Créer un compte</button>
-            <button onclick="login_phone()">Valider mon téléphone</button>
-        </div>
-    </div> -->
-
-    <div class="page" data-page-id="pseudonyme_register">
-        <h1>CONTACTS</h1>
-
-        <div class="caption">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/crayon.png" alt="image test">
-            </div>
-            <div class="txt secondary">
-                <span>Entrez un pseudonyme</span>
-            </div>
-
-            <div class="input-text">
-                <input type="text" id="input_register_pseudo">
-                <div class="err"></div>
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button onclick="register_pseudo()">Valider mon pseudonyme</button>
-        </div>
-    </div>
-
-    <!-- Avatar creation -->
-
-    <div class="page" data-page-id="create_avatar_photo">
-
-        <div class="caption" style="margin:0; height:auto;">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/mask.png" alt="image test">
-            </div>
-            <div class="txt secondary">
-                Il est l'heure de concevoir ton identité virtuelle. Réponds à un petit formulaire pour avoir un avatar qui te sera unique. 
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button id="media-stream-snapshot">Capturer</button>
-        </div>
-        
-        <div class="video-container">
-            <video id="media-stream" src="" muted autoplay playsinline loop></video>
-            <img id="media-snapshot" style="display: none;" src="" alt="snapshot">
-            <button id="media-reload" style="visibility: hidden; transform: translate(-50%, 50%);">⟳</button>
-        </div>
-    </div>
-
-    <div class="page" data-page-id="create_avatar_question1">
-
-        <div class="caption" style="margin:0; height:auto;">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/mask.png" alt="image test">
-            </div>
-            <div class="txt secondary">
-                A quel point souhaites-tu rester anonyme ?
-            </div>
-        </div>
-
-        <div id="anonymity-container">
-            <img src="img/questions/mask_man.png" alt="face" class="center" draggable="false">
-            <img src="img/questions/mask.png" alt="face mask" id="anonymity-mask" draggable="false" style="top: 135px; left: 70px;">
-        </div>
-
-        <div class="buttons">
-            <button id="question1-suivant">Suivant</button>
-        </div>
-    </div>
-
-    <div class="page" data-page-id="create_avatar_question2">
-
-        <div class="txt secondary">
-            Quel est ta tribue ?
-        </div>
-
-        <div id="tribe-container">
-            <canvas id="tribe-canvas"></canvas>
-        </div>
-
-        <div class="buttons">
-            <button id="question2-suivant">Suivant</button>
-        </div>
-    </div>
-
-    <div class="page" data-page-id="create_avatar_question3">
-
-        <div class="caption" style="margin:0; height:auto;">
-            <div class="txt secondary">
-                Es-tu étrange ?
-            </div>
-        </div>
-
-        <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <!-- 12e0f970-53bc-42fb-a299-ef8b048a3798 -->
-                <filter id="anonymity-filter">
-                    <feTurbulence baseFrequency="0.05" numOctaves="4" result="12e0f970-53bc-42fb-a299-ef8b048a3798"></feTurbulence>
-                    <feDisplacementMap in="SourceGraphic" in2="12e0f970-53bc-42fb-a299-ef8b048a3798" scale="0" result="755421d4-9410-44cc-b138-fb3827ec1999"></feDisplacementMap>
-                </filter>
-            </defs>
-            <image xlink:href="./img/questions/body-full.png" width="100%" height="100%" filter="url(#anonymity-filter)" />
-        </svg>
-        
-        <input type="range" name="test" id="slider-weirdness" width="100%" min="0" max="50" step="0.1" value="0">
-
-        <div class="buttons">
-            <button id="question3-suivant">Suivant</button>
-        </div>
-    </div>
-    <div class="page" data-page-id="create_avatar_processing">
-        <h1>CONTACTS</h1>
-        <br />
-        <div class="caption" style="margin:0; height:auto;">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/mask.png" alt="image test">
-            </div>
-            <div class="txt secondary">
-                Ton avatar est en cours de création...
-            </div>
-            <div class="txt secondary">
-                Reviens dans un instant, tu seras notifié dès que ton avatar sera prêt.
-            </div>
-        </div>
-    </div>
-
-    <div class="page" data-page-id="create_avatar_results">
-        <h1>CONTACTS</h1>
-        <br />
-        <div class="caption" style="margin:0; height:auto;">
-            <div class="illustration-container">
-                <img class="illustration" src="./img/mask.png" alt="image test">
-            </div>
-            <div class="txt secondary" id="avatar-preview-text">
-                Ton avatar est en cours de création...
-            </div>
-        </div>
-
-        <!-- <img src="" alt="avatar" id="create-avatar-preview"> -->
-        <div id="create-avatar-preview"></div>
-    </div>
-
-    <!-- Main menu -->
-    <div class="page" data-page-id="main">
-        <h1>CONTACTS</h1>
-        <br />
-        <div class="caption">
-            <div class="illustration-container">
-                <img class="illustration maskSwitch" src="./img/mask.png" >
-            </div>
-            <div class="txt secondary">
-                <span>Bienvenue au carnaval CONTACTS</span>
-                <span>Rendez-vous demain !</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Event -->
-
-    <div class="page" data-page-id="event-subscribe-prompt">
-        <h1>CONTACTS</h1>
-        <br />
-        <div class="txt secondary">
-            <span>L'évènement <span id="subscribe-label-event"></span> va arriver bientôt !</span>
-            <span>Voulez-vous y participer ?</span>
-        </div>
-        <div class="buttons">
-            <button id="subscribe-confirm">Participer</button>
-            <button id="subscribe-decline">Ne pas participer</button>
-        </div>
-    </div>
-
-    <template id="event-list-item">
-        <button class="event-list-item">
-            <div class="event-list-item-title"></div>
-            <div class="event-list-item-date"></div>
-        </button>
-    </template>
-    
-    <div class="page" data-page-id="event-list">
-        <h1>CONTACTS</h1>
-        <br />
-        <div class="txt secondary">
-            Des évènements sont à venir !
-        </div>
-        <div class="illustration-container">
-            <img class="illustration maskSwitch" src="./img/mask.png">
-        </div>
-        <div id="event-list"></div>
     </div>
 
     <div class="page" data-page-id="event-countdown">
-        <h1 id="nextevent-name"></h1>
-        <br />
-        <div class="flex-group">
-            <div class="txt secondary">
-                <span>Le prochain évènement aura lieu<br />
-                <span id="nextevent-date"></span><br />
-                l'emplacement vous sera communiqué 1H avant.
-                </span>
+        <div id="countdown-container">
+            <div>
+                <div class="big" id="countdown-days">0</div>
+                <div>Jours</div>
             </div>
-
-            <div id="nextevent-countdown">
-                <div class="jours">
-                    <h1 class="number" id="label-countdown-days">04</h1>
-                    <h3 class="label">Jours</h3>
-                </div>
-                <div class="heures">
-                    <h1 class="number" id="label-countdown-hours">17</h1>
-                    <h3 class="label">Heures</h3>
-                </div>
-                <div class="minutes">
-                    <h1 class="number" id="label-countdown-minutes">11</h1>
-                    <h3 class="label">Minutes</h3>
-                </div>
+            <div>
+                <div class="big" id="countdown-hours">0</div>
+                <div>Heures</div>
+            </div>
+            <div>
+                <div class="big" id="countdown-minutes">0</div>
+                <div>Minutes</div>
             </div>
         </div>
 
-        <div class="illustration-container" onclick="PAGES.goto('event-list')">
-            <img class="illustration" src="./img/clock/bg.png" alt="clock">
-            <img class="illustration" data-renderer-rotate="3" src="./img/clock/big.png" alt="clock">
-            <img class="illustration" data-renderer-rotate="1" src="./img/clock/small.png" alt="clock">
+        <div class="clock-container">
+            <img src="./img/clock/bg.png" alt="clock-bg">
+            <img src="./img/clock/big.png" class="clock-m" alt="clock-m">
+            <img src="./img/clock/small.png" class="clock-h" alt="clock-h">
         </div>
-        
-        <!-- <div class="buttons">
-            <button class="button-sm" onclick="PAGES.goto('event-list')">Retour</button>
-        </div> -->
+
+        <div class="txt">
+            <span>Revenez une heure avant le début de l'evenement pour connaitre sa localisation !</span>
+        </div>
+
+        <hr>
     </div>
 
     <div class="page" data-page-id="event-location">
-        <h1 id="event-location-name"></h1>
-        
-        <div id="coords-map-overlay">
-            <div class="box">Rejoignez ce lieu avant <span id="event-location-hour">21h</span></div>
-            <div class="buttons">
-                <a class="button" id="event-location-coords-button" href="geo:124.028582,-29.201930" target="_blank" >Ouvrir sur mon GPS</a>
-            </div>
-
-            <div id="coords-map"></div>
+        <div class="event-location-container">
+            <div id="event-location-map"></div>
+            <div id="event-location-txt"></div>
+            <a id="event-location-goto" class="button c3">Aller sur la carte</a>
         </div>
     </div>
 
-    <!-- SPECIAL EVENTS -->
-    <div class="page" data-page-id="event-idle">
-        <h1>CONTACTS</h1>
-        <div class="caption">
+    <!-- Live event -->
+
+    <div class="page" data-page-id="live-idle">        
+        <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
-            <h1><span>Un évènement</span> <span>est en cours</span></h1>
-            <div class="txt secondary">
+            <h2>évènement en cours</h2>
+            <div class="txt">
                 Gardez votre téléphone sous la main..
             </div>
-            <div class="illustration-container">
-                <img class="illustration" src="./img/party.png" alt="image test">
+            <div class="illus-container">
+                <img class="illus" src="./img/party.png" alt="image test">
             </div>
-            <div class="txt secondary">
+            <div class="txt">
                 Profitez du carnaval pirate !
             </div>
         </div>
     </div>
 
-    <div class="page" data-page-id="event-flashlight">
+    <div class="page" data-page-id="live-flashlight">
         <div class="caption">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             
@@ -398,11 +171,11 @@
         </div>
     </div>
     
-    <div class="page" data-page-id="event-color">
-        <div class="caption">
+    <div class="page" data-page-id="live-color">
+        <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             
-            <div class="txt secondary">
+            <div class="txt">
                 C'est l'heure d'utiliser les couleurs de vos beaux écrans ! Choisissez une couleur parmi celles proposées.
             </div>
 
@@ -415,11 +188,11 @@
         </div>
     </div>
 
-    <div class="page" data-page-id="event-image">
-        <div class="caption">
+    <div class="page" data-page-id="live-image">
+        <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             
-            <div class="txt secondary">
+            <div class="txt">
                 Choisis une image à afficher sur ton écran !
             </div>
 
@@ -430,11 +203,11 @@
         </div>
     </div>
     
-    <div class="page" data-page-id="event-text">
-        <div class="caption">
+    <div class="page" data-page-id="live-text">
+        <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             
-            <div class="txt secondary">
+            <div class="txt">
                 Faites passer un message au metaverse !
                 Choisissez un texte parmi ceux proposés
             </div>
@@ -449,132 +222,376 @@
         </div>
     </div>
 
-    <div class="page" data-page-id="event-info">
+    <div class="page" data-page-id="live-info">
 
-        <div class="caption">
+        <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-info"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>            <div class="txt secondary">
                 Une information vous a été envoyée
             </div>
-            <div id="event-info-message" class="txt primary">
+            <div id="live-info-message" class="txt primary">
                 Profitez du carnaval pirate !
             </div>
         </div>
     </div>
 
-    <!-- Sub pages -->
+    <!-- Profile page -->
 
-    <template id="notif-template">
-        <div class="notification">
-            <div class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>
-            </div>
-            <div class="notif-preview">
-                <span class="light">01/01/1970 à 00:00</span>
-                <span class="bold">Evènement Ici, Maintenant</span>
-            </div>
-            <span class="more">[Lire...]</span>
+    <template id="tem-trophy">
+        <div class="trophy">
+            <div class="info"></div>
         </div>
     </template>
 
-    <div class="page" data-page-id="notifications">
-        <h1>Mes messages</h1>
-        <br />
-        <div id="notifications">
-        </div>
+    <div class="page flex-top" data-page-id="profile">
+
+        <section>
+            <div class="accordion">
+                <h2>Notifications</h2>
+                <div class="content">
+                    <div class="notification profile">
+                        <span>Vous pouvez voter pour 10 avatars aujourd’hui !</span>
+                        <button>Débuter le vote</button>
+                    </div>
+                    <div class="notification tribe">
+                        <span>Vous êtes proche de passer dans le classement utilisateurs, continuez comme ça !</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Mon avatar</h2>
+            <img id="profile-avatar" src="./img/noise.gif" alt="profil avatar">
+            <div class="buttons-sm">
+                <button id="profile-edit-avatar" class="c3">Générer un nouvel avatar</button>
+                <button id="profile-save-avatar" class="c4">Enregistrer</button>
+            </div>
+        </section>
+
+        <section>
+            <h2>Mes trophées</h2>
+            <div style="position: relative;">
+                <div id="trophies">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Paramètres</h2>
+            <div class="buttons-sm">
+                <button id="profile-edit-username" class="c3">Changer de pseudo</button>
+                <button id="profile-edit-profilepicture" class="c2">Changer de photo</button>
+                <button id="profile-delete" class="c1">Supprimer mon compte</button>
+            </div>
+        </section>
     </div>
+
+    <!-- Tribe page -->
+
+    <div class="page flex-top" data-page-id="tribe">
+        <section>
+            <div id="tribe-leaderboard">
+                <div class="header">Ta tribu est <span>3</span>eme !</div>
+                <div class="info">Score total : <span id="tribe-score">3285</span></div>
+                <div class="info">Rien n'est terminé, continuez de vous combattre !</div>
+            </div>
+        </section>
+
+        <section>
+            <div class="accordion">
+                <h2>Top utilisateurs</h2>
+                <div class="content">
+                    <div id="users-podium-top3">
+                        <div class="second">
+                            <div class="avatar"></div>
+                            <div class="info">
+                                <span>2eme</span>
+                                <span class="username">coolpseudo1</span>
+                            </div>
+                        </div>
+                        <div class="first">
+                            <div class="avatar"></div>
+                            <div class="info">
+                                <span>1er</span>
+                                <span class="username">superman</span>
+                            </div>
+                        </div>
+                        <div class="third">
+                            <div class="avatar"></div>
+                            <div class="info">
+                                <span>3eme</span>
+                                <span class="username">yessssguy</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="users-podium-top10">
+                        <div class="leaderboard-user">
+                            <div class="rank">4</div>
+                            <div class="avatar"></div>
+                            <div class="username">theutilisateur4</div>
+                        </div>
+                        <div class="leaderboard-user">
+                            <div class="rank">5</div>
+                            <div class="avatar"></div>
+                            <div class="username">Xx_coolskeleton_xX</div>
+                        </div>
+                        <div class="leaderboard-user">
+                            <div class="rank">6</div>
+                            <div class="avatar"></div>
+                            <div class="username">contactsmagicien</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="chatbox tribe">
+            <h2>Chat tribu</h2>
+            <div class="chat-container"></div>
+            <div class="message-box">
+                <input type="text" name="input-message">
+                <button class="send">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal"><path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/></svg>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Cyber-space page -->
+
+    <template id="tem-rdv">
+        <div class="rdv c2">
+            <div class="content">
+                <div class="name">Warmup numéro 1</div>
+                <div class="date">Dimanche 23 mars - 10h00</div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tem-chatbox-message">
+        <div class="message">
+            <div class="header">
+                <div class="username">EstebanV</div>
+                <div class="date">à 18:23</div>
+            </div>
+            <div class="content">Salut tout le monde, vous allez bien ???</div>
+        </div>
+    </template>
+    
+    <div class="page flex-top" data-page-id="cyberspace">
+        <section>
+            <div class="accordion">
+                <h2>Rendez-vous</h2>
+                <div class="content" id="cyberspace-rdvs">
+
+                </div>
+            </div>
+        </section>
+        <section class="chatbox cyberspace">
+            <h2>Chat cyber-espace</h2>
+            <div class="chat-container" id="chatbox-cyberspace">
+
+            </div>
+            <div class="message-box">
+                <input type="text" name="input-message" id="input-cyberspace-message">
+                <button class="send" id="btn-cyberspace-send">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal"><path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/></svg>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Live chat -->
+
+    <template id="template-chat-container">
+        <div class="message">
+            <div class="message-header">
+                <div class="pseudo"></div>
+                <div class="btn-report">
+                    <svg class="report" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                    <svg class="delete" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                </div>
+            </div>
+            <div class="content"></div>
+        </div>
+    </template>
 
     <div class="page" data-page-id="chat">
-        <h1>Live chat</h1>
-        <div id="chat-messages">
+        <div id="chat-container">
+
         </div>
-        <div class="input_field">
+        <div class="input-horizontal">
             <input type="text" id="chat-input">
-            <button id="chat-send">></button>
+            <button id="chat-send" class="c4">></button>
         </div>
     </div>
 
+    <!-- Misc pages -->
 
-    <div class="page" data-page-id="mon_avatar">
-        <h1>Mon avatar</h1>
-
-        <div id="mon-avatar-container" onclick="processEventRouting()">
-            <img src="" alt="Avatar">
-        </div>
-        
-        <div class="txt secondary" id="change-avatar-text" style="display: none;"> Choisis ton avatar favori </div>
-        <div id="change-avatar-container" style="display: none;">
-            
-        </div>
-        
-        <div class="buttons btns-avatar">
-            <button id="btn-regenerate-avatar" style="display: none;">Re-générer des avatars</button>
-            <button id="btn-change-avatar" class="button-sm">Changer mon avatar</button>
-            <button id="btn-delete-user" style="display: none;" class="button-sm">Supprimer mes données</button>
-        </div>
-
-    </div>
-
-    <div class="page" data-page-id="share_link">
-        <div class="txt secondary">
-            Partage l'expérience CONTACT avec tes proches !
-        </div>
-        
-        <div id="qr-code" class="illustration-container">
-            <img src="./img/qrcode.png" alt="QR CODE" class="illustration" data-renderer-rotate="0">
-        </div>
-        
-        <div class="buttons">
-            <button id="copylink">
-                Partager le lien
-            </button>
-        </div>
-    </div>
-
-    <div class="page" data-page-id="loading">
-    </div>
-    
-    <template id="unread-notification-template">
-        <div class="unread-notification">
-            <div class="caption">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-badge-info"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>            <div class="txt secondary">
-                    Vous avez un nouveau message !
-                </div>
-                <div class="unread-notification-content" class="txt primary">
-                    Profitez du carnaval pirate !
-                </div>
+    <div class="page" data-page-id="app-share">
+        <div class="input-container">
+            <div class="illus-container">
+                <img class="illus" src="./img/qrcode.png" alt="QR-code">
             </div>
-            <div class="buttons">
-                <button class="button-sm close"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>Fermer</button>
+            <div class="txt">
+                <span>Partagez l'application avec vos proches !</span>
             </div>
         </div>
-    </template>
+    </div>
 
-    <div id="unread-notifications-container" class="hidden">
+    <div class="page" data-page-id="app-confirm">
+        <div class="input-container">
+            <div class="txt" id="confirm-text">
+                
+            </div>
+            <div class="buttons-horizontal">
+                <button id="input-confirm-false" class="c1">Non</button>
+                <button id="input-confirm-true" class="c4">Oui</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="app-prompt">
+        <div class="input-container">
+            <div class="txt" id="prompt-text">
+                
+            </div>
+            <input type="text" name="input-prompt" id="prompt-input">
+            <div class="buttons-horizontal">
+                <button id="input-prompt-back" class="c1">Retour</button>
+                <button id="input-prompt-validate" class="c4">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" data-page-id="debug-camera">
+        <div class="input-container">
+            <video src="" id="video-debug" autoplay playsinline muted></video>
+            <button id="video-debug-capture" class="c3">Capture</button>
+            <canvas id="video-debug-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <button id="nav-profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
         
-    </div>
+        <button id="nav-tribe">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame-kindling"><path d="M12 2c1 3 2.5 3.5 3.5 4.5A5 5 0 0 1 17 10a5 5 0 1 1-10 0c0-.3 0-.6.1-.9a2 2 0 1 0 3.3-2C8 4.5 11 2 12 2Z"/><path d="m5 22 14-4"/><path d="m5 18 14 4"/></svg>
+        </button>
+        
+        <button id="nav-cyberspace">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        </button>
 
-    <div id="toggle_fullscreen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-expand"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21m0 0h4.8M3 21l6-6"/><path d="M21 7.8V3m0 0h-4.8M21 3l-6 6"/><path d="M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
-    </div>
+        <!-- button id="nav-events">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+        </button>
+        <button id="nav-profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+        </button>
+        
+        <button id="nav-chat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        
+        <button id="nav-share">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-qr-code"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+        </button -->
+    </nav>
 
+    <!-- Overlay -->
+    <div id="noise-overlay"></div>
     <div id="overlay"></div>
+    <div id="video-overlay"><video src="" loop muted playsinline></video></div>
 
-    <div id="video-overlay">
-        <video src="" loop muted playsinline></video>
-    </div>
+    <!-- SVG filters -->
+    <svg id="filters">
 
-    <script src="./js/libs/nosleep.js"></script>
+        <!-- Turbulence displace -->
+        <filter id="svg-turb">
+            <feTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="2" seed="2"/>
+            <feDisplacementMap in="SourceGraphic" scale="5" />
+        </filter>
 
-    <script src="./js/shader.js"></script>
-    <script src="./js/canvas.js"></script>
-    <script src="./js/main.js"></script>
-    <script src="./js/network.js"></script>
-    <script src="./js/chat.js"></script>
+        <!-- Chromatic aberration -->
+        <filter id="chromatic-aberration">
+            <feColorMatrix type="matrix" 
+                in="SourceGraphic"
+                result="red_"             
+                values="1 0 0 0 0
+                        0 0 0 0 0 
+                        0 0 0 0 0 
+                        0 0 0 1 0"/>
+            <feOffset in="red_" dx="0" dy="0" result="red" id="chromatic-red"/>
 
-    <script src="./js/pages/evenements.js"></script>
+            <feColorMatrix type="matrix" 
+            in="SourceGraphic"  
+            result="green_"             
+              values="0 0 0 0 0
+                      0 1 0 0 0 
+                      0 0 0 0 0 
+                      0 0 0 1 0"/>
+            <feOffset in="green_" dx="0" dy="0" result="green" id="chromatic-green"/>
+
+            <feColorMatrix type="matrix" 
+              in="SourceGraphic"        
+              result="blue_"             
+              values="0 0 0 0 0
+                      0 0 0 0 0 
+                      0 0 1 0 0 
+                      0 0 0 1 0"/>
+            <feOffset in="blue_" dx="0" dy="0" result="blue" id="chromatic-blue"/>
+
+            <feBlend mode="screen" in="red" in2="green" result="middle" />
+            <feBlend mode="screen" in="middle" in2="blue" />
+        </filter>
+
+        <!-- Noise filter -->
+        <filter id='noise'>
+            <feTurbulence id="filter-noise-turbulence" type="fractalNoise" baseFrequency="0.3" numOctaves="4" seed="15" stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="noise"></feTurbulence>
+            <!--
+            <feTurbulence
+            type='fractalNoise'
+            baseFrequency='0.5' 
+            numOctaves='2'
+            seed='1'
+            result="noise" 
+            id="filter-noise-turbulence"/>
+            -->
+            <feColorMatrix
+            in="noise"
+            type="matrix"
+            values="0.3 0.3 0.3 0 0
+                    0.3 0.3 0.3 0 0
+                    0.3 0.3 0.3 0 0
+                    0 0 0 1 0"
+            result="noise-bw"/>
+        </filter>
+    </svg>
+
+    <!-- Background -->
+    <div id="background"></div>
+
+    <!-- Scripts -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/pages.js"></script>
+    <script src="./js/clock.js"></script>
+    <script src="./js/query.js"></script>
+    <script src="./js/socket.js"></script>
+    <script src="./js/test.js"></script>
+    <script src="./js/render.js"></script>
+
+    <!-- Pages -->
     <script src="./js/pages/onboarding.js"></script>
-    <script src="./js/pages/avatar.js"></script>
-    
-    <script> PAGES.goto('loading'); </script>
+    <script src="./js/pages/events.js"></script>
+    <script src="./js/pages/live.js"></script>
+    <script src="./js/pages/camera.js"></script>
+    <script src="./js/pages/profile.js"></script>
+    <script src="./js/pages/chat.js"></script>
+
+    <!-- Main -->
+    <script src="./js/main.js"></script>
 </body>
 </html>

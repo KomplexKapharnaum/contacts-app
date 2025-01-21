@@ -1,0 +1,104 @@
+#events-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;   
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    margin-top: 16px;
+}
+
+.event-item {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border: solid 2px var(--color-text-secondary);
+    border-radius: 8px;
+    user-select: none;
+}
+
+.event-item-countdown {
+    color: var(--color-text-secondary);
+}
+
+#countdown-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+#countdown-container>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+#countdown-container .big {
+    font-size: 32px;
+    font-family: var(--font-big);
+}
+
+.clock-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+@keyframes clock-rotate {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+.clock-container img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    top: 0;
+    left: 0;
+    user-select: none;
+}
+
+.clock-m {
+    animation: clock-rotate 10s linear infinite;
+}
+
+.clock-h {
+    animation: clock-rotate 120s linear infinite;
+}
+
+/* Map */
+/* */
+
+.event-location-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    padding: 16px;
+    z-index: 1;
+}
+
+#event-location-map {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    pointer-events: all;
+}
+
+#event-location-txt {
+    background-color: var(--color-background);
+    padding: 8px;
+    border-radius: 8px;
+}
