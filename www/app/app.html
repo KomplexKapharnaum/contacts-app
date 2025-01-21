@@ -4,6 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App</title>
 
+    <!-- GLOBAL -->
+    <script> document.BASEPATH = "$BASEPATH$"; </script>
+
     <!-- Socket.io -->
     <script src="/socket.io/socket.io.js"></script>
 
@@ -15,24 +18,54 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
 
+    <!-- INLINE CSS -->
+    <style>
+        @font-face {
+            font-family: 'v50-bold';
+            src: url($BASEPATH$/font/version50_bold.ttf);
+        }
+        
+        @font-face {
+            font-family: 'wondertype';
+            src: url($BASEPATH$/font/wondertype.otf);
+        }
+        
+        @font-face {
+            font-family: 'ark-es';
+            src: url($BASEPATH$/font/ark-es.otf);
+        }
+
+        body::after {
+            background-image: url($BASEPATH$/img/screen.png);
+        }
+
+        #noise-overlay {
+            background: url($BASEPATH$/img/noise.gif);
+        }
+
+        #background {
+            background: url($BASEPATH$/img/bg.jpg);
+        }
+    </style>
+
     <!-- CSS -->       
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/pages.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/main.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/pages.css">
 
-    <link rel="stylesheet" href="./css/events.css">
-    <link rel="stylesheet" href="./css/live.css">
-    <link rel="stylesheet" href="./css/chat.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/events.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/live.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/chat.css">
 
-    <link rel="stylesheet" href="./css/profile.css">
-    <link rel="stylesheet" href="./css/tribe.css">
-    <link rel="stylesheet" href="./css/cyberspace.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/profile.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/tribe.css">
+    <link rel="stylesheet" href="$BASEPATH$/css/cyberspace.css">
     
 </head>
 <body>
     
     <div class="page active" data-page-id="loading">
         <div class="center-img">
-            <img src="./img/load.gif" alt="loading...">
+            <img src="$BASEPATH$/img/load.gif" alt="loading...">
         </div>
     </div>
 
@@ -42,7 +75,7 @@
 
         <div class="caption">
             <div class="illus-container">
-                <img class="illus" src="./img/mask2.png" alt="Carnaval mask">
+                <img class="illus" src="$BASEPATH$/img/mask2.png" alt="Carnaval mask">
             </div>
             <div class="txt">
                 <span>Bienvenue au carnaval CONTACTS</span>
@@ -118,9 +151,9 @@
         </div>
 
         <div class="clock-container">
-            <img src="./img/clock/bg.png" alt="clock-bg">
-            <img src="./img/clock/big.png" class="clock-m" alt="clock-m">
-            <img src="./img/clock/small.png" class="clock-h" alt="clock-h">
+            <img src="$BASEPATH$/img/clock/bg.png" alt="clock-bg">
+            <img src="$BASEPATH$/img/clock/big.png" class="clock-m" alt="clock-m">
+            <img src="$BASEPATH$/img/clock/small.png" class="clock-h" alt="clock-h">
         </div>
 
         <div class="txt">
@@ -148,7 +181,7 @@
                 Gardez votre téléphone sous la main..
             </div>
             <div class="illus-container">
-                <img class="illus" src="./img/party.png" alt="image test">
+                <img class="illus" src="$BASEPATH$/img/party.png" alt="image test">
             </div>
             <div class="txt">
                 Profitez du carnaval pirate !
@@ -166,7 +199,7 @@
                 <span>Sinon, allumez la manuellement.</span>
             </div>
             <div class="illustration-container">
-                <img class="illustration" src="./img/sun.png" alt="image test">
+                <img class="illustration" src="$BASEPATH$/img/sun.png" alt="image test">
             </div>
         </div>
     </div>
@@ -261,7 +294,7 @@
 
         <section>
             <h2>Mon avatar</h2>
-            <img id="profile-avatar" src="./img/noise.gif" alt="profil avatar">
+            <img id="profile-avatar" src="$BASEPATH$/img/noise.gif" alt="profil avatar">
             <div class="buttons-sm">
                 <button id="profile-edit-avatar" class="c3">Générer un nouvel avatar</button>
                 <button id="profile-save-avatar" class="c4">Enregistrer</button>
@@ -430,7 +463,7 @@
     <div class="page" data-page-id="app-share">
         <div class="input-container">
             <div class="illus-container">
-                <img class="illus" src="./img/qrcode.png" alt="QR-code">
+                <img class="illus" src="$BASEPATH$/img/qrcode.png" alt="QR-code">
             </div>
             <div class="txt">
                 <span>Partagez l'application avec vos proches !</span>
@@ -575,23 +608,23 @@
     <div id="background"></div>
 
     <!-- Scripts -->
-    <script src="./js/utils.js"></script>
-    <script src="./js/pages.js"></script>
-    <script src="./js/clock.js"></script>
-    <script src="./js/query.js"></script>
-    <script src="./js/socket.js"></script>
-    <script src="./js/test.js"></script>
-    <script src="./js/render.js"></script>
+    <script src="$BASEPATH$/js/utils.js"></script>
+    <script src="$BASEPATH$/js/pages.js"></script>
+    <script src="$BASEPATH$/js/clock.js"></script>
+    <script src="$BASEPATH$/js/query.js"></script>
+    <script src="$BASEPATH$/js/socket.js"></script>
+    <script src="$BASEPATH$/js/test.js"></script>
+    <script src="$BASEPATH$/js/render.js"></script>
 
     <!-- Pages -->
-    <script src="./js/pages/onboarding.js"></script>
-    <script src="./js/pages/events.js"></script>
-    <script src="./js/pages/live.js"></script>
-    <script src="./js/pages/camera.js"></script>
-    <script src="./js/pages/profile.js"></script>
-    <script src="./js/pages/chat.js"></script>
+    <script src="$BASEPATH$/js/pages/onboarding.js"></script>
+    <script src="$BASEPATH$/js/pages/events.js"></script>
+    <script src="$BASEPATH$/js/pages/live.js"></script>
+    <script src="$BASEPATH$/js/pages/camera.js"></script>
+    <script src="$BASEPATH$/js/pages/profile.js"></script>
+    <script src="$BASEPATH$/js/pages/chat.js"></script>
 
     <!-- Main -->
-    <script src="./js/main.js"></script>
+    <script src="$BASEPATH$/js/main.js"></script>
 </body>
 </html>

@@ -1,18 +1,3 @@
-@font-face {
-    font-family: 'v50-bold';
-    src: url(../font/version50_bold.ttf);
-}
-
-@font-face {
-    font-family: 'wondertype';
-    src: url(../font/wondertype.otf);
-}
-
-@font-face {
-    font-family: 'ark-es';
-    src: url(../font/ark-es.otf);
-}
-
 :root {
     --color-primary: white;
     --color-background: #08070F;
@@ -70,7 +55,7 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url(../img/screen.png);
+    /* background-image: url(../img/screen.png); */
     z-index: 10;
     pointer-events: none;
 
@@ -274,7 +259,7 @@ button:not(nav button), .event-item {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url(../img/noise.gif);
+    /* background: url(../img/noise.gif); */
     z-index: 10;
     opacity: 0.4;
     /*filter: url(#noise);*/
@@ -317,7 +302,7 @@ hr {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url(../img/bg.jpg);
+    /* background: url(../img/bg.jpg); */
     z-index: -1;
     background-size: cover;
     opacity: 0.6;
