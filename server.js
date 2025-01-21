@@ -501,7 +501,7 @@ app.get('/', function (req, res) {
 
 // Serve EXIT
 app.get('/exit', function (req, res) {
-  res.sendFile(__dirname + '/exit.html');
+  res.sendFile(__dirname + '/www/exit.html');
 });
 
 // Serve static files /static
