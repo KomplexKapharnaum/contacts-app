@@ -1,4 +1,4 @@
-var socket = io();
+var socket = io( );
 socket.connected = false;
 
 socket.on('connect', () => {
