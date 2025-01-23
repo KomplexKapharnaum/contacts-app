@@ -56,6 +56,7 @@
     <link rel="stylesheet" href="$BASEPATH$/css/live.css">
     <link rel="stylesheet" href="$BASEPATH$/css/chat.css">
 
+    <link rel="stylesheet" href="$BASEPATH$/css/onboarding.css">
     <link rel="stylesheet" href="$BASEPATH$/css/profile.css">
     <link rel="stylesheet" href="$BASEPATH$/css/tribe.css">
     <link rel="stylesheet" href="$BASEPATH$/css/cyberspace.css">
@@ -70,33 +71,69 @@
     </div>
 
     <!-- Onboarding pages -->
-    <div class="page" data-page-id="home">
-        <h1>CONTACTS</h1>
 
-        <div class="caption">
-            <div class="illus-container">
-                <img class="illus" src="$BASEPATH$/img/mask2.png" alt="Carnaval mask">
-            </div>
-            <div class="txt">
-                <span>Bienvenue au carnaval CONTACTS</span>
-                <span>Rejoignez notre monde virtuel</span>
+    <div class="page" data-page-id="home">
+        <div class="onboarding-header">
+            <h1>CONTACTS</h1>
+            <div class="shapes-container">
+                <img src="$BASEPATH$/img/shapes/square.svg" alt="square">
+                <img src="$BASEPATH$/img/shapes/circle.svg" alt="circle">
+                <img src="$BASEPATH$/img/shapes/octogon.svg" alt="octogon">
+                <img src="$BASEPATH$/img/shapes/star.svg" alt="star">
             </div>
         </div>
-
         <div class="buttons">
-            <button id="goto-onboarding-username" class="c4">S'inscrire</button>
+            <button id="goto-onboarding-username" class="c4">Rejoindre le cyber-espace</button>
+            <button id="goto-onboarding-username" class="c3">J'ai déjà un compte</button>
         </div>
     </div>
 
     <div class="page" data-page-id="onboarding-username">
+        <div class="onboarding-header">
+            <h1>BIENVENUE.</h1>
+            <div class="shapes-container">
+                <img src="$BASEPATH$/img/shapes/square.svg" alt="square">
+                <img src="$BASEPATH$/img/shapes/circle.svg" alt="circle">
+                <img src="$BASEPATH$/img/shapes/octogon.svg" alt="octogon">
+                <img src="$BASEPATH$/img/shapes/star.svg" alt="star">
+            </div>
+        </div>
         <div class="input-container">
-            <span>Rentre ton nom d'utilisateur</span>
-            <input type="text" id="onboarding-input-username" placeholder="Ton nom d'utilisateur">
+            <span>Choisis ton pseudonyme</span>
+            <input type="text" id="onboarding-input-username" placeholder="Ecris ton pseudonyme ici...">
             <button id="onboarding-validate-username" class="c4">Valider</button>
             <span class="error" id="onboarding-username-error"></span>
         </div>
     </div>
 
+    <template id="tem-onboarding-tribe">
+        <div class="tribe-container">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.7138 13.5385L20.4862 20.4831L13.5385 15.7138L12 24L10.4615 15.7138L3.51385 20.4831L8.28615 13.5385L0 12L8.28615 10.4585L3.51385 3.51385L10.4615 8.28308L12 0L13.5385 8.28308L20.4862 3.51385L15.7138 10.4585L24 12L15.7138 13.5385Z" fill="#E66AA5"/>
+            </svg>
+            <button>Végétal</button>
+        </div>
+    </template>
+
+    <div class="page" data-page-id="onboarding-tribe">
+        <div class="onboarding-header">
+            <h1>BIENVENUE.</h1>
+            <div class="shapes-container">
+                <img src="$BASEPATH$/img/shapes/square.svg" alt="square">
+                <img src="$BASEPATH$/img/shapes/circle.svg" alt="circle">
+                <img src="$BASEPATH$/img/shapes/octogon.svg" alt="octogon">
+                <img src="$BASEPATH$/img/shapes/star.svg" alt="star">
+            </div>
+            <span>Choisis ta tribu.</span>
+        </div>
+        <div id="onboarding-tribe-selector">
+        </div>
+        <div class="buttons">
+            <button id="onboarding-validate-tribe" class="c4">Choisissez une tribu.</button>
+        </div>
+    </div>
+
+    <!-- DEPRECATED - Selfie page -->
     <div class="page" data-page-id="onboarding-selfie">
         <div class="input-container">
             <span>C'est l'heure de faire ton avatar, prend toi en photo pour commencer !</span>
@@ -324,9 +361,9 @@
     <div class="page flex-top" data-page-id="tribe">
         <section>
             <div id="tribe-leaderboard">
-                <div class="header">Ta tribu est <span>3</span>eme !</div>
+                <div class="header">Ta tribu est <span id="tribe-rank">3</span><span id="tribe-rank-suffix">eme</span> !</div>
                 <div class="info">Score total : <span id="tribe-score">3285</span></div>
-                <div class="info">Rien n'est terminé, continuez de vous combattre !</div>
+                <div class="info" id="rank-phrase">Rien n'est terminé, continuez de vous combattre !</div>
             </div>
         </section>
 
@@ -334,55 +371,51 @@
             <div class="accordion">
                 <h2>Top utilisateurs</h2>
                 <div class="content">
+
                     <div id="users-podium-top3">
-                        <div class="second">
+                        <div class="second" data-rank="2">
                             <div class="avatar"></div>
                             <div class="info">
-                                <span>2eme</span>
-                                <span class="username">coolpseudo1</span>
+                                <span>2eme <span class="score"></span></span>
+                                <span class="username">-</span>
                             </div>
                         </div>
-                        <div class="first">
+                        <div class="first" data-rank="1">
                             <div class="avatar"></div>
                             <div class="info">
-                                <span>1er</span>
-                                <span class="username">superman</span>
+                                <span>1er <span class="score"></span></span>
+                                <span class="username">-</span>
                             </div>
                         </div>
-                        <div class="third">
+                        <div class="third" data-rank="3">
                             <div class="avatar"></div>
                             <div class="info">
-                                <span>3eme</span>
-                                <span class="username">yessssguy</span>
+                                <span>3eme <span class="score"></span></span>
+                                <span class="username">-</span>
                             </div>
                         </div>
                     </div>
-                    <div id="users-podium-top10">
+
+                    <template id="tem-leaderboard-top10">
                         <div class="leaderboard-user">
                             <div class="rank">4</div>
                             <div class="avatar"></div>
-                            <div class="username">theutilisateur4</div>
+                            <div class="username">-</div>
                         </div>
-                        <div class="leaderboard-user">
-                            <div class="rank">5</div>
-                            <div class="avatar"></div>
-                            <div class="username">Xx_coolskeleton_xX</div>
-                        </div>
-                        <div class="leaderboard-user">
-                            <div class="rank">6</div>
-                            <div class="avatar"></div>
-                            <div class="username">contactsmagicien</div>
-                        </div>
+                    </template>
+
+                    <div id="users-podium-top10">
+                        
                     </div>
                 </div>
             </div>
         </section>
         <section class="chatbox tribe">
             <h2>Chat tribu</h2>
-            <div class="chat-container"></div>
+            <div class="chat-container" id="chatbox-tribe"></div>
             <div class="message-box">
-                <input type="text" name="input-message">
-                <button class="send">
+                <input type="text" name="input-message" id="input-tribe-message">
+                <button class="send" id="btn-tribe-send">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal"><path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/></svg>
                 </button>
             </div>
@@ -623,6 +656,7 @@
     <script src="$BASEPATH$/js/pages/camera.js"></script>
     <script src="$BASEPATH$/js/pages/profile.js"></script>
     <script src="$BASEPATH$/js/pages/chat.js"></script>
+    <script src="$BASEPATH$/js/pages/tribe.js"></script>
 
     <!-- Main -->
     <script src="$BASEPATH$/js/main.js"></script>

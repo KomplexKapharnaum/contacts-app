@@ -9,7 +9,7 @@
     font-size: 22px;
 }
 
-#tribe-leaderboard>.header>span {
+#tribe-rank {
     font-family: var(--font-big);
     color: var(--color-secondary-3);
     font-size: 32px;
@@ -81,4 +81,12 @@
     height: 32px;
     border-radius: 50%;
     background-color: gray;
+}
+
+.leaderboard-user .rank {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

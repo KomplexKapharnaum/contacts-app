@@ -28,6 +28,7 @@ import './server-js/network/github-hook.js';
 
 import SCORE from './server-js/score.js';
 import './server-js/trophies.js'
+import util from './server-js/utils.js'
 
 import './server-js/mobileapp/updater.js';
 import './server-js/mobileapp/notifier.js';
@@ -46,6 +47,16 @@ async function test() {
     // db.createEvent(session[0], new Date(Date.now() - 1000), "Hautes herbes", "le carnaval émerge...", "45.787805, 4.919129", "Parc municipal Elsa Triolet");
     db.createEvent(session[0], new Date(Date.now() + one_day ), "Incoming event", "45 minutes from now", "1.3215,2.154", "LOCATION NAME");
     db.createEvent(session[0], new Date(Date.now() + one_day * 2), "test event 2", "test description 2", "0,0", "test location 2");
+
+    for (let i = 0; i < 10; i++) {
+        const user = await db('users').insert({
+            uuid: util.createUUID(),
+            name: "user" + i,
+            tribe_id: 3,
+            subscribed_session: 0,
+            score: Math.floor(Math.random() * 10000)
+        });
+    }
 }
 
 test();

@@ -121,7 +121,6 @@ SOCKET.io.on('connection', (socket) => {
               public_id: socket.public_id,
               id: id[0]
             });
-
             if (data.tribeID != 0) {
               SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
             } else {

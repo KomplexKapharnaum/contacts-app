@@ -47,10 +47,11 @@ QUERY.getEventLocation = async (eventID) => {
     });
 }
 
-QUERY.getMessages = async () => {
+QUERY.getMessages = async (tribeID) => {
     if (!userData) return;
     return await QUERY.process("get_messages", {
-        uuid: userData.uuid
+        uuid: userData.uuid,
+        tribe_id: tribeID
     });
 }
 
@@ -74,4 +75,12 @@ QUERY.updateName = async (name) => {
             userData.name = name;
         }
     });
+}
+
+QUERY.getLeaderBoard = async (tribeID) => {
+    return await QUERY.process("leaderboard", {uuid: userData.uuid, tribe_id: tribeID});
+}
+
+QUERY.getTribes = async () => {
+    return await QUERY.process("tribelist")
 }
