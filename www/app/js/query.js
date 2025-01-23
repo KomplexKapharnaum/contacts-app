@@ -2,7 +2,7 @@ var QUERY = {};
 
 QUERY.process = async (name, params) => {
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(`/query?queryname=${name}&${queryString}`)
+    const response = await fetch(document.WEBAPP_URL+`/query?queryname=${name}&${queryString}`)
     const res = await response.json()
     return {
         status: response.status===200,
