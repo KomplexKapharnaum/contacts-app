@@ -38,26 +38,26 @@ const tem_trophy = document.getElementById("tem-trophy")
 const trophies_container = document.getElementById("trophies")
 function updateTrophies() {
     trophies_container.innerHTML = ""
-    fetch("/trophies")
-    .then(res => res.json())
-    .then(data => {
-        for (let [id, info] of Object.entries(data)) {
-            const clone = tem_trophy.cloneNode(true).content
-            const trophy = clone.querySelector(".trophy")
-            
-            trophy.style.backgroundImage = `url(${document.BASEPATH}/img/trophies/${info.img}.png)`
-            clone.querySelector(".info").innerHTML = `${info.name} : ${info.desc}`
+    fetch(document.WEBAPP_URL+"/trophies")
+        .then(res => res.json())
+        .then(data => {
+            for (let [id, info] of Object.entries(data)) {
+                const clone = tem_trophy.cloneNode(true).content
+                const trophy = clone.querySelector(".trophy")
+                
+                trophy.style.backgroundImage = `url(${document.BASEPATH}/img/trophies/${info.img}.png)`
+                clone.querySelector(".info").innerHTML = `${info.name} : ${info.desc}`
 
-            trophy.addEventListener("click", () => {
+                trophy.addEventListener("click", () => {
+                    trophies_container.querySelectorAll(".trophy").forEach(t => t.classList.remove("active"))
+                    trophy.classList.add("active")
+                })
+
+                trophies_container.appendChild(clone)
+            }
+            document.addEventListener("click", (ev) => {
+                if (ev.target.classList.contains("trophy")) return
                 trophies_container.querySelectorAll(".trophy").forEach(t => t.classList.remove("active"))
-                trophy.classList.add("active")
             })
-
-            trophies_container.appendChild(clone)
-        }
-        document.addEventListener("click", (ev) => {
-            if (ev.target.classList.contains("trophy")) return
-            trophies_container.querySelectorAll(".trophy").forEach(t => t.classList.remove("active"))
         })
-    })
 }
