@@ -1,3 +1,22 @@
+function log(msg) {
+    console.log(`[\x1b[36mServer\x1b[0m]\t${msg}`);
+}
+
+// Starting
+//
+
+console.log("                                                                                ")
+console.log("░░      ░░░░      ░░░   ░░░  ░░        ░░░      ░░░░      ░░░        ░░░      ░░")
+console.log("▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒    ▒▒  ▒▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒▒▒▒")
+console.log("▓  ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓  ▓  ▓  ▓▓▓▓▓  ▓▓▓▓▓  ▓▓▓▓  ▓▓  ▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓      ▓▓")
+console.log("█  ████  ██  ████  ██  ██    █████  █████        ██  ████  █████  ███████████  █")
+console.log("██      ████      ███  ███   █████  █████  ████  ███      ██████  ██████      ██")
+console.log("                                                                                ")
+log('Starting...');
+
+// Importing modules
+//
+
 import './server-js/core/server.js';
 import './server-js/core/env.js';
 import db from './server-js/core/database.js';
@@ -5,8 +24,14 @@ import db from './server-js/core/database.js';
 import './server-js/network/query.js';
 import './server-js/network/routes.js';
 import './server-js/network/socket.js';
+import './server-js/network/github-hook.js';
+
 import SCORE from './server-js/score.js';
 import './server-js/trophies.js'
+
+import './server-js/mobileapp/updater.js';
+import './server-js/mobileapp/notifier.js';
+
 
 // Test purposes
 // 
@@ -24,6 +49,7 @@ async function test() {
 }
 
 test();
+
 
 /* === Routines === */
 
