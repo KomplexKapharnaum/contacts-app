@@ -5,6 +5,7 @@ import { app } from '../core/server.js';
 import { rateLimit } from 'express-rate-limit'
 import police from '../core/police.js';
 import stats from '../stats.js';
+import score from '../score.js';
 
 if (env.BYPASS_RATELIMIT) {
     const ratelimit_general = rateLimit({
@@ -64,11 +65,12 @@ query.add("create_user", async (params) => {
     const uuid = util.createUUID();
     const public_id = util.createPublicID();
     const name = params.get("name");
+    const tribe_id = parseInt(params.get("tribe_id"));
 
     const valid = util.isUserNameValid(name)
     if (!valid[0]) return valid;
 
-    let obj = {uuid: uuid, name: name, public_id: public_id}
+    let obj = {uuid, name, public_id, tribe_id}
     const userID = await db('users').insert(obj);
     obj.id = userID;
     stats.loadUser(obj);
@@ -187,8 +189,23 @@ query.add("get_messages", async (params) => {
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
 
-    const messages = await db('messages').orderBy('date', 'desc').where('admin', false).whereNot('deleted', true).limit(25).select();
-    const admin_messages = await db('messages').where('admin', true).whereNot('deleted', true).select();
+    const tribeID = params.get("tribe_id");
+    console.log(tribeID);
+    const user = await db('users').where('uuid', uuid).first();
+    if (user.tribe_id != tribeID && tribeID != 0) return [false, "user not in tribe"];
+
+    const messages = await db('messages')
+    .orderBy('date', 'desc')
+    .where('admin', false)
+    .where('tribeID', tribeID)
+    .whereNot('deleted', true)
+    .limit(25)
+    .select();
+
+    const admin_messages = await db('messages')
+    .where('admin', true)
+    .where('tribeID', tribeID)
+    .whereNot('deleted', true).select();
 
     const processed = [...messages, ...admin_messages].map(msg => {
         delete msg.uuid;
@@ -196,6 +213,25 @@ query.add("get_messages", async (params) => {
     })
 
     return [true, processed];
+})
+
+query.add("tribelist", async (params) => {
+    const tribes = await db('tribes').select();
+    return [true, tribes];
+})
+
+query.add("leaderboard", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    const tribeID = params.get("tribe_id");
+    let data = await score.getLeaderBoard()
+
+    for (let [key, value] of Object.entries(data)) {
+        if (key != tribeID) delete data[key].players;
+    }
+
+    return [true, data];
 })
 
 // Regie query

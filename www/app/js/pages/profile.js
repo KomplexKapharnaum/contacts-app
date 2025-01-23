@@ -45,7 +45,7 @@ function updateTrophies() {
             const clone = tem_trophy.cloneNode(true).content
             const trophy = clone.querySelector(".trophy")
             
-            trophy.style.backgroundImage = `url(./img/trophies/${info.img}.png)`
+            trophy.style.backgroundImage = `url(${document.BASEPATH}/img/trophies/${info.img}.png)`
             clone.querySelector(".info").innerHTML = `${info.name} : ${info.desc}`
 
             trophy.addEventListener("click", () => {

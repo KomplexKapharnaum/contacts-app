@@ -31,6 +31,13 @@ async function app_prompt(text) {
     })
 }
 
+function after_user_load(uuid) {
+    socketAuth(uuid)
+    loadEvents()
+    loadChats(userData.tribe_id)
+    loadLeaderBoard()
+}
+
 function subscribeToSession(uuid) {
     QUERY.getSession(uuid).then(res => {
         if(res.status && res.data) {
@@ -40,8 +47,7 @@ function subscribeToSession(uuid) {
                     QUERY.subscribeToSession(uuid, res.data).then(sub_res => {
                         if (sub_res.status) {
                             userData.subscribed_session = sub_res.data.session_id
-                            socketAuth(uuid)
-                            loadEvents()
+                            after_user_load(uuid)
                         }
                     })
                 } else {
@@ -59,8 +65,7 @@ function loadUser() {
                 userData = res.data
                 if (!userData.subscribed_session) {subscribeToSession(userData.uuid)}
                 else {
-                    socketAuth(userData.uuid)
-                    loadEvents()
+                    after_user_load(userData.uuid)
                 }
             } else {
                 Cookie.remove("uuid")
@@ -103,3 +108,14 @@ nav_goto("nav-chat", "chat", true)
 nav_goto("nav-profile", "profile", "var(--color-secondary-1)")
 nav_goto("nav-tribe", "tribe", "var(--color-secondary-3)")
 nav_goto("nav-cyberspace", "cyberspace", "var(--color-secondary-2)")
+
+// Accordions
+
+function initAccordion(elm) {
+    elm.querySelector("h2").addEventListener("click", () => {
+        elm.classList.toggle("closed")
+    })
+}
+
+const accordions = document.querySelectorAll(".accordion")
+accordions.forEach(initAccordion)

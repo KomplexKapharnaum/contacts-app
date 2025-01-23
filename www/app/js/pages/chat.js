@@ -116,6 +116,8 @@ class ChatBox {
                 this.addMessage(data)
             }
         })
+
+        this.initMessages()
     }
 
     sendMessage() {
@@ -139,17 +141,26 @@ class ChatBox {
         })
     }
 
-    initMessages() {
-        const msgs = QUERY.getMessages(this.tribeID)
+    async initMessages() {
+        if (!userData) return
+        const msgs = await QUERY.getMessages(this.tribeID)
         for (const msg of msgs.data) {
             this.addMessage(msg)
         }
     }
 }
 
-new ChatBox(
-    document.getElementById("chatbox-cyberspace"), 
-    document.getElementById("btn-cyberspace-send"), 
-    document.getElementById("input-cyberspace-message"), 
-    0
-)
+function loadChats(tribeID) {  
+    new ChatBox(
+        document.getElementById("chatbox-cyberspace"), 
+        document.getElementById("btn-cyberspace-send"), 
+        document.getElementById("input-cyberspace-message"), 
+        0
+    )
+    new ChatBox(
+        document.getElementById("chatbox-tribe"), 
+        document.getElementById("btn-tribe-send"), 
+        document.getElementById("input-tribe-message"), 
+        tribeID
+    )
+}
