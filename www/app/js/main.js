@@ -124,7 +124,7 @@ accordions.forEach(initAccordion)
 
 // Version
 if (document.APPVERSION) {
-    document.getElementById("version").innerText = 'v '+document.APPVERSION
+    document.getElementById("version").innerText = document.APPVERSION
     document.getElementById("version").style.display = "block"
 }
 else {

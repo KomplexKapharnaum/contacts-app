@@ -325,13 +325,13 @@ hr {
 
 #version {
     position: fixed;
-    top: 0;
+    top: 5px;
     right: 0;
-    padding: 8px;
+    padding: 5px;
     font-size: 12px;
     background-color: red;
     color: black;
-    z-index: 1000;
+    z-index: 10;
     opacity: 0.8;
     display: none;
 }
