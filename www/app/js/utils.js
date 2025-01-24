@@ -58,7 +58,7 @@ function isUserNameValid(username) {
 }
 
 if (!document.CONFIG) {
-    console.log("Setting up document.CONFIG using browser cookies")
+    console.log("CONFIG: will use browser cookies")
 
     document.CONFIG = {
         get: function(name) {
@@ -76,10 +76,12 @@ if (!document.CONFIG) {
             date.setTime(date.getTime()+(days*24*60*60*1000))
             expires = "; expires="+date.toGMTString()
             document.cookie = name+"="+value+expires+"; path=/"
+            console.log("CONFIG: set", name, value)
         },
         remove: function(name) {
             document.cookie = name+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+            console.log("CONFIG: removed", name)
         }
     }
 }
-else console.log("document.CONFIG already set up by launcher (Using Cloud settings)")
+// else console.log("CONFIG: already set up by launcher (Using Cloud settings)")
