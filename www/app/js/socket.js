@@ -1,15 +1,24 @@
-var socket = io(document.WEBAPP_URL);
-socket.connected = false;
+// Connect Socketio (if not already exists)
+if (!document.SOCKETIO) 
+{
+    document.SOCKETIO = io(document.WEBAPP_URL)
+    document.SOCKETIO.connected = false;
 
-socket.on('connect', () => {
-    console.log('Connected');
-    socket.connected = true;
-});
+    document.SOCKETIO.on('connect', function () {
+        console.log('SOCKETIO: Connected to server');
+        document.SOCKETIO.connected = 1;
+    });
+    document.SOCKETIO.on('disconnect', function () {
+        console.log('SOCKETIO: Disconnected from server');
+        document.SOCKETIO.connected = 0;
+    });
+}
+
 
 function socketAuth(uuid) {
-    socket.emit('user-auth', uuid);
+    document.SOCKETIO.emit('user-auth', uuid);
 }
 
 function socketEventLive(uuid) {
-    socket.emit('event-live', uuid);
+    document.SOCKETIO.emit('event-live', uuid);
 }

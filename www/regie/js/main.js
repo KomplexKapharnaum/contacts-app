@@ -41,11 +41,25 @@ var password = document.CONFIG.get('pass')
 /* Socket handler */
 /* */
 
-var socket = io()
+// Connect Socketio (if not already exists)
+if (!document.SOCKETIO) 
+{
+    document.SOCKETIO = io(document.WEBAPP_URL)
+    document.SOCKETIO.connected = false;
 
-socket.on('hello', () => {
+    document.SOCKETIO.on('connect', function () {
+        console.log('SOCKETIO: Connected to server');
+        document.SOCKETIO.connected = 1;
+    });
+    document.SOCKETIO.on('disconnect', function () {
+        console.log('SOCKETIO: Disconnected from server');
+        document.SOCKETIO.connected = 0;
+    });
+}
+
+document.SOCKETIO.on('hello', () => {
     log("Connexion established with server");
-    socket.emit('admin-auth', password);
+    document.SOCKETIO.emit('admin-auth', password);
 })
 
 function ctrl(name, args = {params:{}}) {
@@ -62,19 +76,19 @@ function ctrl(name, args = {params:{}}) {
         args.params.tribe = tribe
     }
 
-    socket.emit('ctrl', {
+    document.SOCKETIO.emit('ctrl', {
         name: name,
         args: args?args:{},
         resid: resid
     })
 
-    socket.once('event-ok-' + resid, (data) => { 
+    document.SOCKETIO.once('event-ok-' + resid, (data) => { 
         log(data)
     })
 }
 
 let current_event_state = false
-socket.on("adminEventState", (eventState) => {
+document.SOCKETIO.on("adminEventState", (eventState) => {
     current_event_state = eventState
     setEventBtnState(eventState)
 })
@@ -82,14 +96,14 @@ socket.on("adminEventState", (eventState) => {
 /*
 query = function (name, ...args) {
     var resid = Math.random().toString(36).substring(2);
-    socket.emit('query', {
+    document.SOCKETIO.emit('query', {
         name: name,
         args: args,
         resid: resid
     });
     var p = new Promise((resolve, reject) => {
-        socket.once('ok-' + resid, (data) => { resolve(data) })
-        socket.once('ko-' + resid, (data) => { reject(data) })
+        document.SOCKETIO.once('ok-' + resid, (data) => { resolve(data) })
+        document.SOCKETIO.once('ko-' + resid, (data) => { reject(data) })
     })
     return p
 }
@@ -596,10 +610,10 @@ click("set-event-state", () => {
     if (!confirm("Update event state ?")) return
     current_event_state = !current_event_state
     // setEventBtnState(current_event_state)
-    socket.emit('setEventState', current_event_state)
+    document.SOCKETIO.emit('setEventState', current_event_state)
 });
 
-socket.on("getEventState", (state)=> {
+document.SOCKETIO.on("getEventState", (state)=> {
     setEventBtnState(state)
     log(`${log_time()} [EVENT STATE] : ${state}`)
 })

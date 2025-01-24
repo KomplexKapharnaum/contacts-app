@@ -25,7 +25,7 @@ function displayMessage(data) {
             app_confirm("Voulez-vous supprimer ce message ?").then((res) => {
                 PAGES.goto("chat")
                 if (res) {
-                    socket.emit("delete-message", data.id)
+                    document.SOCKETIO.emit("delete-message", data.id)
                 }
             })
         })
@@ -35,7 +35,7 @@ function displayMessage(data) {
             app_confirm("Voulez-vous signaler ce message ?").then((res) => {
                 PAGES.goto("chat")
                 if (res) {
-                    socket.emit("report-message", data.id)
+                    document.SOCKETIO.emit("report-message", data.id)
                 }
             })
         })
@@ -60,7 +60,7 @@ function sendMessage() {
     if (message) {
         chat_text_input.value = ""
         const date = new Date()
-        socket.emit("chat-message", {name: userData.name, message: message})
+        document.SOCKETIO.emit("chat-message", {name: userData.name, message: message})
     }
 }
 
@@ -87,11 +87,11 @@ PAGES.addCallback("chat", () => {
     if (userData && !messagesLoaded) initMessages()
 })
 
-socket.on("chat-message", (data) => {
+document.SOCKETIO.on("chat-message", (data) => {
     if (messagesLoaded) displayMessage(data)
 })
 
-socket.on("delete-message", (id) => {
+document.SOCKETIO.on("delete-message", (id) => {
     if (!messagesLoaded) return
     const msg = chat_container.querySelector(`.message[data-id="${id}"]`)
     if (msg) msg.remove()
@@ -111,7 +111,7 @@ class ChatBox {
             this.sendMessage()
         })
 
-        socket.on("chat-message", (data) => {
+        document.SOCKETIO.on("chat-message", (data) => {
             if (data.tribeID == this.tribeID) {
                 this.addMessage(data)
             }
@@ -124,7 +124,7 @@ class ChatBox {
         const message = this.input.value
         if (message) {
             this.input.value = ""
-            socket.emit("chat-message", {name: userData.name, message: message, tribeID: this.tribeID})
+            document.SOCKETIO.emit("chat-message", {name: userData.name, message: message, tribeID: this.tribeID})
         }
     }
 

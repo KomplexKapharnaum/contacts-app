@@ -167,7 +167,7 @@ receiveSessionEvent = function (event) {
 }
 
 let lastevent_id = null;
-socket.on('start-event', (data_pack) => {
+document.SOCKETIO.on('start-event', (data_pack) => {
 
     console.log(data_pack)
     
@@ -179,7 +179,7 @@ socket.on('start-event', (data_pack) => {
     lastevent_id = data.id
 });
 
-socket.on("reload", () => {
+document.SOCKETIO.on("reload", () => {
     location.reload();
 })
 
