@@ -6,7 +6,7 @@ document.getElementById("profile-delete").addEventListener("click", () => {
             PAGES.goto("loading")
             QUERY.process("remove_user", {uuid: userData.uuid}).then(() => {
                 userData = {}
-                Cookie.remove("uuid")
+                document.COOKIES.remove("uuid")
                 hasEventsLoaded = false
                 loadUser()
             })

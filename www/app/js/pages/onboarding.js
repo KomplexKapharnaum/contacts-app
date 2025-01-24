@@ -23,7 +23,7 @@ function onboarding_create_user(username, tribeID) {
         if (res.status) {
             if (res.data.uuid) {
                 userData = res.data
-                Cookie.set("uuid", res.data.uuid)
+                document.COOKIES.set("uuid", res.data.uuid)
                 subscribeToSession(res.data.uuid)
             } else {
                 onboarding_username_error.innerText = "Une erreur est survenue"

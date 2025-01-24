@@ -1,5 +1,5 @@
 var userData = {}
-const cookie_uuid = Cookie.get("uuid")
+const cookie_uuid = document.COOKIES.get("uuid")
 
 showNavbar(false)
 
@@ -68,7 +68,7 @@ function loadUser() {
                     after_user_load(userData.uuid)
                 }
             } else {
-                Cookie.remove("uuid")
+                document.COOKIES.remove("uuid")
                 PAGES.goto("home")
             }
         })
