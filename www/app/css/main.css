@@ -323,6 +323,19 @@ hr {
     transition: background-color 0.5s ease-in-out;
 }
 
+#version {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 8px;
+    font-size: 12px;
+    background-color: red;
+    color: black;
+    z-index: 1000;
+    opacity: 0.8;
+    display: none;
+}
+
 .accordion, .accordion > .content {
     display: flex;
     flex-direction: column;

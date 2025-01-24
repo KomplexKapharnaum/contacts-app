@@ -120,3 +120,13 @@ function initAccordion(elm) {
 
 const accordions = document.querySelectorAll(".accordion")
 accordions.forEach(initAccordion)
+
+
+// Version
+if (document.APPVERSION) {
+    document.getElementById("version").innerText = 'v '+document.APPVERSION
+    document.getElementById("version").style.display = "block"
+}
+else {
+    document.getElementById("version").style.display = "none"
+}
