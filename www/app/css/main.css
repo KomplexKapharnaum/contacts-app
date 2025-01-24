@@ -325,9 +325,10 @@ hr {
 
 #version {
     position: fixed;
-    top: 5px;
+    top: 15px;
     right: 0;
     padding: 5px;
+    padding-right: 10px;
     font-size: 12px;
     background-color: red;
     color: black;
