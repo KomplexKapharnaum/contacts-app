@@ -32,11 +32,11 @@ function log_time() {
 /* Cookies & Password check */
 /* */
 
-if (!document.COOKIES.get('pass')) {
+if (!document.CONFIG.get('pass')) {
     pass = prompt("Password", "")
-    document.COOKIES.set('pass', pass, { expires: 10 })
+    document.CONFIG.set('pass', pass, { expires: 10 })
 }
-var password = document.COOKIES.get('pass')
+var password = document.CONFIG.get('pass')
 
 /* Socket handler */
 /* */
@@ -96,7 +96,7 @@ query = function (name, ...args) {
 */
 
 async function query(name, params={}) {
-    params.pass = document.COOKIES.get('pass');
+    params.pass = document.CONFIG.get('pass');
     const queryString = new URLSearchParams(params).toString();
     const response = await fetch(document.WEBAPP_URL+`/query?queryname=${name}&${queryString}`)
     const res = await response.json()

@@ -57,9 +57,10 @@ function isUserNameValid(username) {
     return [true, '']
 }
 
-if (!document.COOKIES) {
-    console.log("Setting up document.COOKIES with Browser Cookies")
-    document.COOKIES = {
+if (!document.CONFIG) {
+    console.log("Setting up document.CONFIG using browser cookies")
+
+    document.CONFIG = {
         get: function(name) {
             const nameEQ = name + "="
             const ca = document.cookie.split(';')
@@ -70,13 +71,10 @@ if (!document.COOKIES) {
             }
             return null
         },
-        set: function(name,value,days) {
-            let expires = ""
-            if (days) {
-                const date = new Date()
-                date.setTime(date.getTime()+(days*24*60*60*1000))
-                expires = "; expires="+date.toGMTString()
-            }
+        set: function(name,value,days=3650) {
+            const date = new Date()
+            date.setTime(date.getTime()+(days*24*60*60*1000))
+            expires = "; expires="+date.toGMTString()
             document.cookie = name+"="+value+expires+"; path=/"
         },
         remove: function(name) {
@@ -84,4 +82,4 @@ if (!document.COOKIES) {
         }
     }
 }
-else console.log("document.COOKIES already set up by launcher (Using Cloud settings")
+else console.log("document.CONFIG already set up by launcher (Using Cloud settings)")
