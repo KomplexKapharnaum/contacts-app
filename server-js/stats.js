@@ -27,14 +27,19 @@ STATS.loadUser = (user) => {
     }
 }
 
-STATS.update = (userID, key, amount) => {
+STATS.addToUser = (userID, key, amount) => {
     STATS.cache[userID].data[key] += amount
+    return STATS.cache[userID].data[key]
 }
 
-STATS.save = (userID) => {
+STATS.get = (userID, key) => {
+    return STATS.cache[userID].data[key]
+}
+
+STATS.save = async (userID) => {
     if (!STATS.cache[userID]) return
     if (!STATS.cache[userID].updated) return
-    db('users').where('id', userID).update({stats: JSON.stringify(STATS.cache[userID])})
+    await db('users').where('id', userID).update({stats: JSON.stringify(STATS.cache[userID].data)})
 }
 
 export default STATS

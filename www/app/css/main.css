@@ -349,3 +349,8 @@ hr {
 .accordion.closed > h2::before {
     transform: rotate(0deg);
 }
+
+.fill {
+    width: 100%;
+    height: 100%;
+}

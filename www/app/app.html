@@ -312,19 +312,20 @@
         </div>
     </template>
 
+    <template id="tem-notification">
+        <div class="notification">
+            <span>Vous pouvez voter pour 10 avatars aujourd’hui !</span>
+            <button>Débuter le vote</button>
+        </div>
+    </template>
+
     <div class="page flex-top" data-page-id="profile">
 
         <section>
             <div class="accordion">
                 <h2>Notifications</h2>
-                <div class="content">
-                    <div class="notification profile">
-                        <span>Vous pouvez voter pour 10 avatars aujourd’hui !</span>
-                        <button>Débuter le vote</button>
-                    </div>
-                    <div class="notification tribe">
-                        <span>Vous êtes proche de passer dans le classement utilisateurs, continuez comme ça !</span>
-                    </div>
+                <div class="content" id="notifications-container">
+
                 </div>
             </div>
         </section>
@@ -354,6 +355,59 @@
                 <button id="profile-delete" class="c1">Supprimer mon compte</button>
             </div>
         </section>
+    </div>
+
+    <!-- Avatar creaton pages -->
+
+    <div class="page" data-page-id="avatar-creation">
+        <h1>Avatar</h1>
+
+        <section class="avatar-subpage" data-subpage-id="0">
+            <div class="camera-container">
+                <video class="active" src="" id="video-avatar" autoplay playsinline muted></video>
+                <canvas id="video-avatar-canvas"></canvas>
+
+                <button id="video-avatar-capture" class="c3">Capture</button>
+                <button id="video-avatar-retry" class="c2">Réessayer</button>
+
+            </div>
+        </section>
+        <section class="avatar-subpage" data-subpage-id="1">
+            <div class="avatar-canvas-container">
+                <canvas id="canvas-paint"></canvas>
+                <div class="buttons" id="paint-buttons">
+                </div>
+            </div>
+        </section>
+        <section class="avatar-subpage" data-subpage-id="2">
+            <span>
+                Ton avatar est en cours de création... Tu seras notifié dès qu’il sera prêt !
+            </span>
+            <img class="star-loading" src="$BASEPATH$/img/shapes/star.svg" alt="">
+        </section>
+        
+        <div class="fill"></div>
+
+        <section>
+            <button id="avatar-creation-next" class="c4">Suivant</button>
+            <div id="avatar-creation-state">
+                <div class="state-box">
+                    <img src="./img/shapes/star.svg" alt="state">
+                    <span>Photo</span>
+                </div>
+                <div class="state-vr"></div>
+                <div class="state-box">
+                    <img src="./img/shapes/star.svg" alt="state">
+                    <span>Dessin</span>
+                </div>
+                <div class="state-vr"></div>
+                <div class="state-box">
+                    <img src="./img/shapes/star.svg" alt="state">
+                    <span>Résultat</span>
+                </div>
+            </div>
+        </section>
+
     </div>
 
     <!-- Tribe page -->

@@ -32,4 +32,11 @@ PAGES.goto = function(pageID, init=false) {
     if (!init) PAGES.active().classList.remove("active");
     page.classList.add("active");
     PAGES.callback(pageID);
+
+    if (page.dataset.pageColor) document.documentElement.style.setProperty('--bg-color', page.dataset.pageColor);
+}
+
+PAGES.setPageColor = function(pageID, color) {
+    const page = document.querySelector(`.page[data-page-id="${pageID}"]`);
+    page.dataset.pageColor = color;
 }

@@ -5,6 +5,9 @@ import util from '../utils.js';
 import police from '../core/police.js';
 import db from '../core/database.js';
 
+import stats from '../stats.js';
+import trophies from '../trophies.js';
+
 var SOCKET = {};
 SOCKET.io = new IoServer(server);
 
@@ -49,6 +52,10 @@ SOCKET.io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         if (SOCKET.connectedUsers[socket.userID]) delete SOCKET.connectedUsers[socket.userID];
+        stats.save(socket.userID);
+        trophies.save(socket.userID);
+
+        clearInterval(socket.stayInterval);
     });
 
     socket.on('user-auth', async (uuid) => {
@@ -66,6 +73,15 @@ SOCKET.io.on('connection', (socket) => {
 
             const userID = user.id;
             SOCKET.connectedUsers[userID] = socket;
+
+            stats.loadUser(user);
+            trophies.loadUser(user);
+
+            socket.stayInterval = setInterval(() => {
+                const count = stats.addToUser(userID, "time_spent", 10);
+                // console.log(count)
+                if (count>=10*60) trophies.reward(userID, 'stay10');
+            }, 10 * 1000)
 
             console.log("User connected: " + uuid);
         }
@@ -112,20 +128,26 @@ SOCKET.io.on('connection', (socket) => {
 
       socket.on("chat-message", async (data) => {
         if (socket.rooms.has("user")) {
-            if (data.tribeID != socket.tribeID && data.tribeID != 0) return
-            const date = new Date()
-            const id = await db.createMessage(socket.isAdmin, data.name, date, socket.uuid, socket.public_id, data.message, data.tribeID);
-            Object.assign(data, {
-              date, 
-              admin: socket.isAdmin, 
-              public_id: socket.public_id,
-              id: id[0]
-            });
-            if (data.tribeID != 0) {
-              SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
-            } else {
-              SOCKET.io.to("user").emit("chat-message", data);
-            }
+          if (data.tribeID != socket.tribeID && data.tribeID != 0) return
+          const date = new Date()
+          const id = await db.createMessage(socket.isAdmin, data.name, date, socket.uuid, socket.public_id, data.message, data.tribeID);
+          Object.assign(data, {
+            date, 
+            admin: socket.isAdmin, 
+            public_id: socket.public_id,
+            id: id[0]
+          });
+          if (data.tribeID != 0) {
+            SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
+          } else {
+            SOCKET.io.to("user").emit("chat-message", data);
+          }
+          
+          const count = stats.addToUser(socket.userID, "messages_sent", 1);
+          switch (count) {
+            case 1: trophies.reward(socket.userID, 'msg1'); break;
+            case 10: trophies.reward(socket.userID, 'msg20'); break;
+          }
         }
       })
 

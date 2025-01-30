@@ -1,6 +1,7 @@
 import { app } from './core/server.js';
 import SCORE from './score.js';
 import { SOCKET } from './network/socket.js';
+import db from './core/database.js';
 
 let TROPHIES = {};
 
@@ -41,7 +42,7 @@ TROPHIES.config = {
 
 TROPHIES.cache = {}
 
-TROPHIES.addPlayer = (user) => {
+TROPHIES.loadUser = (user) => {
     if (!TROPHIES.cache[user.id]) {
         TROPHIES.cache[user.id] = {
             updated: false,
@@ -51,7 +52,7 @@ TROPHIES.addPlayer = (user) => {
 }
 
 TROPHIES.reward = (userID, trophyID) => {
-    
+
     if (!TROPHIES.config[trophyID]) return
     if (!TROPHIES.cache[userID]) return
     if (TROPHIES.cache[userID].data.includes(trophyID)) return
@@ -72,10 +73,13 @@ TROPHIES.reward = (userID, trophyID) => {
     TROPHIES.cache[userID].updated = true
 }
 
-TROPHIES.save = (userID) => {
+TROPHIES.save = async (userID) => {
     if (!TROPHIES.cache[userID]) return
     if (!TROPHIES.cache[userID].updated) return
-    db('users').where('id', userID).update({trophies: JSON.stringify(TROPHIES.cache[userID])})
+    await db('users').where('id', userID).update({trophies: JSON.stringify(TROPHIES.cache[userID].data)})
+    delete TROPHIES.cache[userID]
 }
 
 app.get('/trophies', (req, res) => res.json(TROPHIES.config));
+
+export default TROPHIES

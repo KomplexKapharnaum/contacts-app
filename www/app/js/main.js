@@ -36,6 +36,7 @@ function after_user_load(uuid) {
     loadEvents()
     loadChats(userData.tribe_id)
     loadLeaderBoard()
+    updateTrophies()
 }
 
 function subscribeToSession(uuid) {
@@ -86,7 +87,6 @@ function nav_goto(id, page, bgColor=false, needsInternet=false) {
     document.getElementById(id).addEventListener("click", () => {
         if (!needsInternet || (needsInternet && navigator.onLine)) {
             PAGES.goto(page);
-            if (bgColor) document.documentElement.style.setProperty('--bg-color', bgColor)
         }
     })
 
@@ -105,9 +105,13 @@ nav_goto("nav-share", "app-share")
 nav_goto("nav-chat", "chat", true)
 */
 
-nav_goto("nav-profile", "profile", "var(--color-secondary-1)")
-nav_goto("nav-tribe", "tribe", "var(--color-secondary-3)")
-nav_goto("nav-cyberspace", "cyberspace", "var(--color-secondary-2)")
+nav_goto("nav-profile", "profile")
+nav_goto("nav-tribe", "tribe")
+nav_goto("nav-cyberspace", "cyberspace")
+
+PAGES.setPageColor("profile", "var(--color-secondary-1)")
+PAGES.setPageColor("tribe", "var(--color-secondary-3)")
+PAGES.setPageColor("cyberspace", "var(--color-secondary-2)")
 
 // Accordions
 

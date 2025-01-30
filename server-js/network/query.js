@@ -4,8 +4,10 @@ import util from '../utils.js';
 import { app } from '../core/server.js';
 import { rateLimit } from 'express-rate-limit'
 import police from '../core/police.js';
+
 import stats from '../stats.js';
 import score from '../score.js';
+import trophies from '../trophies.js';
 
 if (env.BYPASS_RATELIMIT) {
     const ratelimit_general = rateLimit({
@@ -61,6 +63,20 @@ query.add("username_valid", async (params) => {
     return util.isUserNameValid(name);
 })
 
+async function getUserInfo(uuid) {
+    var user = await db('users').where('uuid', uuid).first();
+    if (!user) return false;
+
+    user.avatars = JSON.parse(user.avatars);
+    stats.loadUser(user);
+    trophies.loadUser(user);
+
+    user.trophies = JSON.parse(user.trophies);
+    user.stats = JSON.parse(user.stats);
+
+    return user;
+}
+
 query.add("create_user", async (params) => {
     const uuid = util.createUUID();
     const public_id = util.createPublicID();
@@ -71,22 +87,21 @@ query.add("create_user", async (params) => {
     if (!valid[0]) return valid;
 
     let obj = {uuid, name, public_id, tribe_id}
-    const userID = await db('users').insert(obj);
-    obj.id = userID;
-    stats.loadUser(obj);
+    await db('users').insert(obj);
 
-    return [true, obj];
+    const user = await getUserInfo(uuid);
+    if (!user) return [false, "user does not exist"];
+    
+    stats.loadUser(user);
+    trophies.loadUser(user);
+    trophies.reward(user.id, "join");
+
+    return [true, user];
 })
 
 query.add("get_user", async (params) => {
-    var user = await db('users').where('uuid', params.get("uuid")).first();
+    const user = await getUserInfo(params.get("uuid"));
     if (!user) return [false, "user does not exist"];
-
-    delete user.id;
-    user.avatars = JSON.parse(user.avatars);
-
-    stats.loadUser(user);
-
     return [true, user];
 })
 
