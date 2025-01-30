@@ -6,7 +6,7 @@ document.getElementById("profile-delete").addEventListener("click", () => {
             PAGES.goto("loading")
             QUERY.process("remove_user", {uuid: userData.uuid}).then(() => {
                 userData = {}
-                Cookie.remove("uuid")
+                document.CONFIG.remove("uuid")
                 hasEventsLoaded = false
                 loadUser()
             })
@@ -38,7 +38,7 @@ const tem_trophy = document.getElementById("tem-trophy")
 const trophies_container = document.getElementById("trophies")
 function updateTrophies() {
     trophies_container.innerHTML = ""
-    fetch("/trophies")
+    fetch(document.WEBAPP_URL+"/trophies")
     .then(res => res.json())
     .then(data => {
         for (let [id, info] of Object.entries(data)) {
@@ -49,10 +49,10 @@ function updateTrophies() {
             trophy.style.setProperty("--trophy-image", `url(${document.BASEPATH}/img/trophies/${info.img}.png)`)
             clone.querySelector(".info").innerHTML = `${info.name} : ${info.desc}`
 
-            trophy.addEventListener("click", () => {
-                trophies_container.querySelectorAll(".trophy").forEach(t => t.classList.remove("active"))
-                trophy.classList.add("active")
-            })
+                trophy.addEventListener("click", () => {
+                    trophies_container.querySelectorAll(".trophy").forEach(t => t.classList.remove("active"))
+                    trophy.classList.add("active")
+                })
 
             trophies_container.appendChild(clone)
         }

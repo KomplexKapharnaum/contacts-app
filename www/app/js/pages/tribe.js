@@ -29,19 +29,21 @@ async function loadLeaderBoard() {
 
     const leaderboard_players = data.data[tribeID].players
 
-    for (let i=0;  i<10 ; i++) {
-        const ply = leaderboard_players[i]
-        if (ply) {
-            if (i<3) {
-                const elm = document.querySelector("#users-podium-top3 [data-rank='"+(i+1)+"']")
-                elm.querySelector(".score").innerText = `(${ply.score})`
-                elm.querySelector(".username").innerText = ply.name
-            } else {
-                const tem = document.getElementById("tem-leaderboard-top10").cloneNode(true).content
-                tem.querySelector(".rank").innerText = i+1
-                tem.querySelector(".username").innerText = ply.name
-                tribe_top10.appendChild(tem)
+    if (leaderboard_players)
+        for (let i=0;  i<10 ; i++) {
+            if (i >= leaderboard_players.length) break
+            const ply = leaderboard_players[i]
+            if (ply) {
+                if (i<3) {
+                    const elm = document.querySelector("#users-podium-top3 [data-rank='"+(i+1)+"']")
+                    elm.querySelector(".score").innerText = `(${ply.score})`
+                    elm.querySelector(".username").innerText = ply.name
+                } else {
+                    const tem = document.getElementById("tem-leaderboard-top10").cloneNode(true).content
+                    tem.querySelector(".rank").innerText = i+1
+                    tem.querySelector(".username").innerText = ply.name
+                    tribe_top10.appendChild(tem)
+                }
             }
         }
-    }
 }

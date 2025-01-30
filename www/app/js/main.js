@@ -1,5 +1,6 @@
 var userData = {}
-const cookie_uuid = Cookie.get("uuid")
+const cookie_uuid = document.CONFIG.get("uuid")
+console.log("USER UUID: ", cookie_uuid)
 
 showNavbar(false)
 
@@ -69,7 +70,7 @@ function loadUser() {
                     after_user_load(userData.uuid)
                 }
             } else {
-                Cookie.remove("uuid")
+                document.CONFIG.remove("uuid")
                 PAGES.goto("home")
             }
         })
@@ -123,3 +124,13 @@ function initAccordion(elm) {
 
 const accordions = document.querySelectorAll(".accordion")
 accordions.forEach(initAccordion)
+
+
+// Version
+if (document.APPVERSION) {
+    document.getElementById("version").innerText = document.APPVERSION
+    document.getElementById("version").style.display = "block"
+}
+else {
+    document.getElementById("version").style.display = "none"
+}
