@@ -116,15 +116,6 @@ video_avatar_canvas.height = 512;
 const video_avatar_capture = document.getElementById("video-avatar-capture");
 const video_avatar_retry = document.getElementById("video-avatar-retry");
 
-var img = new Image();
-img.style.position = "fixed";
-img.style.top = "50%";
-img.style.left = "50%";
-img.style.transform = "translate(-50%, -50%)";
-img.style.zIndex = "1000";
-img.style.width = "50px";
-img.style.height = "50px";
-document.body.appendChild(img);
 
 function avatar_start_camera() {
     open_avatar_subpage(0)
@@ -144,19 +135,12 @@ function avatar_start_camera() {
         
         function onSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, (entry) => {
-
-                // var img = new Image();
+                var img = new Image();
                 img.src = entry.toURL()
                 img.onload = () => {
                     process_snapshot(img);
                     set_avatarnext_available(true);
                 }
-
-                // const context = video_avatar_canvas.getContext("2d");
-                // context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
-                // avatar_creation_data.photo = video_avatar_canvas.toDataURL();
-                // set_avatarnext_available(true);
-                
             }, onFail);
         }
         function onFail(message) {
@@ -183,7 +167,7 @@ function avatar_start_camera() {
                     canvas.height = video_avatar.videoHeight;
                     var context = canvas.getContext('2d');
                     context.drawImage(video_avatar, 0, 0, video_avatar.videoWidth, video_avatar.videoHeight);
-                    // var img = new Image();
+                    var img = new Image();
                     img.src = canvas.toDataURL('image/png')
                     img.onload = () => {
                         process_snapshot(img);
