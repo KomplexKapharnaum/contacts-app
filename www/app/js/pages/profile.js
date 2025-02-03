@@ -143,7 +143,7 @@ function avatar_start_camera() {
             targetHeight: 1024,
             targetWidth: 1024
         }
-        console.log("Camera options", options)
+        console.log("Camera options", JSON.stringify(options))
 
         navigator.camera.getPicture(onSuccess, onFail, options);
         
