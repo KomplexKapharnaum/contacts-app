@@ -130,8 +130,8 @@ function avatar_start_camera() {
 
     // IN APP
     if (navigator.camera) {
-        navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-            destinationType: Camera.DestinationType.FILE_URI });
+        navigator.camera.getPicture(onSuccess, onFail, 
+            { quality: 100, destinationType: Camera.DestinationType.FILE_URI, saveToPhotoAlbum: false, cameraDirection: Camera.Direction.FRONT });
         
         function onSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, (entry) => {
@@ -160,6 +160,7 @@ function avatar_start_camera() {
                 video_avatar_capture.classList.add("active")
                 video_avatar.srcObject = stream;
                 video_avatar.play();
+
                 video_avatar_capture.addEventListener("click", () => {
                     stream.getTracks().forEach(track => track.stop());
                     var canvas = document.createElement('canvas');
@@ -190,12 +191,8 @@ function process_snapshot(img)
     video_avatar_retry.classList.add("active")
 
     const context = video_avatar_canvas.getContext("2d");
-
-    console.log(img.width, img.height, video_avatar_canvas.width, video_avatar_canvas.height)
-
     const canvasWidth = video_avatar_canvas.width;
     const canvasHeight = video_avatar_canvas.height;
-
     const ratio = img.width / img.height;
     const canvasRatio = canvasWidth / canvasHeight;
 
@@ -211,10 +208,7 @@ function process_snapshot(img)
         sx = 0;
         sy = (img.height - sHeight) / 2;
     }
-
     context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
-    context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
-
     avatar_creation_data.photo = video_avatar_canvas.toDataURL();
 }
 
