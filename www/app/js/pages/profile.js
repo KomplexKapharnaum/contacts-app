@@ -184,8 +184,8 @@ function avatar_start_camera() {
                     set_avatarnext_available(true);
                     
                     stream.getTracks().forEach(track => track.stop());
-                    
-                    if (navigator.vibrate) navigator.vibrate();
+
+                    if (navigator.vibrate) navigator.vibrate(1000);
                     else console.error("Vibration not supported")
 
                 });
