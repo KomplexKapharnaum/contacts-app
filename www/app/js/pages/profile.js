@@ -127,12 +127,7 @@ function avatar_start_camera() {
     video_avatar_capture.classList.remove("active")
     video_avatar_retry.classList.remove("active")
 
-    const constraints = {
-        audio: false,
-        video: { width: { ideal: 400 }, height: { ideal: 400 } },
-        facingMode: {exact: 'user'}
-    };
-
+    // IN APP
     if (navigator.camera) {
         navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
             destinationType: Camera.DestinationType.FILE_URI });
@@ -154,7 +149,14 @@ function avatar_start_camera() {
             alert('Failed because: ' + message);
         }
     }
+    // BROWSER
     else {
+        const constraints = {
+            audio: false,
+            video: { width: { ideal: 400 }, height: { ideal: 400 } },
+            facingMode: {exact: 'user'}
+        };
+
         navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
             video_avatar_capture.classList.add("active")
@@ -176,7 +178,7 @@ video_avatar_capture.addEventListener("click", () => {
     video_avatar_canvas.classList.add("active")
     video_avatar.classList.remove("active")
     video_avatar_capture.classList.remove("active")
-    video_avatar_retry.classList.add("active")w
+    video_avatar_retry.classList.add("active")
 
     const context = video_avatar_canvas.getContext("2d");
 
