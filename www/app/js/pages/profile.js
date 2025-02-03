@@ -127,28 +127,48 @@ function avatar_start_camera() {
     video_avatar_capture.classList.remove("active")
     video_avatar_retry.classList.remove("active")
 
-    const constraints = {
-        audio: false,
-        video: { width: { ideal: 400 }, height: { ideal: 400 } },
-        facingMode: {exact: 'user'}
-    };
-
+    // IN APP
     if (navigator.camera) {
         navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
             destinationType: Camera.DestinationType.FILE_URI });
         
         function onSuccess(imageURI) {
-            window.resolveLocalFileSystemURL(uri, (entry) => {
-                let img = document.getElementById('image');
+            window.resolveLocalFileSystemURL(imageURI, (entry) => {
+                // create image element
+                var img = document.createElement('img');
                 img.src = entry.toURL();
+
+                // add to body, position fixed and center
+                document.body.appendChild(img);
+                img.style.position = 'fixed';
+                img.style.top = '50%';
+                img.style.left = '50%';
+                img.style.transform = 'translate(-50%, -50%)';
+                
+                
+                // Set video_avatar with image
+                video_avatar.src = entry.toURL()
+                console.log(video_avatar.src)
+
+                // const context = video_avatar_canvas.getContext("2d");
+                // context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
+                // avatar_creation_data.photo = video_avatar_canvas.toDataURL();
+                // set_avatarnext_available(true);
+                
             }, onFail);
         }
-        
         function onFail(message) {
             alert('Failed because: ' + message);
         }
     }
+    // BROWSER
     else {
+        const constraints = {
+            audio: false,
+            video: { width: { ideal: 400 }, height: { ideal: 400 } },
+            facingMode: {exact: 'user'}
+        };
+
         navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
             video_avatar_capture.classList.add("active")
