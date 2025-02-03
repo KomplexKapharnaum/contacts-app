@@ -4,7 +4,7 @@ outputs/*
 database.json
 *.sqlite*
 data.db
-_tmp/
+_tmp/*
 
 # UPLOAD
 upload/*.png
