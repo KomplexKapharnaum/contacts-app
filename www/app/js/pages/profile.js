@@ -182,12 +182,16 @@ function avatar_start_camera() {
                     canvas.height = video_avatar.videoHeight;
                     var context = canvas.getContext('2d');
                     context.drawImage(video_avatar, 0, 0, video_avatar.videoWidth, video_avatar.videoHeight);
+                    
                     var img = new Image();
                     img.src = canvas.toDataURL('image/png')
                     img.onload = () => {
                         process_snapshot(img);
                         set_avatarnext_available(true);
                     }
+
+                    if (navigator.vibrate) navigator.vibrate(100);
+
                 });
             })
             .catch(error => {
@@ -230,15 +234,13 @@ PAGES.addCallback("avatar-creation", () => {
 
     if (cordova && cordova.plugins.permissions) 
     {
-        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, function(status) {
-            if(!status.hasPermission) {
+        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, 
+            (status) => {
+                if(status.hasPermission) avatar_start_camera();
+                else console.error("CAMERA Permission denied")
+            }, () => {
                 console.error("CAMERA Permission denied")
-                return;
-            }
-            avatar_start_camera();
-        }, function() {
-            console.error("CAMERA Permission denied")
-        });
+            });
     }
     else avatar_start_camera();
 })
