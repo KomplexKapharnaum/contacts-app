@@ -131,7 +131,7 @@ function avatar_start_camera() {
     // IN APP
     if (navigator.camera) {
         navigator.camera.getPicture(onSuccess, onFail, 
-            { quality: 100, destinationType: Camera.DestinationType.FILE_URI, saveToPhotoAlbum: false, cameraDirection: Camera.Direction.FRONT });
+            { quality: 100, destinationType: Camera.DestinationType.FILE_URI, saveToPhotoAlbum: false, cameraDirection: 1 });
         
         function onSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, (entry) => {
