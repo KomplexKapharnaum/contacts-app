@@ -177,21 +177,15 @@ function avatar_start_camera() {
 
                 video_avatar_capture.addEventListener("click", () => {
                     stream.getTracks().forEach(track => track.stop());
-                    var canvas = document.createElement('canvas');
-                    canvas.width = video_avatar.videoWidth;
-                    canvas.height = video_avatar.videoHeight;
-                    var context = canvas.getContext('2d');
-                    context.drawImage(video_avatar, 0, 0, video_avatar.videoWidth, video_avatar.videoHeight);
-                    
-                    var img = new Image();
-                    img.src = canvas.toDataURL('image/png')
-                    img.onload = () => {
-                        process_snapshot(img);
-                        set_avatarnext_available(true);
-                    }
 
-                    // if (navigator.vibrate) 
-                        navigator.vibrate(100);
+                    video_avatar.height = video_avatar.videoHeight;
+                    video_avatar.width = video_avatar.videoWidth;
+
+                    process_snapshot(video_avatar);
+                    set_avatarnext_available(true);
+
+                    if (navigator.vibrate) navigator.vibrate();
+                    else console.error("Vibration not supported")
 
                 });
             })
@@ -210,9 +204,12 @@ function process_snapshot(img)
     video_avatar_retry.classList.add("active")
 
     const context = video_avatar_canvas.getContext("2d");
+
     const canvasWidth = video_avatar_canvas.width;
     const canvasHeight = video_avatar_canvas.height;
+    
     const ratio = img.width / img.height;
+    
     const canvasRatio = canvasWidth / canvasHeight;
 
     let sx, sy, sWidth, sHeight;
