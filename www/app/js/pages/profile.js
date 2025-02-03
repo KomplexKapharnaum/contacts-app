@@ -179,7 +179,9 @@ function avatar_start_camera() {
                 video_avatar_capture.addEventListener("click", () => {
                     stream.getTracks().forEach(track => track.stop());
                     // var img = new Image();
-                    img.src = video_avatar_canvas.toDataURL();
+
+                    // copy video_avatar_capture to img
+                    img.src = video_avatar_capture.toDataURL();
                     img.onload = () => {
                         process_snapshot(img);
                         set_avatarnext_available(true);
