@@ -137,6 +137,14 @@ function avatar_start_camera() {
                 // create image element
                 var img = document.createElement('img');
                 img.src = entry.toURL();
+
+                // add to body, position fixed and center
+                document.body.appendChild(img);
+                img.style.position = 'fixed';
+                img.style.top = '50%';
+                img.style.left = '50%';
+                img.style.transform = 'translate(-50%, -50%)';
+                
                 
                 // Set video_avatar with image
                 video_avatar.src = entry.toURL()
