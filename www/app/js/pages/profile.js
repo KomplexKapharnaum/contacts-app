@@ -129,9 +129,23 @@ function avatar_start_camera() {
     video_avatar_retry.classList.remove("active")
 
     // IN APP
-    if (navigator.camera) {
-        navigator.camera.getPicture(onSuccess, onFail, 
-            { quality: 100, destinationType: Camera.DestinationType.FILE_URI, saveToPhotoAlbum: false, cameraDirection: 1 });
+    if (navigator.camera) 
+    {
+        var options = {
+            quality: 100,
+            cameraDirection: Camera.Direction.FRONT,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            encodingType: Camera.EncodingType.JPEG,
+            mediaType: Camera.MediaType.PICTURE,
+            allowEdit: true,
+            correctOrientation: true,
+            targetHeight: 1024,
+            targetWidth: 1024
+        }
+        console.log("Camera options", options)
+
+        navigator.camera.getPicture(onSuccess, onFail, options);
         
         function onSuccess(imageURI) {
             window.resolveLocalFileSystemURL(imageURI, (entry) => {
