@@ -207,6 +207,8 @@ function process_snapshot(img)
 
     const context = video_avatar_canvas.getContext("2d");
 
+    console.log(img.width, img.height, video_avatar_canvas.width, video_avatar_canvas.height)
+
     const canvasWidth = video_avatar_canvas.width;
     const canvasHeight = video_avatar_canvas.height;
 
@@ -226,6 +228,7 @@ function process_snapshot(img)
         sy = (img.height - sHeight) / 2;
     }
 
+    context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
     context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
 
     avatar_creation_data.photo = video_avatar_canvas.toDataURL();
