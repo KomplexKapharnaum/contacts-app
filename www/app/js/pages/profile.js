@@ -190,15 +190,18 @@ function avatar_start_camera() {
                         if (typeof cordova !== 'undefined' && cordova.plugins.permissions)
                             cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.VIBRATE,
                                 (status) => {
-                                    if(status.hasPermission) console.log("Vibration permission granted")
+                                    if(status.hasPermission) {
+                                        console.log("Vibration permission granted")
+                                        let r = navigator.vibrate(1000);
+                                        console.log("Vibration", r)
+                                    }
                                     else console.error("Vibration permission denied")
                                 }, () => {
                                     console.error("Vibration permission denied")
                                 });
-                                
 
-                        let r = navigator.vibrate(1000);
-                        console.log("Vibration", r)
+
+                        
                     }
                     else console.error("Vibration not supported")
 
