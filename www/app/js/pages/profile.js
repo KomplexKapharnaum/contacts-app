@@ -136,12 +136,18 @@ function avatar_start_camera() {
             destinationType: Camera.DestinationType.FILE_URI });
         
         function onSuccess(imageURI) {
-            window.resolveLocalFileSystemURL(uri, (entry) => {
-                let img = document.getElementById('image');
+            window.resolveLocalFileSystemURL(imageURI, (entry) => {
+                // create image element
+                var img = document.createElement('img');
                 img.src = entry.toURL();
+                // obtain .toDataURL() base64 image from img element
+                const context = video_avatar_canvas.getContext("2d");
+                context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
+                avatar_creation_data.photo = canvas.toDataURL();
+                set_avatarnext_available(true);
+                
             }, onFail);
         }
-        
         function onFail(message) {
             alert('Failed because: ' + message);
         }
@@ -167,7 +173,7 @@ video_avatar_capture.addEventListener("click", () => {
     video_avatar_canvas.classList.add("active")
     video_avatar.classList.remove("active")
     video_avatar_capture.classList.remove("active")
-    video_avatar_retry.classList.add("active")
+    video_avatar_retry.classList.add("active")w
 
     const context = video_avatar_canvas.getContext("2d");
     context.drawImage(video_avatar, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
