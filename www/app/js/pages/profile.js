@@ -131,18 +131,34 @@ function avatar_start_camera() {
         facingMode: {exact: 'user'}
     };
 
-    navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-        video_avatar.srcObject = stream;
-        video_avatar.play();
-        video_avatar_capture.addEventListener("click", () => {
-            stream.getTracks().forEach(track => track.stop());
-            set_avatarnext_available(true);
+    if (navigator.camera) {
+        navigator.camera.cleanup(
+            (uri) => {
+                window.resolveLocalFileSystemURL(uri, (entry) => {
+                    let image = document.getElementById('myImage');
+                    image.src = entry.toURL();
+                }, onError);
+            },
+            (message) => {
+                console.log('Camera cleanup failed: ' + message);
+            }
+        );
+    }
+    else {
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+            video_avatar.srcObject = stream;
+            video_avatar.play();
+            video_avatar_capture.addEventListener("click", () => {
+                stream.getTracks().forEach(track => track.stop());
+                set_avatarnext_available(true);
+            });
+        })
+        .catch(error => {
+            console.error('Error opening video camera.', JSON.stringify(error));
         });
-    })
-    .catch(error => {
-        console.error('Error opening video camera.', JSON.stringify(error));
-    });
+    }
+    
 }
 
 video_avatar_capture.addEventListener("click", () => {
