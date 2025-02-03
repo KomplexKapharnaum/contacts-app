@@ -140,7 +140,7 @@ function avatar_start_camera() {
                 // obtain .toDataURL() base64 image from img element
                 const context = video_avatar_canvas.getContext("2d");
                 context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
-                avatar_creation_data.photo = canvas.toDataURL();
+                avatar_creation_data.photo = video_avatar_canvas.toDataURL();
                 set_avatarnext_available(true);
                 
             }, onFail);
