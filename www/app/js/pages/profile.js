@@ -137,11 +137,14 @@ function avatar_start_camera() {
                 // create image element
                 var img = document.createElement('img');
                 img.src = entry.toURL();
-                // obtain .toDataURL() base64 image from img element
-                const context = video_avatar_canvas.getContext("2d");
-                context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
-                avatar_creation_data.photo = video_avatar_canvas.toDataURL();
-                set_avatarnext_available(true);
+                
+                // Set video_avatar with image
+                video_avatar.src = entry.toURL()
+
+                // const context = video_avatar_canvas.getContext("2d");
+                // context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
+                // avatar_creation_data.photo = video_avatar_canvas.toDataURL();
+                // set_avatarnext_available(true);
                 
             }, onFail);
         }
