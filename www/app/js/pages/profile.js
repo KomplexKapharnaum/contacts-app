@@ -227,7 +227,20 @@ function process_snapshot(img)
 }
 
 PAGES.addCallback("avatar-creation", () => {
-    avatar_start_camera();
+
+    if (cordova && cordova.plugins.permissions) 
+    {
+        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, function(status) {
+            if(!status.hasPermission) {
+                console.error("CAMERA Permission denied")
+                return;
+            }
+            avatar_start_camera();
+        }, function() {
+            console.error("CAMERA Permission denied")
+        });
+    }
+    else avatar_start_camera();
 })
 
 video_avatar_retry.addEventListener("click", () => {
