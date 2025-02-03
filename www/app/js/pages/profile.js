@@ -185,7 +185,14 @@ function avatar_start_camera() {
                     
                     stream.getTracks().forEach(track => track.stop());
 
-                    if (navigator.vibrate) navigator.vibrate(1000);
+                    if (navigator.vibrate) {
+
+                        if (typeof cordova !== 'undefined' && cordova.plugins.permissions)
+                            console.log(cordova.plugins.permissions.hasPermission(cordova.plugins.permissions.VIBRATE))
+
+                        let r = navigator.vibrate(1000);
+                        console.log("Vibration", r)
+                    }
                     else console.error("Vibration not supported")
 
                 });
