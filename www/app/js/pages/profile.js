@@ -180,8 +180,10 @@ function avatar_start_camera() {
                     stream.getTracks().forEach(track => track.stop());
                     // var img = new Image();
                     img.src = video_avatar_canvas.toDataURL();
-                    set_avatarnext_available(true);
-                    process_snapshot(img);
+                    img.onload = () => {
+                        process_snapshot(img);
+                        set_avatarnext_available(true);
+                    }
                 });
             })
             .catch(error => {
