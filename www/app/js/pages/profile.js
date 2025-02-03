@@ -190,7 +190,8 @@ function avatar_start_camera() {
                         set_avatarnext_available(true);
                     }
 
-                    if (navigator.vibrate) navigator.vibrate(100);
+                    // if (navigator.vibrate) 
+                        navigator.vibrate(100);
 
                 });
             })

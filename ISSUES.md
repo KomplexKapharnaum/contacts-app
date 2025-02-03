@@ -10,3 +10,6 @@
 
 - Brancher la génération d'Avatar
 
+- Camera: first snapshot fails (black)
+
+- Vibrate doesnt vibrate..
