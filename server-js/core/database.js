@@ -12,7 +12,7 @@ const db = knex({
 
 const dataPath = __dirname + '/data.db';
 if (fs.existsSync(dataPath)) {
-    fs.unlinkSync(dataPath);
+    // fs.unlinkSync(dataPath);
 }
 
 // Database schema
