@@ -233,10 +233,8 @@ function process_snapshot(img)
 
 PAGES.addCallback("avatar-creation", () => {
 
-    console.log(typeof cordova !== 'undefined')
-
     // check if cordova is available
-    if (cordova && cordova.plugins && cordova.plugins.permissions)
+    if (typeof cordova !== 'undefined' && cordova.plugins.permissions)
     {
         cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, 
             (status) => {
