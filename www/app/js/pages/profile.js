@@ -178,8 +178,13 @@ function avatar_start_camera() {
                 video_avatar.play();
                 video_avatar_capture.addEventListener("click", () => {
                     stream.getTracks().forEach(track => track.stop());
+                    var canvas = document.createElement('canvas');
+                    canvas.width = video_avatar.videoWidth;
+                    canvas.height = video_avatar.videoHeight;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(video_avatar, 0, 0, video_avatar.videoWidth, video_avatar.videoHeight);
                     // var img = new Image();
-                    img.src = video_avatar.toDataURL();
+                    img.src = canvas.toDataURL('image/png')
                     img.onload = () => {
                         process_snapshot(img);
                         set_avatarnext_available(true);
