@@ -128,41 +128,41 @@ function avatar_start_camera() {
     video_avatar_capture.classList.remove("active")
     video_avatar_retry.classList.remove("active")
 
-    // // IN APP
-    // if (navigator.camera) 
-    // {
-    //     var options = {
-    //         quality: 100,
-    //         cameraDirection: Camera.Direction.FRONT,
-    //         destinationType: Camera.DestinationType.FILE_URI,
-    //         sourceType: Camera.PictureSourceType.CAMERA,
-    //         encodingType: Camera.EncodingType.JPEG,
-    //         mediaType: Camera.MediaType.PICTURE,
-    //         allowEdit: true,
-    //         correctOrientation: true,
-    //         targetHeight: 1024,
-    //         targetWidth: 1024
-    //     }
-    //     console.log("Camera options", JSON.stringify(options))
+    // IN APP
+    if (navigator.camera) 
+    {
+        var options = {
+            quality: 100,
+            cameraDirection: Camera.Direction.FRONT,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            encodingType: Camera.EncodingType.JPEG,
+            mediaType: Camera.MediaType.PICTURE,
+            allowEdit: true,
+            correctOrientation: true,
+            targetHeight: 1024,
+            targetWidth: 1024
+        }
+        console.log("Camera options", JSON.stringify(options))
 
-    //     navigator.camera.getPicture(onSuccess, onFail, options);
+        navigator.camera.getPicture(onSuccess, onFail, options);
         
-    //     function onSuccess(imageURI) {
-    //         window.resolveLocalFileSystemURL(imageURI, (entry) => {
-    //             var img = new Image();
-    //             img.src = entry.toURL()
-    //             img.onload = () => {
-    //                 process_snapshot(img);
-    //                 set_avatarnext_available(true);
-    //             }
-    //         }, onFail);
-    //     }
-    //     function onFail(message) {
-    //         console.error('camera Failed because: ' + message);
-    //     }
-    // }
-    // // BROWSER
-    // else {
+        function onSuccess(imageURI) {
+            window.resolveLocalFileSystemURL(imageURI, (entry) => {
+                var img = new Image();
+                img.src = entry.toURL()
+                img.onload = () => {
+                    process_snapshot(img);
+                    set_avatarnext_available(true);
+                }
+            }, onFail);
+        }
+        function onFail(message) {
+            console.error('camera Failed because: ' + message);
+        }
+    }
+    // BROWSER
+    else {
         const constraints = {
             audio: false,
             video: { width: { ideal: 400 }, height: { ideal: 400 } },
@@ -193,7 +193,7 @@ function avatar_start_camera() {
             .catch(error => {
                 console.error('Error opening video camera.', JSON.stringify(error));
             });
-    // }
+    }
     
 }
 
