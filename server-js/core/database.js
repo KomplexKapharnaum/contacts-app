@@ -10,6 +10,12 @@ const db = knex({
     useNullAsDefault: true
 })
 
+// RESET DB
+//
+if (fs.existsSync(dataPath)) {
+    // fs.unlinkSync(dataPath);
+}
+
 
 // Database schema
 //
@@ -143,10 +149,9 @@ db.endEvent = async (id) => {
     return event;
 }
 
-// RESET DB
+// INIT DB
 //
-if (fs.existsSync(dataPath)) {
-    fs.unlinkSync(dataPath);
+if (!fs.existsSync(dataPath)) {
     initDB()
 }
 
