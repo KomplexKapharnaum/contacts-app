@@ -134,6 +134,10 @@ class ChatBox {
         clone.querySelector(".username").innerText = data.name
         const formattedDate = new Date(data.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
         clone.querySelector(".date").innerText = formattedDate;
+
+        const time = new Date(data.date).getTime().toString().slice(5)
+        clone.querySelector(".message").style.order = time
+
         this.msg_container.appendChild(clone)
         this.msg_container.scrollTo({
             top: this.msg_container.scrollHeight,

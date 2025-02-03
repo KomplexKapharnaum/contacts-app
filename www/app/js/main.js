@@ -36,28 +36,28 @@ async function app_prompt(text) {
     })
 }
 
-function after_user_load(uuid) {
+async function after_user_load(uuid) {
     socketAuth(uuid)
     loadEvents()
     loadChats(userData.tribe_id)
     loadLeaderBoard()
     updateTrophies()
+
+    const tribes = await QUERY.getTribes()
+    console.log(tribes)
+    if (tribes.status) {
+        document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
+    }
 }
 
 function subscribeToSession(uuid) {
     QUERY.getSession(uuid).then(res => {
         if(res.status && res.data) {
             const session = res.data
-            app_confirm("Voulez-vous vous inscrire à la session ?").then(confirmed => {
-                if (confirmed) {
-                    QUERY.subscribeToSession(uuid, res.data).then(sub_res => {
-                        if (sub_res.status) {
-                            userData.subscribed_session = sub_res.data.session_id
-                            after_user_load(uuid)
-                        }
-                    })
-                } else {
-                    PAGES.goto("home")
+            QUERY.subscribeToSession(uuid, res.data).then(sub_res => {
+                if (sub_res.status) {
+                    userData.subscribed_session = sub_res.data.session_id
+                    after_user_load(uuid)
                 }
             })
         }
