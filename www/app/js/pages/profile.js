@@ -233,7 +233,8 @@ function process_snapshot(img)
 
 PAGES.addCallback("avatar-creation", () => {
 
-    if (cordova && cordova.plugins.permissions) 
+    // check if cordova is available
+    if (cordova && cordova.plugins && cordova.plugins.permissions)
     {
         cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, 
             (status) => {
