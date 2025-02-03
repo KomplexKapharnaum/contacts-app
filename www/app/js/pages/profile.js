@@ -140,6 +140,7 @@ function avatar_start_camera() {
                 
                 // Set video_avatar with image
                 video_avatar.src = entry.toURL()
+                console.log(video_avatar.src)
 
                 // const context = video_avatar_canvas.getContext("2d");
                 // context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
