@@ -176,14 +176,15 @@ function avatar_start_camera() {
                 video_avatar.play();
 
                 video_avatar_capture.addEventListener("click", () => {
-                    stream.getTracks().forEach(track => track.stop());
-
+                    
                     video_avatar.height = video_avatar.videoHeight;
                     video_avatar.width = video_avatar.videoWidth;
-
+                    
                     process_snapshot(video_avatar);
                     set_avatarnext_available(true);
-
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                    
                     if (navigator.vibrate) navigator.vibrate();
                     else console.error("Vibration not supported")
 
