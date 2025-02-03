@@ -127,7 +127,8 @@ function avatar_start_camera() {
 
     const constraints = {
         audio: false,
-        video: { width: { ideal: 400 }, height: { ideal: 400 } }
+        video: { width: { ideal: 400 }, height: { ideal: 400 } },
+        facingMode: {exact: 'user'}
     };
 
     navigator.mediaDevices.getUserMedia(constraints)
@@ -140,7 +141,7 @@ function avatar_start_camera() {
         });
     })
     .catch(error => {
-        console.error('Error opening video camera.', error);
+        console.error('Error opening video camera.', JSON.stringify(error));
     });
 }
 
