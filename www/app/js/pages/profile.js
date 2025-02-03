@@ -110,6 +110,8 @@ const set_avatarnext_available = (bool) => avatar_creation_next.classList.toggle
 
 const video_avatar = document.getElementById("video-avatar");
 const video_avatar_canvas = document.getElementById("video-avatar-canvas");
+video_avatar_canvas.width = 512;
+video_avatar_canvas.height = 512;
 
 const video_avatar_capture = document.getElementById("video-avatar-capture");
 const video_avatar_retry = document.getElementById("video-avatar-retry");
@@ -122,7 +124,7 @@ function avatar_start_camera() {
 
     video_avatar_canvas.classList.remove("active")
     video_avatar.classList.add("active")
-    video_avatar_capture.classList.add("active")
+    video_avatar_capture.classList.remove("active")
     video_avatar_retry.classList.remove("active")
 
     const constraints = {
@@ -155,6 +157,7 @@ function avatar_start_camera() {
     else {
         navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
+            video_avatar_capture.classList.add("active")
             video_avatar.srcObject = stream;
             video_avatar.play();
             video_avatar_capture.addEventListener("click", () => {
@@ -176,7 +179,31 @@ video_avatar_capture.addEventListener("click", () => {
     video_avatar_retry.classList.add("active")w
 
     const context = video_avatar_canvas.getContext("2d");
-    context.drawImage(video_avatar, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
+
+    const cameraWidth = video_avatar.videoWidth;
+    const cameraHeight = video_avatar.videoHeight;
+
+    const canvasWidth = video_avatar_canvas.width;
+    const canvasHeight = video_avatar_canvas.height;
+
+    const ratio = cameraWidth / cameraHeight;
+    const canvasRatio = canvasWidth / canvasHeight;
+
+    let sx, sy, sWidth, sHeight;
+    if (ratio > canvasRatio) {
+        sWidth = cameraHeight * canvasRatio;
+        sHeight = cameraHeight;
+        sx = (cameraWidth - sWidth) / 2;
+        sy = 0;
+    } else {
+        sWidth = cameraWidth;
+        sHeight = cameraWidth / canvasRatio;
+        sx = 0;
+        sy = (cameraHeight - sHeight) / 2;
+    }
+
+    context.drawImage(video_avatar, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
+
     avatar_creation_data.photo = video_avatar_canvas.toDataURL();
 })
 
@@ -242,18 +269,22 @@ addButton("#00F")
 
 setActiveColor(default_color)
 
-cnv_paint.addEventListener("mousedown", (e) => {
+cnv_paint.addEventListener("touchstart", (e) => {
+    const bounds = cnv_paint.getBoundingClientRect()
+    const x = (e.touches[0].clientX - bounds.left) * (cnv_paint.width / bounds.width)
+    const y = (e.touches[0].clientY - bounds.top) * (cnv_paint.height / bounds.height)
     paint_data.down = true
-    const bounds = cnv_paint.getBoundingClientRect()
-    paint_data.prevX = e.offsetX / bounds.width * cnv_paint.width
-    paint_data.prevY = e.offsetY / bounds.height * cnv_paint.height
+    paint_data.prevX = x
+    paint_data.prevY = y
 })
-cnv_paint.addEventListener("mouseup", () => {paint_data.down = false})
+cnv_paint.addEventListener("touchend", () => {paint_data.down = false})
 
-cnv_paint.addEventListener("mousemove", (e) => {
+cnv_paint.addEventListener("touchmove", (e) => {
     const bounds = cnv_paint.getBoundingClientRect()
+    const x = (e.touches[0].clientX - bounds.left) * (cnv_paint.width / bounds.width)
+    const y = (e.touches[0].clientY - bounds.top) * (cnv_paint.height / bounds.height)
     if (paint_data.down) {
-        draw(e.offsetX / bounds.width * cnv_paint.width, e.offsetY / bounds.height * cnv_paint.height)
+        draw(x, y)
     }
 })
 
