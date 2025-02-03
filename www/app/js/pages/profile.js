@@ -134,17 +134,19 @@ function avatar_start_camera() {
     };
 
     if (navigator.camera) {
-        navigator.camera.cleanup(
-            (uri) => {
-                window.resolveLocalFileSystemURL(uri, (entry) => {
-                    let image = document.getElementById('myImage');
-                    image.src = entry.toURL();
-                }, onError);
-            },
-            (message) => {
-                console.log('Camera cleanup failed: ' + message);
-            }
-        );
+        navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+            destinationType: Camera.DestinationType.FILE_URI });
+        
+        function onSuccess(imageURI) {
+            window.resolveLocalFileSystemURL(uri, (entry) => {
+                let img = document.getElementById('image');
+                img.src = entry.toURL();
+            }, onFail);
+        }
+        
+        function onFail(message) {
+            alert('Failed because: ' + message);
+        }
     }
     else {
         navigator.mediaDevices.getUserMedia(constraints)
