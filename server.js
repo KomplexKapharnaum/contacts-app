@@ -45,7 +45,7 @@ async function test() {
     // db.createEvent = async (session_id, start_date, name, description, location_coords, location_name) => {
 
     // db.createEvent(session[0], new Date(Date.now() - 1000), "Hautes herbes", "le carnaval émerge...", "45.787805, 4.919129", "Parc municipal Elsa Triolet");
-    db.createEvent(session[0], new Date(Date.now() + one_day ), "Incoming event", "45 minutes from now", "1.3215,2.154", "LOCATION NAME");
+    db.createEvent(session[0], new Date(Date.now() + 60 * 1000), "Incoming event", "1 minutes from now", "1.3215,2.154", "LOCATION NAME");
     db.createEvent(session[0], new Date(Date.now() + one_day * 2), "test event 2", "test description 2", "0,0", "test location 2");
 
     for (let i = 0; i < 10; i++) {

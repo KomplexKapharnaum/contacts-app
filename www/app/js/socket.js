@@ -21,7 +21,6 @@ if (!document.SOCKETIO)
     })
 }
 
-
 function socketAuth(uuid) {
     document.SOCKETIO.emit('user-auth', uuid);
 }
