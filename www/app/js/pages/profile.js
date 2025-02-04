@@ -116,6 +116,7 @@ video_avatar_canvas.height = 512;
 const video_avatar_capture = document.getElementById("video-avatar-capture");
 const video_avatar_retry = document.getElementById("video-avatar-retry");
 
+
 function avatar_start_camera() {
     open_avatar_subpage(0)
 
@@ -127,42 +128,41 @@ function avatar_start_camera() {
     video_avatar_capture.classList.remove("active")
     video_avatar_retry.classList.remove("active")
 
-    // IN APP
-    if (navigator.camera) {
-        navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-            destinationType: Camera.DestinationType.FILE_URI });
+    // // IN APP
+    // if (navigator.camera) 
+    // {
+    //     var options = {
+    //         quality: 100,
+    //         cameraDirection: Camera.Direction.FRONT,
+    //         destinationType: Camera.DestinationType.FILE_URI,
+    //         sourceType: Camera.PictureSourceType.CAMERA,
+    //         encodingType: Camera.EncodingType.JPEG,
+    //         mediaType: Camera.MediaType.PICTURE,
+    //         allowEdit: true,
+    //         correctOrientation: true,
+    //         targetHeight: 1024,
+    //         targetWidth: 1024
+    //     }
+    //     console.log("Camera options", JSON.stringify(options))
+
+    //     navigator.camera.getPicture(onSuccess, onFail, options);
         
-        function onSuccess(imageURI) {
-            window.resolveLocalFileSystemURL(imageURI, (entry) => {
-                // create image element
-                var img = document.createElement('img');
-                img.src = entry.toURL();
-
-                // add to body, position fixed and center
-                document.body.appendChild(img);
-                img.style.position = 'fixed';
-                img.style.top = '50%';
-                img.style.left = '50%';
-                img.style.transform = 'translate(-50%, -50%)';
-                
-                
-                // Set video_avatar with image
-                video_avatar.src = entry.toURL()
-                console.log(video_avatar.src)
-
-                // const context = video_avatar_canvas.getContext("2d");
-                // context.drawImage(img, 0, 0, video_avatar_canvas.width, video_avatar_canvas.height);
-                // avatar_creation_data.photo = video_avatar_canvas.toDataURL();
-                // set_avatarnext_available(true);
-                
-            }, onFail);
-        }
-        function onFail(message) {
-            alert('Failed because: ' + message);
-        }
-    }
-    // BROWSER
-    else {
+    //     function onSuccess(imageURI) {
+    //         window.resolveLocalFileSystemURL(imageURI, (entry) => {
+    //             var img = new Image();
+    //             img.src = entry.toURL()
+    //             img.onload = () => {
+    //                 process_snapshot(img);
+    //                 set_avatarnext_available(true);
+    //             }
+    //         }, onFail);
+    //     }
+    //     function onFail(message) {
+    //         console.error('camera Failed because: ' + message);
+    //     }
+    // }
+    // // BROWSER
+    // else {
         const constraints = {
             audio: false,
             video: { width: { ideal: 400 }, height: { ideal: 400 } },
@@ -170,23 +170,35 @@ function avatar_start_camera() {
         };
 
         navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
-            video_avatar_capture.classList.add("active")
-            video_avatar.srcObject = stream;
-            video_avatar.play();
-            video_avatar_capture.addEventListener("click", () => {
-                stream.getTracks().forEach(track => track.stop());
-                set_avatarnext_available(true);
+            .then(stream => {
+                video_avatar_capture.classList.add("active")
+                video_avatar.srcObject = stream;
+                video_avatar.play();
+
+                video_avatar_capture.addEventListener("click", () => {
+                    
+                    video_avatar.height = video_avatar.videoHeight;
+                    video_avatar.width = video_avatar.videoWidth;
+                    
+                    process_snapshot(video_avatar);
+                    set_avatarnext_available(true);
+                    
+                    stream.getTracks().forEach(track => track.stop());
+
+                    if (navigator.vibrate) navigator.vibrate(1000);
+                    else console.error("Vibration not supported")
+
+                });
+            })
+            .catch(error => {
+                console.error('Error opening video camera.', JSON.stringify(error));
             });
-        })
-        .catch(error => {
-            console.error('Error opening video camera.', JSON.stringify(error));
-        });
-    }
+    // }
     
 }
 
-video_avatar_capture.addEventListener("click", () => {
+function process_snapshot(img) 
+{
     video_avatar_canvas.classList.add("active")
     video_avatar.classList.remove("active")
     video_avatar_capture.classList.remove("active")
@@ -194,35 +206,43 @@ video_avatar_capture.addEventListener("click", () => {
 
     const context = video_avatar_canvas.getContext("2d");
 
-    const cameraWidth = video_avatar.videoWidth;
-    const cameraHeight = video_avatar.videoHeight;
-
     const canvasWidth = video_avatar_canvas.width;
     const canvasHeight = video_avatar_canvas.height;
-
-    const ratio = cameraWidth / cameraHeight;
+    
+    const ratio = img.width / img.height;
+    
     const canvasRatio = canvasWidth / canvasHeight;
 
     let sx, sy, sWidth, sHeight;
     if (ratio > canvasRatio) {
-        sWidth = cameraHeight * canvasRatio;
-        sHeight = cameraHeight;
-        sx = (cameraWidth - sWidth) / 2;
+        sWidth = img.height * canvasRatio;
+        sHeight = img.height;
+        sx = (img.width - sWidth) / 2;
         sy = 0;
     } else {
-        sWidth = cameraWidth;
-        sHeight = cameraWidth / canvasRatio;
+        sWidth = img.width;
+        sHeight = img.width / canvasRatio;
         sx = 0;
-        sy = (cameraHeight - sHeight) / 2;
+        sy = (img.height - sHeight) / 2;
     }
-
-    context.drawImage(video_avatar, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
-
+    context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
     avatar_creation_data.photo = video_avatar_canvas.toDataURL();
-})
+}
 
 PAGES.addCallback("avatar-creation", () => {
-    avatar_start_camera();
+
+    // check if cordova is available
+    if (typeof cordova !== 'undefined' && cordova.plugins.permissions)
+    {
+        cordova.plugins.permissions.requestPermission(cordova.plugins.permissions.CAMERA, 
+            (status) => {
+                if(status.hasPermission) avatar_start_camera();
+                else console.error("CAMERA Permission denied")
+            }, () => {
+                console.error("CAMERA Permission denied")
+            });
+    }
+    else avatar_start_camera();
 })
 
 video_avatar_retry.addEventListener("click", () => {

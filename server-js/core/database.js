@@ -2,91 +2,101 @@ import { __dirname } from '../../path.js';
 import knex from 'knex';
 import fs from 'fs';
 
+const dataPath = __dirname + '/data.db';
+
 const db = knex({
     client: 'sqlite3',
-    connection: {
-        filename: __dirname + '/data.db',
-    },
+    connection: { filename: dataPath, },
     useNullAsDefault: true
 })
 
-const dataPath = __dirname + '/data.db';
+// RESET DB
+//
 if (fs.existsSync(dataPath)) {
-    fs.unlinkSync(dataPath);
+    // fs.unlinkSync(dataPath);
 }
+
 
 // Database schema
 //
 
-await db.schema
+async function initDB() {
 
-.createTable('avatars', (table) => {
-    table.increments('id');
-    table.integer('user_id').unsigned().references('users.id');
-    table.string('status').default('pending');
-    table.string('filename');
-})
+    await db.schema
 
-.createTable('tribes', (table) => {
-    table.increments('id');
-    table.string('name');
-    table.json('color').default('[]');
-    table.integer('score').default(0);
-})
+        .createTable('avatars', (table) => {
+            table.increments('id');
+            table.integer('user_id').unsigned().references('users.id');
+            table.string('status').default('pending');
+            table.string('filename');
+        })
 
-.createTable('session', (table) => {
-    table.increments('id');
-    table.string('name');
-    table.boolean('frozen').default(false);
-    table.string('date_start');
-    table.string('date_end');
-})
+        .createTable('tribes', (table) => {
+            table.increments('id');
+            table.string('name');
+            table.json('color').default('[]');
+            table.integer('score').default(0);
+        })
 
-.createTable('event', (table) => {
-    table.increments('id');
-    table.integer('session_id').unsigned().references('session.id');
-    table.string('start_date');
-    table.boolean('ended').default(false);
-    table.string('name');
-    table.string('description');
-    table.json('location_coords').default('{lat: 0, lon: 0}');
-    table.string('location_name');
-})
+        .createTable('session', (table) => {
+            table.increments('id');
+            table.string('name');
+            table.boolean('frozen').default(false);
+            table.string('date_start');
+            table.string('date_end');
+        })
 
-.createTable('users', (table) => {
-    table.increments('id');
-    table.string('uuid'); // User token, other users should NEVER see it
-    table.string('public_id'); // Use this instead
-    table.string('name');
-    table.json('avatars').default('[]');
-    table.integer('selected_avatar').unsigned().references('avatars.id');
-    table.integer('tribe_id').unsigned().references('tribes.id');
-    table.integer('subscribed_session').unsigned().references('session.id');
-    table.boolean('admin').default(false);
-    table.json('stats').default('{}');
-    table.json('trophies').default('[]');
-    table.integer('score').default(0);
-})
+        .createTable('event', (table) => {
+            table.increments('id');
+            table.integer('session_id').unsigned().references('session.id');
+            table.string('start_date');
+            table.boolean('ended').default(false);
+            table.string('name');
+            table.string('description');
+            table.json('location_coords').default('{lat: 0, lon: 0}');
+            table.string('location_name');
+        })
 
-.createTable('messages', (table) => {
-    table.increments('id');
-    table.boolean("admin").default(false);
-    table.string('name');
-    table.dateTime("date");
-    table.string("uuid");
-    table.string("public_id");
-    table.string("message");
-    table.json("reports").default('[]');
-    table.boolean("deleted").default(false);
-    table.integer("tribeID").default(0);
-})
+        .createTable('users', (table) => {
+            table.increments('id');
+            table.string('uuid'); // User token, other users should NEVER see it
+            table.string('public_id'); // Use this instead
+            table.string('name');
+            table.json('avatars').default('[]');
+            table.integer('selected_avatar').unsigned().references('avatars.id');
+            table.integer('tribe_id').unsigned().references('tribes.id');
+            table.integer('subscribed_session').unsigned().references('session.id');
+            table.boolean('admin').default(false);
+            table.json('stats').default('{}');
+            table.json('trophies').default('[]');
+            table.integer('score').default(0);
+        })
 
-.createTable('presets', (table) => {
-    table.increments('id');
-    table.string("group");
-    table.string("name");
-    table.json("data");
-})
+        .createTable('messages', (table) => {
+            table.increments('id');
+            table.boolean("admin").default(false);
+            table.string('name');
+            table.dateTime("date");
+            table.string("uuid");
+            table.string("public_id");
+            table.string("message");
+            table.json("reports").default('[]');
+            table.boolean("deleted").default(false);
+            table.integer("tribeID").default(0);
+        })
+
+        .createTable('presets', (table) => {
+            table.increments('id');
+            table.string("group");
+            table.string("name");
+            table.json("data");
+        })
+
+        db.createTribe("techno", "#FFFF00");
+        db.createTribe("animal", "#FF0000");
+        db.createTribe("vegetal", "#00FF00");
+
+}
 
 // Tribe related
 //
@@ -95,10 +105,6 @@ db.createTribe = async (name, color) => {
     const tribe = await db('tribes').insert({name: name, color: color});
     return tribe;
 }
-
-db.createTribe("techno", "#FFFF00");
-db.createTribe("animal", "#FF0000");
-db.createTribe("vegetal", "#00FF00");
 
 // Message related
 //
@@ -141,6 +147,12 @@ db.createEvent = async (session_id, start_date, name, description, location_coor
 db.endEvent = async (id) => {
     const event = await db('event').where('id', id).update({ended: true});
     return event;
+}
+
+// INIT DB
+//
+if (!fs.existsSync(dataPath)) {
+    initDB()
 }
 
 export default db
