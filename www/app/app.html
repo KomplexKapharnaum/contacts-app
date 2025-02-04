@@ -45,6 +45,10 @@
         #background {
             background: url($BASEPATH$/img/bg.jpg);
         }
+
+        #buddy-icon {
+            background: var(--buddy-color) url($BASEPATH$/img/buddy/icon.png) no-repeat center;
+        }
     </style>
 
     <!-- CSS -->       
@@ -54,7 +58,8 @@
     <link rel="stylesheet" href="$BASEPATH$/css/events.css">
     <link rel="stylesheet" href="$BASEPATH$/css/live.css">
     <link rel="stylesheet" href="$BASEPATH$/css/chat.css">
-
+    <link rel="stylesheet" href="$BASEPATH$/css/buddy.css">
+    
     <link rel="stylesheet" href="$BASEPATH$/css/onboarding.css">
     <link rel="stylesheet" href="$BASEPATH$/css/profile.css">
     <link rel="stylesheet" href="$BASEPATH$/css/tribe.css">
@@ -627,6 +632,16 @@
     <div id="overlay"></div>
     <div id="video-overlay"><video src="" loop muted playsinline></video></div>
 
+    <!-- Buddy -->
+    <div id="buddy-icon"></div>
+    <div id="buddy-overlay"></div>
+    <div id="buddy-container">
+        <img src="" alt="buddy" id="buddy">
+        <img src="$BASEPATH$/img/buddy/sockets.png" alt="buddy-sockets">
+        <img src="$BASEPATH$/img/buddy/eyes.png" id="buddy-eyes" alt="buddy-eyes">
+        <div id="buddy-text">Hello, user !</div>
+    </div>
+
     <!-- SVG filters -->
     <svg id="filters">
 
@@ -706,6 +721,7 @@
     <script src="$BASEPATH$/js/socket.js"></script>
     <script src="$BASEPATH$/js/test.js"></script>
     <script src="$BASEPATH$/js/render.js"></script>
+    <script src="$BASEPATH$/js/buddy.js"></script>
 
     <!-- Pages -->
     <script src="$BASEPATH$/js/pages/onboarding.js"></script>
