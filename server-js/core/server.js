@@ -3,10 +3,12 @@
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 // import https from 'https';
 
 import { env } from './env.js';
 var app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json({ limit: '50mb' }));
 
