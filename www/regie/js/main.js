@@ -9,7 +9,6 @@ const config = {
 /* */
 if (!document.CONFIG) {
     console.log("CONFIG: will use browser cookies")
-
     document.CONFIG = {
         get: function(name) {
             const nameEQ = name + "="

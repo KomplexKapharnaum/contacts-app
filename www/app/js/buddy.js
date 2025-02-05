@@ -66,12 +66,10 @@ class Buddy {
 
         this.icon.addEventListener('click', async () => {
             if (!this.currentDialogue) return;
-            this.overlay.classList.add('active');
-            this.show(false);
-            await new Promise(resolve => setTimeout(resolve, 300));
-            await this.startDialogue();
-            this.overlay.classList.remove('active');
+            this.startDialogue();
         });
+
+        this.available(false)
     }
 
     available(state) {
@@ -146,24 +144,34 @@ class Buddy {
         this.text.innerHTML+= '<br><span class="skip">Appuyez pour continuer...</span>'
     }
 
-    setCurrentDialogue(textList=false) {
+    setCurrentDialogue(textList=false, force=false) {
         this.currentDialogue = textList;
         this.available(textList!=false);
+        if (force) this.startDialogue();
     }
 
+    dialogueactive=false;
     async startDialogue() {
-        if (this.currentDialogue) {
-            for (const text of this.currentDialogue) {
+        if (this.dialogueactive) return;
+        this.dialogueactive = true;
+        this.overlay.classList.add('active');
+        this.show(false);
+        const processedDialogue = this.currentDialogue
+        if (processedDialogue) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+            for (const text of processedDialogue) {
                 await this.appendText(text);
                 await new Promise(resolve => document.addEventListener('click', resolve));
             }
             this.show(true);
             this.text.classList.remove('shown');
         }
+        this.overlay.classList.remove('active');
+        this.dialogueactive = false;
     }
 }
 
-const b = new Buddy(
+const BUD = new Buddy(
     document.getElementById('buddy-container'),
     document.getElementById('buddy-overlay'),
     document.getElementById('buddy-icon'), 
@@ -172,10 +180,15 @@ const b = new Buddy(
     document.getElementById('buddy-text')
 );
 
-b.setCurrentDialogue([
-    'Salut, je suis Buddy, un assistant virtuel qui va te guider dans le cyberespace !',
-    'Je vais te montrer plein de choses à faire !',
-    'Déjà, est-ce que tu as créé ton avatar ? Tu peux en générer un dans ta page Profile, ensuite trouve la partie Avatar. Tu verras, c\'est super fun !',
-])
+// BUD.setCurrentDialogue([
+//     'Salut, je suis Buddy, un assistant virtuel qui va te guider dans le cyberespace !',
+//     'Je vais te montrer plein de choses à faire !',
+//     'Déjà, est-ce que tu as créé ton avatar ? Tu peux en générer un dans ta page Profile, ensuite trouve la partie Avatar. Tu verras, c\'est super fun !',
+// ])
 
 // b.appendText('Salut, bienvenue dans le cyberespace ! Tu vas voir, il y a plein de choses à faire :)');
+
+PAGES.setBuddyDial("profile", BUD_DIALS.profile)
+PAGES.setBuddyDial("tribe", BUD_DIALS.tribe)
+PAGES.setBuddyDial("cyberspace", BUD_DIALS.cyberspace)
+PAGES.setBuddyDial("avatar-creation", BUD_DIALS.profil_draw)

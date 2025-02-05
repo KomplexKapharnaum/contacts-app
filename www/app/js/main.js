@@ -117,6 +117,7 @@ nav_goto("nav-cyberspace", "cyberspace")
 PAGES.setPageColor("profile", "var(--color-secondary-1)")
 PAGES.setPageColor("tribe", "var(--color-secondary-3)")
 PAGES.setPageColor("cyberspace", "var(--color-secondary-2)")
+PAGES.setPageColor("live-idle", "white")
 
 // Accordions
 
