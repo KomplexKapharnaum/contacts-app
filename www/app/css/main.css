@@ -41,6 +41,9 @@ body {
     flex-direction: column;
     background-color: var(--color-background);
     filter: url(#chromatic-aberration);
+
+    padding-bottom: 22px;
+    padding-top: 22px;
 }
 
 @keyframes screen-scroll {

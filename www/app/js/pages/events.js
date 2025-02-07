@@ -36,16 +36,22 @@ function loadEvents() {
                     now
                 )
 
-                clock.add("events-list", () => {
+                const liveEventHandler = () => {
+                    if (eventLive) return
+                    if (isEventLive(event_data.start_date)) {
+                        socketEventLive(userData.uuid)
+                        PAGES.goto("live-idle")
+                        eventLive = true
+                        showNavbar(false)
+                    }
+                }
+                liveEventHandler();
+
+                clock.add("cyberspace", () => {
                     now = new Date().getTime() > new Date(event_data.start_date).getTime()
                     el.querySelector(".date").innerHTML = now ? "En cours" : formateDate(event_date)
+                    liveEventHandler();
                 })
-
-                if (isEventLive(event_data.start_date)) {
-                    socketEventLive(userData.uuid)
-                    PAGES.goto("live-idle")
-                    eventLive = true
-                }
 
                 el.addEventListener("click", () => {
                     goto_event(event_data)

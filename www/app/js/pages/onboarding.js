@@ -30,6 +30,7 @@ function onboarding_create_user(username, tribeID) {
             if (res.data.uuid) {
                 userData = res.data
                 document.CONFIG.set("uuid", res.data.uuid)
+                BUD.setCurrentDialogue(BUD_DIALS.welcome, true)
                 subscribeToSession(res.data.uuid)
             } else {
                 onboarding_username_error.innerText = "Une erreur est survenue"
@@ -83,65 +84,3 @@ onboarding_tribe_validate.addEventListener("click", () => {
         onboarding_userdata_buffer.tribeID
     )
 })
-
-/*
-let avatar_creation_data = {}
-
-const onboarding_camera = document.getElementById("onboarding-video")
-const onboarding_video_capture = document.getElementById("onboarding-video-capture")
-const onboarding_video_canvas = document.getElementById("onboarding-video-canvas")
-
-const validate_buttons_container = document.getElementById("onboarding-video-validate-buttons")
-const videovalidate_send = document.getElementById("onboarding-video-send")
-const videovalidate_cancel = document.getElementById("onboarding-video-cancel")
-
-function displayCameraButtons(bool1, bool2) {
-    validate_buttons_container.style.display = bool1 ? "flex" : "none"
-    onboarding_video_capture.style.display = bool2 ? "block" : "none"
-}
-
-function startCamera() {
-
-    displayCameraButtons(false, false)
-
-    avatar_creation_data = {}
-
-    const constraints = {
-        audio: false,
-        video: { width: { ideal: 400 }, height: { ideal: 400 } }
-    }
-
-    navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-        onboarding_camera.srcObject = stream
-        onboarding_camera.play()
-        displayCameraButtons(false, true)
-        onboarding_video_capture.addEventListener("click", () => {
-            stream.getTracks().forEach(track => track.stop())
-        })
-    })
-    .catch(error => {
-        console.error('Error opening video camera.', error)
-    })
-}
-
-PAGES.addCallback("onboarding-selfie", () => {
-    startCamera()
-})
-
-onboarding_video_capture.addEventListener("click", () => {
-    const context = onboarding_video_canvas.getContext("2d")
-    context.drawImage(video_debug, 0, 0, onboarding_video_canvas.width, onboarding_video_canvas.height)
-
-    displayCameraButtons(true, false)
-
-    videovalidate_cancel.addEventListener("click", () => {
-        startCamera()
-    })
-
-    videovalidate_send.addEventListener("click", () => {
-        avatar_creation_data.avatar = onboarding_video_canvas.toDataURL("image/png")
-        PAGES.goto("onboarding-questions-01")
-    })
-})
-    */
