@@ -31,6 +31,8 @@ PAGES.goto = function(pageID, init=false) {
 
     if (!init) PAGES.active().classList.remove("active");
     page.classList.add("active");
+    
+    BUD.setCurrentDialogue(PAGES.buddyDials[pageID])
     PAGES.callback(pageID);
 
     if (page.dataset.pageColor) document.documentElement.style.setProperty('--bg-color', page.dataset.pageColor);
@@ -39,4 +41,9 @@ PAGES.goto = function(pageID, init=false) {
 PAGES.setPageColor = function(pageID, color) {
     const page = document.querySelector(`.page[data-page-id="${pageID}"]`);
     page.dataset.pageColor = color;
+}
+
+PAGES.buddyDials = {}
+PAGES.setBuddyDial = function(id, dial) {
+    PAGES.buddyDials[id] = dial
 }

@@ -1,6 +1,7 @@
 import { __dirname } from '../../path.js';
 import knex from 'knex';
 import fs from 'fs';
+import {env} from './env.js';
 
 const dataPath = __dirname + '/data.db';
 
@@ -12,8 +13,8 @@ const db = knex({
 
 // RESET DB
 //
-if (fs.existsSync(dataPath)) {
-    // fs.unlinkSync(dataPath);
+if (fs.existsSync(dataPath) && env.DESTROY_DB_ON_START) {
+    fs.unlinkSync(dataPath);
 }
 
 

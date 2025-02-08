@@ -59,6 +59,7 @@
     overflow-y: scroll;
     gap: 8px;
     height: 100%;
+    min-height: 256px;
 
     padding: 8px;
     border-radius: 8px;

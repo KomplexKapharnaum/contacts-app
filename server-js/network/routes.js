@@ -29,3 +29,8 @@ app.get('/query', async function (req, res) {
 });
 
 app.use('/regie', express.static('www/regie'));
+
+// Serve EXIT
+app.get('/exit', function (req, res) {
+    res.sendFile(__dirname + '/www/exit.html');
+});

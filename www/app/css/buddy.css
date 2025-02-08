@@ -1,0 +1,133 @@
+html {
+    background-color: black;
+}
+
+:root {
+    --buddy-color: #E66AA5;
+}
+
+#buddy-icon {
+    position: fixed;
+    top: 4px;
+    right: 4px;
+    width: 32px;
+    height: 32px;
+    background-size: 100% 100%;
+    border-radius: 50%;
+
+    transition: right 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+#buddy-icon.hidden, #buddy-icon:not(.available) {
+    right: -4px;
+    transform: translateX(100%);
+    pointer-events: none;
+}
+
+#buddy-container {
+    position: fixed;
+    top: 0;
+    transform: translateY(-100%);
+    left: 16px;
+
+    width: calc(100% - 32px);
+    aspect-ratio: 1/1;
+
+    transition: top 0.3s ease-in-out, transform 0.3s cubic-bezier(0.5, 0, 0.2, 1.5);;
+}
+
+#buddy-container.shown {
+    top: 64px;
+    transform: none;
+}
+
+#buddy-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+#buddy-text {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    font-size: 12px;
+    color: #fff;
+    pointer-events: none;
+
+    background-color: var(--buddy-color);
+    padding: 16px;
+    border-radius: 16px;
+
+    font-size: 16px;
+
+    transform-origin: center top;
+    transform: scale(0);
+
+    transition: transform 0.3s cubic-bezier(0.5, 0, 0.2, 1.5);
+    
+    font-family: 'v50-bold';
+}
+
+@keyframes skip-flicker {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.8;
+    }
+}
+
+#buddy-text>.skip {
+    opacity: 0.5;
+}
+
+#buddy-text.shown {
+    transform: scale(1) translateY(100%);
+}
+
+#buddy-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 16px;
+    height: 16px;
+
+    z-index: -1;
+    background-color: var(--buddy-color);
+}
+
+#buddy-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 0.3s ease-in-out;
+}
+
+#buddy-overlay.active {
+    opacity: 0.7;
+    pointer-events: all;
+}
+
+/* debug */
+
+.text {
+    color: white;
+}
