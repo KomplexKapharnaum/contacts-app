@@ -44,6 +44,9 @@ body {
 
     padding-bottom: 22px;
     padding-top: 22px;
+
+    position: fixed;
+    bottom: 0;
 }
 
 @keyframes screen-scroll {
