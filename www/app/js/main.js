@@ -139,3 +139,14 @@ if (document.APPVERSION) {
 else {
     document.getElementById("version").style.display = "none"
 }
+
+// Update offset (virtual keyboard)
+visualViewport.addEventListener('resize', (e) => {
+    const h = e.target.height
+    if (window.visualViewport.height < window.innerHeight) {
+        document.documentElement.style.setProperty('--offset', `-${window.innerHeight - window.visualViewport.height}px`)
+    }
+    else {
+        document.documentElement.style.setProperty('--offset', '0px')
+    }
+});
