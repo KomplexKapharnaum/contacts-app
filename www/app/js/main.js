@@ -144,7 +144,7 @@ else {
 }
 
 const virtualKeyboardSupported = "virtualKeyboard" in navigator;
-alert(" is virtual keyboard supported : ", virtualKeyboardSupported)
+alert(virtualKeyboardSupported)
 if (virtualKeyboardSupported) {
     navigator.virtualKeyboard.overlaysContent = true;
     navigator.virtualKeyboard.addEventListener("geometrychange", e => {    
