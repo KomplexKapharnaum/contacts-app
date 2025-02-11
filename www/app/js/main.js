@@ -143,23 +143,12 @@ else {
     document.getElementById("version").style.display = "none"
 }
 
-// Update offset (virtual keyboard)
-// visualViewport.addEventListener('resize', (e) => {
-//     alert(window.visualViewport.height)
-//     const h = e.target.height
-//     if (window.visualViewport.height < window.innerHeight) {
-//         document.documentElement.style.setProperty('--offset', `-${window.innerHeight - window.visualViewport.height}px`)
-//     }
-//     else {
-//         document.documentElement.style.setProperty('--offset', '0px')
-//     }
-// });
-
-// if ('virtualKeyboard' in navigator) {
-//     navigator.virtualKeyboard.overlaysContent = true;
-//     navigator.virtualKeyboard.addEventListener('geometrychange', (event) => {
-//         alert(event.target.boundingRect.height)
-//         const { x, y, width, height } = event.target.boundingRect;
-//         document.documentElement.style.setProperty('--offset', `-${height}px`)
-//     });
-// }
+const virtualKeyboardSupported = "virtualKeyboard" in navigator;
+alert(" is virtual keyboard supported : ", virtualKeyboardSupported)
+if (virtualKeyboardSupported) {
+    navigator.virtualKeyboard.overlaysContent = true;
+    navigator.virtualKeyboard.addEventListener("geometrychange", e => {    
+        let { x, y, width, height } = e.target.boundingRect;
+        document.documentElement.style.setProperty('--offset', `-${height}px`)
+    });
+}
