@@ -104,84 +104,93 @@ SOCKET.io.on('connection', (socket) => {
     })
 
     socket.on('ctrl', (data) => {
+      
+      console.log('ctrl', data);
+      if (!socket.rooms.has("admin")) return;
+
+      if (data.name == "reload") SOCKET.io.emit('reload')
+      else SOCKET.startEvent(data.name, data.args);
+
+      const grp = data.args.params.grpChoice || '';
+      SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${grp===''?'everyone':grp.toLowerCase()}` );
+    });
+
+    socket.on('setEventState', (data) => {
+
+      if (!socket.rooms.has("admin")) return;
+
+      console.log('EVENT STATE HAS CHANGED : ', data);
+      IS_EVENT_LIVE = data;
+      SOCKET.io.emit('getEventState', IS_EVENT_LIVE);
+    });
+
+    /* === Chat === */
+
+    socket.on("chat-message", async (data) => {
+      if (socket.rooms.has("user")) {
+        if (data.tribeID != socket.tribeID && data.tribeID != 0) return
+        const date = new Date()
+        const id = await db.createMessage(socket.isAdmin, data.name, date, socket.uuid, socket.public_id, data.message, data.tribeID);
+        Object.assign(data, {
+          date, 
+          admin: socket.isAdmin, 
+          public_id: socket.public_id,
+          id: id[0]
+        });
+        if (data.tribeID != 0) {
+          SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
+        } else {
+          SOCKET.io.to("user").emit("chat-message", data);
+        }
         
-        console.log('ctrl', data);
-        if (!socket.rooms.has("admin")) return;
-
-        if (data.name == "reload") SOCKET.io.emit('reload')
-        else SOCKET.startEvent(data.name, data.args);
-    
-        const grp = data.args.params.grpChoice || '';
-        SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${grp===''?'everyone':grp.toLowerCase()}` );
-      });
-    
-      socket.on('setEventState', (data) => {
-
-        if (!socket.rooms.has("admin")) return;
-
-        console.log('EVENT STATE HAS CHANGED : ', data);
-        IS_EVENT_LIVE = data;
-        SOCKET.io.emit('getEventState', IS_EVENT_LIVE);
-      });
-
-      /* === Chat === */
-
-      socket.on("chat-message", async (data) => {
-        if (socket.rooms.has("user")) {
-          if (data.tribeID != socket.tribeID && data.tribeID != 0) return
-          const date = new Date()
-          const id = await db.createMessage(socket.isAdmin, data.name, date, socket.uuid, socket.public_id, data.message, data.tribeID);
-          Object.assign(data, {
-            date, 
-            admin: socket.isAdmin, 
-            public_id: socket.public_id,
-            id: id[0]
-          });
-          if (data.tribeID != 0) {
-            SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
-          } else {
-            SOCKET.io.to("user").emit("chat-message", data);
-          }
-          
-          const count = stats.addToUser(socket.userID, "messages_sent", 1);
-          switch (count) {
-            case 1: trophies.reward(socket.userID, 'msg1'); break;
-            case 10: trophies.reward(socket.userID, 'msg20'); break;
-          }
+        const count = stats.addToUser(socket.userID, "messages_sent", 1);
+        switch (count) {
+          case 1: trophies.reward(socket.userID, 'msg1'); break;
+          case 10: trophies.reward(socket.userID, 'msg20'); break;
         }
-      })
+      }
+    })
 
-      socket.on("delete-message", async (messageID) => {
-        if (socket.rooms.has("user")) {
-          const msg = await db('messages').where({id: messageID}).first().then((row) => row)
-          if (!msg) return
-          if (msg.uuid == socket.uuid) {
-            await db('messages').where({id: messageID}).delete();
-            SOCKET.io.to("user").emit("delete-message", messageID);
-          }
+    socket.on("delete-message", async (messageID) => {
+      if (socket.rooms.has("user")) {
+        const msg = await db('messages').where({id: messageID}).first().then((row) => row)
+        if (!msg) return
+        if (msg.uuid == socket.uuid) {
+          await db('messages').where({id: messageID}).delete();
+          SOCKET.io.to("user").emit("delete-message", messageID);
         }
-      })
+      }
+    })
 
-      socket.on("report-message", async(messageID) => {
-        if (socket.rooms.has("user")) {
-          const msg = await db('messages').where({id: messageID}).first().then((row) => row);
-          if (!msg) return;
-          
-          const public_id = socket.public_id;
-          const reports = JSON.parse(msg.reports);
-          if (reports.includes(public_id)) return;
+    socket.on("report-message", async(messageID) => {
+      if (socket.rooms.has("user")) {
+        const msg = await db('messages').where({id: messageID}).first().then((row) => row);
+        if (!msg) return;
+        
+        const public_id = socket.public_id;
+        const reports = JSON.parse(msg.reports);
+        if (reports.includes(public_id)) return;
 
-          const newList = [...reports, public_id];
+        const newList = [...reports, public_id];
 
-          if (newList.length >= 3) {
-            await db('messages').where({id: messageID}).update({deleted: true});
-            SOCKET.io.to("user").emit("delete-message", messageID);
-          } else {
-            await db('messages').where({id: messageID}).update({reports: JSON.stringify(newList)});
-            socket.emit("delete-message", messageID);
-          }
+        if (newList.length >= 3) {
+          await db('messages').where({id: messageID}).update({deleted: true});
+          SOCKET.io.to("user").emit("delete-message", messageID);
+        } else {
+          await db('messages').where({id: messageID}).update({reports: JSON.stringify(newList)});
+          socket.emit("delete-message", messageID);
         }
-      });
+      }
+    });
+
+    /* Avatar vote */
+
+    socket.on("vote-avatar", async (userID) => {
+      if (socket.rooms.has("user")) {
+        stats.addToUser(userID, "avatar_score", 1)
+      }
+    })
+
 });
 
 export { SOCKET };

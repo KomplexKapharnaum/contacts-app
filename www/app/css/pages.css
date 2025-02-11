@@ -12,6 +12,8 @@
     padding: 16px;
     overflow-y: auto;
     overflow-x: hidden;
+
+    transform: translateY(var(--offset));
 }
 
 .page.flex-top {

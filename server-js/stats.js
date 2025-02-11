@@ -3,11 +3,12 @@ import db from "./core/database.js";
 let STATS = {};
 
 STATS.config = [
-    "avatard_voted",
+    "avatars_voted",
     "messages_sent",
     "daily_app_open",
     "events_participated",
-    "time_spent"
+    "time_spent",
+    "avatar_score"
 ]
 
 STATS.cache = {}

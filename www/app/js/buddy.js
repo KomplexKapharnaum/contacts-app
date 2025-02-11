@@ -88,10 +88,12 @@ class Buddy {
         for (let i = 0; i < imageCount; i++) {
             promises.push(new Promise((resolve, reject) => {
                 const img = new Image();
-                img.onload = () => resolve(img);
+                img.onload = async () => {
+                    this.images.push(img);
+                    resolve();
+                }
                 img.onerror = reject;
                 img.src = `${document.BASEPATH}/img/buddy/${i}.png`;
-                this.images.push(img);
             }));
         }
         return Promise.all(promises);
