@@ -158,7 +158,8 @@ else {
 if ('virtualKeyboard' in navigator) {
     navigator.virtualKeyboard.overlaysContent = true;
     navigator.virtualKeyboard.addEventListener('geometrychange', (event) => {
-      const { x, y, width, height } = event.target.boundingRect;
-      document.documentElement.style.setProperty('--offset', `-${height}px`)
+        alert(event.target.boundingRect.height)
+        const { x, y, width, height } = event.target.boundingRect;
+        document.documentElement.style.setProperty('--offset', `-${height}px`)
     });
 }
