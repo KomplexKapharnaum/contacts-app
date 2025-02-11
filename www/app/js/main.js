@@ -144,13 +144,21 @@ else {
 }
 
 // Update offset (virtual keyboard)
-visualViewport.addEventListener('resize', (e) => {
-    alert(window.visualViewport.height)
-    const h = e.target.height
-    if (window.visualViewport.height < window.innerHeight) {
-        document.documentElement.style.setProperty('--offset', `-${window.innerHeight - window.visualViewport.height}px`)
-    }
-    else {
-        document.documentElement.style.setProperty('--offset', '0px')
-    }
-});
+// visualViewport.addEventListener('resize', (e) => {
+//     alert(window.visualViewport.height)
+//     const h = e.target.height
+//     if (window.visualViewport.height < window.innerHeight) {
+//         document.documentElement.style.setProperty('--offset', `-${window.innerHeight - window.visualViewport.height}px`)
+//     }
+//     else {
+//         document.documentElement.style.setProperty('--offset', '0px')
+//     }
+// });
+
+if ('virtualKeyboard' in navigator) {
+    navigator.virtualKeyboard.overlaysContent = true;
+    navigator.virtualKeyboard.addEventListener('geometrychange', (event) => {
+      const { x, y, width, height } = event.target.boundingRect;
+      document.documentElement.style.setProperty('--offset', `-${height}px`)
+    });
+}
