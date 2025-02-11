@@ -360,3 +360,38 @@ document.getElementById("profile-edit-avatar").addEventListener("click", () => {
     PAGES.goto("avatar-creation")
     set_avatar_creation_indicator_part(0)
 })
+
+/* Avatar votes */
+
+const avatar_vote_image = document.getElementById("avatar-vote-image")
+const avatar_vote_yes = document.getElementById("avatar-vote-yes")
+const avatar_vote_no = document.getElementById("avatar-vote-no")
+
+function newAvatarVote(user_id, avatar_path) {
+    return new Promise((resolve, reject) => {
+        avatar_vote_image.src = avatar_path
+        avatar_vote_image.alt = user_id
+
+        const vote_yes = () => {
+            avatar_vote_yes.removeEventListener("click", vote_yes)
+            avatar_vote_no.removeEventListener("click", vote_no)
+            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "yes"})
+            resolve("yes")
+        }
+        const vote_no = () => {
+            avatar_vote_yes.removeEventListener("click", vote_yes)
+            avatar_vote_no.removeEventListener("click", vote_no)
+            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "no"})
+            resolve("no")
+        }
+
+        avatar_vote_yes.addEventListener("click", vote_yes)
+        avatar_vote_no.addEventListener("click", vote_no)
+    })
+}
+
+async function processAvatarVotes(avatar_data) {
+    avatar_data.forEach(async avatar => {
+        await newAvatarVote(avatar.user_id, avatar.avatar_path)
+    })
+}
