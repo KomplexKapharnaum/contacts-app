@@ -144,11 +144,11 @@ else {
 }
 
 const virtualKeyboardSupported = "virtualKeyboard" in navigator;
-alert(virtualKeyboardSupported)
 if (virtualKeyboardSupported) {
     navigator.virtualKeyboard.overlaysContent = true;
-    navigator.virtualKeyboard.addEventListener("geometrychange", e => {    
+    navigator.virtualKeyboard.addEventListener("geometrychange", e => {
         let { x, y, width, height } = e.target.boundingRect;
+        alert(height)
         document.documentElement.style.setProperty('--offset', `-${height}px`)
     });
 }
