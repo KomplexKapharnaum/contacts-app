@@ -146,7 +146,7 @@ SOCKET.io.on('connection', (socket) => {
         const count = stats.addToUser(socket.userID, "messages_sent", 1);
         switch (count) {
           case 1: trophies.reward(socket.userID, 'msg1'); break;
-          case 10: trophies.reward(socket.userID, 'msg20'); break;
+          case 20: trophies.reward(socket.userID, 'msg20'); break;
         }
       }
     })

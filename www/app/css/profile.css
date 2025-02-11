@@ -258,6 +258,7 @@
     border-radius: 8px;
 
     animation: trophy-rewarded 1s ease-out;
+    pointer-events: all;
 }
 
 .trophy-reward-item img {

@@ -23,5 +23,6 @@ ce qu'on tape.
 
 ### Pour MAIGRE
 
+- Vérifier compatibilité KeyboardAPI avec Cordova
 - Brancher la génération d'Avatar
 - Vibrate doesnt vibrate..

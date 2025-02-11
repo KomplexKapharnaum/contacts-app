@@ -34,6 +34,7 @@ document.getElementById("profile-edit-username").addEventListener("click", () =>
 })
 
 
+let TROPHYDATA = {};
 const tem_trophy = document.getElementById("tem-trophy")
 const trophies_container = document.getElementById("trophies")
 function updateTrophies() {
@@ -41,6 +42,7 @@ function updateTrophies() {
     fetch(document.WEBAPP_URL+"/trophies")
     .then(res => res.json())
     .then(data => {
+        TROPHYDATA = data
         for (let [id, info] of Object.entries(data)) {
             const clone = tem_trophy.cloneNode(true).content
             const trophy = clone.querySelector(".trophy")
@@ -71,6 +73,30 @@ function updateTrophiesState() {
     })
 }
 
+const trophy_notif_container = document.getElementById("trophy-reward-overlay")
+const tem_trophy_item = document.getElementById("tem-trophy-notif")
+
+function rewardUserTrophy(trophyID) {
+    if (!userData) return
+    const trophyInfo = TROPHYDATA[trophyID]
+    if (trophyInfo) {
+        console.log("trophy_reward", trophyID)
+        userData.trophies.push(trophyID)
+        updateTrophiesState()
+        
+        const clone = tem_trophy_item.cloneNode(true).content
+        const item = clone.querySelector(".trophy-reward-item")
+        item.querySelector("img").src = `${document.BASEPATH}/img/trophies/${trophyInfo.img}.png`
+        item.querySelector(".trophy-reward-name").innerText = trophyInfo.name
+        item.querySelector(".trophy-reward-desc").innerText = trophyInfo.desc
+        item.addEventListener("click", () => {
+            item.remove()
+        })
+
+        trophy_notif_container.appendChild(item)
+    }
+}
+
 const notif_container = document.getElementById("notifications-container")
 const tem_notification = document.getElementById("tem-notification")
 function showNotification(text, color, priority, button_label=false, onlcick=false) {
@@ -92,6 +118,7 @@ function showNotification(text, color, priority, button_label=false, onlcick=fal
 }
 
 showNotification("test", "cyberspace", 0, "test", () => {alert(1)})
+
 
 /* Avatar creation related */
 let avatar_creation_data = {};
