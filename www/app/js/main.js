@@ -113,10 +113,13 @@ nav_goto("nav-chat", "chat", true)
 nav_goto("nav-profile", "profile")
 nav_goto("nav-tribe", "tribe")
 nav_goto("nav-cyberspace", "cyberspace")
+nav_goto("nav-notifications", "notifications")
 
 PAGES.setPageColor("profile", "var(--color-secondary-1)")
 PAGES.setPageColor("tribe", "var(--color-secondary-3)")
 PAGES.setPageColor("cyberspace", "var(--color-secondary-2)")
+PAGES.setPageColor("notifications", "var(--color-secondary-4)")
+
 PAGES.setPageColor("live-idle", "white")
 
 // Accordions
@@ -142,6 +145,7 @@ else {
 
 // Update offset (virtual keyboard)
 visualViewport.addEventListener('resize', (e) => {
+    alert(window.visualViewport.height)
     const h = e.target.height
     if (window.visualViewport.height < window.innerHeight) {
         document.documentElement.style.setProperty('--offset', `-${window.innerHeight - window.visualViewport.height}px`)

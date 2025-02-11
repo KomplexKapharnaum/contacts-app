@@ -14,6 +14,10 @@
     --font-primary: 'v50-bold';
     --font-secondary: 'v50-bold';
     --font-big: 'ark-es';
+
+    --fontSize-big: 32px;
+    --fontSize-medium: 20px;
+    --fontSize-small: 16px;
 }
 
 * {
@@ -24,6 +28,7 @@ html {
     font-family: var(--font-primary);
     background-color: var(--color-background);
     color: var(--color-text-primary);
+    font-size: var(--fontSize-medium);
 }
 
 body, html {
@@ -65,6 +70,8 @@ body::after {
     z-index: 10;
     pointer-events: none;
 
+    opacity: 0.5;
+
     animation: screen-scroll 10s linear infinite;
 }
 
@@ -90,9 +97,9 @@ nav.show {
 }
 
 nav button {
-    padding: 4px;
+    padding: 8px;
     margin: 0;
-    border-radius: 16px;
+    border-radius: 32px;
     width: 100%;
 
     border: solid 2px var(--btn-color);
@@ -106,6 +113,10 @@ nav button * {
 #nav-profile {--btn-color: var(--color-secondary-1);}
 #nav-tribe {--btn-color: var(--color-secondary-3);}
 #nav-cyberspace {--btn-color: var(--color-secondary-2);}
+#nav-notifications {
+    --btn-color: var(--color-secondary-4);
+    width: fit-content;
+}
 
 nav button.disabled {
     opacity: 0.5;
@@ -126,7 +137,7 @@ button, .button {
     border: none;
     border-radius: 32px;
     padding: 10px 8px;
-    font-size: 20px;
+    font-size: var(--fontSize-medium);
 
     text-align: center;
     text-decoration: none;
@@ -149,7 +160,7 @@ button.c4, .button.c4 {background-color: var(--color-secondary-4);}
     border: none;
     border-radius: 4px;
     padding: 4px 8px;
-    font-size: 20px;
+    font-size: var(--fontSize-medium);
     margin: 0 auto;
 
     display: flex;
@@ -173,7 +184,7 @@ button.c4, .button.c4 {background-color: var(--color-secondary-4);}
 }
 
 .buttons-sm button {
-    font-size: 16px;
+    font-size: var(--fontSize-medium);
     padding: 8px 16px;
     border-radius: 32px;
 }
@@ -241,7 +252,7 @@ input[type="text"] {
     border: solid 2px var(--color-text-secondary);
     border-radius: 8px;
     padding: 8px 16px;
-    font-size: 20px;
+    font-size: var(--fontSize-medium);
     width: 100%;
 }
 
@@ -267,7 +278,7 @@ button:not(nav button), .event-item {
     height: 100%;
     /* background: url(../img/noise.gif); */
     z-index: 10;
-    opacity: 0.4;
+    opacity: 0.2;
     /*filter: url(#noise);*/
     mix-blend-mode: multiply;
     pointer-events: none;

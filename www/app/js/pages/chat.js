@@ -161,10 +161,10 @@ function loadChats(tribeID) {
         document.getElementById("input-cyberspace-message"), 
         0
     )
-    new ChatBox(
-        document.getElementById("chatbox-tribe"), 
-        document.getElementById("btn-tribe-send"), 
-        document.getElementById("input-tribe-message"), 
-        tribeID
-    )
+    // new ChatBox(
+    //     document.getElementById("chatbox-tribe"), 
+    //     document.getElementById("btn-tribe-send"), 
+    //     document.getElementById("input-tribe-message"), 
+    //     tribeID
+    // )
 }

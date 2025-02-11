@@ -12,7 +12,7 @@
 }
 
 .onboarding-header span {
-    font-size: 22px;
+    font-size: var(--fontSize-big);
 }
 
 .shapes-container {

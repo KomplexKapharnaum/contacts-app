@@ -4,7 +4,7 @@ var BUD_DIALS = {
         "Dès qu'une icone rose apparaîtra dans le coin de ton écran, tu pourras appuyer dessus pour m'appeler. C'est aussi simple que ça !",
         "Dès que tu m'appelleras, je te donnerais des informations sur la page ou tu te trouves. Au moins, il n'y aura plus de secret entre toi et cette application :)",
         "Tiens, au fait... Vu que tu es nouveau, ça te dis de faire ton tout premier avatar ?",
-        "Je te laisse aller dans la page 👤 PROFILE et cliquer soit sur la notification tout en haut, soit dans 'générer un nouvel avatar'.",
+        "Je te laisse naviguer dans ta page de profil et cliquer soit sur la notification tout en haut, soit dans 'générer un nouvel avatar'.",
         "Aller, je te laisse, bon séjour sur CONTACTS !"
     ],
     profile: [

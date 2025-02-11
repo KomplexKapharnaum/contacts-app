@@ -98,7 +98,7 @@ button {
     background-color: var(--col-bg);
     stroke: var(--col-primary);
 
-    font-size: 22px;
+    font-size: var(--fontSize-big);
 
     display: flex;
     justify-content: center;
@@ -109,7 +109,7 @@ button {
 }
 
 button.sm {
-    font-size: 16px;
+    font-size: var(--fontSize-medium);
 }
 
 hr {
@@ -135,7 +135,7 @@ input[type="checkbox"] {
 }
 
 label {
-    font-size: 22px;
+    font-size: var(--fontSize-big);
 }
 
 input[type="text"], textarea {
@@ -226,7 +226,7 @@ option:hover {
     border: solid 2px var(--col-primary);
     color: var(--col-txt-gray);
 
-    font-size: 16px;
+    font-size: var(--fontSize-medium);
     line-height: 150%;
 }
 

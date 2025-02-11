@@ -273,7 +273,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* general typography */
 .leaflet-container {
 	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-size: var(--fontSize-medium);
 	font-size: 0.75rem;
 	line-height: 1.5;
 	}
@@ -344,7 +344,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
-	font-size: 22px;
+	font-size: var(--fontSize-big);
 	}
 
 
@@ -393,7 +393,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 .leaflet-control-layers label {
 	display: block;
-	font-size: 13px;
+	font-size: var(--fontSize-medium);
 	font-size: 1.08333em;
 	}
 .leaflet-control-layers-separator {
@@ -487,7 +487,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-popup-content {
 	margin: 13px 24px 13px 20px;
 	line-height: 1.3;
-	font-size: 13px;
+	font-size: var(--fontSize-medium);
 	font-size: 1.08333em;
 	min-height: 1px;
 	}
