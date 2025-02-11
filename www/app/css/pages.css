@@ -13,7 +13,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    transform: translateY(var(--offset));
+    transform: translateY(calc(-1 * env(keyboard-inset-height)));
 }
 
 .page.flex-top {

@@ -155,11 +155,11 @@ else {
 //     }
 // });
 
-if ('virtualKeyboard' in navigator) {
-    navigator.virtualKeyboard.overlaysContent = true;
-    navigator.virtualKeyboard.addEventListener('geometrychange', (event) => {
-        alert(event.target.boundingRect.height)
-        const { x, y, width, height } = event.target.boundingRect;
-        document.documentElement.style.setProperty('--offset', `-${height}px`)
-    });
-}
+// if ('virtualKeyboard' in navigator) {
+//     navigator.virtualKeyboard.overlaysContent = true;
+//     navigator.virtualKeyboard.addEventListener('geometrychange', (event) => {
+//         alert(event.target.boundingRect.height)
+//         const { x, y, width, height } = event.target.boundingRect;
+//         document.documentElement.style.setProperty('--offset', `-${height}px`)
+//     });
+// }
