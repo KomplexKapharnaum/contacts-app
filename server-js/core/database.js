@@ -2,6 +2,7 @@ import { __dirname } from '../../path.js';
 import knex from 'knex';
 import fs from 'fs';
 import {env} from './env.js';
+import { table } from 'console';
 
 const dataPath = __dirname + '/data.db';
 
@@ -67,6 +68,7 @@ async function initDB() {
             table.integer('selected_avatar').unsigned().references('avatars.id');
             table.integer('tribe_id').unsigned().references('tribes.id');
             table.integer('subscribed_session').unsigned().references('session.id');
+            table.string('firebase_id');
             table.boolean('admin').default(false);
             table.json('stats').default('{}');
             table.json('trophies').default('[]');
@@ -93,6 +95,13 @@ async function initDB() {
             table.json("data");
         })
 
+        .createTable('notifications', (table) => {
+            table.increments('id');
+            table.string("message");
+            table.string("color").default("cyberspace");
+            table.integer("tribeID").default(0);
+        })
+
         db.createTribe("techno", "#FFFF00");
         db.createTribe("animal", "#FF0000");
         db.createTribe("vegetal", "#00FF00");
@@ -112,6 +121,11 @@ db.createTribe = async (name, color) => {
 
 db.createMessage = async (admin, name, date, uuid, public_id, message, tribeID) => {
     const msg = await db('messages').insert({admin, name, uuid, public_id, message, date, tribeID});
+    return msg;
+}
+
+db.createNotification = async(message, color, tribeID=0) => {
+    const msg = await db('notifications').insert({message, tribeID, color});
     return msg;
 }
 

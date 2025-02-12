@@ -191,6 +191,15 @@ SOCKET.io.on('connection', (socket) => {
       }
     })
 
+    /* REGIE -> notification */
+   
+    socket.on('new-notification', async (data) => {
+      if (!socket.rooms.has("admin")) return;
+      const text = data.text;
+      const color = data.color;
+      await db.createNotification(text, color);
+      socket.emit("notification-validation", true);
+    });
 });
 
 export { SOCKET };

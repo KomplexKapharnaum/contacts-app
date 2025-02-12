@@ -56,6 +56,20 @@
 
     <!-- Pages -->
     <main>
+
+        <!-- Notifications -->
+        <div class="page" data-page-id="notifications">
+            <div class="input_field">
+                <textarea name="text" id="input-notification-text" placeholder="Enter text..." style="min-height: 128px;"></textarea>
+            </div>
+            <select name="select-notification-color" id="select-notification-color">
+                <option value="cyberspace">Cyberspace (blue)</option>
+                <option value="tribe">Tribe (yellow)</option>
+                <option value="Profile">Profile (Pink)</option>
+            </select>
+            <button id="btn-notificaton-send">Send notification</button>
+        </div>
+
         <!-- Console -->
         <div class="page" data-page-id="console">
             <div id="box-events"></div>
@@ -243,6 +257,10 @@
         </div>
         
         <div class="vertical-separator"></div>
+
+        <div class="nav-btn goto-page" data-page-id="notifications">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-plus"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M15 8h6"/><path d="M18 5v6"/><path d="M20.002 14.464a9 9 0 0 0 .738.863A1 1 0 0 1 20 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 8.75-5.332"/></svg>
+        </div>
 
         <div class="nav-btn" id="btn-end-current-event">
             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

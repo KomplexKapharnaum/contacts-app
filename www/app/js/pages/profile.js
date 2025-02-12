@@ -117,7 +117,25 @@ function showNotification(text, color, priority, button_label=false, onlcick=fal
     notif_container.appendChild(clone)
 }
 
-showNotification("test", "cyberspace", 0, "test", () => {alert(1)})
+function loadNotifications()  {
+    notif_container.innerHTML = ""
+    QUERY.getNotifications().then(res => {
+        console.log(res)
+        if (res.status) {
+            notifications_loaded = true
+            for (let notif of res.data) {
+                showNotification(notif.message, notif.color, 0)
+            }
+        }
+    })
+}
+
+let notifications_loaded = false;
+PAGES.addCallback("notifications", () => {
+    if (!notifications_loaded) loadNotifications()
+})
+
+// showNotification("test", "cyberspace", 0, "test", () => {alert(1)})
 
 
 /* Avatar creation related */

@@ -676,3 +676,26 @@ function fill_select_usergroup() {
 }
 
 fill_select_usergroup()
+
+/* Notifications */
+
+const input_notification_text = document.getElementById("input-notification-text")
+const input_notification_color = document.getElementById("select-notification-color")
+const send_notification = document.getElementById("btn-notificaton-send")
+
+send_notification.addEventListener("click", () => {
+    if (!confirm("Send notification ?")) return
+    const text = input_notification_text.value
+    const color = input_notification_color.value
+
+    document.SOCKETIO.emit('new-notification', {
+        text,
+        color
+    })
+
+    document.SOCKETIO.once("notification-validation", () => {
+        alert("Notification sent !")
+        input_notification_text.value = ""
+        input_notification_color.value = "cyberspace"
+    })
+})

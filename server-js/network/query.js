@@ -249,6 +249,17 @@ query.add("leaderboard", async (params) => {
     return [true, data];
 })
 
+query.add("notifications", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+    const tribeID = params.get("tribe_id");
+
+    const notifications = await db('notifications')
+    .where('tribeID', 'in', [tribeID, 0])
+
+    return [true, notifications];
+})
+
 // Regie query
 
 query.add("r_eventlist", async (params) => {

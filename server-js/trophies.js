@@ -9,7 +9,7 @@ TROPHIES.config = {
     join: {
         name: "Un nouveau monde",
         desc: "J'ai rejoint le réseau CONTACTS",
-        img: "car",
+        img: "welcome",
         awards: {
             xp: 100
         }
@@ -17,7 +17,7 @@ TROPHIES.config = {
     msg1: {
         name: "Bonjour cyber-espace !",
         desc: "J'ai envoyé mon premier message dans le cyber-espace",
-        img: "car",
+        img: "msg1",
         awards: {
             xp: 100
         }
@@ -25,7 +25,7 @@ TROPHIES.config = {
     msg20: {
         name: "Membre confirmé",
         desc: "J'ai envoyé 20 messages dans le cyber-espace",
-        img: "car",
+        img: "msg20",
         awards: {
             xp: 500
         }
@@ -33,7 +33,7 @@ TROPHIES.config = {
     stay10: {
         name: "Posé",
         desc: "Je suis resté sur l'application pendant 10 minutes !",
-        img: "car",
+        img: "stay10",
         awards: {
             xp: 300
         }

@@ -4,6 +4,12 @@
     object-fit: cover;
 }
 
+#notifications-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .notification {
     display: flex;
     flex-direction: column;

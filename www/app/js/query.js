@@ -84,3 +84,7 @@ QUERY.getLeaderBoard = async (tribeID) => {
 QUERY.getTribes = async () => {
     return await QUERY.process("tribelist")
 }
+
+QUERY.getNotifications = async () => {
+    return await QUERY.process("notifications", {uuid: userData.uuid, tribe_id: userData.tribe_id});
+}
