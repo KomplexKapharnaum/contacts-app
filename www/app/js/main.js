@@ -134,8 +134,8 @@ accordions.forEach(initAccordion)
 // Version
 if (document.APPVERSION) {
     document.getElementById("version").innerText = document.APPVERSION
-    document.getElementById("version").style.display = "block"
+//     document.getElementById("version").style.display = "block"
 }
-else {
+// else {
     document.getElementById("version").style.display = "none"
-}
+//}
