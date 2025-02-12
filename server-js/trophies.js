@@ -15,8 +15,8 @@ TROPHIES.config = {
         }
     },
     msg1: {
-        name: "Bonjour cyber-espace !",
-        desc: "J'ai envoyé mon premier message dans le cyber-espace",
+        name: "Bonjour cyberespace !",
+        desc: "J'ai envoyé mon premier message dans le cyberespace",
         img: "msg1",
         awards: {
             xp: 100
@@ -24,7 +24,7 @@ TROPHIES.config = {
     },
     msg20: {
         name: "Membre confirmé",
-        desc: "J'ai envoyé 20 messages dans le cyber-espace",
+        desc: "J'ai envoyé 20 messages dans le cyberespace",
         img: "msg20",
         awards: {
             xp: 500
