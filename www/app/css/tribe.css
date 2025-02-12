@@ -6,7 +6,7 @@
 
 #tribe-leaderboard>.header {
     color: var(--color-primary);
-    font-size: 22px;
+    font-size: var(--fontSize-big);
 }
 
 #tribe-rank {

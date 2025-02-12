@@ -10,17 +10,20 @@ const onboarding_username_error = document.getElementById("onboarding-username-e
 
 let onboarding_userdata_buffer = {}
 
-onboarding_input_username.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
+onboarding_input_username.addEventListener("keypress", (e) => {
+    if (e.key === 'Enter') {
         onboarding_validate_username.click()
     }
 })
 
 onboarding_validate_username.addEventListener("click", () => {
     const username = onboarding_input_username.value
-    if (isUserNameValid(username)) {
+    const valid = isUserNameValid(username)
+    if (valid[0]) {
         onboarding_userdata_buffer.username = username
         PAGES.goto("onboarding-tribe")
+    } else {
+        onboarding_username_error.innerText = valid[1]
     }
 })
 

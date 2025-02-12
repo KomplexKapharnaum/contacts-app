@@ -61,7 +61,7 @@ function loadEvents() {
             });
             hasloaded = true
             if (!eventLive) {
-                PAGES.goto("cyberspace")
+                PAGES.goto("profile")
                 showNavbar(true)
             }
         }

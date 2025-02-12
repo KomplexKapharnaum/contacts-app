@@ -14,10 +14,7 @@ if (!document.SOCKETIO)
     });
     
     document.SOCKETIO.on("trophy_reward", (trophyID) => {
-        console.log("trophy_reward", trophyID);
-        if (!userData) return;
-        userData.trophies.push(trophyID);
-        updateTrophiesState()
+        rewardUserTrophy(trophyID)
     })
 }
 

@@ -18,7 +18,7 @@
 
 .message .pseudo {
     opacity: 0.5;
-    font-size: 12px;
+    font-size: var(--fontSize-medium);
 }
 
 .message.admin {
@@ -123,14 +123,14 @@
 .message .username {
     color: var(--chatbox-color);
     font-weight: bold;
-    font-size: 14px;
+    font-size: var(--fontSize-medium);
 }
 
 .message .date {
     opacity: 0.5;
-    font-size: 10px;
+    font-size: var(--fontSize-small);
 }
 
 .message .content {
-    font-size: 14px;
+    font-size: var(--fontSize-medium);
 }

@@ -113,10 +113,13 @@ nav_goto("nav-chat", "chat", true)
 nav_goto("nav-profile", "profile")
 nav_goto("nav-tribe", "tribe")
 nav_goto("nav-cyberspace", "cyberspace")
+nav_goto("nav-notifications", "notifications")
 
 PAGES.setPageColor("profile", "var(--color-secondary-1)")
 PAGES.setPageColor("tribe", "var(--color-secondary-3)")
 PAGES.setPageColor("cyberspace", "var(--color-secondary-2)")
+PAGES.setPageColor("notifications", "var(--color-secondary-4)")
+
 PAGES.setPageColor("live-idle", "white")
 
 // Accordions
@@ -136,6 +139,12 @@ if (document.APPVERSION) {
     document.getElementById("version").innerText = document.APPVERSION
 //     document.getElementById("version").style.display = "block"
 }
-// else {
-    document.getElementById("version").style.display = "none"
-//}
+
+const virtualKeyboardSupported = "virtualKeyboard" in navigator;
+if (virtualKeyboardSupported) {
+    navigator.virtualKeyboard.overlaysContent = true;
+    navigator.virtualKeyboard.addEventListener("geometrychange", e => {
+        let { x, y, width, height } = e.target.boundingRect;
+        document.documentElement.style.setProperty('--offset', `-${height}px`)
+    });
+}

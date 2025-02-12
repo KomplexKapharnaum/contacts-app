@@ -34,6 +34,7 @@ document.getElementById("profile-edit-username").addEventListener("click", () =>
 })
 
 
+let TROPHYDATA = {};
 const tem_trophy = document.getElementById("tem-trophy")
 const trophies_container = document.getElementById("trophies")
 function updateTrophies() {
@@ -41,6 +42,7 @@ function updateTrophies() {
     fetch(document.WEBAPP_URL+"/trophies")
     .then(res => res.json())
     .then(data => {
+        TROPHYDATA = data
         for (let [id, info] of Object.entries(data)) {
             const clone = tem_trophy.cloneNode(true).content
             const trophy = clone.querySelector(".trophy")
@@ -71,6 +73,30 @@ function updateTrophiesState() {
     })
 }
 
+const trophy_notif_container = document.getElementById("trophy-reward-overlay")
+const tem_trophy_item = document.getElementById("tem-trophy-notif")
+
+function rewardUserTrophy(trophyID) {
+    if (!userData) return
+    const trophyInfo = TROPHYDATA[trophyID]
+    if (trophyInfo) {
+        console.log("trophy_reward", trophyID)
+        userData.trophies.push(trophyID)
+        updateTrophiesState()
+        
+        const clone = tem_trophy_item.cloneNode(true).content
+        const item = clone.querySelector(".trophy-reward-item")
+        item.querySelector("img").src = `${document.BASEPATH}/img/trophies/${trophyInfo.img}.png`
+        item.querySelector(".trophy-reward-name").innerText = trophyInfo.name
+        item.querySelector(".trophy-reward-desc").innerText = trophyInfo.desc
+        item.addEventListener("click", () => {
+            item.remove()
+        })
+
+        trophy_notif_container.appendChild(item)
+    }
+}
+
 const notif_container = document.getElementById("notifications-container")
 const tem_notification = document.getElementById("tem-notification")
 function showNotification(text, color, priority, button_label=false, onlcick=false) {
@@ -92,6 +118,7 @@ function showNotification(text, color, priority, button_label=false, onlcick=fal
 }
 
 showNotification("test", "cyberspace", 0, "test", () => {alert(1)})
+
 
 /* Avatar creation related */
 let avatar_creation_data = {};
@@ -360,3 +387,38 @@ document.getElementById("profile-edit-avatar").addEventListener("click", () => {
     PAGES.goto("avatar-creation")
     set_avatar_creation_indicator_part(0)
 })
+
+/* Avatar votes */
+
+const avatar_vote_image = document.getElementById("avatar-vote-image")
+const avatar_vote_yes = document.getElementById("avatar-vote-yes")
+const avatar_vote_no = document.getElementById("avatar-vote-no")
+
+function newAvatarVote(user_id, avatar_path) {
+    return new Promise((resolve, reject) => {
+        avatar_vote_image.src = avatar_path
+        avatar_vote_image.alt = user_id
+
+        const vote_yes = () => {
+            avatar_vote_yes.removeEventListener("click", vote_yes)
+            avatar_vote_no.removeEventListener("click", vote_no)
+            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "yes"})
+            resolve("yes")
+        }
+        const vote_no = () => {
+            avatar_vote_yes.removeEventListener("click", vote_yes)
+            avatar_vote_no.removeEventListener("click", vote_no)
+            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "no"})
+            resolve("no")
+        }
+
+        avatar_vote_yes.addEventListener("click", vote_yes)
+        avatar_vote_no.addEventListener("click", vote_no)
+    })
+}
+
+async function processAvatarVotes(avatar_data) {
+    avatar_data.forEach(async avatar => {
+        await newAvatarVote(avatar.user_id, avatar.avatar_path)
+    })
+}
