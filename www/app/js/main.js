@@ -148,3 +148,21 @@ if (virtualKeyboardSupported) {
         document.documentElement.style.setProperty('--offset', `-${height}px`)
     });
 }
+
+// Feedback
+
+document.getElementById("send-feedback-button").addEventListener("click", ()=>PAGES.goto("send-feedback"))
+
+const input_feedback = document.getElementById("input-feedback")
+const send_feedback = document.getElementById("input-feedback-send")
+send_feedback.addEventListener("click", () => {
+    const value = input_feedback.value
+    if (value) {
+        QUERY.sendFeedback(value).then(res => {
+            if (res.status) {
+                alert("Feedback sent !")
+                input_feedback.value = ""
+            }
+        })
+    }
+})

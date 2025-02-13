@@ -102,10 +102,24 @@ async function initDB() {
             table.integer("tribeID").default(0);
         })
 
+        .createTable('feedback', (table) => {
+            table.increments("id");
+            table.string("username");
+            table.string("message");
+            table.string("date");
+            table.integer("status").default(0);
+        })
+
         db.createTribe("techno", "#FFFF00");
         db.createTribe("animal", "#FF0000");
         db.createTribe("vegetal", "#00FF00");
+}
 
+// Send feedback
+
+db.sendFeedBack = async (username, message) => {
+    const feedback = await db('feedback').insert({username, message, date: new Date().toISOString(), status: 0});
+    return feedback;
 }
 
 // Tribe related

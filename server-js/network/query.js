@@ -260,6 +260,18 @@ query.add("notifications", async (params) => {
     return [true, notifications];
 })
 
+query.add("send_feedback", async (params) => { 
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    const user = await db('users').where('uuid', uuid).first();
+    const username = user.name;
+    const message = params.get("message");
+
+    const res = await db.sendFeedBack(username, message);
+    return [true, res];
+})
+
 // Regie query
 
 query.add("r_eventlist", async (params) => {
@@ -304,6 +316,20 @@ query.add("r_get_presets", async (params) => {
     const presets = await db('presets').select();
     return [true, presets];
 })
+
+query.add("r_getfeedbacks", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const feedbacks = await db('feedback').select();
+    return [true, feedbacks];
+})
+
+query.add("r_updatefeedback", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const id = params.get("id");
+    const status = params.get("status");
+    await db('feedback').where('id', id).update({status: status});
+    return [true, {id: id, status: status}];
+});
 
 query.add("admin", async (params) => {
     const uuid = params.get("uuid");

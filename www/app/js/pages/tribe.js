@@ -14,13 +14,13 @@ async function loadLeaderBoard() {
     const data = await QUERY.getLeaderBoard(tribeID)
     if (!data) return
     if (!data.status) return
-    
+    // console.log(data.data)
     const header = tribe_leaderboard.querySelector("#tribe-rank")
     const header_suffix = tribe_leaderboard.querySelector("#tribe-rank-suffix")
     const score = tribe_leaderboard.querySelector("#tribe-score")
     const info = tribe_leaderboard.querySelector("#rank-phrase")
 
-    const tribe_rank = Object.values(data.data).sort((a, b) => b.score - a.score).findIndex(obj => obj.id === tribeID) + 1
+    const tribe_rank = Object.values(data.data).sort((a, b) => b.general - a.general).findIndex(obj => obj.id === tribeID) + 1
 
     header.innerText = tribe_rank + 1
     header_suffix.innerText = tribe_rank>0 ? "eme" : "ère"

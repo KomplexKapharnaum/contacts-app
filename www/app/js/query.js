@@ -88,3 +88,7 @@ QUERY.getTribes = async () => {
 QUERY.getNotifications = async () => {
     return await QUERY.process("notifications", {uuid: userData.uuid, tribe_id: userData.tribe_id});
 }
+
+QUERY.sendFeedback = async (message) => {
+    return await QUERY.process("send_feedback", {uuid: userData.uuid, message: message});
+}

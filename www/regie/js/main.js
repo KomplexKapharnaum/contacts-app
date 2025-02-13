@@ -699,3 +699,33 @@ send_notification.addEventListener("click", () => {
         input_notification_color.value = "cyberspace"
     })
 })
+
+/* Feedbacks */
+
+const feedbacks_container = document.getElementById("feedback-container")
+
+function load_feedbacks() {
+    feedbacks_container.innerHTML = ""
+    query("r_getfeedbacks").then((res) => {
+        res.data.forEach((f) => {
+            const el = document.getElementById("tem-feedback").cloneNode(true).content
+            el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
+            const item = el.querySelector(".feedback-item")
+            item.style.order = f.status
+            
+            const checkbox = el.querySelector("input")
+            checkbox.checked = f.status
+            checkbox.addEventListener("click", () => {
+                const newStatus = checkbox.checked ? 1 : 0
+                query("r_updatefeedback", {
+                    id: f.id,
+                    status: newStatus
+                }).then(() => {
+                    item.style.order = newStatus
+                })
+            })
+            feedbacks_container.appendChild(el)
+        })
+    })
+}
+load_feedbacks()

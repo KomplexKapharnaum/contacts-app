@@ -515,6 +515,11 @@
     
     <div class="page flex-top" data-page-id="cyberspace">
         <section>
+            <button id="send-feedback-button">
+                Feedback / signaler un bug
+            </button>
+        </section>
+        <section>
             <div class="accordion">
                 <h2>Rendez-vous</h2>
                 <div class="content" id="cyberspace-rdvs">
@@ -616,6 +621,16 @@
             <button id="video-debug-capture" class="c3">Capture</button>
             <canvas id="video-debug-canvas"></canvas>
         </div>
+    </div>
+
+    <div class="page" data-page-id="send-feedback">
+        <section>
+            <h2>Envoyer un feedback</h2>
+            <div class="input-container">
+                <textarea name="input-feedback" id="input-feedback" rows="8"></textarea>
+                <button id="input-feedback-send" class="c4">Envoyer</button>
+            </div>
+        </section>
     </div>
 
     <!-- Navbar -->

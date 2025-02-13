@@ -245,7 +245,7 @@ button.c4, .button.c4 {background-color: var(--color-secondary-4);}
     text-align: left;
 }
 
-input[type="text"] {
+input[type="text"], textarea {
     font-family: var(--font-primary);
     background-color: var(--color-background);
     color: var(--color-text-primary);
