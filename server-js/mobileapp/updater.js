@@ -124,8 +124,11 @@ function fileCrowler(path) {
 // build Media tree
 function buildMediaTree() 
 {
-    const MEDIA_PATH = __basepath + "/" + MEDIA_DIR;
-    APPINFO.media_tree = fileCrowler(MEDIA_PATH);
+    return new Promise((resolve, reject) => {
+        const MEDIA_PATH = __basepath + "/" + MEDIA_DIR;
+        APPINFO.media_tree = fileCrowler(MEDIA_PATH);
+        resolve();
+    })
 }
 
 
