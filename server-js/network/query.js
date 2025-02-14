@@ -8,6 +8,7 @@ import police from '../core/police.js';
 import stats from '../stats.js';
 import score from '../score.js';
 import trophies from '../trophies.js';
+import comfygen from '../comfygen.js';
 
 if (env.BYPASS_RATELIMIT) {
     const ratelimit_general = rateLimit({
@@ -74,6 +75,12 @@ async function getUserInfo(uuid) {
     user.trophies = JSON.parse(user.trophies);
     user.stats = JSON.parse(user.stats);
 
+    const userAvatarID = user.selected_avatar;
+    
+    let avatar;
+    if (userAvatarID) avatar = await db('avatars').where('id', userAvatarID).first().select('filename');
+    if (avatar) user.avatar = avatar.filename;
+
     return user;
 }
 
@@ -95,6 +102,8 @@ query.add("create_user", async (params) => {
     stats.loadUser(user);
     trophies.loadUser(user);
     trophies.reward(user.id, "join");
+
+    // comfygen.add(user.id, false);
 
     return [true, user];
 })

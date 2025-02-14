@@ -9,6 +9,7 @@ import stats from '../stats.js';
 import trophies from '../trophies.js';
 
 var SOCKET = {};
+
 SOCKET.io = new IoServer(server);
 
 SOCKET.lastEvent = {0:{}};
@@ -62,6 +63,7 @@ SOCKET.io.on('connection', (socket) => {
         if (util.userExists(uuid)) {
             socket.join("user");
             socket.uuid = uuid;
+            
             const user = await db('users').where('uuid', uuid).first();
             socket.userID = user.id;
             
@@ -200,6 +202,11 @@ SOCKET.io.on('connection', (socket) => {
       await db.createNotification(text, color);
       socket.emit("notification-validation", true);
     });
+
+    socket.on("gen-avatar", async (data) => {
+      if (!socket.rooms.has("user")) return;
+      comfygen.add(socket.userID, data);
+    })
 });
 
 export { SOCKET };

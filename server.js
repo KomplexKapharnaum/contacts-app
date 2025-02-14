@@ -33,6 +33,7 @@ import util from './server-js/utils.js'
 import './server-js/mobileapp/updater.js';
 import './server-js/mobileapp/notifier.js';
 
+import comfygen from './server-js/comfygen.js';
 
 // Test purposes
 // 
@@ -67,3 +68,5 @@ test();
 const ONE_HOUR = 1000 * 60 * 60;
 setInterval(SCORE.updateLeaderBoard, ONE_HOUR/2);
 SCORE.updateLeaderBoard();
+
+comfygen.run();

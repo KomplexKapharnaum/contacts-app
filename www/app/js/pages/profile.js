@@ -295,7 +295,6 @@ video_avatar_retry.addEventListener("click", () => {
 })
 
 /* Canvas paint */
-
 const btns_paint = document.getElementById("paint-buttons")
 const cnv_paint = document.getElementById("canvas-paint")
 const ctx_paint = cnv_paint.getContext("2d")
@@ -310,17 +309,24 @@ let paint_data = {
     size: 1,
     prevX: 0,
     prevY: 0,
-    down: false
+    down: false,
+    erasing: false
 }
 
 function draw(x, y, e) {
     ctx_paint.beginPath();
     ctx_paint.lineCap = "round";
+    if (paint_data.erasing) {
+        ctx_paint.globalCompositeOperation = "destination-out"
+    }
     ctx_paint.strokeStyle = paint_data.color;
     ctx_paint.lineWidth = paint_data.size;
     ctx_paint.moveTo(paint_data.prevX, paint_data.prevY);
     ctx_paint.lineTo(x, y);
     ctx_paint.stroke();
+    if (paint_data.erasing) {
+        ctx_paint.globalCompositeOperation = "source-over"
+    }
     paint_data.prevX = x;
     paint_data.prevY = y;
 }
@@ -336,6 +342,7 @@ function addButton(color) {
     btn.addEventListener("click", () => {
         setActiveColor(btn)
         paint_data.color = color
+        paint_data.erasing = false
     })
     btns_paint.appendChild(btn)
     return btn
@@ -345,6 +352,15 @@ const default_color = addButton("#FFF")
 addButton("#F00")
 addButton("#0F0")
 addButton("#00F")
+
+const erase_button = document.createElement("button")
+erase_button.classList.add("erase")
+erase_button.innerHTML = "X"
+erase_button.addEventListener("click", () => {
+    setActiveColor(erase_button)
+    paint_data.erasing = true
+})
+btns_paint.appendChild(erase_button)
 
 setActiveColor(default_color)
 
@@ -392,7 +408,8 @@ avatar_creation_next.addEventListener("click", () => {
         case 1:
             avatar_creation_data.paint = cnv_paint.toDataURL();
             open_avatar_subpage(2)
-            avatar_creation_state=2;
+            avatar_creation_state=2
+            genNewAvatar(userData.id, avatar_creation_data)
             break;
         case 2:
             avatar_creation_state=0;
@@ -439,4 +456,12 @@ async function processAvatarVotes(avatar_data) {
     avatar_data.forEach(async avatar => {
         await newAvatarVote(avatar.user_id, avatar.avatar_path)
     })
+}
+
+function updateProfilePicture() {
+    if (!userData) return;
+
+    if (userData.avatar) {
+        document.getElementById("profile-avatar").src = "/avatars/" + userData.avatar
+    }
 }

@@ -16,6 +16,12 @@ if (!document.SOCKETIO)
     document.SOCKETIO.on("trophy_reward", (trophyID) => {
         rewardUserTrophy(trophyID)
     })
+
+    document.SOCKETIO.on("comfygen_done", (path) => {
+        console.log("comfygen_done", data)
+        userData.avatar = path
+        updateProfilePicture()
+    })
 }
 
 function socketAuth(uuid) {
@@ -24,4 +30,8 @@ function socketAuth(uuid) {
 
 function socketEventLive(uuid) {
     document.SOCKETIO.emit('event-live', uuid);
+}
+
+function genNewAvatar(userID, data) {
+    document.SOCKETIO.emit("gen-avatar", {userID: userID, data: data})
 }

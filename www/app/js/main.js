@@ -1,3 +1,10 @@
+
+/* temp : display errors as alerts */
+window.onerror = function(message, source, lineno, colno, error) {
+    alert("Error: " + message + "\nAt: " + source + "\nLine: " + lineno);
+    return true;
+};
+
 if ("virtualKeyboard" in navigator) {
     navigator.virtualKeyboard.overlaysContent = true;
 }
@@ -42,6 +49,7 @@ async function after_user_load(uuid) {
     loadChats(userData.tribe_id)
     loadLeaderBoard()
     updateTrophies()
+    updateProfilePicture()
 
     const tribes = await QUERY.getTribes()
     console.log(tribes)

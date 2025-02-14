@@ -5,6 +5,7 @@ database.json
 *.sqlite*
 data.db
 _tmp/*
+gen_output/*
 
 # UPLOAD
 upload/*.png
