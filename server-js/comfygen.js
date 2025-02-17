@@ -11,6 +11,11 @@ let comfygen = {};
 comfygen.serverAddress = env.COMFY_API_URL
 
 comfygen.gen = async (avatarID, data) => {
+
+    await new Promise(resolve => setTimeout(resolve, 10000));
+
+    return "static_1_0.png";
+
     const client = new ComfyUIClient(comfygen.serverAddress);
     await client.connect(); 
     // await client.uploadImage(input.pic, picname);
