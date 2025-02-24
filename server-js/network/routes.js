@@ -9,6 +9,8 @@ import util from '../utils.js';
 import db from '../core/database.js';
 import police from '../core/police.js';
 
+import bodyParser from 'body-parser';
+
 app.use('/static', express.static('www'));
 
 app.get('/', function (req, res) {
@@ -45,17 +47,14 @@ app.get('/exit', function (req, res) {
 });
 
 // Tribe cry upload
-
-app.use(express.urlencoded({
-    extended: false, // Whether to use algorithm that can handle non-flat data strutures
-    limit: 10000, // Limit payload size in bytes
-    parameterLimit: 2, // Limit number of form items on payload
- }));
  
+app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/tribe_audio', async function(req, res) {
 
     const body = req.body;
     const uuid = body.uuid;
+
+    console.log(body);
 
     if (await util.userExists(uuid) == false) {
         res.status(400).send("User not found");
@@ -71,12 +70,12 @@ app.post('/tribe_audio', async function(req, res) {
     const tribeID = user.tribe_id;
     const audio = JSON.parse(body.audio);
     console.log(audio);
-    if (audio) {
-        const blob = Buffer.from(audio, 'base64');
-        const uploadPath = path.join(__dirname, 'cry_upload', `${tribeID}-${user.id}.mp3`);
-        fs.writeFileSync(uploadPath, blob);
-        res.status(200).send("Audio uploaded");
-    } else {
-        res.status(400).send("No audio");
-    }
+    // if (audio) {
+    //     const blob = Buffer.from(audio, 'base64');
+    //     const uploadPath = path.join(__dirname, 'cry_upload', `${tribeID}-${user.id}.mp3`);
+    //     fs.writeFileSync(uploadPath, blob);
+    //     res.status(200).send("Audio uploaded");
+    // } else {
+    //     res.status(400).send("No audio");
+    // }
 });

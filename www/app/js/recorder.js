@@ -50,15 +50,20 @@ class Recorder {
     }
 
     upload() {
-        const urlEncoded = new URLSearchParams({
-            audio: JSON.stringify(this.blob),
-            uuid: userData.uuid,
-        }).toString();
+        // const urlEncoded = new URLSearchParams({
+        //     audio: this.blob,
+        //     uuid: userData.uuid,
+        // }).toString();
+        const form = new FormData();
+
+        form.append("audio", this.blob);
+        form.append("uuid", userData.uuid);
+
         fetch("/tribe_audio", {
             method: "POST",
-            body: urlEncoded,
+            body: form,
             headers: {
-                'Content-type': 'application/x-www-form-urlencoded'
+                'Content-type': 'multipart/form-data'
             }
         })
         .then((res) => {
