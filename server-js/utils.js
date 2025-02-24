@@ -25,7 +25,13 @@ util.createPublicID = () => {
 util.existingUsers = {};
 util.userExists = async (uuid) => {
     if (util.existingUsers[uuid]) return true;
-    const user = await db('users').where('uuid', uuid).first();
+    let user;
+    try {
+        user = await db('users').where('uuid', uuid).first();
+    }
+    catch (e) {
+        return false;
+    }
     if (user) util.existingUsers[uuid] = true;
     return user != undefined;
 }

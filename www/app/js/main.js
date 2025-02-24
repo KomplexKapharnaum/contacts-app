@@ -56,6 +56,8 @@ async function after_user_load(uuid) {
     if (tribes.status) {
         document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
     }
+
+    input_profile_desc.value = userData.description
 }
 
 function subscribeToSession(uuid) {
@@ -91,7 +93,10 @@ function loadUser() {
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+var FEATURES
+window.addEventListener("DOMContentLoaded", async () => {
+    FEATURES = await QUERY.getFeatures()
+    loadFeatureStates()
     loadUser()
 })
 
@@ -174,3 +179,23 @@ send_feedback.addEventListener("click", () => {
         })
     }
 })
+
+const featurestate_btns = {
+    cyberspace: document.getElementById("nav-cyberspace"),
+    tribe: document.getElementById("nav-tribe"),
+    profile: document.getElementById("nav-profile"),
+    gen_avatar: document.getElementById("gen-avatar-container"),
+    profile_desc: document.getElementById("profile-description-container")
+}
+
+function feature_hide(featureElement) {
+    featurestate_btns[featureElement].style.display = "none"
+}
+
+function loadFeatureStates() {
+    if (!FEATURES.page_cyberspace) feature_hide("cyberspace")
+    if (!FEATURES.page_tribe) feature_hide("tribe")
+    if (!FEATURES.page_profile) feature_hide("profile")
+    if (!FEATURES.vote_avatars) feature_hide("gen_avatar")
+    if (!FEATURES.profile_description) feature_hide("profile_desc")
+}

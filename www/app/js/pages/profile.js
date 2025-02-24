@@ -465,3 +465,12 @@ function updateProfilePicture() {
         document.getElementById("profile-avatar").src = "/avatars/" + userData.avatar
     }
 }
+
+const input_profile_desc = document.getElementById("input-profile-description")
+const btn_profile_desc = document.getElementById("input-profile-save")
+
+btn_profile_desc.addEventListener("click", () => {
+    QUERY.updateDescription(input_profile_desc.value).then(() => {
+        alert("Description mise à jour !")
+    })
+})

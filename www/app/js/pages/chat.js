@@ -1,101 +1,101 @@
-const chat_container = document.getElementById("chat-container")
-const template_chat_message = document.getElementById("template-chat-container")
+// const chat_container = document.getElementById("chat-container")
+// const template_chat_message = document.getElementById("template-chat-container")
 
-function displayMessage(data) {
-    const name = data.name
-    const message = data.message
-    const date = data.date
-    const clone = template_chat_message.cloneNode(true).content
-    clone.querySelector(".content").innerText = message
-    clone.querySelector(".message").dataset.id = data.id
+// function displayMessage(data) {
+//     const name = data.name
+//     const message = data.message
+//     const date = data.date
+//     const clone = template_chat_message.cloneNode(true).content
+//     clone.querySelector(".content").innerText = message
+//     clone.querySelector(".message").dataset.id = data.id
     
-    const order = new Date(date).getTime().toString().slice(5)
+//     const order = new Date(date).getTime().toString().slice(5)
 
-    if (data.admin) {
-        const msg = clone.querySelector(".message")
-        msg.classList.add("admin")
-        msg.style.zIndex = order
-    }
+//     if (data.admin) {
+//         const msg = clone.querySelector(".message")
+//         msg.classList.add("admin")
+//         msg.style.zIndex = order
+//     }
 
-    const btn_report = clone.querySelector(".report")
-    const btn_delete = clone.querySelector(".delete")
-    if (userData.public_id == data.public_id) {
-        btn_report.remove()
-        btn_delete.addEventListener("click", () => {
-            app_confirm("Voulez-vous supprimer ce message ?").then((res) => {
-                PAGES.goto("chat")
-                if (res) {
-                    document.SOCKETIO.emit("delete-message", data.id)
-                }
-            })
-        })
-    } else {
-        btn_delete.remove()
-        btn_report.addEventListener("click", () => {
-            app_confirm("Voulez-vous signaler ce message ?").then((res) => {
-                PAGES.goto("chat")
-                if (res) {
-                    document.SOCKETIO.emit("report-message", data.id)
-                }
-            })
-        })
-    }
+//     const btn_report = clone.querySelector(".report")
+//     const btn_delete = clone.querySelector(".delete")
+//     if (userData.public_id == data.public_id) {
+//         btn_report.remove()
+//         btn_delete.addEventListener("click", () => {
+//             app_confirm("Voulez-vous supprimer ce message ?").then((res) => {
+//                 PAGES.goto("chat")
+//                 if (res) {
+//                     document.SOCKETIO.emit("delete-message", data.id)
+//                 }
+//             })
+//         })
+//     } else {
+//         btn_delete.remove()
+//         btn_report.addEventListener("click", () => {
+//             app_confirm("Voulez-vous signaler ce message ?").then((res) => {
+//                 PAGES.goto("chat")
+//                 if (res) {
+//                     document.SOCKETIO.emit("report-message", data.id)
+//                 }
+//             })
+//         })
+//     }
 
-    const parsedDate = new Date(date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})
-    clone.querySelector(".pseudo").innerText = parsedDate + " - " + name
-    clone.querySelector(".message").style.order = order
-    chat_container.appendChild(clone)
+//     const parsedDate = new Date(date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})
+//     clone.querySelector(".pseudo").innerText = parsedDate + " - " + name
+//     clone.querySelector(".message").style.order = order
+//     chat_container.appendChild(clone)
 
-    chat_container.scrollTo({
-        top: chat_container.scrollHeight,
-        behavior: 'smooth'
-    })
-}
+//     chat_container.scrollTo({
+//         top: chat_container.scrollHeight,
+//         behavior: 'smooth'
+//     })
+// }
 
-const chat_text_input = document.getElementById("chat-input")
-const chat_send_button = document.getElementById("chat-send")
+// const chat_text_input = document.getElementById("chat-input")
+// const chat_send_button = document.getElementById("chat-send")
 
-function sendMessage() {
-    const message = chat_text_input.value
-    if (message) {
-        chat_text_input.value = ""
-        const date = new Date()
-        document.SOCKETIO.emit("chat-message", {name: userData.name, message: message})
-    }
-}
+// function sendMessage() {
+//     const message = chat_text_input.value
+//     if (message) {
+//         chat_text_input.value = ""
+//         const date = new Date()
+//         document.SOCKETIO.emit("chat-message", {name: userData.name, message: message})
+//     }
+// }
 
-chat_send_button.addEventListener("click", () => {
-    sendMessage()
-})
+// chat_send_button.addEventListener("click", () => {
+//     sendMessage()
+// })
 
-chat_text_input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-        sendMessage()
-    }
-})
+// chat_text_input.addEventListener("keydown", (event) => {
+//     if (event.key === "Enter") {
+//         sendMessage()
+//     }
+// })
 
-async function initMessages() {
-    messagesLoaded = true;
-    const msgs = await QUERY.getMessages();
-    for (const msg of msgs.data) {
-        displayMessage(msg)
-    }
-}
+// async function initMessages() {
+//     messagesLoaded = true;
+//     const msgs = await QUERY.getMessages();
+//     for (const msg of msgs.data) {
+//         displayMessage(msg)
+//     }
+// }
 
-var messagesLoaded = false
-PAGES.addCallback("chat", () => {
-    if (userData && !messagesLoaded) initMessages()
-})
+// var messagesLoaded = false
+// PAGES.addCallback("chat", () => {
+//     if (userData && !messagesLoaded) initMessages()
+// })
 
-document.SOCKETIO.on("chat-message", (data) => {
-    if (messagesLoaded) displayMessage(data)
-})
+// document.SOCKETIO.on("chat-message", (data) => {
+//     if (messagesLoaded) displayMessage(data)
+// })
 
-document.SOCKETIO.on("delete-message", (id) => {
-    if (!messagesLoaded) return
-    const msg = chat_container.querySelector(`.message[data-id="${id}"]`)
-    if (msg) msg.remove()
-})
+// document.SOCKETIO.on("delete-message", (id) => {
+//     if (!messagesLoaded) return
+//     const msg = chat_container.querySelector(`.message[data-id="${id}"]`)
+//     if (msg) msg.remove()
+// })
 
 /* === New chatbox system === */
 
@@ -137,6 +137,10 @@ class ChatBox {
 
         const time = new Date(data.date).getTime().toString().slice(3).slice(0, -2)
         clone.querySelector(".message").style.order = time
+
+        if (data.admin) {
+            clone.querySelector(".message").classList.add("admin")
+        }
 
         this.msg_container.appendChild(clone)
         this.msg_container.scrollTo({

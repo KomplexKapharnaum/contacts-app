@@ -36,7 +36,7 @@ async function initDB() {
         .createTable('tribes', (table) => {
             table.increments('id');
             table.string('name');
-            table.json('color').default('[]');
+            table.json('colors').default('[]');
             table.integer('score').default(0);
         })
 
@@ -73,6 +73,7 @@ async function initDB() {
             table.json('stats').default('{}');
             table.json('trophies').default('[]');
             table.integer('score').default(0);
+            table.string('description').default('');
         })
 
         .createTable('messages', (table) => {
@@ -110,9 +111,15 @@ async function initDB() {
             table.integer("status").default(0);
         })
 
-        db.createTribe("techno", "#FFFF00");
-        db.createTribe("animal", "#FF0000");
-        db.createTribe("vegetal", "#00FF00");
+        .createTable('features', (table) => {
+            table.increments('id');
+            table.string("name");
+            table.boolean("enabled").default(false);
+        });
+
+        db.createTribe("techno", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
+        db.createTribe("animal", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
+        db.createTribe("vegetal", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
 }
 
 // Send feedback
@@ -125,8 +132,8 @@ db.sendFeedBack = async (username, message) => {
 // Tribe related
 //
 
-db.createTribe = async (name, color) => {
-    const tribe = await db('tribes').insert({name: name, color: color});
+db.createTribe = async (name, colors) => {
+    const tribe = await db('tribes').insert({name: name, colors: colors});
     return tribe;
 }
 

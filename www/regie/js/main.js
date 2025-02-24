@@ -682,6 +682,7 @@ fill_select_usergroup()
 const input_notification_text = document.getElementById("input-notification-text")
 const input_notification_color = document.getElementById("select-notification-color")
 const send_notification = document.getElementById("btn-notificaton-send")
+const input_notification_add_to_chat = document.getElementById("checkbox-notification-add-to-chat")
 
 send_notification.addEventListener("click", () => {
     if (!confirm("Send notification ?")) return
@@ -690,6 +691,7 @@ send_notification.addEventListener("click", () => {
 
     document.SOCKETIO.emit('new-notification', {
         text,
+        add_to_chat: input_notification_add_to_chat.checked,
         color
     })
 
@@ -697,6 +699,7 @@ send_notification.addEventListener("click", () => {
         alert("Notification sent !")
         input_notification_text.value = ""
         input_notification_color.value = "cyberspace"
+        input_notification_add_to_chat.checked = false
     })
 })
 
@@ -729,3 +732,60 @@ function load_feedbacks() {
     })
 }
 load_feedbacks()
+
+/* Features */
+
+const features_container = document.getElementById("feature-container")
+
+function load_features() {
+
+    fetch('/features').then(res => res.json())
+    .then(res => {
+        for (let [key, value] of Object.entries(res)) {
+            const el = document.getElementById("tem-feature").cloneNode(true).content
+            el.querySelector("label").innerHTML = key
+            const checkbox = el.querySelector("input")
+            checkbox.checked = value
+            checkbox.addEventListener("click", () => {
+                const newStatus = checkbox.checked ? 1 : 0
+                query("r_updatefeature", {
+                    name: key,
+                    status: newStatus
+                }).then((res) => {
+                    if (res.status) {
+                        alert(`${res.data.name} changed to ${res.data.status}`)
+                    } else {
+                        alert("error updating state.")
+                    }
+                })
+            })
+            features_container.appendChild(el)
+        }
+    })
+
+    // features_container.innerHTML = ""
+    // query("r_getfeatures").then((res) => {
+    //     res.data.forEach((f) => {
+    //         const el = document.getElementById("tem-feature").cloneNode(true).content
+    //         el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
+    //         const item = el.querySelector(".feature-item")
+    //         item.style.order = f.status
+            
+    //         const checkbox = el.querySelector("input")
+    //         checkbox.checked = f.status
+    //         checkbox.addEventListener("click", () => {
+    //             const newStatus = checkbox.checked ? 1 : 0
+    //             query("r_updatefeature", {
+    //                 id: f.id,
+    //                 status: newStatus
+    //             }).then(() => {
+    //                 item.style.order = newStatus
+    //             })
+    //         })
+    //         features_container.appendChild(el)
+    //     })
+    // })
+
+    
+}
+load_features()

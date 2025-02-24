@@ -335,7 +335,13 @@
             </div>
         </section> -->
 
-        <section>
+        <section id="profile-description-container">
+            <h2>Qui suis-je vraiment ?</h2>
+            <input type="text" name="input-description" id="input-profile-description" placeholder="Qui es-tu derrière cet écran ?">
+            <button id="input-profile-save" class="c4">Valider</button>
+        </section>
+
+        <section id="gen-avatar-container">
             <h2>Mon avatar</h2>
             <img id="profile-avatar" src="$BASEPATH$/img/noise.gif" alt="profil avatar">
             <div class="buttons-sm">
@@ -434,6 +440,15 @@
                 <div class="header">Ta tribu est <span id="tribe-rank">3</span><span id="tribe-rank-suffix">eme</span> !</div>
                 <div class="info">Score total : <span id="tribe-score">3285</span></div>
                 <div class="info" id="rank-phrase">Rien n'est terminé, continuez de vous combattre !</div>
+            </div>
+        </section>
+
+        <section id="tribe-cry">
+            <h2>Cri de tribu</h2>
+            <div>
+                <div>Tu n'as pas encore fait de cri. Appuie sur le bouton pour enregistrer ton cri de tribu (5 secondes)</div>
+                <button id="btn-cry-record">Appuyez pour enregistrer</button>
+                <audio controls id="audio-cry"></audio>
             </div>
         </section>
 
@@ -780,6 +795,7 @@
     <script src="$BASEPATH$/js/test.js"></script>
     <script src="$BASEPATH$/js/render.js"></script>
     <script src="$BASEPATH$/js/buddy.js"></script>
+    <script src="$BASEPATH$/js/recorder.js"></script>
 
     <!-- Pages -->
     <script src="$BASEPATH$/js/pages/onboarding.js"></script>

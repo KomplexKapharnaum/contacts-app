@@ -92,3 +92,14 @@ QUERY.getNotifications = async () => {
 QUERY.sendFeedback = async (message) => {
     return await QUERY.process("send_feedback", {uuid: userData.uuid, message: message});
 }
+
+QUERY.updateDescription = async (description) => {
+    return await QUERY.process("update_description", {uuid: userData.uuid, description: description});
+}
+
+QUERY.getFeatures = async () => {
+    return new Promise((resolve, reject) => {
+        fetch('/features').then(res => res.json())
+        .then(res => resolve(res))
+    })
+}

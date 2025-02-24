@@ -9,6 +9,7 @@ import stats from '../stats.js';
 import score from '../score.js';
 import trophies from '../trophies.js';
 import comfygen from '../comfygen.js';
+import features from '../features.js'
 
 if (env.BYPASS_RATELIMIT) {
     const ratelimit_general = rateLimit({
@@ -115,6 +116,8 @@ query.add("get_user", async (params) => {
 })
 
 query.add("update_username", async (params) => {
+    if (!features.getState("page_profile")) return [false, "feature disabled"];
+
     const uuid = params.get("uuid");
     const name = params.get("name");
 
@@ -124,6 +127,20 @@ query.add("update_username", async (params) => {
     await db('users').where('uuid', uuid).update({name: name});
 
     return [true, {uuid: uuid, name: name}];
+})
+
+query.add("update_description", async (params) => {
+    if (!features.getState("page_profile")) return [false, "feature disabled"];
+    if (!features.getState("profile_description")) return [false, "feature disabled"];
+
+    const uuid = params.get("uuid");
+    const description = params.get("description");
+
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    await db('users').where('uuid', uuid).update({description: description});
+
+    return [true, {uuid: uuid, description: description}];
 })
 
 query.add("remove_user", async (params) => {
@@ -240,11 +257,15 @@ query.add("get_messages", async (params) => {
 })
 
 query.add("tribelist", async (params) => {
+    // if (!features.getState("page_tribe")) return [false, "feature disabled"];
+
     const tribes = await db('tribes').select();
     return [true, tribes];
 })
 
 query.add("leaderboard", async (params) => {
+    if (!features.getState("page_tribe")) return [false, "feature disabled"];
+
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
 
@@ -338,6 +359,14 @@ query.add("r_updatefeedback", async (params) => {
     const status = params.get("status");
     await db('feedback').where('id', id).update({status: status});
     return [true, {id: id, status: status}];
+});
+
+query.add("r_updatefeature", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const name = params.get("name");
+    const status = params.get("status");
+    await features.edit(name, status)
+    return [true, {name: name, status: status}];
 });
 
 query.add("admin", async (params) => {

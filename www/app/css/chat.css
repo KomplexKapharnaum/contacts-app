@@ -114,6 +114,17 @@
     gap: 2px;
 }
 
+.message.admin {
+    color: red;
+    background-color: var(--color-background);
+    border: solid 2px white;
+    border-radius: 8px;
+    padding: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 .message .header {
     display: flex;
     align-items: center;

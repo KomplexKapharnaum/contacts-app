@@ -51,6 +51,11 @@ TROPHIES.loadUser = (user) => {
     }
 }
 
+TROPHIES.count = (userID) => {
+    if (!TROPHIES.cache[userID]) return 0
+    return TROPHIES.cache[userID].data.length
+}
+
 TROPHIES.reward = (userID, trophyID) => {
 
     if (!TROPHIES.config[trophyID]) return

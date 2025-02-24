@@ -7,6 +7,7 @@ import db from '../core/database.js';
 
 import stats from '../stats.js';
 import trophies from '../trophies.js';
+import features from '../features.js'
 
 var SOCKET = {};
 
@@ -188,6 +189,8 @@ SOCKET.io.on('connection', (socket) => {
     /* Avatar vote */
 
     socket.on("vote-avatar", async (userID) => {
+      if (!features.getState("vote_avatars")) return;
+
       if (socket.rooms.has("user")) {
         stats.addToUser(userID, "avatar_score", 1)
       }
@@ -199,11 +202,26 @@ SOCKET.io.on('connection', (socket) => {
       if (!socket.rooms.has("admin")) return;
       const text = data.text;
       const color = data.color;
+      const addtochat = data.add_to_chat;
       await db.createNotification(text, color);
+      
+      if (addtochat) {
+        SOCKET.io.to("user").emit("chat-message", data);
+        const id = await db.createMessage(true, "notification", Date.now(), false, false, text, 0);
+        const messageData = {
+          date: Date.now(),
+          admin: true,
+          public_id: false,
+          id: id[0]
+        }
+        SOCKET.io.to("user").emit("chat-message", messageData);
+        
+      }
       socket.emit("notification-validation", true);
     });
 
     socket.on("gen-avatar", async (data) => {
+      if (!features.getState("vote_avatars")) return;
       if (!socket.rooms.has("user")) return;
       comfygen.add(socket.userID, data);
     })

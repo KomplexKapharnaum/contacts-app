@@ -34,6 +34,7 @@ import './server-js/mobileapp/updater.js';
 import './server-js/mobileapp/notifier.js';
 
 import comfygen from './server-js/comfygen.js';
+import features from './server-js/features.js';
 
 // Test purposes
 // 
@@ -70,3 +71,4 @@ setInterval(SCORE.updateLeaderBoard, ONE_HOUR/2);
 SCORE.updateLeaderBoard();
 
 comfygen.run();
+features.start();

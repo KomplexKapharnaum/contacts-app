@@ -67,6 +67,10 @@
                 <option value="tribe">Tribe (yellow)</option>
                 <option value="Profile">Profile (Pink)</option>
             </select>
+            <div class="input_field">
+                <input type="checkbox" name="checkbox-notification-add-to-chat" id="checkbox-notification-add-to-chat">
+                <label for="checkbox-notification-add-to-chat">Add to chat</label>
+            </div>
             <button id="btn-notificaton-send">Send notification</button>
         </div>
 
@@ -211,88 +215,112 @@
 
             </div>
         </div>
+
+        <!-- Features -->
+        <template id="tem-feature">
+            <div class="feature-item">
+                <input type="checkbox" name="feedback" value="0"><label for="feedback-1">feedback name</label>
+            </div>
+        </template>
+
+        <div class="page" data-page-id="features">
+            <div id="feature-container">
+
+            </div>
+        </div>
     </main>
 
     <!-- Regie navigation bar -->
     <nav>
-        <div class="nav-btn goto-page" data-page-id="console">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10 8L14 12L10 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="color">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2222 11L11.2222 3L2.62224 11.6C2.25578 11.9739 2.05052 12.4765 2.05052 13C2.05052 13.5235 2.25578 14.0261 2.62224 14.4L7.82224 19.6C8.62224 20.4 9.82224 20.4 10.6222 19.6L19.2222 11Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5.22223 2L10.2222 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2.22223 13H17.2222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M22.2222 20C22.2222 20.5304 22.0115 21.0391 21.6364 21.4142C21.2614 21.7893 20.7527 22 20.2222 22C19.6918 22 19.1831 21.7893 18.808 21.4142C18.4329 21.0391 18.2222 20.5304 18.2222 20C18.2222 18.4 19.9222 17.6 20.2222 16C20.5222 17.6 22.2222 18.4 22.2222 20Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="text">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.4444 12H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.4444 6H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3.44444 13L6.99744 5.27597C7.03901 5.19303 7.10284 5.12329 7.18178 5.07455C7.26072 5.02581 7.35167 5 7.44444 5C7.53722 5 7.62816 5.02581 7.70711 5.07455C7.78605 5.12329 7.84987 5.19303 7.89144 5.27597L11.4444 13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3.44444 18H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M4.44444 11H10.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="image">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.6667 3H5.66666C4.56209 3 3.66666 3.89543 3.66666 5V19C3.66666 20.1046 4.56209 21 5.66666 21H19.6667C20.7712 21 21.6667 20.1046 21.6667 19V5C21.6667 3.89543 20.7712 3 19.6667 3Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.66666 11C10.7712 11 11.6667 10.1046 11.6667 9C11.6667 7.89543 10.7712 7 9.66666 7C8.56209 7 7.66666 7.89543 7.66666 9C7.66666 10.1046 8.56209 11 9.66666 11Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21.6667 14.9999L18.5807 11.9139C18.2056 11.539 17.697 11.3284 17.1667 11.3284C16.6363 11.3284 16.1277 11.539 15.7527 11.9139L6.66666 20.9999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="info">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.8889 22C18.4117 22 22.8889 17.5228 22.8889 12C22.8889 6.47715 18.4117 2 12.8889 2C7.36604 2 2.88889 6.47715 2.88889 12C2.88889 17.5228 7.36604 22 12.8889 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12.8889 16V12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12.8889 8H12.8989" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="video">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16.1111 13L21.3341 16.482C21.4094 16.5321 21.4969 16.5609 21.5872 16.5652C21.6776 16.5695 21.7674 16.5493 21.8471 16.5066C21.9268 16.4639 21.9935 16.4004 22.04 16.3228C22.0865 16.2452 22.1111 16.1565 22.1111 16.066V7.87002C22.1111 7.78204 22.088 7.69562 22.0439 7.61947C21.9998 7.54332 21.9365 7.48014 21.8602 7.43632C21.7839 7.3925 21.6974 7.36958 21.6094 7.36988C21.5214 7.37017 21.4351 7.39368 21.3591 7.43802L16.1111 10.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14.1111 6H4.11111C3.00654 6 2.11111 6.89543 2.11111 8V16C2.11111 17.1046 3.00654 18 4.11111 18H14.1111C15.2157 18 16.1111 17.1046 16.1111 16V8C16.1111 6.89543 15.2157 6 14.1111 6Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn goto-page" data-page-id="preset">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.3333 8V4H8.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M18.3333 8H6.33334C5.22877 8 4.33334 8.89543 4.33334 10V18C4.33334 19.1046 5.22877 20 6.33334 20H18.3333C19.4379 20 20.3333 19.1046 20.3333 18V10C20.3333 8.89543 19.4379 8 18.3333 8Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2.33334 14H4.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M20.3333 14H22.3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.3333 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.33334 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        
-        <div class="vertical-separator"></div>
 
-        <div class="nav-btn goto-page" data-page-id="notifications">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-plus"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M15 8h6"/><path d="M18 5v6"/><path d="M20.002 14.464a9 9 0 0 0 .738.863A1 1 0 0 1 20 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 8.75-5.332"/></svg>
+        <div class="nav-line">
+
+            <div class="nav-btn goto-page" data-page-id="features">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-check-2"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 14V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="M3 10h18"/><path d="m16 20 2 2 4-4"/></svg>
+            </div>
+
+            <div class="nav-btn goto-page" data-page-id="notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-plus"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M15 8h6"/><path d="M18 5v6"/><path d="M20.002 14.464a9 9 0 0 0 .738.863A1 1 0 0 1 20 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 8.75-5.332"/></svg>
+            </div>
+
+            <div class="nav-btn goto-page" data-page-id="feedback">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
         </div>
 
-        <div class="nav-btn goto-page" data-page-id="feedback">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        </div>
+        <div class="nav-line">
+            <div class="nav-btn goto-page" data-page-id="console">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 8L14 12L10 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="color">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.2222 11L11.2222 3L2.62224 11.6C2.25578 11.9739 2.05052 12.4765 2.05052 13C2.05052 13.5235 2.25578 14.0261 2.62224 14.4L7.82224 19.6C8.62224 20.4 9.82224 20.4 10.6222 19.6L19.2222 11Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5.22223 2L10.2222 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2.22223 13H17.2222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22.2222 20C22.2222 20.5304 22.0115 21.0391 21.6364 21.4142C21.2614 21.7893 20.7527 22 20.2222 22C19.6918 22 19.1831 21.7893 18.808 21.4142C18.4329 21.0391 18.2222 20.5304 18.2222 20C18.2222 18.4 19.9222 17.6 20.2222 16C20.5222 17.6 22.2222 18.4 22.2222 20Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="text">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.4444 12H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.4444 6H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.44444 13L6.99744 5.27597C7.03901 5.19303 7.10284 5.12329 7.18178 5.07455C7.26072 5.02581 7.35167 5 7.44444 5C7.53722 5 7.62816 5.02581 7.70711 5.07455C7.78605 5.12329 7.84987 5.19303 7.89144 5.27597L11.4444 13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.44444 18H21.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4.44444 11H10.4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="image">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.6667 3H5.66666C4.56209 3 3.66666 3.89543 3.66666 5V19C3.66666 20.1046 4.56209 21 5.66666 21H19.6667C20.7712 21 21.6667 20.1046 21.6667 19V5C21.6667 3.89543 20.7712 3 19.6667 3Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.66666 11C10.7712 11 11.6667 10.1046 11.6667 9C11.6667 7.89543 10.7712 7 9.66666 7C8.56209 7 7.66666 7.89543 7.66666 9C7.66666 10.1046 8.56209 11 9.66666 11Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21.6667 14.9999L18.5807 11.9139C18.2056 11.539 17.697 11.3284 17.1667 11.3284C16.6363 11.3284 16.1277 11.539 15.7527 11.9139L6.66666 20.9999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="info">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.8889 22C18.4117 22 22.8889 17.5228 22.8889 12C22.8889 6.47715 18.4117 2 12.8889 2C7.36604 2 2.88889 6.47715 2.88889 12C2.88889 17.5228 7.36604 22 12.8889 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12.8889 16V12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12.8889 8H12.8989" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="video">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.1111 13L21.3341 16.482C21.4094 16.5321 21.4969 16.5609 21.5872 16.5652C21.6776 16.5695 21.7674 16.5493 21.8471 16.5066C21.9268 16.4639 21.9935 16.4004 22.04 16.3228C22.0865 16.2452 22.1111 16.1565 22.1111 16.066V7.87002C22.1111 7.78204 22.088 7.69562 22.0439 7.61947C21.9998 7.54332 21.9365 7.48014 21.8602 7.43632C21.7839 7.3925 21.6974 7.36958 21.6094 7.36988C21.5214 7.37017 21.4351 7.39368 21.3591 7.43802L16.1111 10.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14.1111 6H4.11111C3.00654 6 2.11111 6.89543 2.11111 8V16C2.11111 17.1046 3.00654 18 4.11111 18H14.1111C15.2157 18 16.1111 17.1046 16.1111 16V8C16.1111 6.89543 15.2157 6 14.1111 6Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="preset">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.3333 8V4H8.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.3333 8H6.33334C5.22877 8 4.33334 8.89543 4.33334 10V18C4.33334 19.1046 5.22877 20 6.33334 20H18.3333C19.4379 20 20.3333 19.1046 20.3333 18V10C20.3333 8.89543 19.4379 8 18.3333 8Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2.33334 14H4.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.3333 14H22.3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.3333 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.33334 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <div class="vertical-separator"></div>
 
-        <div class="nav-btn" id="btn-end-current-event">
-            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.7778 22C18.3006 22 22.7778 17.5228 22.7778 12C22.7778 6.47715 18.3006 2 12.7778 2C7.25495 2 2.7778 6.47715 2.7778 12C2.7778 17.5228 7.25495 22 12.7778 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.7778 9L9.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.7778 9L15.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="nav-btn" id="btn-reload-event">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 12C21 9.61305 20.0518 7.32387 18.364 5.63604C16.6762 3.94821 14.387 3 12 3C9.48398 3.00947 7.069 3.99122 5.26003 5.74L3.00003 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3.00003 3V8H8.00003" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3.00003 12C3.00003 14.3869 3.94824 16.6761 5.63607 18.364C7.3239 20.0518 9.61308 21 12 21C14.5161 20.9905 16.9311 20.0088 18.74 18.26L21 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 16H21V21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="nav-btn" id="btn-end-current-event">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.7778 22C18.3006 22 22.7778 17.5228 22.7778 12C22.7778 6.47715 18.3006 2 12.7778 2C7.25495 2 2.7778 6.47715 2.7778 12C2.7778 17.5228 7.25495 22 12.7778 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.7778 9L9.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.7778 9L15.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="nav-btn" id="btn-reload-event">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12C21 9.61305 20.0518 7.32387 18.364 5.63604C16.6762 3.94821 14.387 3 12 3C9.48398 3.00947 7.069 3.99122 5.26003 5.74L3.00003 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.00003 3V8H8.00003" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.00003 12C3.00003 14.3869 3.94824 16.6761 5.63607 18.364C7.3239 20.0518 9.61308 21 12 21C14.5161 20.9905 16.9311 20.0088 18.74 18.26L21 16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 16H21V21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+
         </div>
     </nav>
 
