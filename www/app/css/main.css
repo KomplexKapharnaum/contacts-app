@@ -118,8 +118,9 @@ nav button * {
     width: fit-content;
 }
 
-nav button.disabled {
+button.disabled {
     opacity: 0.5;
+    pointer-events: none;
 }
 
 h1, h2, h3, h4, h5, h6 {

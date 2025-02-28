@@ -4,11 +4,13 @@ let FEATURES = {};
 
 FEATURES.config = {
     page_cyberspace: true,
-    page_profile: true,
-    page_tribe: true,
-    create_avatars: true,
-    vote_avatars: true,
-    profile_description: true
+    page_profile: false,
+    page_tribe: false,
+    create_avatars: false,
+    vote_avatars: false,
+    profile_description: false,
+    join_tribe: false,
+    tribe_cry: false
 }
 
 FEATURES.cache = {};

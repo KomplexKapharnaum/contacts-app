@@ -56,15 +56,16 @@ class Recorder {
         // }).toString();
         const form = new FormData();
 
-        form.append("audio", this.blob);
+        const audioFile = new File([this.blob], `recording-${Date.now()}.webm`, {
+            contentType: 'audio/webm',
+        });
+
+        form.append("audio", audioFile);
         form.append("uuid", userData.uuid);
 
-        fetch("/tribe_audio", {
+        fetch("/tribe_audio_upload", {
             method: "POST",
-            body: form,
-            headers: {
-                'Content-type': 'multipart/form-data'
-            }
+            body: form
         })
         .then((res) => {
             if (res.ok) {

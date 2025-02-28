@@ -10,6 +10,9 @@ import db from '../core/database.js';
 import police from '../core/police.js';
 
 import bodyParser from 'body-parser';
+import multer from 'multer';
+
+import comfygen from '../comfygen.js';
 
 app.use('/static', express.static('www'));
 
@@ -48,13 +51,19 @@ app.get('/exit', function (req, res) {
 
 // Tribe cry upload
  
-app.use(bodyParser.urlencoded({ extended: true }));
-app.post('/tribe_audio', async function(req, res) {
+const upload = multer({ dest: '_tmp/' });
 
+app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
+    
     const body = req.body;
     const uuid = body.uuid;
 
-    console.log(body);
+    const file = req.file;
+
+    if (!file) {
+        res.status(400).send("No audio file");
+        return;
+    }
 
     if (await util.userExists(uuid) == false) {
         res.status(400).send("User not found");
@@ -68,14 +77,41 @@ app.post('/tribe_audio', async function(req, res) {
     }
 
     const tribeID = user.tribe_id;
-    const audio = JSON.parse(body.audio);
-    console.log(audio);
-    // if (audio) {
-    //     const blob = Buffer.from(audio, 'base64');
-    //     const uploadPath = path.join(__dirname, 'cry_upload', `${tribeID}-${user.id}.mp3`);
-    //     fs.writeFileSync(uploadPath, blob);
-    //     res.status(200).send("Audio uploaded");
-    // } else {
-    //     res.status(400).send("No audio");
-    // }
+
+    const uploadPath = path.join(__dirname, 'cry_upload', `${tribeID}-${user.id}.mp3`);
+    fs.renameSync(file.path, uploadPath);
+
+    await db('users').where('uuid', uuid).update({ audio: `${tribeID}-${user.id}.mp3` });
+
+    res.status(200).send("Audio uploaded");
+});
+
+app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), async function(req, res) {
+    
+    const files = req.files;
+    const uuid = req.body.uuid;
+
+    if (!uuid) {
+        res.status(400).send("Missing uuid");
+        return;
+    }
+    
+    if (!files || !files.selfie || !files.paint) {
+        res.status(400).send("Missing image files");
+        return;
+    }
+
+    if (await util.userExists(uuid) == false) {
+        res.status(400).send("User not found");
+        return;
+    };
+
+    const user = await db('users').where('uuid', uuid).first();
+    if (!user) {
+        res.status(400).send("User not found");
+        return;
+    }
+    comfygen.add(user.id, files);
+
+    res.status(200).send("Avatar saved");
 });

@@ -12,19 +12,24 @@ comfygen.serverAddress = env.COMFY_API_URL
 
 comfygen.gen = async (avatarID, data) => {
 
-    await new Promise(resolve => setTimeout(resolve, 10000));
-
-    return "static_1_0.png";
+    const image_selfie = data.selfie[0];
+    const image_paint = data.paint[0];
 
     const client = new ComfyUIClient(comfygen.serverAddress);
     await client.connect(); 
-    // await client.uploadImage(input.pic, picname);
+    
+    const selfie_uploaded = await client.uploadImage(image_selfie.path, "selfie-"+avatarID+".png");
+    await client.uploadImage(image_paint.path, "paint-"+avatarID+".png");
+
+    // console.log("-------------------- UPLOAD COMPLETED --------------------")
+    // console.log(selfie_uploaded)
 
     const workflow_clone = structuredClone(workflow);
     
     const seed = Math.floor(Math.random() * 1000000);
 
     workflow_clone["3"]["inputs"]["seed"] = seed;
+    workflow_clone["10"]["inputs"]["image"] = selfie_uploaded.name;
 
     const result = await client.runPrompt(workflow_clone); // run
     const images = client.getImages(result, "static_"+avatarID);

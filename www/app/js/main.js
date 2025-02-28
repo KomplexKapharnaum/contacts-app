@@ -1,5 +1,3 @@
-
-/* temp : display errors as alerts */
 window.onerror = function(message, source, lineno, colno, error) {
     alert("Error: " + message + "\nAt: " + source + "\nLine: " + lineno);
     return true;
@@ -43,18 +41,29 @@ async function app_prompt(text) {
     })
 }
 
+let DATA_TRIBES = {};
 async function after_user_load(uuid) {
     socketAuth(uuid)
-    loadEvents()
-    loadChats(userData.tribe_id)
-    loadLeaderBoard()
-    updateTrophies()
-    updateProfilePicture()
+    loadFeatureStates()
+    await loadEvents()
+    await loadChats(userData.tribe_id)
+    await loadLeaderBoard()
+    await updateTrophies()
+    await updateProfilePicture()
 
-    const tribes = await QUERY.getTribes()
-    console.log(tribes)
-    if (tribes.status) {
-        document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
+    if (userData.tribe_id) {
+        const tribes = await QUERY.getTribes()
+        
+        if (tribes.status) {
+            DATA_TRIBES = tribes.data
+            document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
+        }
+    } else {
+        if (FEATURES.join_tribe) {
+            PAGES.goto("onboarding-questions-fingerprint")
+            BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
+            showNavbar(false)
+        }
     }
 
     input_profile_desc.value = userData.description
@@ -185,17 +194,28 @@ const featurestate_btns = {
     tribe: document.getElementById("nav-tribe"),
     profile: document.getElementById("nav-profile"),
     gen_avatar: document.getElementById("gen-avatar-container"),
-    profile_desc: document.getElementById("profile-description-container")
+    profile_desc: document.getElementById("profile-description-container"),
+    tribe_cry: document.getElementById("tribe-cry"),
 }
 
 function feature_hide(featureElement) {
     featurestate_btns[featureElement].style.display = "none"
 }
 
+function feature_show(featureElement) {
+    featurestate_btns[featureElement].style.display = "block"
+}
+
+function setFeatureState(featureElement, state) {
+    if (state) feature_show(featureElement)
+    else feature_hide(featureElement)
+}
+
 function loadFeatureStates() {
-    if (!FEATURES.page_cyberspace) feature_hide("cyberspace")
-    if (!FEATURES.page_tribe) feature_hide("tribe")
-    if (!FEATURES.page_profile) feature_hide("profile")
-    if (!FEATURES.vote_avatars) feature_hide("gen_avatar")
-    if (!FEATURES.profile_description) feature_hide("profile_desc")
+    setFeatureState("cyberspace", FEATURES.page_cyberspace)
+    setFeatureState("tribe", FEATURES.page_tribe && userData.tribe_id)
+    setFeatureState("profile", FEATURES.page_profile)
+    setFeatureState("gen_avatar", FEATURES.create_avatars)
+    setFeatureState("profile_desc", FEATURES.profile_description)
+    setFeatureState("tribe_cry", FEATURES.tribe_cry)
 }

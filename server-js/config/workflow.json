@@ -1,12 +1,12 @@
 {
   "3": {
     "inputs": {
-      "seed": 850311950454037,
+      "seed": 362002150961053,
       "steps": 20,
       "cfg": 8,
       "sampler_name": "euler",
       "scheduler": "normal",
-      "denoise": 1,
+      "denoise": 0.5,
       "model": [
         "4",
         0
@@ -20,7 +20,7 @@
         0
       ],
       "latent_image": [
-        "5",
+        "13",
         0
       ]
     },
@@ -36,17 +36,6 @@
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
       "title": "Load Checkpoint"
-    }
-  },
-  "5": {
-    "inputs": {
-      "width": 512,
-      "height": 512,
-      "batch_size": 1
-    },
-    "class_type": "EmptyLatentImage",
-    "_meta": {
-      "title": "Empty Latent Image"
     }
   },
   "6": {
@@ -104,6 +93,32 @@
     "class_type": "SaveImage",
     "_meta": {
       "title": "Save Image"
+    }
+  },
+  "10": {
+    "inputs": {
+      "image": "01-sistine-chapel-opener.adapt_.1900.1.jpg",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "13": {
+    "inputs": {
+      "pixels": [
+        "10",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
     }
   }
 }

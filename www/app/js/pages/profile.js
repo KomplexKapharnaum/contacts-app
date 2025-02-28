@@ -288,6 +288,13 @@ PAGES.addCallback("avatar-creation", () => {
             });
     }
     else avatar_start_camera();
+
+    // const default_color = addButton("#FFF")
+    // addButton("#F00")
+    // addButton("#0F0")
+    // addButton("#00F")
+    // setActiveColor(default_color)
+    addButtons()
 })
 
 video_avatar_retry.addEventListener("click", () => {
@@ -305,7 +312,7 @@ cnv_paint.width = 512
 cnv_paint.height = 512
 
 let paint_data = {
-    color: "white",
+    color: false,
     size: 1,
     prevX: 0,
     prevY: 0,
@@ -345,24 +352,30 @@ function addButton(color) {
         paint_data.erasing = false
     })
     btns_paint.appendChild(btn)
+
+    if (!paint_data.color) {
+        setActiveColor(btn)
+        paint_data.color = color
+        paint_data.erasing = false
+    }
     return btn
 }
 
-const default_color = addButton("#FFF")
-addButton("#F00")
-addButton("#0F0")
-addButton("#00F")
+function addButtons() {
 
-const erase_button = document.createElement("button")
-erase_button.classList.add("erase")
-erase_button.innerHTML = "X"
-erase_button.addEventListener("click", () => {
-    setActiveColor(erase_button)
-    paint_data.erasing = true
-})
-btns_paint.appendChild(erase_button)
+    JSON.parse(DATA_TRIBES[userData.tribe_id-1].colors).forEach(tribeColor => {
+        addButton(tribeColor)
+    })
 
-setActiveColor(default_color)
+    const erase_button = document.createElement("button")
+    erase_button.classList.add("erase")
+    erase_button.innerHTML = "X"
+    erase_button.addEventListener("click", () => {
+        setActiveColor(erase_button)
+        paint_data.erasing = true
+    })
+    btns_paint.appendChild(erase_button)
+}
 
 cnv_paint.addEventListener("touchstart", (e) => {
     const bounds = cnv_paint.getBoundingClientRect()
@@ -409,7 +422,7 @@ avatar_creation_next.addEventListener("click", () => {
             avatar_creation_data.paint = cnv_paint.toDataURL();
             open_avatar_subpage(2)
             avatar_creation_state=2
-            genNewAvatar(userData.id, avatar_creation_data)
+            genNewAvatar(userData.uuid, avatar_creation_data)
             break;
         case 2:
             avatar_creation_state=0;
@@ -422,6 +435,39 @@ document.getElementById("profile-edit-avatar").addEventListener("click", () => {
     PAGES.goto("avatar-creation")
     set_avatar_creation_indicator_part(0)
 })
+
+function base64ToBlob(base64) {
+    const byteString = atob(base64.split(',')[1]);
+    const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+}
+
+function genNewAvatar(userID, data) {
+    // document.SOCKETIO.emit("gen-avatar", {userID: userID, data: data})
+
+    const form = new FormData();
+    form.append("uuid", userID);
+    form.append("selfie", base64ToBlob(data.photo));
+    form.append("paint", base64ToBlob(data.paint));
+
+    fetch("/gen_avatar", {
+        method: "POST",
+        body: form
+    })
+    .then((res) => {
+        if (res.ok) {
+            alert("Data sent !")
+        } else {
+            console.error("Error sending data")
+        }
+    })
+
+}
 
 /* Avatar votes */
 

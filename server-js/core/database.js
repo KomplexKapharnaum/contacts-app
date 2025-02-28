@@ -29,21 +29,21 @@ async function initDB() {
         .createTable('avatars', (table) => {
             table.increments('id');
             table.integer('user_id').unsigned().references('users.id');
-            table.string('status').default('pending');
+            table.string('status').defaultTo('pending');
             table.string('filename');
         })
 
         .createTable('tribes', (table) => {
             table.increments('id');
             table.string('name');
-            table.json('colors').default('[]');
-            table.integer('score').default(0);
+            table.json('colors').defaultTo('[]');
+            table.integer('score').defaultTo(0);
         })
 
         .createTable('session', (table) => {
             table.increments('id');
             table.string('name');
-            table.boolean('frozen').default(false);
+            table.boolean('frozen').defaultTo(false);
             table.string('date_start');
             table.string('date_end');
         })
@@ -52,10 +52,10 @@ async function initDB() {
             table.increments('id');
             table.integer('session_id').unsigned().references('session.id');
             table.string('start_date');
-            table.boolean('ended').default(false);
+            table.boolean('ended').defaultTo(false);
             table.string('name');
             table.string('description');
-            table.json('location_coords').default('{lat: 0, lon: 0}');
+            table.json('location_coords').defaultTo('{lat: 0, lon: 0}');
             table.string('location_name');
         })
 
@@ -64,29 +64,30 @@ async function initDB() {
             table.string('uuid'); // User token, other users should NEVER see it
             table.string('public_id'); // Use this instead
             table.string('name');
-            table.json('avatars').default('[]');
+            table.json('avatars').defaultTo('[]');
             table.integer('selected_avatar').unsigned().references('avatars.id');
-            table.integer('tribe_id').unsigned().references('tribes.id');
+            table.integer('tribe_id').unsigned().references('tribes.id').nullable().defaultTo(null);
             table.integer('subscribed_session').unsigned().references('session.id');
             table.string('firebase_id');
-            table.boolean('admin').default(false);
-            table.json('stats').default('{}');
-            table.json('trophies').default('[]');
-            table.integer('score').default(0);
-            table.string('description').default('');
+            table.boolean('admin').defaultTo(false);
+            table.json('stats').defaultTo('{}');
+            table.json('trophies').defaultTo('[]');
+            table.integer('score').defaultTo(0);
+            table.string('description').defaultTo('');
+            table.string('audio').nullable().defaultTo(null);
         })
 
         .createTable('messages', (table) => {
             table.increments('id');
-            table.boolean("admin").default(false);
+            table.boolean("admin").defaultTo(false);
             table.string('name');
             table.dateTime("date");
             table.string("uuid");
             table.string("public_id");
             table.string("message");
-            table.json("reports").default('[]');
-            table.boolean("deleted").default(false);
-            table.integer("tribeID").default(0);
+            table.json("reports").defaultTo('[]');
+            table.boolean("deleted").defaultTo(false);
+            table.integer("tribeID").defaultTo(0);
         })
 
         .createTable('presets', (table) => {
@@ -99,8 +100,8 @@ async function initDB() {
         .createTable('notifications', (table) => {
             table.increments('id');
             table.string("message");
-            table.string("color").default("cyberspace");
-            table.integer("tribeID").default(0);
+            table.string("color").defaultTo("cyberspace");
+            table.integer("tribeID").defaultTo(0);
         })
 
         .createTable('feedback', (table) => {
@@ -108,16 +109,16 @@ async function initDB() {
             table.string("username");
             table.string("message");
             table.string("date");
-            table.integer("status").default(0);
+            table.integer("status").defaultTo(0);
         })
 
         .createTable('features', (table) => {
             table.increments('id');
             table.string("name");
-            table.boolean("enabled").default(false);
+            table.boolean("enabled").defaultTo(false);
         });
 
-        db.createTribe("techno", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
+        db.createTribe("machine", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
         db.createTribe("animal", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
         db.createTribe("vegetal", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
 }
@@ -133,7 +134,7 @@ db.sendFeedBack = async (username, message) => {
 //
 
 db.createTribe = async (name, colors) => {
-    const tribe = await db('tribes').insert({name: name, colors: colors});
+    const tribe = await db('tribes').insert({name: name, colors: JSON.stringify(colors)});
     return tribe;
 }
 

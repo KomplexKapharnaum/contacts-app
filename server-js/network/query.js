@@ -89,12 +89,12 @@ query.add("create_user", async (params) => {
     const uuid = util.createUUID();
     const public_id = util.createPublicID();
     const name = params.get("name");
-    const tribe_id = parseInt(params.get("tribe_id"));
+    // const tribe_id = parseInt(params.get("tribe_id"));
 
     const valid = util.isUserNameValid(name)
     if (!valid[0]) return valid;
 
-    let obj = {uuid, name, public_id, tribe_id}
+    let obj = {uuid, name, public_id/*, tribe_id*/}
     await db('users').insert(obj);
 
     const user = await getUserInfo(uuid);
@@ -263,6 +263,19 @@ query.add("tribelist", async (params) => {
     return [true, tribes];
 })
 
+query.add("set_tribe", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    const tribeID = params.get("tribe_id");
+    const user = await db('users').where('uuid', uuid).first();
+
+    if (user.tribe_id) return [false, "user already in a tribe"];
+
+    await db('users').where('uuid', uuid).update({ tribe_id: tribeID });
+    return [true, {uuid: uuid, tribe_id: tribeID}];
+})
+
 query.add("leaderboard", async (params) => {
     if (!features.getState("page_tribe")) return [false, "feature disabled"];
 
@@ -301,6 +314,14 @@ query.add("send_feedback", async (params) => {
     const res = await db.sendFeedBack(username, message);
     return [true, res];
 })
+
+query.add("send_feedback", async (params) => { 
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+    
+    const user = await db('users').where('uuid', uuid).first();
+    const tribeID = user.tribe_id;
+});
 
 // Regie query
 

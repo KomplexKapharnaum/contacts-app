@@ -103,3 +103,7 @@ QUERY.getFeatures = async () => {
         .then(res => resolve(res))
     })
 }
+
+QUERY.setTribe = async (tribeID) => {
+    return await QUERY.process("set_tribe", {uuid: userData.uuid, tribe_id: tribeID});
+}

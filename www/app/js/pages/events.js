@@ -18,53 +18,56 @@ function formateDate(date) {
 
 var hasEventsLoaded = false;
 
-function loadEvents() {
-    clock.clear("events-list")
-    let eventLive = false;
-    if (hasEventsLoaded) return
-    QUERY.getEvents().then(res => {
-        if (res.status && res.data) {    
-            event_list_container.innerHTML = ""        
-            res.data.forEach(event_data => {
-                const event_name = event_data.name
-                // const event_countdown = parseCountDown(event_data.start_date, true)
-                let now = new Date().getTime() > new Date(event_data.start_date).getTime()
-                const event_date = new Date(event_data.start_date)
-                const el = cloneEventTemplate(
-                    event_name,
-                    formateDate(event_date),
-                    now
-                )
+async function loadEvents() {
+    return new Promise((resolve, reject) => {
+        clock.clear("events-list")
+        let eventLive = false;
+        if (hasEventsLoaded) return
+        QUERY.getEvents().then(res => {
+            if (res.status && res.data) {    
+                event_list_container.innerHTML = ""        
+                res.data.forEach(event_data => {
+                    const event_name = event_data.name
+                    // const event_countdown = parseCountDown(event_data.start_date, true)
+                    let now = new Date().getTime() > new Date(event_data.start_date).getTime()
+                    const event_date = new Date(event_data.start_date)
+                    const el = cloneEventTemplate(
+                        event_name,
+                        formateDate(event_date),
+                        now
+                    )
 
-                const liveEventHandler = () => {
-                    if (eventLive) return
-                    if (isEventLive(event_data.start_date)) {
-                        socketEventLive(userData.uuid)
-                        PAGES.goto("live-idle")
-                        eventLive = true
-                        showNavbar(false)
+                    const liveEventHandler = () => {
+                        if (eventLive) return
+                        if (isEventLive(event_data.start_date)) {
+                            socketEventLive(userData.uuid)
+                            PAGES.goto("live-idle")
+                            eventLive = true
+                            showNavbar(false)
+                        }
                     }
-                }
-                liveEventHandler();
-
-                clock.add("cyberspace", () => {
-                    now = new Date().getTime() > new Date(event_data.start_date).getTime()
-                    el.querySelector(".date").innerHTML = now ? "En cours" : formateDate(event_date)
                     liveEventHandler();
-                })
 
-                el.addEventListener("click", () => {
-                    goto_event(event_data)
-                })
+                    clock.add("cyberspace", () => {
+                        now = new Date().getTime() > new Date(event_data.start_date).getTime()
+                        el.querySelector(".date").innerHTML = now ? "En cours" : formateDate(event_date)
+                        liveEventHandler();
+                    })
 
-                event_list_container.appendChild(el)
-            });
-            hasloaded = true
-            if (!eventLive) {
-                PAGES.goto("cyberspace")
-                showNavbar(true)
+                    el.addEventListener("click", () => {
+                        goto_event(event_data)
+                    })
+
+                    event_list_container.appendChild(el)
+                });
+                hasloaded = true
+                if (!eventLive) {
+                    PAGES.goto("cyberspace")
+                    showNavbar(true)
+                }
+                resolve()
             }
-        }
+        })
     })
 }
 

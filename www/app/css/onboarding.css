@@ -75,3 +75,39 @@
     opacity: 1;
     pointer-events: all;
 }
+
+/* Questions tribe */
+
+#btn-onboarding-question-fingerprint {
+    padding: 8px;
+    border-radius: 32px;
+    background-color: var(--color-secondary-1);
+    width: fit-content;
+}
+
+#btn-onboarding-question-fingerprint > svg {
+    width: 128px;
+    height: 128px;
+}
+
+#onboarding-question-fingerprint-status {
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
+    background-color: var(--color-secondary-1);
+}
+
+#onboarding-question-fingerprint-status>div {
+    height: 100%;
+    background-color: var(--color-primary);
+}
+
+#dishes {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}

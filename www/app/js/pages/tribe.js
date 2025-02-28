@@ -11,10 +11,11 @@ async function loadLeaderBoard() {
     if (!userData) return
     const tribeID = userData.tribe_id
 
+    if (!tribeID) return
+
     const data = await QUERY.getLeaderBoard(tribeID)
     if (!data) return
     if (!data.status) return
-    // console.log(data.data)
     const header = tribe_leaderboard.querySelector("#tribe-rank")
     const header_suffix = tribe_leaderboard.querySelector("#tribe-rank-suffix")
     const score = tribe_leaderboard.querySelector("#tribe-score")

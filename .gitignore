@@ -4,15 +4,11 @@ outputs/*
 database.json
 *.sqlite*
 data.db
+
+# Uploads
 _tmp/*
 gen_output/*
-
-# UPLOAD
-upload/*.png
-
-# IMGS
-imgs/*
-media/*
+cry_upload/*
 
 # Logs
 logs
