@@ -88,3 +88,15 @@ ce qu'on tape.
 
 - Profile:
     = Champs status / description
+
+
+====================
+
+- Notification:
+    = firebase id ?
+
+- Live :
+    = playback cri-mix
+    = pop barbie image
+
+
