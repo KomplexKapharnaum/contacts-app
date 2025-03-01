@@ -105,7 +105,7 @@ function loadUser() {
 var FEATURES
 window.addEventListener("DOMContentLoaded", async () => {
     FEATURES = await QUERY.getFeatures()
-    loadFeatureStates()
+    // loadFeatureStates() /// TODO : FIX THIS !
     loadUser()
 })
 
