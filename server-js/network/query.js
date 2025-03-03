@@ -11,29 +11,29 @@ import trophies from '../trophies.js';
 import comfygen from '../comfygen.js';
 import features from '../features.js'
 
-if (env.BYPASS_RATELIMIT) {
-    const ratelimit_general = rateLimit({
-        skip: (req) => { 
-            const pathname = req._parsedUrl.pathname === '/query'
-            const queryname = req.query.queryname === "create_user"
-            const uuidCorrect = req.query.uuid && util.userExists(req.query.uuid)
-            const isRegieRequest = req.query.queryname && req.query.queryname.startsWith("r_") 
-            return (pathname && queryname || uuidCorrect || !pathname || isRegieRequest)},
-        windowMs: 60 * 1000, // per ms
-        limit: 5, // requests
-        message: JSON.stringify([false, "too many requests"])
-    })
-    app.use(ratelimit_general);
+// if (env.BYPASS_RATELIMIT) {
+//     const ratelimit_general = rateLimit({
+//         skip: (req) => { 
+//             const pathname = req._parsedUrl.pathname === '/query'
+//             const queryname = req.query.queryname === "create_user"
+//             const uuidCorrect = req.query.uuid && util.userExists(req.query.uuid)
+//             const isRegieRequest = req.query.queryname && req.query.queryname.startsWith("r_") 
+//             return (pathname && queryname || uuidCorrect || !pathname || isRegieRequest)},
+//         windowMs: 60 * 1000, // per ms
+//         limit: 5, // requests
+//         message: JSON.stringify([false, "too many requests"])
+//     })
+//     app.use(ratelimit_general);
 
-    const ratelimit_create_user = rateLimit({
-        skip: (req) => { return !(req._parsedUrl.pathname === '/query' && req.query.queryname === "create_user") },
-        windowMs: 60 * 5000, // 5 minutes
-        limit: 1, // 1 request
-        skipFailedRequests: true,
-        message: JSON.stringify([false, "too many requests"])
-    })
-    app.use(ratelimit_create_user);
-}
+//     const ratelimit_create_user = rateLimit({
+//         skip: (req) => { return !(req._parsedUrl.pathname === '/query' && req.query.queryname === "create_user") },
+//         windowMs: 60 * 5000, // 5 minutes
+//         limit: 1, // 1 request
+//         skipFailedRequests: true,
+//         message: JSON.stringify([false, "too many requests"])
+//     })
+//     app.use(ratelimit_create_user);
+// }
 
 var query = {list:{}};
 

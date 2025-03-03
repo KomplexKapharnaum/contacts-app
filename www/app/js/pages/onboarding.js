@@ -28,8 +28,9 @@ onboarding_validate_username.addEventListener("click", () => {
     }
 })
 
-function onboarding_create_user(username/*, tribeID*/) {
-    QUERY.process("create_user", {name: username,/* tribe_id: tribeID*/}).then((res) => {
+function onboarding_create_user(username) {
+    let firebasetoken = CORDOVA_INFO.token ? CORDOVA_INFO.token : false
+    QUERY.process("create_user", {name: username, firebase_id: firebasetoken}).then((res) => {
         if (res.status) {
             if (res.data.uuid) {
                 userData = res.data
