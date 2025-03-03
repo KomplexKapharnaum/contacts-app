@@ -4,6 +4,8 @@ outputs/*
 database.json
 *.sqlite*
 data.db
+media/
+upload/
 
 # Uploads
 _tmp/*

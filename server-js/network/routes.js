@@ -16,6 +16,9 @@ import comfygen from '../comfygen.js';
 
 app.use('/static', express.static('www'));
 
+app.set('trust proxy', 1 /* number of proxies between user and server */)
+// app.get('/ip', (request, response) => response.send(request.ip)) => 'should client ip, otherwise increase trust proxy'
+
 app.get('/', function (req, res) {
     res.redirect('/app');
 });
