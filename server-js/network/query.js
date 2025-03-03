@@ -89,12 +89,13 @@ query.add("create_user", async (params) => {
     const uuid = util.createUUID();
     const public_id = util.createPublicID();
     const name = params.get("name");
+    const firebase_id = params.get("firebase_id");
     // const tribe_id = parseInt(params.get("tribe_id"));
 
     const valid = util.isUserNameValid(name)
     if (!valid[0]) return valid;
 
-    let obj = {uuid, name, public_id/*, tribe_id*/}
+    let obj = {uuid, name, public_id, firebase_id};
     await db('users').insert(obj);
 
     const user = await getUserInfo(uuid);

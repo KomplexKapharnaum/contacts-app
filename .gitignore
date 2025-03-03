@@ -7,6 +7,9 @@ data.db
 media/
 upload/
 
+# Firebase 
+firebase-sdk-admin.json
+
 # Uploads
 _tmp/*
 gen_output/*

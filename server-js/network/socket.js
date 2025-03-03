@@ -9,6 +9,8 @@ import stats from '../stats.js';
 import trophies from '../trophies.js';
 import features from '../features.js'
 
+import firebase from './firebase.js';
+
 var SOCKET = {};
 
 SOCKET.io = new IoServer(server);
@@ -205,6 +207,8 @@ SOCKET.io.on('connection', (socket) => {
       const addtochat = data.add_to_chat;
       await db.createNotification(text, color);
       
+      // firebase.broadcastMessage("Notification", text);
+
       if (addtochat) {
         SOCKET.io.to("user").emit("chat-message", data);
         const id = await db.createMessage(true, "notification", Date.now(), false, false, text, 0);
