@@ -1,3 +1,19 @@
+function onDeviceReady() {
+    if (!cordova) return;
+    if (!cordova.platformId == 'android' && !cordova.platformId == 'ios') return;
+
+    cordova.plugins.firebase.messaging.requestPermission().then(() => {
+        console.log("FIREBASE: Push permission granted.");
+        cordova.plugins.firebase.messaging.getToken().then(token => {
+            console.log("FIREBASE: Token=", token);
+            alert("Token: " + token)
+        });
+    }).catch(err => {
+        console.error("FIREBASE: Push permission denied: ", err);
+    });
+}
+document.addEventListener('deviceready', onDeviceReady, false);
+
 window.onerror = function(message, source, lineno, colno, error) {
     alert("Error: " + message + "\nAt: " + source + "\nLine: " + lineno);
     return true;
