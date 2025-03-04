@@ -99,8 +99,10 @@ QUERY.updateDescription = async (description) => {
 
 QUERY.getFeatures = async () => {
     return new Promise((resolve, reject) => {
-        fetch('/features').then(res => res.json())
-        .then(res => resolve(res))
+        fetch(document.WEBAPP_URL+'/features')
+            .then(res => res.json())
+            .then(res => resolve(res))
+        
     })
 }
 

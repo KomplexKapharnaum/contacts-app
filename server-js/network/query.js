@@ -47,7 +47,8 @@ query.request = async (req, params) => {
     if (!query.list[queryname]) return false;
 
     const res = await query.list[queryname](params);
-
+    
+    console.log("QUERY: ", queryname, res);
     if (res[0]) {
         if (res[1] && res[1].uuid) {
             police.updateQuery(res[1].uuid, req.socket.remoteAddress);
@@ -316,13 +317,6 @@ query.add("send_feedback", async (params) => {
     return [true, res];
 })
 
-query.add("send_feedback", async (params) => { 
-    const uuid = params.get("uuid");
-    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
-    
-    const user = await db('users').where('uuid', uuid).first();
-    const tribeID = user.tribe_id;
-});
 
 // Regie query
 

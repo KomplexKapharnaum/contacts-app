@@ -134,9 +134,9 @@ function nav_goto(id, page, bgColor=false, needsInternet=false) {
             PAGES.goto(page);
         }
     })
-
+    
     const setActive = (isactive) => document.getElementById(id).classList.toggle("disabled", !isactive)
-
+    
     if (needsInternet) {
         setActive(navigator.onLine)
         window.addEventListener("online", () => setActive(true))
@@ -177,7 +177,7 @@ accordions.forEach(initAccordion)
 // Version
 if (document.APPVERSION) {
     document.getElementById("version").innerText = document.APPVERSION
-//     document.getElementById("version").style.display = "block"
+    //     document.getElementById("version").style.display = "block"
 }
 
 const virtualKeyboardSupported = "virtualKeyboard" in navigator;
@@ -196,7 +196,8 @@ document.getElementById("send-feedback-button").addEventListener("click", ()=>PA
 const input_feedback = document.getElementById("input-feedback")
 const send_feedback = document.getElementById("input-feedback-send")
 send_feedback.addEventListener("click", () => {
-    const value = input_feedback.value
+    console.log("Sending feedback", input_feedback.value)
+    let value = input_feedback.value
     if (value) {
         QUERY.sendFeedback(value).then(res => {
             if (res.status) {
@@ -226,10 +227,11 @@ function feature_show(featureElement) {
 
 function setFeatureState(featureElement, state) {
     if (state) feature_show(featureElement)
-    else feature_hide(featureElement)
+        else feature_hide(featureElement)
 }
 
-function loadFeatureStates() {
+async function loadFeatureStates() {
+    FEATURES = await QUERY.getFeatures()
     setFeatureState("cyberspace", FEATURES.page_cyberspace)
     setFeatureState("tribe", FEATURES.page_tribe && userData.tribe_id)
     setFeatureState("profile", FEATURES.page_profile)
