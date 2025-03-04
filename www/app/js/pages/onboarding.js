@@ -35,10 +35,19 @@ function onboarding_create_user(username) {
             if (res.data.uuid) {
                 userData = res.data
                 document.CONFIG.set("uuid", res.data.uuid)
-                
                 BUD.setCurrentDialogue(BUD_DIALS.welcome, true)
-                
                 subscribeToSession(res.data.uuid)
+
+                if (cordova) {
+                    cordova.plugins.firebase.messaging.subscribe("all")
+                    .then(function () {
+                        console.log("Successfully subscribed to the topic!");
+                    })
+                    .catch(function (error) {
+                        console.error("Error subscribing to the topic:", error);
+                    });
+                }
+
             } else {
                 onboarding_username_error.innerText = "Une erreur est survenue"
             }
