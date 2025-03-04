@@ -689,10 +689,12 @@ send_notification.addEventListener("click", () => {
     const text = input_notification_text.value
     const color = input_notification_color.value
 
+    const tribe = document.getElementById("select-group").value
     document.SOCKETIO.emit('new-notification', {
         text,
         add_to_chat: input_notification_add_to_chat.checked,
-        color
+        color,
+        tribe
     })
 
     document.SOCKETIO.once("notification-validation", () => {

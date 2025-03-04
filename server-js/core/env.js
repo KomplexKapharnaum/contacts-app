@@ -8,6 +8,7 @@ const env = {
     BYPASS_RATELIMIT: process.env.BYPASS_RATELIMIT || false,
     DESTROY_DB_ON_START: process.env.DESTROY_DB_ON_START || false,
     COMFY_API_URL: process.env.COMFY_API_URL || "http://localhost:5000",
+    DISABLE_FIREBASE: process.env.DISABLE_FIREBASE || false
 }
 
 export { env };

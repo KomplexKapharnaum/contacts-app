@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import db from '../core/database.js';
+import { env } from '../core/env.js';
 
 const FIREBASE = {};
 
@@ -18,6 +19,8 @@ FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
 });
 
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
+    if (env.DISABLE_FIREBASE) return false;
+
     const message = FIREBASE.messagePayload(title, body, 'all', data);
     try {
         const res = await admin.messaging().send(message);
@@ -28,6 +31,8 @@ FIREBASE.broadcastMessage = async (title, body, data={}) => {
 }
 
 FIREBASE.toTribe = async (tribeID, title, body, data={}) => {
+    if (env.DISABLE_FIREBASE) return false;
+    
     const message = FIREBASE.messagePayload(title, body, 'tribe-'+tribeID, data);
     try {
         const res = await admin.messaging().send(message);
@@ -38,6 +43,8 @@ FIREBASE.toTribe = async (tribeID, title, body, data={}) => {
 }
 
 FIREBASE.toUser = async (userID, title, body, data={}) => {
+    if (env.DISABLE_FIREBASE) return false;
+    
     const user = await db('users').where('id', userID).first();
     if (!user) return false;
     const token = user.firebase_id;

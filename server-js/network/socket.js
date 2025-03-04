@@ -202,16 +202,22 @@ SOCKET.io.on('connection', (socket) => {
    
     socket.on('new-notification', async (data) => {
       if (!socket.rooms.has("admin")) return;
+      console.log(data);
       const text = data.text;
       const color = data.color;
       const addtochat = data.add_to_chat;
+      const tribe = data.tribe;
       await db.createNotification(text, color);
-      
-      // firebase.broadcastMessage("Notification", text);
+
+      if (tribe=='') {
+        firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
+      } else {
+        firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
+      }
 
       if (addtochat) {
         SOCKET.io.to("user").emit("chat-message", data);
-        const id = await db.createMessage(true, "notification", Date.now(), false, false, text, 0);
+        const id = await db.createMessage(true, "Notification", Date.now(), false, false, text, 0);
         const messageData = {
           date: Date.now(),
           admin: true,

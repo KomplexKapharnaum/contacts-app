@@ -269,16 +269,27 @@ async function obform_process() {
 
     if (chosenTribeID) {
         const updateUser = await QUERY.setTribe(chosenTribeID)
-
-        if (updateUser.status) {
-            userData.tribe_id = chosenTribeID
-        }
-        
         const tribes = await QUERY.getTribes()
+
+        if (!updateUser.status || !tribes.status) {
+            alert("Une erreur s'est produite, veuillez recharger la page.");
+            return
+        };
         
-        if (tribes.status) {
-            DATA_TRIBES = tribes.data
-            document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
+        userData.tribe_id = updateUser.data.tribe_id
+        DATA_TRIBES = tribes.data
+        document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
+
+        const tribeName = DATA_TRIBES[updateUser.data.tribe_id].name
+
+        if (cordova) {
+            cordova.plugins.firebase.messaging.subscribe("tribe-"+tribeName)
+            .then(function () {
+                console.log("Successfully subscribed to the topic!");
+            })
+            .catch(function (error) {
+                console.error("Error subscribing to the topic:", error);
+            });
         }
 
         feature_show("tribe")
