@@ -62,7 +62,7 @@ async function app_prompt(text) {
 let DATA_TRIBES = {};
 async function after_user_load(uuid) {
 
-    if (cordova) {
+    try {
         cordova.plugins.firebase.messaging.subscribe("all")
         .then(function () {
             console.log("Successfully subscribed to the topic!");
@@ -70,6 +70,9 @@ async function after_user_load(uuid) {
         .catch(function (error) {
             console.error("Error subscribing to the topic:", error);
         });
+    }
+    catch (e) {
+        console.log("FIREBASE: Error subscribing to all: ", e)
     }
 
     socketAuth(uuid)
