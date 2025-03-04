@@ -7,15 +7,18 @@ const FIREBASE = {};
 import serviceAccount from '../../firebase-sdk-admin.json' assert { type: 'json' };
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-});
+})
+// .onLog((log) => {
+//     console.log('FCM:', log);
+// }, { level: 'debug' });
 
 FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
     notification: {
-        title,
-        body,
+        title: title,
+        body: body,
     },
-    data,
-    topic
+    // data,
+    topic: topic
 });
 
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
