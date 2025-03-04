@@ -149,8 +149,10 @@ class ChatBox {
         if (data.admin) {
             report.remove()
             clone.classList.add("admin")
+            // unstick message on click
             clone.addEventListener("click", () => {
-                clone.remove()
+                clone.classList.remove("admin")
+                clone.classList.add("adminsoft")
             })
         } else {
             report.addEventListener("click", () => {

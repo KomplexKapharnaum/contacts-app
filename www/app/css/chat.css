@@ -119,9 +119,16 @@
     gap: 4px;
 }
 
-.message-container.admin {
+.message-container.admin,
+.message-container.adminsoft {
     color: red;
     background-color: var(--color-background);
+    border: solid 2px white;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.message-container.admin {
     border: solid 2px white;
     border-radius: 8px;
     padding: 8px;
