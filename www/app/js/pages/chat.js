@@ -148,6 +148,9 @@ class ChatBox {
         if (data.admin) {
             report.remove()
             clone.classList.add("admin")
+            clone.addEventListener("click", () => {
+                clone.remove()
+            })
         } else {
             report.addEventListener("click", () => {
                 app_confirm("Vous êtes sur le point de signaler ce message : " + data.message).then((res) => {
