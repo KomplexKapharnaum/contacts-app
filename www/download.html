@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Télécharger CONTACTS !</title>
+</head>
+<body>
+    <script>
+        function detectAndRedirect() {
+
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            const androidUrl = 'https://play.google.com/store/apps/details?id=net.kxkm.contacts';
+            const iOSUrl = 'https://apps.apple.com/fr/app/kxkm-contacts/id6741528108';
+            
+            // Perform redirection
+            if (isAndroid) {
+                window.location.href = androidUrl;
+            } else if (isIOS) {
+                window.location.href = iOSUrl;
+            }
+
+        }
+
+        // Call the function when the page loads
+        window.onload = detectAndRedirect;
+    </script>
+</body>
+</html>

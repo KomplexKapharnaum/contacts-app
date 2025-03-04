@@ -52,6 +52,11 @@ app.get('/exit', function (req, res) {
     res.sendFile(__dirname + '/www/exit.html');
 });
 
+// Serve DOWNLOAD
+app.get('/download', function (req, res) {
+    res.sendFile(__dirname + '/www/download.html');
+});
+
 // Tribe cry upload
  
 const upload = multer({ dest: '_tmp/' });
