@@ -1,3 +1,4 @@
+const ENUMS = {};
 const CORDOVA_INFO = {};
 
 function onDeviceReady() {
@@ -174,6 +175,9 @@ PAGES.setPageColor("cyberspace", "var(--color-secondary-2)")
 PAGES.setPageColor("notifications", "var(--color-secondary-4)")
 
 PAGES.setPageColor("live-idle", "white")
+
+PAGES.setHistoryState(["profile", "tribe", "cyberspace", "notifications", "live-idle"], "purge")
+PAGES.setHistoryState(["send-feedback"], "push")
 
 // Accordions
 
