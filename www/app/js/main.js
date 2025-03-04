@@ -61,6 +61,17 @@ async function app_prompt(text) {
 
 let DATA_TRIBES = {};
 async function after_user_load(uuid) {
+
+    if (cordova) {
+        cordova.plugins.firebase.messaging.subscribe("all")
+        .then(function () {
+            console.log("Successfully subscribed to the topic!");
+        })
+        .catch(function (error) {
+            console.error("Error subscribing to the topic:", error);
+        });
+    }
+
     socketAuth(uuid)
     loadFeatureStates()
     await loadEvents()
