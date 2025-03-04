@@ -111,6 +111,12 @@ class ChatBox {
             this.sendMessage()
         })
 
+        this.input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                this.sendMessage()
+            }
+        })
+
         document.SOCKETIO.on("chat-message", (data) => {
             if (data.tribeID == this.tribeID) {
                 this.addMessage(data)
