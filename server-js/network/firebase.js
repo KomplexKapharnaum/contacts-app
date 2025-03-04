@@ -21,7 +21,7 @@ FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
     if (env.DISABLE_FIREBASE) return false;
 
-    const message = FIREBASE.messagePayload(title, body, 'all', data);
+    const message = FIREBASE.messagePayload(title, body, 'all', data);  
     try {
         const res = await admin.messaging().send(message);
         console.log('Successfully sent message:', res);

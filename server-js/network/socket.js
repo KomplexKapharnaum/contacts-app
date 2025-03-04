@@ -207,7 +207,7 @@ SOCKET.io.on('connection', (socket) => {
       const tribe = data.tribe;
       await db.createNotification(text, color);
 
-      if (tribe=='') {
+      if (tribe!='') {
         firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
       } else {
         firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
