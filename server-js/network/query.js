@@ -48,7 +48,6 @@ query.request = async (req, params) => {
 
     const res = await query.list[queryname](params);
     
-    console.log("QUERY: ", queryname, res);
     if (res[0]) {
         if (res[1] && res[1].uuid) {
             police.updateQuery(res[1].uuid, req.socket.remoteAddress);
@@ -233,7 +232,6 @@ query.add("get_messages", async (params) => {
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
 
     const tribeID = params.get("tribe_id");
-    console.log(tribeID);
     const user = await db('users').where('uuid', uuid).first();
     if (user.tribe_id != tribeID && tribeID != 0) return [false, "user not in tribe"];
 

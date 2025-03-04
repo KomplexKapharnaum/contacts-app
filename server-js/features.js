@@ -18,25 +18,25 @@ FEATURES.cache = {};
 FEATURES.start = async () => {
     for (let key in FEATURES.config) {
         await new Promise((resolve, reject) => {
-            db('features').where('name', key).first().then(async (row) => {
-                if (!row) {
-                    await FEATURES.add(key, FEATURES.config[key]);
+            // insert feature if not exists
+            db('features').select().where('name', key).then((rows) => {
+                if (rows.length === 0) {
+                    db('features').insert({name: key, enabled: FEATURES.config[key]}).then(() => {
+                        FEATURES.cache[key] = FEATURES.config[key];
+                        resolve();
+                    });
+                } else {
+                    FEATURES.cache[key] = rows[0].enabled;
                     resolve();
                 }
-            });
+            });            
         })
     };
-
-    db('features').select().then((rows) => {
-        for (let row of rows) {
-            FEATURES.cache[row.name] = row.enabled;
-        }
-    });
+    console.log("Loaded features",FEATURES.cache);
 }
 
 FEATURES.add = async (name, state=false) => {
-    await db('features').insert({name, enabled: state});
-    return true;
+    return db('features').insert({name, enabled: state});
 }
 
 FEATURES.edit = async (name, state) => {

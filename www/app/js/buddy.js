@@ -69,6 +69,24 @@ class Buddy {
             this.startDialogue();
         });
 
+        // icon long press touch
+        this.icon.addEventListener('touchstart', () => {
+            this.icon.classList.add('pressed');
+            this.longPress = setTimeout(() => {
+                this.icon.classList.remove('pressed');
+                forceupdate();
+            }, 1000);
+        });
+        this.icon.addEventListener('touchend', () => {
+            clearTimeout(this.longPress);
+            this.icon.classList.remove('pressed');
+        });
+        this.icon.addEventListener('touchcancel', () => {
+            clearTimeout(this.longPress);
+            this.icon.classList.remove('pressed');
+        });
+
+
         this.available(false)
     }
 

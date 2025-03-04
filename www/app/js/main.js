@@ -122,7 +122,6 @@ function loadUser() {
 
 var FEATURES
 window.addEventListener("DOMContentLoaded", async () => {
-    FEATURES = await QUERY.getFeatures()
     loadFeatureStates()
     loadUser()
 })
@@ -232,6 +231,7 @@ function setFeatureState(featureElement, state) {
 
 async function loadFeatureStates() {
     FEATURES = await QUERY.getFeatures()
+    console.log("FEATURES: ", FEATURES)
     setFeatureState("cyberspace", FEATURES.page_cyberspace)
     setFeatureState("tribe", FEATURES.page_tribe && userData.tribe_id)
     setFeatureState("profile", FEATURES.page_profile)

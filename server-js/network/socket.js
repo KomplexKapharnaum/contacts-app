@@ -100,7 +100,6 @@ SOCKET.io.on('connection', (socket) => {
     });
 
     socket.on('admin-auth', (password) => {
-        console.log(password, env.ADMIN_PASS)
         if (password == env.ADMIN_PASS) {
             console.log("Admin connected");
             socket.join("admin");
@@ -202,7 +201,6 @@ SOCKET.io.on('connection', (socket) => {
    
     socket.on('new-notification', async (data) => {
       if (!socket.rooms.has("admin")) return;
-      console.log(data);
       const text = data.text;
       const color = data.color;
       const addtochat = data.add_to_chat;

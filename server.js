@@ -23,7 +23,7 @@ import db from './server-js/core/database.js';
 
 import './server-js/network/query.js';
 import './server-js/network/routes.js';
-import './server-js/network/socket.js';
+import { SOCKET } from './server-js/network/socket.js';
 import './server-js/network/github-hook.js';
 
 import SCORE from './server-js/score.js';
@@ -72,3 +72,9 @@ SCORE.updateLeaderBoard();
 
 comfygen.run();
 features.start();
+
+// Send forceupdate to all clients after 10s
+setTimeout(() => {
+    log("Sending forceupdate to all clients");
+    SOCKET.io.emit('forceupdate');
+}, 10000);

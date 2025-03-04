@@ -102,7 +102,6 @@ QUERY.getFeatures = async () => {
         fetch(document.WEBAPP_URL+'/features')
             .then(res => res.json())
             .then(res => resolve(res))
-        
     })
 }
 

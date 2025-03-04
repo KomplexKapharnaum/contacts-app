@@ -57,6 +57,12 @@ function isUserNameValid(username) {
     return [true, '']
 }
 
+function forceupdate() {
+    console.log("forceupdate")
+    window.localStorage.setItem("APPHASH", "forceupdate");
+    location.reload()
+}
+
 if (!document.CONFIG) {
     console.log("CONFIG: will use browser cookies")
 
