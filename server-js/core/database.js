@@ -3,8 +3,19 @@ import knex from 'knex';
 import fs from 'fs';
 import {env} from './env.js';
 import { table } from 'console';
+import path from 'path';
 
-const dataPath = __dirname + '/data.db';
+const dataPath = path.join(__dirname, 'database', env.DBFILE);
+
+// create folder if not exists
+if (!fs.existsSync(path.join(__dirname, 'database'))) {
+    fs.mkdirSync(path.join(__dirname, 'database'));
+}
+
+function log(msg) {
+    console.log(`[\x1b[35mDatabase\x1b[0m]\t${msg}`);
+}
+
 
 const db = knex({
     client: 'sqlite3',
@@ -14,8 +25,9 @@ const db = knex({
 
 // RESET DB
 //
-if (fs.existsSync(dataPath) && env.DESTROY_DB_ON_START) {
+if (env.DESTROY_DB_ON_START != 'false' && fs.existsSync(dataPath)) {
     fs.unlinkSync(dataPath);
+    log('Database destroyed');
 }
 
 
@@ -190,6 +202,9 @@ db.endEvent = async (id) => {
 //
 if (!fs.existsSync(dataPath)) {
     initDB()
+    log('Database initialized');
 }
+
+log('Database ready '+dataPath);
 
 export default db

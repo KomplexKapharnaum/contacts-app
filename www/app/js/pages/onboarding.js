@@ -203,9 +203,9 @@ function obform_adddish(src, value) {
     })
 }
 
-obform_adddish(document.BASEPATH + "img/load.gif", "animal")
-obform_adddish(document.BASEPATH + "img/load.gif", "vegetable")
-obform_adddish(document.BASEPATH + "img/load.gif", "machine")
+obform_adddish(document.BASEPATH + "/img/load.gif", "animal")
+obform_adddish(document.BASEPATH + "/img/load.gif", "vegetable")
+obform_adddish(document.BASEPATH + "/img/load.gif", "machine")
 
 async function obform_process() {
     let rank = {
