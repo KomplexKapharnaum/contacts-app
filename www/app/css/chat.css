@@ -114,7 +114,12 @@
     gap: 2px;
 }
 
-.message.admin {
+.message-container {
+    display: flex;
+    gap: 4px;
+}
+
+.message-container.admin {
     color: red;
     background-color: var(--color-background);
     border: solid 2px white;

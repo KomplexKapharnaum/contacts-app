@@ -253,3 +253,13 @@ async function loadFeatureStates() {
     setFeatureState("profile_desc", FEATURES.profile_description)
     setFeatureState("tribe_cry", FEATURES.tribe_cry)
 }
+
+function gotoButtons() {
+    const btns = document.querySelectorAll("button[data-gotopage]")
+    btns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            PAGES.goto(btn.dataset.gotopage)
+        })
+    })
+}
+gotoButtons()

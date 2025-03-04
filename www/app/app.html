@@ -228,6 +228,7 @@
     </div>
 
     <div class="page" data-page-id="event-countdown">
+        <button class="back" data-gotopage="cyberspace"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <div id="countdown-container">
             <div>
                 <div class="big" id="countdown-days">0</div>
@@ -250,13 +251,12 @@
         </div>
 
         <div class="txt">
-            <span>Revenez une heure avant le début de l'evenement pour connaitre sa localisation !</span>
+            <span>Revenez une heure avant le début de l'évènement pour connaître sa localisation !</span>
         </div>
-
-        <hr>
     </div>
 
     <div class="page" data-page-id="event-location">
+        <button class="back" data-gotopage="cyberspace"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <div class="event-location-container">
             <div id="event-location-map"></div>
             <div id="event-location-txt"></div>
@@ -561,21 +561,30 @@
     <!-- Cyber-space page -->
 
     <template id="tem-rdv">
-        <div class="rdv c2">
+        <div class="rdv c1">
             <div class="content">
                 <div class="name">Warmup numéro 1</div>
-                <div class="date">Dimanche 23 mars - 10h00</div>
+                <div class="date-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <div class="date">Dimanche 23 mars - 10h00</div>
+                </div>
             </div>
         </div>
     </template>
 
     <template id="tem-chatbox-message">
-        <div class="message">
-            <div class="header">
-                <div class="username">EstebanV</div>
-                <div class="date">à 18:23</div>
+        <div class="message-container">
+            <div class="message">
+                <div class="header">
+                    <div class="username">EstebanV</div>
+                    <div class="date">à 18:23</div>
+                    <div style="width: 100%;"></div>
+                    <div class="report">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                    </div>
+                </div>
+                <div class="content">Salut tout le monde, vous allez bien ???</div>
             </div>
-            <div class="content">Salut tout le monde, vous allez bien ???</div>
         </div>
     </template>
     
@@ -594,7 +603,8 @@
             </div>
         </section>
         <section class="chatbox cyberspace">
-            <h2>Chat cyberespace</h2>
+            <h2>Messagerie</h2>
+            <hr>
             <div class="chat-container" id="chatbox-cyberspace">
 
             </div>
@@ -610,6 +620,7 @@
     <!-- Notifications page -->
 
     <div class="page" data-page-id="notifications">
+        <button class="back" data-gotopage="cyberspace"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <section>
             <h2>Notifications</h2>
             <div id="notifications-container">
@@ -690,6 +701,7 @@
     </div>
 
     <div class="page" data-page-id="send-feedback">
+        <button class="back" data-gotopage="cyberspace"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <section>
             <h2>Envoyer un feedback</h2>
             <div class="input-container">

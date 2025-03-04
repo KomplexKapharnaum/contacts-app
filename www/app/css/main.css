@@ -51,7 +51,7 @@ body {
     filter: url(#chromatic-aberration);
 
     padding-bottom: 22px;
-    padding-top: 22px;
+    padding-top: 28px;
 }
 
 @keyframes screen-scroll {
@@ -306,6 +306,7 @@ hr {
     height: 1px;
     background-color: var(--color-text-secondary);
     border: none;
+    margin: 2px 0;
 }
 
 .input-horizontal {
@@ -385,4 +386,21 @@ hr {
 .fill {
     width: 100%;
     height: 100%;
+}
+
+button.back {
+    border: solid 2px var(--color-text-secondary);
+    border-top: none;
+    border-left: none;
+
+    border-radius: 0 0 8px 0;
+    padding: 8px;
+    
+    background-color: var(--color-background);
+    color: var(--color-text-secondary);
+    font-size: var(--fontSize-small);
+
+    position: absolute;
+    left: 0;
+    top: 0;
 }

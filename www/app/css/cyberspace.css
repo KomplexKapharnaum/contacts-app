@@ -2,6 +2,10 @@
     width: 100%;
     display: flex;
     gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--color-background);
+    border: solid 2px var(--rdv-color);
 }
 
 .rdv.c1 {--rdv-color: var(--color-secondary-1)}
@@ -9,18 +13,42 @@
 .rdv.c3 {--rdv-color: var(--color-secondary-3)}
 .rdv.c4 {--rdv-color: var(--color-secondary-4)}
 
-.rdv::before {
+/* .rdv::before {
     content: "";
     width: 8px;
     border-radius: 4px;
     background-color: var(--rdv-color);
-}
+} */
 
 .rdv>.content {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+    font-size: var(--fontSize-medium);
+    color: var(--rdv-color);
+}
+
+.rdv .date-container {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    color: var(--color-text-primary);
+    stroke: var(--color-text-primary)
 }
 
 .rdv .date {
-    opacity: 0.75;
+    font-size: var(--fontSize-small);
+}
+
+/* Temp */
+
+#send-feedback-button {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 0 0 8px 0;
+    
+    position: absolute;
+    left: 0;
+    top: 0;
 }

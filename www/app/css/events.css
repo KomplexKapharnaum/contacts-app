@@ -102,3 +102,15 @@
     padding: 8px;
     border-radius: 8px;
 }
+
+#event-location-goto {
+    border: solid 2px var(--color-text-secondary);
+    border-radius: 32px;
+    padding: 8px 16px;
+    background-color: var(--color-background);
+    color: var(--color-text-secondary);
+    font-size: var(--fontSize-small);
+    text-align: center;
+    text-decoration: none;
+    margin: 0 auto;
+}

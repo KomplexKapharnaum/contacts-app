@@ -112,14 +112,12 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const attributionControl = leafletMap.attributionControl;
 leafletMap.removeControl(attributionControl);
 
-/*
 var customIcon = L.icon({
-    iconUrl: './img/pin.png',
-    iconSize:     [64, 64],
-    iconAnchor:   [32, 64],
-    popupAnchor:  [0, -64] 
+    iconUrl: document.BASEPATH + '/img/pin.png',
+    iconSize:     [32, 32],
+    iconAnchor:   [16, 16],
+    popupAnchor:  [0, -32] 
 });
-*/
 
 function openEventMap(evenement) {
     PAGES.goto("event-location")
@@ -164,7 +162,7 @@ function SetMapCoords(evenement)
         }
     });
 
-    var p = L.marker([lat, lon]/*, {icon: customIcon}*/).addTo(leafletMap).bindPopup(popupText)
+    var p = L.marker([lat, lon], {icon: customIcon}).addTo(leafletMap).bindPopup(popupText)
 
     const btn = document.getElementById("event-location-goto");
     btn.href = "https://maps.google.com/?q="+lat+","+lon+"&z="+zoom;

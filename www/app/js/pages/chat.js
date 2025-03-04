@@ -135,17 +135,29 @@ class ChatBox {
     }
 
     addMessage(data) {
-        const clone = this.tem_msg.cloneNode(true).content
+        const clone = this.tem_msg.cloneNode(true).content.querySelector(".message-container")
         clone.querySelector(".content").innerText = data.message
         clone.querySelector(".username").innerText = data.name
         const formattedDate = new Date(data.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
         clone.querySelector(".date").innerText = formattedDate;
 
         const time = new Date(data.date).getTime().toString().slice(3).slice(0, -2)
-        clone.querySelector(".message").style.order = time
+        clone.style.order = time
 
+        const report = clone.querySelector(".report")
         if (data.admin) {
-            clone.querySelector(".message").classList.add("admin")
+            report.remove()
+            clone.classList.add("admin")
+        } else {
+            report.addEventListener("click", () => {
+                app_confirm("Vous êtes sur le point de signaler ce message : " + data.message).then((res) => {
+                    if (res) {
+                        clone.remove();
+                        document.SOCKETIO.emit("report-message", data.id);
+                    }
+                    PAGES.goto("cyberspace")
+                })
+            })
         }
 
         this.msg_container.appendChild(clone)

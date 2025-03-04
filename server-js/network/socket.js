@@ -178,7 +178,7 @@ SOCKET.io.on('connection', (socket) => {
         const newList = [...reports, public_id];
 
         if (newList.length >= 3) {
-          await db('messages').where({id: messageID}).update({deleted: true});
+            await db('messages').where({id: messageID}).update({deleted: true});
           SOCKET.io.to("user").emit("delete-message", messageID);
         } else {
           await db('messages').where({id: messageID}).update({reports: JSON.stringify(newList)});

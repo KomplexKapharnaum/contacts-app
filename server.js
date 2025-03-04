@@ -41,6 +41,7 @@ import features from './server-js/features.js';
 
 async function test() {
     const one_day = 1000 * 60 * 60 * 24;
+    const one_hour = 1000 * 60 * 60;
     const session = await db.createSession("test session", new Date() - one_day, new Date() + one_day);
     // console.log(session[0]);
     
