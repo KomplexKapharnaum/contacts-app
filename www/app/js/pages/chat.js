@@ -114,6 +114,7 @@ class ChatBox {
         this.input.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 this.sendMessage()
+                this.input.blur()
             }
         })
 
