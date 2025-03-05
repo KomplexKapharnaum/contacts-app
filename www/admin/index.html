@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin.css">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <title>Admin panel</title>
+</head>
+<body>
+    <div id="boxes-container">
+
+        <!-- NOTIFICATIONS -->
+        <div class="box">
+            <h1>Notifications</h1>
+            <div class="content">
+                <div class="input_field">
+                    <textarea name="text" id="input-notification-text" placeholder="Enter text..." style="min-height: 128px;"></textarea>
+                </div>
+                <select name="select-notification-color" id="select-notification-color">
+                    <option value="cyberspace">Cyberspace (blue)</option>
+                    <option value="tribe">Tribe (yellow)</option>
+                    <option value="Profile">Profile (Pink)</option>
+                </select>
+                <div class="input_field">
+                    <input type="checkbox" name="checkbox-notification-add-to-chat" id="checkbox-notification-add-to-chat">
+                    <label for="checkbox-notification-add-to-chat">Add to chat</label>
+                </div>
+                <button id="btn-notificaton-send">Send notification</button>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+
+        <template id="feature-template">
+            <label for="">
+                <input type="checkbox" name="">
+                <span class="feature-desc">Ouvrir la page cyber-espace</span>
+            </label>
+        </template>
+
+        <div class="box">
+            <h1>Fonctionnalités</h1>
+            <div class="content" id="feature-container">
+            </div>
+        </div>
+
+        <!-- EVENEMENTS -->
+        <div class="box">
+            <h1>Evenements</h1>
+            <div class="content">
+                <div class="input_field">
+                    <input type="datetime-local" name="input-event-start-date" id="input-event-start-date" step="1" placeholder="Start date">
+                </div>
+                <div class="input_field">
+                    <input type="text" name="input-event-location-coords" id="input-event-location-coords" placeholder="Location coordinates (long,lat)">
+                </div>
+                <div class="input_field">
+                    <input type="text" name="input-event-location-name" id="input-event-location-name" placeholder="Location name">
+                </div>
+                <div class="input_field">
+                    <input type="text" name="input-event-name" id="input-event-name" placeholder="Event name">
+                </div>
+                <button id="btn-event-create">Create event</button>
+            </div>
+        </div>
+
+        <!-- CHAT -->
+
+        <template id="chat-message-template">
+            <div class="message">
+                <div class="username"></div>
+                <div class="content"></div>
+            </div>
+        </template>
+        <div class="box">
+            <h1>Chat</h1>
+            <div class="content scroll" id="chat-container">
+                
+            </div>
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

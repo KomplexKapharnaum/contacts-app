@@ -4,6 +4,7 @@ import util from '../utils.js';
 import { app } from '../core/server.js';
 import { rateLimit } from 'express-rate-limit'
 import police from '../core/police.js';
+import { SOCKET } from './socket.js';
 
 import stats from '../stats.js';
 import score from '../score.js';
@@ -391,5 +392,92 @@ query.add("admin", async (params) => {
     await db('users').where('uuid', uuid).update({admin: true});
     return [true, {uuid: uuid, message: "User set to admin"}];
 })
+
+/* Admin panel queries */
+
+query.add("admin_send_notification", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+
+    const text = params.get("text");
+    const color = params.get("color");
+    const addtochat = params.get("add_to_chat");
+    const tribe = params.get("tribe");
+
+    await db.createNotification(text, color);
+
+    if (!env.DISABLE_FIREBASE) {
+        if (tribe !== '') {
+            firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
+        } else {
+            firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
+        }
+    }
+
+    if (addtochat) {
+        SOCKET.io.to("user").emit("chat-message", { text, color, add_to_chat: addtochat, tribe });
+        const id = await db.createMessage(true, "Notification", Date.now(), false, false, text, 0);
+        const messageData = {
+            date: Date.now(),
+            admin: true,
+            public_id: false,
+            id: id[0]
+        };
+        SOCKET.io.to("user").emit("chat-message", messageData);
+    }
+
+    return [true, "Notification sent"];
+})
+
+query.add("admin_create_event", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const start_date = params.get("start_date");
+    const location_coords = params.get("location_coords");
+    const location_name = params.get("location_name");
+    const name = params.get("name");
+
+    const current_session = await db('session').first();
+    if (!current_session) return [false, "no session exists"];
+
+    const eventData = {
+        start_date,
+        location_coords,
+        location_name,
+        name,
+        session_id: current_session.id
+    };
+
+    await db('event').insert(eventData);
+
+    return [true, eventData];
+})
+
+query.add("admin_get_features", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const features = await db('features').select();
+    return [true, features];
+})
+
+query.add("admin_update_feature", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const name = params.get("name");
+    const enabled = params.get("enabled");
+    await features.edit(name, enabled);
+    return [true, {name: name, enabled: enabled}];
+})
+
+query.add("admin_get_chat", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const messages = await db('messages').orderBy('date', 'desc').limit(50).select();
+    return [true, messages.reverse()];
+})
+
+query.add("admin_delete_message", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const id = params.get("id");
+    await db('messages').where('id', id).delete();
+    SOCKET.io.to("user").emit("delete-message", id);
+    return [true, {id: id}];
+})
+
 
 export { query };

@@ -123,6 +123,11 @@ class ChatBox {
             }
         })
 
+        document.SOCKETIO.on("delete-message", (id) => {
+            const msg = this.msg_container.querySelector(`.message-container[data-id="${id}"]`)
+            if (msg) msg.remove()
+        })
+
         this.initMessages()
     }
 
@@ -136,6 +141,7 @@ class ChatBox {
 
     addMessage(data) {
         const clone = this.tem_msg.cloneNode(true).content.querySelector(".message-container")
+        clone.dataset.id = data.id
         clone.querySelector(".content").innerText = data.message
         clone.querySelector(".username").innerText = data.name
         const formattedDate = new Date(data.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});

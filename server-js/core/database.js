@@ -127,6 +127,7 @@ async function initDB() {
         .createTable('features', (table) => {
             table.increments('id');
             table.string("name");
+            table.string('description');
             table.boolean("enabled").defaultTo(false);
         });
 

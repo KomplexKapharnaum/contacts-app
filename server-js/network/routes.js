@@ -39,6 +39,8 @@ app.get('/query', async function (req, res) {
     res.status(result[0] ? 200 : 400).json(result[1]);
 });
 
+// Admin routes
+app.use('/admin', express.static('www/admin'));
 app.use('/regie', express.static('www/regie'));
 
 app.use('/avatars', express.static('gen_output'));

@@ -141,11 +141,14 @@ SOCKET.io.on('connection', (socket) => {
           public_id: socket.public_id,
           id: id[0]
         });
+
         if (data.tribeID != 0) {
           SOCKET.io.to("tribe-" + data.tribeID).emit("chat-message", data);
         } else {
           SOCKET.io.to("user").emit("chat-message", data);
         }
+
+        SOCKET.io.to("admin").emit("chat-message", data);
         
         const count = stats.addToUser(socket.userID, "messages_sent", 1);
         switch (count) {
@@ -199,34 +202,34 @@ SOCKET.io.on('connection', (socket) => {
 
     /* REGIE -> notification */
    
-    socket.on('new-notification', async (data) => {
-      if (!socket.rooms.has("admin")) return;
-      const text = data.text;
-      const color = data.color;
-      const addtochat = data.add_to_chat;
-      const tribe = data.tribe;
-      await db.createNotification(text, color);
+    // socket.on('new-notification', async (data) => {
+    //   if (!socket.rooms.has("admin")) return;
+    //   const text = data.text;
+    //   const color = data.color;
+    //   const addtochat = data.add_to_chat;
+    //   const tribe = data.tribe;
+    //   await db.createNotification(text, color);
 
-      if (tribe!='') {
-        firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
-      } else {
-        firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
-      }
+    //   if (tribe!='') {
+    //     firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
+    //   } else {
+    //     firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
+    //   }
 
-      if (addtochat) {
-        SOCKET.io.to("user").emit("chat-message", data);
-        const id = await db.createMessage(true, "Notification", Date.now(), false, false, text, 0);
-        const messageData = {
-          date: Date.now(),
-          admin: true,
-          public_id: false,
-          id: id[0]
-        }
-        SOCKET.io.to("user").emit("chat-message", messageData);
+    //   if (addtochat) {
+    //     SOCKET.io.to("user").emit("chat-message", data);
+    //     const id = await db.createMessage(true, "Notification", Date.now(), false, false, text, 0);
+    //     const messageData = {
+    //       date: Date.now(),
+    //       admin: true,
+    //       public_id: false,
+    //       id: id[0]
+    //     }
+    //     SOCKET.io.to("user").emit("chat-message", messageData);
         
-      }
-      socket.emit("notification-validation", true);
-    });
+    //   }
+    //   socket.emit("notification-validation", true);
+    // });
 
     socket.on("gen-avatar", async (data) => {
       if (!features.getState("vote_avatars")) return;
