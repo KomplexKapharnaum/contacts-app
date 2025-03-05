@@ -93,65 +93,65 @@ if (!document.CONFIG) {
 // else console.log("CONFIG: already set up by launcher (Using Cloud settings)")
 
 // MOBILE KEYBOARD DETECTION
-if (document.APPSTATE) {
+// if (document.APPSTATE) {
 
-    function estimateKeyboardHeight() {
-        let screenHeight = window.screen.height;
-        if (cordova.platformId === 'ios') {
-            if (screenHeight <= 480) return 216;       // iPhone 4S and older
-            if (screenHeight <= 568) return 216;       // iPhone 5, 5S, 5C, SE (1st gen)
-            if (screenHeight <= 667) return 216;       // iPhone 6, 6S, 7, 8, SE (2nd gen)
-            if (screenHeight <= 736) return 226;       // iPhone 6+, 6S+, 7+, 8+
-            if (screenHeight <= 812) return 291;       // iPhone X, XS, 11 Pro
-            if (screenHeight <= 896) return 301;       // iPhone XR, XS Max, 11, 11 Pro Max
-            return 301;                                // Default for newer/larger devices
-        } else {
-            if (screenHeight <= 480) return 200;       // Small Android devices
-            if (screenHeight <= 800) return 230;       // Medium-sized Android devices
-            if (screenHeight <= 1280) return 260;      // Large Android devices
-            return 280;        
-        }
-    }
+//     function estimateKeyboardHeight() {
+//         let screenHeight = window.screen.height;
+//         if (cordova.platformId === 'ios') {
+//             if (screenHeight <= 480) return 216;       // iPhone 4S and older
+//             if (screenHeight <= 568) return 216;       // iPhone 5, 5S, 5C, SE (1st gen)
+//             if (screenHeight <= 667) return 216;       // iPhone 6, 6S, 7, 8, SE (2nd gen)
+//             if (screenHeight <= 736) return 226;       // iPhone 6+, 6S+, 7+, 8+
+//             if (screenHeight <= 812) return 291;       // iPhone X, XS, 11 Pro
+//             if (screenHeight <= 896) return 301;       // iPhone XR, XS Max, 11, 11 Pro Max
+//             return 301;                                // Default for newer/larger devices
+//         } else {
+//             if (screenHeight <= 480) return 200;       // Small Android devices
+//             if (screenHeight <= 800) return 230;       // Medium-sized Android devices
+//             if (screenHeight <= 1280) return 260;      // Large Android devices
+//             return 280;        
+//         }
+//     }
 
-    const keyboardShowEvent = new CustomEvent('keyboardDidShow', {detail: {keyboardHeight: estimateKeyboardHeight()}});
-    const keyboardHideEvent = new Event('keyboardDidHide');
+//     const keyboardShowEvent = new CustomEvent('keyboardDidShow', {detail: {keyboardHeight: estimateKeyboardHeight()}});
+//     const keyboardHideEvent = new Event('keyboardDidHide');
 
-    const keyboardTriggeringInputTypes = [
-        'text', 'password', 'email', 'number', 'tel', 'url', 'search'
-      ];
+//     const keyboardTriggeringInputTypes = [
+//         'text', 'password', 'email', 'number', 'tel', 'url', 'search'
+//       ];
       
-      let keyboardTimeout;
+//       let keyboardTimeout;
       
-      document.addEventListener('focusin', function(event) {
-        if (isKeyboardTriggeringInput(event.target)) {
-          clearTimeout(keyboardTimeout);
-          window.dispatchEvent(keyboardShowEvent);
-        }
-      });
+//       document.addEventListener('focusin', function(event) {
+//         if (isKeyboardTriggeringInput(event.target)) {
+//           clearTimeout(keyboardTimeout);
+//           window.dispatchEvent(keyboardShowEvent);
+//         }
+//       });
       
-      document.addEventListener('focusout', function(event) {
-        if (isKeyboardTriggeringInput(event.target)) {
-          keyboardTimeout = setTimeout(() => {
-          window.dispatchEvent(keyboardHideEvent);
-          }, 100); // Short delay to account for focus switching between inputs
-        }
-      });
+//       document.addEventListener('focusout', function(event) {
+//         if (isKeyboardTriggeringInput(event.target)) {
+//           keyboardTimeout = setTimeout(() => {
+//           window.dispatchEvent(keyboardHideEvent);
+//           }, 100); // Short delay to account for focus switching between inputs
+//         }
+//       });
       
-      function isKeyboardTriggeringInput(element) {
-        return (
-          (element.tagName === 'INPUT' && keyboardTriggeringInputTypes.includes(element.type)) ||
-          element.tagName === 'TEXTAREA' || (element.contentEditable && element.contentEditable !== 'false')
-        );
-      }
+//       function isKeyboardTriggeringInput(element) {
+//         return (
+//           (element.tagName === 'INPUT' && keyboardTriggeringInputTypes.includes(element.type)) ||
+//           element.tagName === 'TEXTAREA' || (element.contentEditable && element.contentEditable !== 'false')
+//         );
+//       }
       
-      // Keyboard height detection Exemple
-      //
+//       // Keyboard height detection Exemple
+//       //
       
-    window.addEventListener('keyboardDidShow', (event) => {
-        document.documentElement.style.setProperty('--offset', `${-event.detail.keyboardHeight}px`)
-    })
+//     window.addEventListener('keyboardDidShow', (event) => {
+//         document.documentElement.style.setProperty('--offset', `${-event.detail.keyboardHeight}px`)
+//     })
 
-    window.addEventListener('keyboardDidHide', () => {
-        document.documentElement.style.setProperty('--offset', `0px`)
-    })
-}
+//     window.addEventListener('keyboardDidHide', () => {
+//         document.documentElement.style.setProperty('--offset', `0px`)
+//     })
+// }
