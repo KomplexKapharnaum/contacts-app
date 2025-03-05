@@ -291,7 +291,7 @@ async function obform_process() {
 
         const tribeName = DATA_TRIBES[updateUser.data.tribe_id].name
 
-        if (cordova) {
+        if (document.APPSTATE) {
             cordova.plugins.firebase.messaging.subscribe("tribe-"+tribeName)
             .then(function () {
                 console.log("Successfully subscribed to the topic!");

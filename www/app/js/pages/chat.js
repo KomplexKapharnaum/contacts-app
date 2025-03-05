@@ -114,6 +114,7 @@ class ChatBox {
         this.input.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 this.sendMessage()
+                this.input.blur()
             }
         })
 
@@ -154,8 +155,10 @@ class ChatBox {
         if (data.admin) {
             report.remove()
             clone.classList.add("admin")
+            // unstick message on click
             clone.addEventListener("click", () => {
-                clone.remove()
+                clone.classList.remove("admin")
+                clone.classList.add("adminsoft")
             })
         } else {
             report.addEventListener("click", () => {
