@@ -148,6 +148,7 @@ if (document.APPSTATE) {
       //
       
     window.addEventListener('keyboardDidShow', (event) => {
+        alert("Keyboard height: " + event.detail.keyboardHeight)
         document.documentElement.style.setProperty('--offset', `${-event.detail.keyboardHeight}px`)
     })
 
