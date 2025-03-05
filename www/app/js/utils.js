@@ -146,11 +146,12 @@ if (document.APPSTATE) {
       
       // Keyboard height detection Exemple
       //
-      window.addEventListener('keyboardDidShow', (event) => {
-        // alert('keyboardDidShow, height: ' + event.detail.keyboardHeight);
-      })
-      window.addEventListener('keyboardDidHide', () => {
-        // alert('keyboardDidHide');
-      })
+      
+    window.addEventListener('keyboardDidShow', (event) => {
+        document.documentElement.style.setProperty('--offset', `${-event.detail.keyboardHeight}px`)
+    })
+
+    window.addEventListener('keyboardDidHide', () => {
+        document.documentElement.style.setProperty('--offset', `0px`)
+    })
 }
-    
