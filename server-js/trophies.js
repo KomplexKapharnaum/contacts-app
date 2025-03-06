@@ -2,6 +2,7 @@ import { app } from './core/server.js';
 import SCORE from './score.js';
 import { SOCKET } from './network/socket.js';
 import db from './core/database.js';
+import features from './features.js';
 
 let TROPHIES = {};
 
@@ -57,7 +58,7 @@ TROPHIES.count = (userID) => {
 }
 
 TROPHIES.reward = (userID, trophyID) => {
-
+    if (!features.getState("profile_stats")) return;
     if (!TROPHIES.config[trophyID]) return
     if (!TROPHIES.cache[userID]) return
     if (TROPHIES.cache[userID].data.includes(trophyID)) return

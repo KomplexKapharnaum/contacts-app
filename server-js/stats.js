@@ -1,4 +1,5 @@
 import db from "./core/database.js";
+import features from "./features.js"
 
 let STATS = {};
 
@@ -29,6 +30,7 @@ STATS.loadUser = (user) => {
 }
 
 STATS.addToUser = (userID, key, amount) => {
+    if (!features.getState("profile_stats")) return;
     STATS.cache[userID].data[key] += amount
     return STATS.cache[userID].data[key]
 }

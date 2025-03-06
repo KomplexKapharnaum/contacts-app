@@ -1,8 +1,10 @@
 import database from './core/database.js';
+import features from './features.js'
 
 let SCORE = {};
 
 SCORE.addToPlayer = async (id, amount) => {
+    if (!features.getState("profile_stats")) return;
     const player = await database('users').where('id', id).first();
     if (!player) return false;
     const newScore = player.score + amount;

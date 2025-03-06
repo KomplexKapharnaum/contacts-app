@@ -38,7 +38,7 @@ function onboarding_create_user(username) {
                 BUD.setCurrentDialogue(BUD_DIALS.welcome, true)
                 subscribeToSession(res.data.uuid)
 
-                if (cordova) {
+                if (document.APPSTATE) {
                     cordova.plugins.firebase.messaging.subscribe("all")
                     .then(function () {
                         console.log("Successfully subscribed to the topic!");
