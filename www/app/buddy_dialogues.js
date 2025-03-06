@@ -1,11 +1,16 @@
 var BUD_DIALS = {
-    welcome: [
+    introduction: [
         "Bienvenue sur l'application CONTACTS ! Je suis Buddy, ton assistant virtuel qui pourra t'aider lors de ton aventure dans ce cyberespace !",
+        "Cette application a pour but de t'informer des prochains rendez-vous spontanés du carnaval CONTACTS, ainsi que de te connecter au cyberespace.",
+        "En t'inscrivant, tu acceptes que le contenu généré dans l'application puisse être utilisé dans le cadre du carnaval. Tous les contenus seront supprimés une fois l'événement terminé (Samedi 15 mars 2025).",
+        "Bon séjour sur CONTACTS !"
+    ],
+    welcome: [
         "Dès qu'une icône rose apparaîtra dans le coin de ton écran, tu pourras appuyer dessus pour m'appeler. C'est aussi simple que ça !",
         "Dès que tu m'appelleras, je te donnerai des informations sur la page où tu te trouves. Au moins, il n'y aura plus de secret entre toi et cette application :)",
         /*"Tiens, au fait... Vu que c'est ta première fois, ça te dis de faire ton tout premier avatar ?",
         "Je te laisse naviguer dans ta page de profil et cliquer soit sur la notification tout en haut, soit dans 'générer un nouvel avatar'.",
-        */"Allez, je te laisse, bon séjour sur CONTACTS !"
+        "Allez, je te laisse, bon séjour sur CONTACTS !"*/
     ],
     profile: [
         "Ici, c'est ta page de profil, c'est donc tout ce qui te concerne personnellement.",

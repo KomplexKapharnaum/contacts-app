@@ -135,6 +135,11 @@ function loadUser() {
     }
 }
 
+PAGES.addCallback("home", () => {
+    BUD.setCurrentDialogue(BUD_DIALS.introduction, true);
+});
+
+
 var FEATURES
 window.addEventListener("DOMContentLoaded", async () => {
     loadFeatureStates()

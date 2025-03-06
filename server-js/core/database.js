@@ -131,9 +131,11 @@ async function initDB() {
             table.boolean("enabled").defaultTo(false);
         });
 
-        db.createTribe("machine", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
-        db.createTribe("animal", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
-        db.createTribe("vegetal", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
+        await db.createTribe("machine", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
+        await db.createTribe("animal", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
+        await db.createTribe("vegetal", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
+
+        await db.createSession("Marseille", new Date('2025-03-03').toISOString(), new Date('2025-03-15').toISOString());
 }
 
 // Send feedback
