@@ -176,8 +176,8 @@ PAGES.setPageColor("notifications", "var(--color-secondary-4)")
 
 PAGES.setPageColor("live-idle", "white")
 
-PAGES.setHistoryState(["profile", "tribe", "cyberspace", "notifications", "live-idle"], "purge")
-PAGES.setHistoryState(["send-feedback"], "push")
+PAGES.setHistoryState(["profile", "tribe", "cyberspace", "live-idle"], "purge")
+PAGES.setHistoryState(["send-feedback", "notifications", "event-countdown", "event-location"], "push")
 
 // Accordions
 
