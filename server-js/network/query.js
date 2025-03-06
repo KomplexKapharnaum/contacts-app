@@ -106,7 +106,6 @@ query.add("create_user", async (params) => {
     
     stats.loadUser(user);
     trophies.loadUser(user);
-    trophies.reward(user.id, "join");
 
     // comfygen.add(user.id, false);
 

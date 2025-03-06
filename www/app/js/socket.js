@@ -24,6 +24,10 @@ document.SOCKETIO.on("comfygen_done", (path) => {
     updateProfilePicture()
 })
 
+document.SOCKETIO.on("rate-limited", (timeRemaining) => {
+    alert("You are being rate limited, please wait " + Math.ceil(timeRemaining) + " seconds before sending another message.");
+})
+
 
 function socketAuth(uuid) {
     document.SOCKETIO.emit('user-auth', uuid);

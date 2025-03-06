@@ -94,7 +94,7 @@ async function after_user_load(uuid) {
     } else {
         if (FEATURES.tribe_page) {
             PAGES.goto("onboarding-questions-fingerprint")
-            // BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
+            BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
             showNavbar(false)
         }
     }
@@ -182,7 +182,7 @@ PAGES.setPageColor("notifications", "var(--color-secondary-4)")
 PAGES.setPageColor("live-idle", "white")
 
 PAGES.setHistoryState(["profile", "tribe", "cyberspace", "live-idle"], "purge")
-PAGES.setHistoryState(["send-feedback", "notifications", "event-countdown", "event-location"], "push")
+PAGES.setHistoryState(["send-feedback", "notifications", "event-countdown", "event-location", "tribe-leaderboard"], "push")
 
 // Accordions
 

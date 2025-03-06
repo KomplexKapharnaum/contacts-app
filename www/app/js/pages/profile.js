@@ -48,7 +48,7 @@ function updateTrophies() {
             const trophy = clone.querySelector(".trophy")
             trophy.dataset.id = id
             
-            trophy.style.setProperty("--trophy-image", `url(${document.BASEPATH}/img/trophies/${info.img}.png)`)
+            trophy.style.setProperty("--trophy-image", `url(${document.BASEPATH}/img/trophies/${id}.png)`)
             clone.querySelector(".info").innerHTML = `${info.name} : ${info.desc}`
 
                 trophy.addEventListener("click", () => {

@@ -131,9 +131,9 @@ async function initDB() {
             table.boolean("enabled").defaultTo(false);
         });
 
-        await db.createTribe("machine", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
-        await db.createTribe("animal", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
-        await db.createTribe("vegetal", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
+        await db.createTribe("Machines", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
+        await db.createTribe("Animaux", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
+        await db.createTribe("Végétaux", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
 
         await db.createSession("Marseille", new Date('2025-03-03').toISOString(), new Date('2025-03-15').toISOString());
 }
@@ -157,7 +157,6 @@ db.createTribe = async (name, colors) => {
 //
 
 db.createMessage = async (admin, name, date, uuid, public_id, message, tribeID) => {
-    console.log("CREATING A MESSAGE")
     const msg = await db('messages').insert({admin, name, uuid, public_id, message, date, tribeID});
     return msg;
 }

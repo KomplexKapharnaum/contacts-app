@@ -30,7 +30,7 @@ var BUD_DIALS = {
     cyberspace: [
         "L'application c'est bien, mais peut être que tu es un peu plus intéressé·e par les évènements !",
         "C'est ici que tu retrouveras les prochains rendez-vous, qui te seront annoncés juste avant son début. Le but : de la spontanéité dans la ville ! C'est un carnaval pirate après tout :)",
-        "Sinon, c'est aussi ici que tu trouveras le chat du cyberespace, c'est à dire que tout le monde y a accès : parle avec les autres users, et reçois les messages de l'équipe ici !"
+        "Sinon, c'est aussi ici que tu trouveras la messagerie du cyberespace : tu peux parler avec les autres users ou lire les récits de l'équipe CONTACTS !"
     ],
     profil_draw: [
         "Ton avatar va être généré par IA (Intelligence Artificielle). Pour commencer, prends un petit selfie !",

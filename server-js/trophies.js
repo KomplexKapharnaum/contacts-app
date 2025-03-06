@@ -10,33 +10,89 @@ TROPHIES.config = {
     join: {
         name: "Un nouveau monde",
         desc: "J'ai rejoint le réseau CONTACTS",
-        img: "welcome",
         awards: {
             xp: 100
         }
     },
+
     msg1: {
         name: "Bonjour cyberespace !",
         desc: "J'ai envoyé mon premier message dans le cyberespace",
-        img: "msg1",
+        awards: {
+            xp: 50
+        }
+    },
+    msg10: {
+        name: "Membre confirmé",
+        desc: "J'ai envoyé 10 messages dans le cyberespace",
         awards: {
             xp: 100
         }
     },
-    msg20: {
-        name: "Membre confirmé",
-        desc: "J'ai envoyé 20 messages dans le cyberespace",
-        img: "msg20",
+    msg30: {
+        name: "Habitué",
+        desc: "J'ai envoyé 30 messages dans le cyberespace",
         awards: {
-            xp: 500
+            xp: 200
         }
     },
-    stay10: {
+
+    stay5: {
         name: "Posé",
-        desc: "Je suis resté sur l'application pendant 10 minutes !",
-        img: "stay10",
+        desc: "Je suis resté sur l'application pendant 5 minutes !",
+        awards: {
+            xp: 50
+        }
+    },
+    stay15: {
+        name: "Fais comme chez toi",
+        desc: "Je suis resté sur l'application pendant 15 minutes !",
+        awards: {
+            xp: 50
+        }
+    },
+    stay30: {
+        name: "Ma nouvelle maison",
+        desc: "Je suis resté sur l'application pendant 30 minutes !",
+        awards: {
+            xp: 100
+        }
+    },
+    stay60: {
+        name: "Accro",
+        desc: "Je suis resté sur l'application pendant 60 minutes !",
+        awards: {
+            xp: 200
+        }
+    },
+
+    avatar: {
+        name: "Digitalisé",
+        desc: "Je me suis fais un avatar !",
+        awards: {
+            xp: 150
+        }
+    },
+
+    event1: {
+        name: "Participant",
+        desc: "J'ai participé à 1 évènement !",
+        awards: {
+            xp: 100
+        }
+    },
+    event2: {
+        name: "Adepte",
+        desc: "J'ai participé à 2 évènements !",
         awards: {
             xp: 300
+        }
+    },
+    event3: {
+        name: "L'intégrale",
+        desc: "J'ai participé à tous les évènements !",
+        awards: {
+            xp: 500
         }
     }
 }

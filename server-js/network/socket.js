@@ -10,6 +10,7 @@ import trophies from '../trophies.js';
 import features from '../features.js'
 
 import firebase from './firebase.js';
+import rateLimiter from './ratelimiter.js';
 
 var SOCKET = {};
 
@@ -85,10 +86,17 @@ SOCKET.io.on('connection', (socket) => {
             socket.stayInterval = setInterval(() => {
                 const count = stats.addToUser(userID, "time_spent", 10);
                 // console.log(count)
-                if (count>=10*60) trophies.reward(userID, 'stay10');
+
+                if (count>=5*60) trophies.reward(userID, 'stay5');
+                if (count>=15*60) trophies.reward(userID, 'stay15');
+                if (count>=30*60) trophies.reward(userID, 'stay30');
+                if (count>=60*60) trophies.reward(userID, 'stay60');
+
             }, 10 * 1000)
 
             console.log("User connected: " + uuid);
+
+            trophies.reward(user.id, "join");
         }
     });
 
@@ -133,6 +141,16 @@ SOCKET.io.on('connection', (socket) => {
     socket.on("chat-message", async (data) => {
       if (socket.rooms.has("user")) {
         if (data.tribeID != socket.tribeID && data.tribeID != 0) return
+        
+        if (data.message.length > 500) return
+
+        // Apply rate limiting
+        const result = rateLimiter.isAllowed(socket.userID);
+        if (!result.allowed) {
+          socket.emit("rate-limited", result.timeRemaining);
+          return;
+        }
+
         const date = new Date()
         const id = await db.createMessage(socket.isAdmin, data.name, date, socket.uuid, socket.public_id, data.message, data.tribeID);
         Object.assign(data, {
@@ -153,7 +171,8 @@ SOCKET.io.on('connection', (socket) => {
         const count = stats.addToUser(socket.userID, "messages_sent", 1);
         switch (count) {
           case 1: trophies.reward(socket.userID, 'msg1'); break;
-          case 20: trophies.reward(socket.userID, 'msg20'); break;
+          case 10: trophies.reward(socket.userID, 'msg10'); break;
+          case 30: trophies.reward(socket.userID, 'msg30'); break;
         }
       }
     })

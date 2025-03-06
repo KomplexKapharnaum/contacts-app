@@ -4,8 +4,7 @@ const rank_phrases = [
     "Rien n'est terminé, continuez de vous combattre !"
 ]
 
-const tribe_leaderboard = document.getElementById("tribe-leaderboard")
-const tribe_top10 = document.getElementById("users-podium-top10")
+const tribe_top10 = document.getElementById("top10-container")
 
 async function loadLeaderBoard() {
     if (!userData) return
@@ -16,19 +15,20 @@ async function loadLeaderBoard() {
     const data = await QUERY.getLeaderBoard(tribeID)
     if (!data) return
     if (!data.status) return
-    const header = tribe_leaderboard.querySelector("#tribe-rank")
-    const header_suffix = tribe_leaderboard.querySelector("#tribe-rank-suffix")
-    const score = tribe_leaderboard.querySelector("#tribe-score")
-    const info = tribe_leaderboard.querySelector("#rank-phrase")
+    const header = document.getElementById("tribe-rank")
+    const header_suffix = document.getElementById("tribe-rank-suffix")
+    const score = document.getElementById("tribe-score")
+    // const info = document.getElementById("rank-phrase")
 
     const tribe_rank = Object.values(data.data).sort((a, b) => b.general - a.general).findIndex(obj => obj.id === tribeID) + 1
 
     header.innerText = tribe_rank + 1
-    header_suffix.innerText = tribe_rank>0 ? "eme" : "ère"
+    header_suffix.innerText = tribe_rank>0 ? "eme" : "er"
     score.innerText = data.data[tribeID].global
-    info.innerText = rank_phrases[tribe_rank]
+    // info.innerText = rank_phrases[tribe_rank]
 
     const leaderboard_players = data.data[tribeID].players
+    
 
     if (leaderboard_players)
         for (let i=0;  i<10 ; i++) {
@@ -36,13 +36,16 @@ async function loadLeaderBoard() {
             const ply = leaderboard_players[i]
             if (ply) {
                 if (i<3) {
-                    const elm = document.querySelector("#users-podium-top3 [data-rank='"+(i+1)+"']")
-                    elm.querySelector(".score").innerText = `(${ply.score})`
-                    elm.querySelector(".username").innerText = ply.name
+                    const elms = document.querySelectorAll(".podium-item.pod-"+ (i+1))
+                    elms.forEach(elm => {
+                        elm.querySelector(".score").innerText = ply.score + " "
+                        elm.querySelector(".username").innerText = ply.name        
+                    })
                 } else {
                     const tem = document.getElementById("tem-leaderboard-top10").cloneNode(true).content
                     tem.querySelector(".rank").innerText = i+1
                     tem.querySelector(".username").innerText = ply.name
+                    tem.querySelector(".score span").innerText = ply.score
                     tribe_top10.appendChild(tem)
                 }
             }

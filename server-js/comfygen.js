@@ -3,6 +3,7 @@ import { env } from './core/env.js';
 import fs from 'fs';
 import { SOCKET } from './network/socket.js';
 import db from './core/database.js';
+import trophies from './trophies.js';
 
 const workflow = JSON.parse(fs.readFileSync('./server-js/config/workflow.json', 'utf8'))
 
@@ -48,6 +49,8 @@ comfygen.gen = async (avatarID, data) => {
     await db("avatars").where("id", avatarID).update({status: "done", filename: filenames[0]});
     await db("users").where("id", userID).update({selected_avatar: avatarID});
     SOCKET.toClient(userID, "comfygen_done", filenames[0]);
+    
+    trophies.reward(userID, 'avatar');
 
     return filenames[0];
 }

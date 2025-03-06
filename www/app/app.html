@@ -488,12 +488,61 @@
     <!-- Tribe page -->
 
     <div class="page flex-top" data-page-id="tribe">
+        
         <section>
-            <h2>tribu <span id="tribe-name"></span></h2>
-            <div id="tribe-leaderboard">
-                <div class="header">Ta tribu est <span id="tribe-rank">3</span><span id="tribe-rank-suffix">eme</span> !</div>
-                <div class="info">Score total : <span id="tribe-score">3285</span></div>
-                <div class="info" id="rank-phrase">Rien n'est terminé, continuez de vous combattre !</div>
+            <div id="tribe-header">
+                <div class="top">
+                    <div id="tribe-name"></div>
+                    <div><span id="tribe-rank">3</span><span id="tribe-rank-suffix">eme</span></div>
+                </div>
+                <div class="bottom">
+                    Score total : <span id="tribe-score"></span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="tribe-leaderboard">
+                
+                <div class="podium-item pod-2">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">2</div>
+                    </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span>pts</span>
+                    </div>
+                </div>
+
+                <div class="podium-item pod-1">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">1</div>
+                    </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span>pts</span>
+                    </div>
+                </div>
+
+                <div class="podium-item pod-3">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">3</div>
+                    </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span>pts</span>
+                    </div>
+                </div>
+
+                <button id="btn-goto-leaderboard" data-gotopage="tribe-leaderboard">
+                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 12H19.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12.5 5V19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>    
+                </button>
             </div>
         </section>
 
@@ -505,60 +554,61 @@
                 <audio controls id="audio-cry"></audio>
             </div>
         </section>
+    </div>
 
+    <template id="tem-leaderboard-top10">
+        <div class="leaderboard-user">
+            <div class="rank"></div>
+            <img src="$BASEPATH$/img/noise.gif" alt="">
+            <div class="score"><span></span>pts</div>
+            <div class="username"></div>
+        </div>
+    </template>
+
+    <div class="page flex-top" data-page-id="tribe-leaderboard">
+        <button class="back" data-gotopage="tribe"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <section>
-            <div class="accordion">
-                <h2>Classement</h2>
-                <div class="content">
-
-                    <div id="users-podium-top3">
-                        <div class="second" data-rank="2">
-                            <div class="avatar"></div>
-                            <div class="info">
-                                <span>2eme <span class="score"></span></span>
-                                <span class="username">-</span>
-                            </div>
-                        </div>
-                        <div class="first" data-rank="1">
-                            <div class="avatar"></div>
-                            <div class="info">
-                                <span>1er <span class="score"></span></span>
-                                <span class="username">-</span>
-                            </div>
-                        </div>
-                        <div class="third" data-rank="3">
-                            <div class="avatar"></div>
-                            <div class="info">
-                                <span>3eme <span class="score"></span></span>
-                                <span class="username">-</span>
-                            </div>
-                        </div>
+            <div class="tribe-leaderboard">
+                
+                <div class="podium-item pod-2">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">2</div>
                     </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span> pts</span>
+                    </div>
+                </div>
 
-                    <template id="tem-leaderboard-top10">
-                        <div class="leaderboard-user">
-                            <div class="rank">4</div>
-                            <div class="avatar"></div>
-                            <div class="username">-</div>
-                        </div>
-                    </template>
+                <div class="podium-item pod-1">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">1</div>
+                    </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span>pts</span>
+                    </div>
+                </div>
 
-                    <div id="users-podium-top10">
-                        
+                <div class="podium-item pod-3">
+                    <div class="profile-picture">
+                        <img src="$BASEPATH$/img/noise.gif" alt="profil avatar">
+                        <div class="badge">3</div>
+                    </div>
+                    <div class="info">
+                        <span class="username">-</span>
+                        <span><span class="score"></span>pts</span>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- <section class="chatbox tribe">
-            <h2>Chat tribu</h2>
-            <div class="chat-container" id="chatbox-tribe"></div>
-            <div class="message-box">
-                <input type="text" name="input-message" id="input-tribe-message">
-                <button class="send" id="btn-tribe-send">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-background)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizontal"><path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/><path d="M6 12h16"/></svg>
-                </button>
+        <section>
+            <div id="top10-container">
+
             </div>
-        </section> -->
+        </section>
     </div>
 
     <!-- Cyber-space page -->
