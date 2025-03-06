@@ -90,3 +90,136 @@
     align-items: center;
     justify-content: center;
 }
+
+/* Tribe questions */
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border-radius: 16px;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-secondary-4);
+    width: 100%;
+}
+
+.question-container .label-top {
+    color: var(--color-secondary-4);
+    font-size: 1.2em;
+}
+
+.question-container .label-bottom {
+    width: 100%;
+    text-align: center;
+}
+
+.flex-center-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#btn-onboarding-question-fingerprint {
+    padding: 16px;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-secondary-1);
+    transition: border 0.2s ease-in-out;
+}
+
+#btn-onboarding-question-fingerprint svg {
+    stroke: var(--color-secondary-1);
+    width: 64px;
+    height: 64px;
+}
+
+#btn-onboarding-question-fingerprint.active {
+    border: solid 8px var(--color-secondary-4);
+}
+
+#btn-onboarding-question-fingerprint.active svg {
+    stroke: var(--color-secondary-4);
+}
+
+#onboarding-question-fingerprint-status {
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-primary);
+}
+
+#onboarding-question-fingerprint-status>div {
+    width: 0%;
+    height: 100%;
+    background-color: var(--color-primary);
+}
+
+#btn-onboarding-question-violence-spam {
+    width: 100%;
+    padding: 32px;
+    border-radius: 16px;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-secondary-1);
+}
+
+#btn-onboarding-question-violence-spam svg {
+    stroke: var(--color-secondary-1);
+}
+
+#btn-onboarding-question-violence-spam.active {
+    border: solid 2px var(--color-secondary-3);
+}
+
+#btn-onboarding-question-violence-spam.active svg {
+    stroke: var(--color-secondary-3);
+}
+
+#btn-onboarding-question-violence-spam.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#btn-onboarding-question-violence-restart {
+    padding: 8px;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-secondary-3);
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+#btn-onboarding-question-violence-restart.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#btn-onboarding-question-violence-restart svg {
+    stroke: var(--color-secondary-3);
+    width: 22px;
+    height: 22px;
+}
+
+.obform-dish {
+    width: 128px;
+    height: 128px;
+    object-fit: contain;
+}
+
+#dishes {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    gap: 8px;
+}

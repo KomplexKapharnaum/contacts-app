@@ -92,9 +92,9 @@ async function after_user_load(uuid) {
             document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
         }
     } else {
-        if (FEATURES.join_tribe) {
+        if (FEATURES.tribe_page) {
             PAGES.goto("onboarding-questions-fingerprint")
-            BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
+            // BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
             showNavbar(false)
         }
     }
@@ -225,8 +225,7 @@ send_feedback.addEventListener("click", () => {
     }
 })
 
-const featurestate_btns = {
-    cyberspace: document.getElementById("nav-cyberspace"),
+const featurestates_elements = {
     tribe: document.getElementById("nav-tribe"),
     profile: document.getElementById("nav-profile"),
     gen_avatar: document.getElementById("gen-avatar-container"),
@@ -235,11 +234,11 @@ const featurestate_btns = {
 }
 
 function feature_hide(featureElement) {
-    featurestate_btns[featureElement].style.display = "none"
+    featurestates_elements[featureElement].style.display = "none"
 }
 
 function feature_show(featureElement) {
-    featurestate_btns[featureElement].style.display = "block"
+    featurestates_elements[featureElement].style.display = "block"
 }
 
 function setFeatureState(featureElement, state) {
@@ -249,11 +248,11 @@ function setFeatureState(featureElement, state) {
 
 async function loadFeatureStates() {
     FEATURES = await QUERY.getFeatures()
-    console.log("FEATURES: ", FEATURES)
-    setFeatureState("cyberspace", FEATURES.page_cyberspace)
-    setFeatureState("tribe", FEATURES.page_tribe && userData.tribe_id)
-    setFeatureState("profile", FEATURES.page_profile)
-    setFeatureState("gen_avatar", FEATURES.create_avatars)
+    //  console.log("FEATURES: ", FEATURES)
+    // setFeatureState("cyberspace", FEATURES.page_cyberspace)
+    setFeatureState("tribe", FEATURES.tribe_page && userData.tribe_id)
+    setFeatureState("profile", FEATURES.profile_page)
+    setFeatureState("gen_avatar", FEATURES.profile_avatar)
     setFeatureState("profile_desc", FEATURES.profile_description)
     setFeatureState("tribe_cry", FEATURES.tribe_cry)
 }

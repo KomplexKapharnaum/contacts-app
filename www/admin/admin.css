@@ -145,3 +145,20 @@ option:hover {
 .message .username {
     opacity: 0.5;
 }
+
+.list-container {
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form {
+    width: 100%;
+    display: flex;
+    gap: 4px;
+}
+
+.form > * {
+    height: 32px !important;
+}

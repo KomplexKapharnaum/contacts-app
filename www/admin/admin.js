@@ -65,7 +65,6 @@ sendNotificationButton.addEventListener("click", async (e) => {
         color: notificationColorSelect.value,
         add_to_chat: notificationAddToChatCheckbox.checked
     };
-
     const res = await sendCommand("admin_send_notification", notificationData);
     if (res[0] == false) return;
 
@@ -175,3 +174,113 @@ loadChat();
 socket.on("chat-message", (data) => {
     addMessage(data);
 });
+
+async function loadTable(name, parent, structure) {
+    const list = await sendCommand("admin_getall", {table: name});
+    if (!list) return;
+
+    list.forEach(element => {
+        console.log(element);
+        createForm(structure, parent, name, element);
+    });
+}
+
+function createForm(structure, parent, tablename, data) {
+    const holder = document.createElement("div")
+    holder.classList.add("form")
+
+    structure.forEach(element => {
+        const input = document.createElement("input")
+        input.type = element.type
+        input.name = element.key
+        input.placeholder = element.placeholder
+
+        if (element.type == "datetime-local") {
+            flatpickr(input, {
+                enableTime: true
+            });
+        }
+
+        input.value = data[element.key]
+
+        holder.appendChild(input)
+    });
+
+    const btn_update = document.createElement("button")
+    btn_update.textContent = "Update"
+    btn_update.addEventListener("click", async () => {
+        if (!confirm("Update ?")) return
+        const data = {}
+        structure.forEach(element => {
+            data[element.key] = holder.querySelector(`input[name=${element.key}]`).value
+        });
+        const req = {
+            table: tablename,
+            data: JSON.stringify(data),
+            id: data.id
+        }
+        const res = await sendCommand("admin_update", req);
+        if (res[0] == false) return;
+        alert("Updated !")
+    })
+
+    const btn_delete = document.createElement("button")
+    btn_delete.textContent = "Delete"
+    btn_delete.addEventListener("click", async () => {
+        if (!confirm("Delete ?")) return
+        const res = await sendCommand("admin_delete", { table: tablename, id: data.id });
+        if (res[0] == false) return;
+        alert("Deleted !")
+        holder.remove()
+    })
+
+    holder.appendChild(btn_update)
+    holder.appendChild(btn_delete)
+
+    parent.appendChild(holder)
+}
+
+const structure_event = [
+    {
+        key: "start_date",
+        type: "datetime-local",
+        placeholder: "Start date"
+    },
+    {
+        key: "location_coords",
+        type: "text",
+        placeholder: "Location coordinates (long,lat)"
+    },
+    {
+        key: "location_name",
+        type: "text",
+        placeholder: "Location name"
+    },
+    {
+        key: "description",
+        type: "text",
+        placeholder: "Event description"
+    },
+    {
+        key: "name",
+        type: "text",
+        placeholder: "Event name"
+    }
+]
+const box_events = document.getElementById("box-events")
+loadTable("event", box_events, structure_event)
+
+const structure_notification = [
+    {
+        key: "message",
+        type: "text",
+        placeholder: "Notification text"
+    },
+    {
+        key: "color",
+        type: "text",
+        placeholder: "Notification color"
+    }
+]
+const box_notifications = document.getElementById("box-notifcations")
+loadTable("notifications", box_notifications, structure_notification)

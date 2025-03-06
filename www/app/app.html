@@ -112,54 +112,57 @@
     </div>
 
     <div class="page" data-page-id="onboarding-questions-fingerprint">
-        <div class="input-container">
-            <div>
-                Est-ce que tu te sens vivant ?
-            </div>
+        <div class="question-container">
+            <div class="label-top">Question n°1</div>
+            <div class="label-bottom">As-tu l'impression d'exister ?</div>
+        </div>
 
-            <div class="fill"></div>
-
+        <div class="flex-center-container">
+            <div class="text-center">Posez votre emprunte pour vérifier...</div>
             <div id="btn-onboarding-question-fingerprint">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-fingerprint"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
             </div>
-            <div id="onboarding-questions-fingerprint-status">
-                Posez votre emprunte pour donner de la vie
-            </div>
+            <div class="text-center">Niveau de conscience :</div>
             <div id="onboarding-question-fingerprint-status">
                 <div></div>
             </div>
-            <div id="onboarding-question-fingerprint-result">
-                ---
-            </div>
-
-            <div class="fill"></div>
-
-            <button class="c4 disabled" id="onboarding-questions-fingerprint-send">Valider</button>
+        </div>
+        <div class="buttons">
+            <button class="c4 disabled" id="onboarding-questions-fingerprint-send">Suivant</button>
         </div>
     </div>
 
     <div class="page" data-page-id="onboarding-questions-violence">
-        <div>
-            Es-tu violent·e ?
+        <div class="question-container">
+            <div class="label-top">Question n°2</div>
+            <div class="label-bottom">Adoptes-tu des comportements violents ?</div>
         </div>
-        <div class="input-container">
-            <button id="btn-onboarding-question-violence-spam" class="c1">Appuie rapidement sur moi pendant 10 secondes !</button>
+
+        <div class="flex-center-container">
+            <div class="text-center" id="onboarding-question-violence-text">Martèle le bouton ci-dessous aussi vite que possible pendant 10 secondes !</div>
+            <button id="btn-onboarding-question-violence-spam">
+                <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.1 10.781V8.49902M5.1 10.781C5.09709 11.2556 4.90584 11.7096 4.56831 12.0432C4.23077 12.3768 3.77457 12.5627 3.3 12.56C2.82543 12.5627 2.36923 12.3768 2.03169 12.0432C1.69416 11.7096 1.50291 11.2556 1.5 10.781V9.99902C1.5 6.24902 1.5 4.37402 2.455 3.06002C2.76306 2.6357 3.13595 2.26247 3.56 1.95402C4.875 0.999023 6.751 0.999023 10.5 0.999023C14.249 0.999023 16.125 0.999023 17.439 1.95402C17.8634 2.26239 18.2366 2.63562 18.545 3.06002C19.5 4.37402 19.5 6.26002 19.5 10.029C19.5 11.555 19.5 12.319 19.343 12.947C19.1029 13.896 18.6081 14.7612 17.9119 15.4493C17.2157 16.1374 16.3447 16.6221 15.393 16.851C14.985 16.951 14.283 16.986 13.425 16.999C12.579 16.999 11.85 17.075 11.85 15.999C11.85 14.983 12.177 13.894 13.425 13.894H14.1M5.1 10.781V12.115C5.10291 12.5896 5.29416 13.0436 5.63169 13.3772C5.96923 13.7108 6.42543 13.8967 6.9 13.894C7.894 13.894 8.7 13.097 8.7 12.115M14.1 13.894C14.5746 13.8967 15.0308 13.7108 15.3683 13.3772C15.7058 13.0436 15.8971 12.5896 15.9 12.115V8.49902M14.1 13.894C13.6254 13.8967 13.1692 13.7108 12.8317 13.3772C12.4942 13.0436 12.3029 12.5896 12.3 12.115M8.7 12.115V8.11302M8.7 12.115V12.911C8.70291 13.3856 8.89415 13.8396 9.23169 14.1732C9.56923 14.5068 10.0254 14.6927 10.5 14.69C11.494 14.69 12.3 13.894 12.3 12.911V12.115M12.3 12.115V8.11302" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>                
+            </button>
+            <button id="btn-onboarding-question-violence-restart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
         </div>
+
         <div class="buttons">
             <button class="c4 disabled" id="onboarding-questions-violence-send">Valider</button>
         </div>
     </div>
 
     <div class="page" data-page-id="onboarding-questions-dish">
-        <div>
-            Choisis un plat à manger.
+        <div class="question-container">
+            <div class="label-top">Question n°3</div>
+            <div class="label-bottom">Quel plat veux-tu manger ?</div>
         </div>
         <div id="dishes">
 
         </div>
-        <!-- <div class="buttons">
-            <button class="c4 disabled" id="onboarding-questions-dish-send">Valider</button>
-        </div> -->
     </div>
 
     <template id="tem-onboarding-tribe">
@@ -505,7 +508,7 @@
 
         <section>
             <div class="accordion">
-                <h2>Top utilisateurs</h2>
+                <h2>Classement</h2>
                 <div class="content">
 
                     <div id="users-podium-top3">

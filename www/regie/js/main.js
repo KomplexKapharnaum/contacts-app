@@ -679,115 +679,115 @@ fill_select_usergroup()
 
 /* Notifications */
 
-const input_notification_text = document.getElementById("input-notification-text")
-const input_notification_color = document.getElementById("select-notification-color")
-const send_notification = document.getElementById("btn-notificaton-send")
-const input_notification_add_to_chat = document.getElementById("checkbox-notification-add-to-chat")
+// const input_notification_text = document.getElementById("input-notification-text")
+// const input_notification_color = document.getElementById("select-notification-color")
+// const send_notification = document.getElementById("btn-notificaton-send")
+// const input_notification_add_to_chat = document.getElementById("checkbox-notification-add-to-chat")
 
-send_notification.addEventListener("click", () => {
-    if (!confirm("Send notification ?")) return
-    const text = input_notification_text.value
-    const color = input_notification_color.value
+// send_notification.addEventListener("click", () => {
+//     if (!confirm("Send notification ?")) return
+//     const text = input_notification_text.value
+//     const color = input_notification_color.value
 
-    const tribe = document.getElementById("select-group").value
-    document.SOCKETIO.emit('new-notification', {
-        text,
-        add_to_chat: input_notification_add_to_chat.checked,
-        color,
-        tribe
-    })
+//     const tribe = document.getElementById("select-group").value
+//     document.SOCKETIO.emit('new-notification', {
+//         text,
+//         add_to_chat: input_notification_add_to_chat.checked,
+//         color,
+//         tribe
+//     })
 
-    document.SOCKETIO.once("notification-validation", () => {
-        alert("Notification sent !")
-        input_notification_text.value = ""
-        input_notification_color.value = "cyberspace"
-        input_notification_add_to_chat.checked = false
-    })
-})
+//     document.SOCKETIO.once("notification-validation", () => {
+//         alert("Notification sent !")
+//         input_notification_text.value = ""
+//         input_notification_color.value = "cyberspace"
+//         input_notification_add_to_chat.checked = false
+//     })
+// })
 
 /* Feedbacks */
 
-const feedbacks_container = document.getElementById("feedback-container")
+// const feedbacks_container = document.getElementById("feedback-container")
 
-function load_feedbacks() {
-    feedbacks_container.innerHTML = ""
-    query("r_getfeedbacks").then((res) => {
-        res.data.forEach((f) => {
-            const el = document.getElementById("tem-feedback").cloneNode(true).content
-            el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
-            const item = el.querySelector(".feedback-item")
-            item.style.order = f.status
+// function load_feedbacks() {
+//     feedbacks_container.innerHTML = ""
+//     query("r_getfeedbacks").then((res) => {
+//         res.data.forEach((f) => {
+//             const el = document.getElementById("tem-feedback").cloneNode(true).content
+//             el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
+//             const item = el.querySelector(".feedback-item")
+//             item.style.order = f.status
             
-            const checkbox = el.querySelector("input")
-            checkbox.checked = f.status
-            checkbox.addEventListener("click", () => {
-                const newStatus = checkbox.checked ? 1 : 0
-                query("r_updatefeedback", {
-                    id: f.id,
-                    status: newStatus
-                }).then(() => {
-                    item.style.order = newStatus
-                })
-            })
-            feedbacks_container.appendChild(el)
-        })
-    })
-}
-load_feedbacks()
+//             const checkbox = el.querySelector("input")
+//             checkbox.checked = f.status
+//             checkbox.addEventListener("click", () => {
+//                 const newStatus = checkbox.checked ? 1 : 0
+//                 query("r_updatefeedback", {
+//                     id: f.id,
+//                     status: newStatus
+//                 }).then(() => {
+//                     item.style.order = newStatus
+//                 })
+//             })
+//             feedbacks_container.appendChild(el)
+//         })
+//     })
+// }
+// load_feedbacks()
 
 /* Features */
 
-const features_container = document.getElementById("feature-container")
+// const features_container = document.getElementById("feature-container")
 
-function load_features() {
+// function load_features() {
 
-    fetch('/features').then(res => res.json())
-    .then(res => {
-        for (let [key, value] of Object.entries(res)) {
-            const el = document.getElementById("tem-feature").cloneNode(true).content
-            el.querySelector("label").innerHTML = key
-            const checkbox = el.querySelector("input")
-            checkbox.checked = value
-            checkbox.addEventListener("click", () => {
-                const newStatus = checkbox.checked ? 1 : 0
-                query("r_updatefeature", {
-                    name: key,
-                    status: newStatus
-                }).then((res) => {
-                    if (res.status) {
-                        alert(`${res.data.name} changed to ${res.data.status}`)
-                    } else {
-                        alert("error updating state.")
-                    }
-                })
-            })
-            features_container.appendChild(el)
-        }
-    })
+//     fetch('/features').then(res => res.json())
+//     .then(res => {
+//         for (let [key, value] of Object.entries(res)) {
+//             const el = document.getElementById("tem-feature").cloneNode(true).content
+//             el.querySelector("label").innerHTML = key
+//             const checkbox = el.querySelector("input")
+//             checkbox.checked = value
+//             checkbox.addEventListener("click", () => {
+//                 const newStatus = checkbox.checked ? 1 : 0
+//                 query("r_updatefeature", {
+//                     name: key,
+//                     status: newStatus
+//                 }).then((res) => {
+//                     if (res.status) {
+//                         alert(`${res.data.name} changed to ${res.data.status}`)
+//                     } else {
+//                         alert("error updating state.")
+//                     }
+//                 })
+//             })
+//             features_container.appendChild(el)
+//         }
+//     })
 
-    // features_container.innerHTML = ""
-    // query("r_getfeatures").then((res) => {
-    //     res.data.forEach((f) => {
-    //         const el = document.getElementById("tem-feature").cloneNode(true).content
-    //         el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
-    //         const item = el.querySelector(".feature-item")
-    //         item.style.order = f.status
+//     features_container.innerHTML = ""
+//     query("r_getfeatures").then((res) => {
+//         res.data.forEach((f) => {
+//             const el = document.getElementById("tem-feature").cloneNode(true).content
+//             el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`
+//             const item = el.querySelector(".feature-item")
+//             item.style.order = f.status
             
-    //         const checkbox = el.querySelector("input")
-    //         checkbox.checked = f.status
-    //         checkbox.addEventListener("click", () => {
-    //             const newStatus = checkbox.checked ? 1 : 0
-    //             query("r_updatefeature", {
-    //                 id: f.id,
-    //                 status: newStatus
-    //             }).then(() => {
-    //                 item.style.order = newStatus
-    //             })
-    //         })
-    //         features_container.appendChild(el)
-    //     })
-    // })
+//             const checkbox = el.querySelector("input")
+//             checkbox.checked = f.status
+//             checkbox.addEventListener("click", () => {
+//                 const newStatus = checkbox.checked ? 1 : 0
+//                 query("r_updatefeature", {
+//                     id: f.id,
+//                     status: newStatus
+//                 }).then(() => {
+//                     item.style.order = newStatus
+//                 })
+//             })
+//             features_container.appendChild(el)
+//         })
+//     })
 
     
-}
-load_features()
+// }
+// load_features()

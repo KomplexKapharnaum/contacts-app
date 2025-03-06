@@ -64,7 +64,11 @@ app.get('/download', function (req, res) {
 const upload = multer({ dest: '_tmp/' });
 
 app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
-    
+    if (!features.getState("tribe_cry")) {
+        res.status(400).send("Feature disabled");
+        return;
+    }
+
     const body = req.body;
     const uuid = body.uuid;
 
@@ -97,7 +101,11 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 });
 
 app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), async function(req, res) {
-    
+    if (!features.getState("profile_avatar")) {
+        res.status(400).send("Feature disabled");
+        return;
+    }
+
     const files = req.files;
     const uuid = req.body.uuid;
 

@@ -2,40 +2,61 @@ import db from './core/database.js'
 
 let FEATURES = {};
 
+/*
+- App ouverte (inscriptions possible)
+- Page tribu
+  - Cri tribu
+  - Mashup cri tribu
+  - Vote avatars
+- Page profil
+  - Création avatar
+  - Trophées
+*/
+
 FEATURES.config = [
     {
-        name: "page_cyberspace",
-        desc: "Ouverture page cyberespace",
+        name: "open_app",
+        desc: "Application ouverte",
         default: true
     },
     {
-        name: "page_profile",
-        desc: "Ouverture page profil",
+        name: "tribe_page",
+        desc: "Page tribu (+ rejoindre tribu)",
+        default: true
+    },
+    {
+        name: "tribe_cry",
+        desc: "Cri tribu",
         default: false
     },
     {
-        name: "page_tribe",
-        desc: "Ouverture page tribu (+ inscription tribu)",
+        name: "tribe_cry_mashup",
+        desc: "Voir mashup cri tribu",
         default: false
     },
     {
-        name: "create_avatars",
-        desc: "Création d'avatars",
+        name: "tribe_avatar_vote",
+        desc: "Vote avatars",
         default: false
     },
     {
-        name: "vote_avatars",
-        desc: "Vote d'avatar",
+        name: "profile_page",
+        desc: "Page profil",
+        default: false
+    },
+    {
+        name: "profile_avatar",
+        desc: "Créer avatar",
+        default: false
+    },
+    {
+        name: "profile_stats",
+        desc: "Trophées, stats et points",
         default: false
     },
     {
         name: "profile_description",
-        desc: "Description de profil",
-        default: false
-    },
-    {
-        name: "tribe_cry",
-        desc: "Cri de tribu (record & mashup)",
+        desc: "Description du profile",
         default: false
     }
 ]

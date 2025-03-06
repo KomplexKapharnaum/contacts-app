@@ -47,6 +47,8 @@ query.request = async (req, params) => {
     if (!queryname) return false;
     if (!query.list[queryname]) return false;
 
+    if (!features.getState("open_app")) return [false, "feature disabled"];
+
     const res = await query.list[queryname](params);
     
     if (res[0]) {
@@ -118,7 +120,7 @@ query.add("get_user", async (params) => {
 })
 
 query.add("update_username", async (params) => {
-    if (!features.getState("page_profile")) return [false, "feature disabled"];
+    if (!features.getState("profile_page")) return [false, "feature disabled"];
 
     const uuid = params.get("uuid");
     const name = params.get("name");
@@ -132,7 +134,7 @@ query.add("update_username", async (params) => {
 })
 
 query.add("update_description", async (params) => {
-    if (!features.getState("page_profile")) return [false, "feature disabled"];
+    if (!features.getState("profile_page")) return [false, "feature disabled"];
     if (!features.getState("profile_description")) return [false, "feature disabled"];
 
     const uuid = params.get("uuid");
@@ -265,6 +267,7 @@ query.add("tribelist", async (params) => {
 })
 
 query.add("set_tribe", async (params) => {
+    if (!features.getState("tribe_page")) return [false, "feature disabled"];
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
 
@@ -278,7 +281,7 @@ query.add("set_tribe", async (params) => {
 })
 
 query.add("leaderboard", async (params) => {
-    if (!features.getState("page_tribe")) return [false, "feature disabled"];
+    if (!features.getState("tribe_page")) return [false, "feature disabled"];
 
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
@@ -362,27 +365,27 @@ query.add("r_get_presets", async (params) => {
     return [true, presets];
 })
 
-query.add("r_getfeedbacks", async (params) => {
-    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-    const feedbacks = await db('feedback').select();
-    return [true, feedbacks];
-})
+// query.add("r_getfeedbacks", async (params) => {
+//     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+//     const feedbacks = await db('feedback').select();
+//     return [true, feedbacks];
+// })
 
-query.add("r_updatefeedback", async (params) => {
-    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-    const id = params.get("id");
-    const status = params.get("status");
-    await db('feedback').where('id', id).update({status: status});
-    return [true, {id: id, status: status}];
-});
+// query.add("r_updatefeedback", async (params) => {
+//     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+//     const id = params.get("id");
+//     const status = params.get("status");
+//     await db('feedback').where('id', id).update({status: status});
+//     return [true, {id: id, status: status}];
+// });
 
-query.add("r_updatefeature", async (params) => {
-    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-    const name = params.get("name");
-    const status = params.get("status");
-    await features.edit(name, status)
-    return [true, {name: name, status: status}];
-});
+// query.add("r_updatefeature", async (params) => {
+//     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+//     const name = params.get("name");
+//     const status = params.get("status");
+//     await features.edit(name, status)
+//     return [true, {name: name, status: status}];
+// });
 
 query.add("admin", async (params) => {
     const uuid = params.get("uuid");
@@ -479,5 +482,31 @@ query.add("admin_delete_message", async (params) => {
     return [true, {id: id}];
 })
 
+query.add("admin_getall", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+
+    const table = params.get("table");
+    const data = await db(table).select();
+    return [true, data];
+})
+
+query.add("admin_update", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    
+    const table = params.get("table");
+    const data = JSON.parse(params.get("data"));
+    const id = params.get("id");
+
+    await db(table).where('id', id).update(data);
+    return [true, {id: id, data: data}];
+})
+
+query.add("admin_delete", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const table = params.get("table");
+    const id = params.get("id");
+    await db(table).where('id', id).delete();
+    return [true, {id: id}];
+})
 
 export { query };
