@@ -403,7 +403,7 @@ query.add("admin_send_notification", async (params) => {
 
     const text = params.get("text");
     const color = params.get("color");
-    const addtochat = params.get("add_to_chat");
+    const addtochat = params.get("add_to_chat") == 'true' ? true : false; 
     const tribe = params.get("tribe");
 
     await db.createNotification(text, color);
@@ -415,15 +415,18 @@ query.add("admin_send_notification", async (params) => {
             firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
         }
     }
-
+    
     if (addtochat) {
-        SOCKET.io.to("user").emit("chat-message", { text, color, add_to_chat: addtochat, tribe });
+        // SOCKET.io.to("user").emit("chat-message", { text, color, add_to_chat: addtochat, tribe });
         const id = await db.createMessage(true, "Notification", Date.now(), false, false, text, 0);
         const messageData = {
             date: Date.now(),
             admin: true,
             public_id: false,
-            id: id[0]
+            id: id[0],
+            tribeID: 0,
+            message: text,
+            name: "Notification"
         };
         SOCKET.io.to("user").emit("chat-message", messageData);
     }

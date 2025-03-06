@@ -63,7 +63,7 @@ sendNotificationButton.addEventListener("click", async (e) => {
     const notificationData = {
         text: notificationTextInput.value,
         color: notificationColorSelect.value,
-        add_to_chat: notificationAddToChatCheckbox.checked
+        add_to_chat: notificationAddToChatCheckbox.checked 
     };
     const res = await sendCommand("admin_send_notification", notificationData);
     if (res[0] == false) return;

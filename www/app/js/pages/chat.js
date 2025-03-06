@@ -120,6 +120,7 @@ class ChatBox {
 
         document.SOCKETIO.on("chat-message", (data) => {
             if (data.tribeID == this.tribeID) {
+                console.log(data)
                 this.addMessage(data)
             }
         })

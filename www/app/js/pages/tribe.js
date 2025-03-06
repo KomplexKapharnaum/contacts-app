@@ -71,7 +71,7 @@ obform_life_fingerprint.addEventListener("touchstart", () => {
     obform_life_send.classList.remove("disabled")
 
     const interval = setInterval(() => {
-        console.log("obform_life_percent", obform_life_percent)
+        // console.log("obform_life_percent", obform_life_percent)
         obform_life_percent += 1;
         obform_life_percent = Math.min(obform_life_percent, 100);
         obform_life_state.style.width = obform_life_percent + "%";
@@ -262,7 +262,7 @@ async function obform_process() {
         DATA_TRIBES = tribes.data
         document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
 
-        const tribeName = DATA_TRIBES[updateUser.data.tribe_id].name
+        const tribeName = DATA_TRIBES[parseInt(updateUser.data.tribe_id)-1].name
 
         if (document.APPSTATE) {
             cordova.plugins.firebase.messaging.subscribe("tribe-"+tribeName)

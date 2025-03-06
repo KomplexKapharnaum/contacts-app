@@ -155,6 +155,7 @@ db.createTribe = async (name, colors) => {
 //
 
 db.createMessage = async (admin, name, date, uuid, public_id, message, tribeID) => {
+    console.log("CREATING A MESSAGE")
     const msg = await db('messages').insert({admin, name, uuid, public_id, message, date, tribeID});
     return msg;
 }

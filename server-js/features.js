@@ -22,7 +22,7 @@ FEATURES.config = [
     {
         name: "tribe_page",
         desc: "Page tribu (+ rejoindre tribu)",
-        default: true
+        default: false
     },
     {
         name: "tribe_cry",
