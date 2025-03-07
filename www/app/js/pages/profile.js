@@ -161,7 +161,6 @@ video_avatar_canvas.height = 512;
 const video_avatar_capture = document.getElementById("video-avatar-capture");
 const video_avatar_retry = document.getElementById("video-avatar-retry");
 
-
 function avatar_start_camera() {
     open_avatar_subpage(0)
 
@@ -362,7 +361,8 @@ function addButton(color) {
 }
 
 function addButtons() {
-
+    btns_paint.innerHTML = ""
+    
     JSON.parse(DATA_TRIBES[userData.tribe_id-1].colors).forEach(tribeColor => {
         addButton(tribeColor)
     })
@@ -394,6 +394,10 @@ cnv_paint.addEventListener("touchmove", (e) => {
     if (paint_data.down) {
         draw(x, y)
     }
+})
+
+document.getElementById("btn-avatar-draw-clear").addEventListener("click", () => {
+    ctx_paint.clearRect(0, 0, cnv_paint.width, cnv_paint.height)
 })
 
 function setBrushSize(size) {

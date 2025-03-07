@@ -381,8 +381,27 @@
     <div class="page flex-top" data-page-id="profile">
 
         <section>
-            <div class="avatar-container">
+            <div id="avatar-container">
+                <img src="$BASEPATH$/img/noise.gif" alt="avatar" id="profile-avatar">
+                <div class="avatar-btns">
+                    <button id="profile-save-avatar" class="btn-icon c4">
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.5 17V3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6.5 11L12.5 17L18.5 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19.5 21H5.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <button id="profile-edit-avatar" class="btn-outline c3">
+                        Nouvel avatar
+                    </button>
+                </div>
+            </div>
+        </section>
 
+        <section>
+            <div style="position: relative;">
+                <div id="trophies">
+                </div>
             </div>
         </section>
 
@@ -401,22 +420,14 @@
             <button id="input-profile-save" class="c4">Valider</button>
         </section>
 
-        <section id="gen-avatar-container">
+        <!-- <section id="gen-avatar-container">
             <h2>Mon avatar</h2>
             <img id="profile-avatar" src="$BASEPATH$/img/noise.gif" alt="profil avatar">
             <div class="buttons-sm">
                 <button id="profile-edit-avatar" class="c3">Générer un nouvel avatar</button>
                 <button id="profile-save-avatar" class="c4">Enregistrer</button>
             </div>
-        </section>
-
-        <section>
-            <h2>Mes trophées</h2>
-            <div style="position: relative;">
-                <div id="trophies">
-                </div>
-            </div>
-        </section>
+        </section> -->
 
         <section>
             <h2>Paramètres</h2>
@@ -441,25 +452,49 @@
     <!-- Avatar creaton pages -->
 
     <div class="page" data-page-id="avatar-creation">
-        <h1>Avatar</h1>
 
         <section class="avatar-subpage" data-subpage-id="0">
             <div class="camera-container">
                 <video class="active" src="" id="video-avatar" autoplay playsinline muted></video>
                 <canvas id="video-avatar-canvas"></canvas>
 
-                <button id="video-avatar-capture" class="c3">Capture</button>
-                <button id="video-avatar-retry" class="c2">Réessayer</button>
+                <div class="avatar-onboarding-btns toggle">
+                    <button id="video-avatar-capture" class="btn-icon c3">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.5 4H9.5L7 7H4C3.46957 7 2.96086 7.21071 2.58579 7.58579C2.21071 7.96086 2 8.46957 2 9V18C2 18.5304 2.21071 19.0391 2.58579 19.4142C2.96086 19.7893 3.46957 20 4 20H20C20.5304 20 21.0391 19.7893 21.4142 19.4142C21.7893 19.0391 22 18.5304 22 18V9C22 8.46957 21.7893 7.96086 21.4142 7.58579C21.0391 7.21071 20.5304 7 20 7H17L14.5 4Z" stroke="#EAE441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 16C13.6569 16 15 14.6569 15 13C15 11.3431 13.6569 10 12 10C10.3431 10 9 11.3431 9 13C9 14.6569 10.3431 16 12 16Z" stroke="#EAE441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
 
-            </div>
-        </section>
-        <section class="avatar-subpage" data-subpage-id="1">
-            <div class="avatar-canvas-container">
-                <canvas id="canvas-paint"></canvas>
-                <div class="buttons" id="paint-buttons">
+                <div class="avatar-onboarding-btns toggle">
+                    <button id="video-avatar-retry" class="btn-icon c3">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 12C3 13.78 3.52784 15.5201 4.51677 17.0001C5.50571 18.4802 6.91131 19.6337 8.55585 20.3149C10.2004 20.9961 12.01 21.1743 13.7558 20.8271C15.5016 20.4798 17.1053 19.6226 18.364 18.364C19.6226 17.1053 20.4798 15.5016 20.8271 13.7558C21.1743 12.01 20.9961 10.2004 20.3149 8.55585C19.6337 6.91131 18.4802 5.50571 17.0001 4.51677C15.5201 3.52784 13.78 3 12 3C9.48395 3.00947 7.06897 3.99122 5.26 5.74L3 8" stroke="#EAE441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3 3V8H8" stroke="#EAE441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>                            
+                    </button>
                 </div>
             </div>
         </section>
+
+        <section class="avatar-subpage" data-subpage-id="1">
+            <div class="avatar-canvas-container">
+                <canvas id="canvas-paint"></canvas>
+                <div class="avatar-onboarding-btns" id="paint-buttons">
+                </div>
+                <button id="btn-avatar-draw-clear" class="btn-icon c1">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6H21" stroke="#E66AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M19 6V20C19 21 18 22 17 22H7C6 22 5 21 5 20V6" stroke="#E66AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 6V4C8 3 9 2 10 2H14C15 2 16 3 16 4V6" stroke="#E66AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 11V17" stroke="#E66AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 11V17" stroke="#E66AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>                            
+                </button>
+            </div>
+        </section>
+
         <section class="avatar-subpage" data-subpage-id="2">
             <span>
                 Ton avatar est en cours de création... Tu seras notifié dès qu’il sera prêt !
@@ -467,8 +502,6 @@
             <img class="star-loading" src="$BASEPATH$/img/shapes/star.svg" alt="">
         </section>
         
-        <div class="fill"></div>
-
         <section>
             <button id="avatar-creation-next" class="c4">Suivant</button>
             <div id="avatar-creation-state">

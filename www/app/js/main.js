@@ -233,7 +233,7 @@ send_feedback.addEventListener("click", () => {
 const featurestates_elements = {
     tribe: document.getElementById("nav-tribe"),
     profile: document.getElementById("nav-profile"),
-    gen_avatar: document.getElementById("gen-avatar-container"),
+    gen_avatar: document.getElementById("avatar-container"),
     profile_desc: document.getElementById("profile-description-container"),
     tribe_cry: document.getElementById("tribe-cry"),
 }
