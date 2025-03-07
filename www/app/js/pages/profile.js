@@ -139,6 +139,8 @@ PAGES.addCallback("notifications", () => {
 
 
 /* Avatar creation related */
+const AVATAR_SIZE = 1024
+
 let avatar_creation_data = {};
 
 const avatar_creation_subpages = document.querySelectorAll(".avatar-subpage");
@@ -155,8 +157,8 @@ const set_avatarnext_available = (bool) => avatar_creation_next.classList.toggle
 
 const video_avatar = document.getElementById("video-avatar");
 const video_avatar_canvas = document.getElementById("video-avatar-canvas");
-video_avatar_canvas.width = 512;
-video_avatar_canvas.height = 512;
+video_avatar_canvas.width = AVATAR_SIZE;
+video_avatar_canvas.height = AVATAR_SIZE;
 
 const video_avatar_capture = document.getElementById("video-avatar-capture");
 const video_avatar_retry = document.getElementById("video-avatar-retry");
@@ -307,8 +309,8 @@ const ctx_paint = cnv_paint.getContext("2d")
 
 ctx_paint.lineCap = "round"
 
-cnv_paint.width = 512
-cnv_paint.height = 512
+cnv_paint.width = AVATAR_SIZE
+cnv_paint.height = AVATAR_SIZE
 
 let paint_data = {
     color: false,
@@ -363,7 +365,7 @@ function addButton(color) {
 function addButtons() {
     btns_paint.innerHTML = ""
     
-    JSON.parse(DATA_TRIBES[userData.tribe_id-1].colors).forEach(tribeColor => {
+    JSON.parse(DATA_TRIBES[userData.tribe_id-1].colors).slice(1).forEach(tribeColor => {
         addButton(tribeColor)
     })
 
@@ -405,7 +407,7 @@ function setBrushSize(size) {
     // document.getElementById("brush-size-preview").style.width = `${size}px`
     // document.getElementById("brush-size-preview").style.height = `${size}px`
 }
-setBrushSize(16)
+setBrushSize(40)
 
 const avatar_creation_states = document.querySelectorAll("#avatar-creation-state .state-box")
 function set_avatar_creation_indicator_part(id) {
@@ -419,7 +421,7 @@ avatar_creation_next.addEventListener("click", () => {
         case 0:
             open_avatar_subpage(1)
             document.getElementById("canvas-paint").style.backgroundImage = `url(${avatar_creation_data.photo})`
-            document.getElementById("canvas-paint").getContext("2d").clearRect(0, 0, 512, 512);
+            document.getElementById("canvas-paint").getContext("2d").clearRect(0, 0, AVATAR_SIZE, AVATAR_SIZE);
             avatar_creation_state=1;
             break;
         case 1:
