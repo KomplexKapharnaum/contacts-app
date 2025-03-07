@@ -8,9 +8,6 @@ import serviceAccount from '../../firebase-sdk-admin.json' assert { type: 'json'
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 })
-// .onLog((log) => {
-//     console.log('FCM:', log);
-// }, { level: 'debug' });
 
 FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
     notification: {
@@ -23,13 +20,14 @@ FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
 
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
     if (env.DISABLE_FIREBASE) return false;
-
-    const message = FIREBASE.messagePayload(title, body, 'all', data);  
+    
+    const message = FIREBASE.messagePayload(title, body, 'all', data); 
+    console.log('FIREBASE: prep message:', message); 
     try {
         const res = await admin.messaging().send(message);
-        console.log('Successfully sent message:', res);
+        console.log('FIREBASE: Successfully sent message:', res);
     } catch (error) {
-        console.error('Error sending message:', error);
+        console.error('FIREBASE: Error sending message:', error);
     }
 }
 

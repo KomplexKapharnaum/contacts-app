@@ -11,6 +11,7 @@ import score from '../score.js';
 import trophies from '../trophies.js';
 import comfygen from '../comfygen.js';
 import features from '../features.js'
+import firebase from './firebase.js';
 
 // if (env.BYPASS_RATELIMIT) {
 //     const ratelimit_general = rateLimit({
@@ -429,7 +430,8 @@ query.add("admin_send_notification", async (params) => {
         };
         SOCKET.io.to("user").emit("chat-message", messageData);
     }
-
+    
+    console.log("Notification sent");
     return [true, "Notification sent"];
 })
 
