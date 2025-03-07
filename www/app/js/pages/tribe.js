@@ -13,14 +13,13 @@ async function loadLeaderBoard() {
     if (!tribeID) return
 
     const data = await QUERY.getLeaderBoard();
+    console.log(data)
+
     if (!data) return
     if (!data.status) return
     const header = document.getElementById("tribe-rank")
     const header_suffix = document.getElementById("tribe-rank-suffix")
     const score = document.getElementById("tribe-score")
-    // const info = document.getElementById("rank-phrase")
-
-    console.log(data)
 
     const tribe_rank = Object.values(data.data).sort((a, b) => b.general - a.general).findIndex(obj => obj.id === tribeID) + 1
 
