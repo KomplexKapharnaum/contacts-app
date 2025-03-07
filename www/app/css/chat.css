@@ -121,7 +121,7 @@
 
 .message-container.admin,
 .message-container.adminsoft {
-    color: red;
+    color: var(--color-secondary-3);
     background-color: var(--color-background);
     border: solid 2px white;
     border-radius: 8px;

@@ -154,6 +154,10 @@ class ChatBox {
 
         const report = clone.querySelector(".report")
         if (data.admin) {
+            this.msg_container.querySelectorAll(".admin").forEach((msg) => {
+                msg.classList.add("adminsoft")
+                msg.classList.remove("admin")
+            })
             report.remove()
             clone.classList.add("admin")
             // unstick message on click

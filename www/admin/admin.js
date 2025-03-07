@@ -40,8 +40,11 @@ async function sendCommand(name, params) {
     params.pass = cookies.get('pass')
     const queryString = new URLSearchParams(params).toString();
     const res = await fetch(`/query?queryname=${name}&${queryString}`);
-    const json = await res.json();
-    return json;
+    const json = await res.json()
+    return {
+        status: res.status===200,
+        data: json
+    }
 }
 
 const socket = io()
@@ -66,7 +69,7 @@ sendNotificationButton.addEventListener("click", async (e) => {
         add_to_chat: notificationAddToChatCheckbox.checked 
     };
     const res = await sendCommand("admin_send_notification", notificationData);
-    if (res[0] == false) return;
+    if (!res.status) return;
 
     notificationTextInput.value = "";
     notificationColorSelect.value = "cyberspace";
@@ -90,7 +93,7 @@ createEventButton.addEventListener("click", async (e) => {
     };
 
     const res = await sendCommand("admin_create_event", eventData);
-    if (res[0] == false) return;
+    if (!res.status) return;
 
     eventStartDateInput.value = "";
     eventLocationCoordsInput.value = "";
@@ -104,11 +107,11 @@ const featuresContainer = document.getElementById("feature-container");
 
 async function loadFeatures() {
     const features = await sendCommand("admin_get_features", {});
-    if (!features) return;
+    if (!features.status) return;
 
     featuresContainer.innerHTML = ""; // Clear existing features
 
-    features.forEach(feature => {
+    features.data.forEach(feature => {
         const clone = featureTemplate.cloneNode(true).content;
         const checkbox = clone.querySelector("input[type=checkbox]");
         const label = clone.querySelector(".feature-desc");
@@ -120,7 +123,7 @@ async function loadFeatures() {
         checkbox.addEventListener("change", async () => {
             const newStatus = checkbox.checked ? 1 : 0;
             const res = await sendCommand("admin_update_feature", { name: feature.name, enabled: newStatus });
-            if (res[0] == false) return;
+            if (!res.status) return;
             alert(`${feature.description} changed to ${newStatus}`);
         });
 
@@ -146,7 +149,7 @@ function addMessage(message) {
     msg.addEventListener("click", async () => {
         if (!confirm("Remove : " + message.message)) return
         const res = await sendCommand("admin_delete_message", { id: message.id });
-        if (res[0] == false) return;
+        if (!res.status) return;
         msg.remove();
     })
 
@@ -160,11 +163,11 @@ function addMessage(message) {
 
 async function loadChat() {
     const messages = await sendCommand("admin_get_chat", {});
-    if (!messages) return;
+    if (!messages.status) return;
 
     chatContainer.innerHTML = "";
 
-    messages.forEach(message => {
+    messages.data.forEach(message => {
         addMessage(message);
     });
 }
@@ -177,9 +180,9 @@ socket.on("chat-message", (data) => {
 
 async function loadTable(name, parent, structure) {
     const list = await sendCommand("admin_getall", {table: name});
-    if (!list) return;
+    if (!list.status) return;
 
-    list.forEach(element => {
+    list.data.forEach(element => {
         console.log(element);
         createForm(structure, parent, name, element);
     });
@@ -220,7 +223,7 @@ function createForm(structure, parent, tablename, data) {
             id: data.id
         }
         const res = await sendCommand("admin_update", req);
-        if (res[0] == false) return;
+        if (!res.status) return;
         alert("Updated !")
     })
 
@@ -229,7 +232,7 @@ function createForm(structure, parent, tablename, data) {
     btn_delete.addEventListener("click", async () => {
         if (!confirm("Delete ?")) return
         const res = await sendCommand("admin_delete", { table: tablename, id: data.id });
-        if (res[0] == false) return;
+        if (!res.status) return;
         alert("Deleted !")
         holder.remove()
     })

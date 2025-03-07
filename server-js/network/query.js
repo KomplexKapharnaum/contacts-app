@@ -403,7 +403,7 @@ query.add("admin_send_notification", async (params) => {
     const text = params.get("text");
     const color = params.get("color");
     const addtochat = params.get("add_to_chat"); 
-    const tribe = params.get("tribe");
+    const tribe = params.get("tribe") == '' ? null : params.get("tribe");
 
     await db.createNotification(text, color);
 
