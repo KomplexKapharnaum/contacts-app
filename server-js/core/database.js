@@ -131,9 +131,9 @@ async function initDB() {
             table.boolean("enabled").defaultTo(false);
         });
 
-        await db.createTribe("Machines", ["#FFFF00", "#FF00FF", "#00FFFF", "#FF0000", "#00FF00"]);
-        await db.createTribe("Animaux", ["#FF0000", "#00FF00", "#FF00FF", "#00FFFF", "#FFFF00"]);
-        await db.createTribe("Végétaux", ["#00FF00", "#00FFFF", "#FF0000", "#FF00FF", "#FFFF00"]);
+        await db.createTribe("Machines", ["#EEFE04", "#F8A539", "#8EEFFE"]);
+        await db.createTribe("Animaux", ["#0391BF", "#F34D17", "#FF6FFE"]);
+        await db.createTribe("Végétaux", ["#FC03CF", "#08F6F1", "#16D605"]);
 
         await db.createSession("Marseille", new Date('2025-03-03').toISOString(), new Date('2025-03-15').toISOString());
 }
@@ -206,6 +206,10 @@ db.endEvent = async (id) => {
 if (!fs.existsSync(dataPath)) {
     initDB()
     log('Database initialized');
+} else {
+    await db('tribes').where('id', 1).update({name: 'Machines', colors: JSON.stringify(["#EEFE04", "#F8A539", "#8EEFFE"])});
+    await db('tribes').where('id', 2).update({name: 'Animaux', colors: JSON.stringify(["#0391BF", "#F34D17", "#FF6FFE"])});
+    await db('tribes').where('id', 3).update({name: 'Végétaux', colors: JSON.stringify(["#FC03CF", "#08F6F1", "#16D605"])});
 }
 
 log('Database ready '+dataPath);
