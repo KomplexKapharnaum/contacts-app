@@ -402,13 +402,13 @@ query.add("admin_send_notification", async (params) => {
 
     const text = params.get("text");
     const color = params.get("color");
-    const addtochat = params.get("add_to_chat") == 'true' ? true : false; 
+    const addtochat = params.get("add_to_chat"); 
     const tribe = params.get("tribe");
 
     await db.createNotification(text, color);
 
     if (!env.DISABLE_FIREBASE) {
-        if (tribe !== '') {
+        if (tribe) {
             firebase.toTribe(tribe, addtochat ? "Nouveau message" : "Notification", text);
         } else {
             firebase.broadcastMessage(addtochat ? "Nouveau message" : "Notification", text);
