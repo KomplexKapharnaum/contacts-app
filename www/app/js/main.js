@@ -280,12 +280,12 @@ setInterval(() => {
         console.log("INFO pong not received for 20s, reloading")
         location.reload()
     }
-    console.log("ping")
+    // console.log("ping")
     document.SOCKETIO.emit("ping")
 }, 5000)
 document.SOCKETIO.on("pong", (data) => {
     lastAnswer = Date.now()
-    console.log("pong", data)
+    // console.log("pong")  
 })
 
 // ASK for update every 60s
@@ -294,4 +294,4 @@ setInterval(() => {
 }, 60000)
 document.SOCKETIO.on("update", (data) => {
     console.log("update", data)
-})
+})    

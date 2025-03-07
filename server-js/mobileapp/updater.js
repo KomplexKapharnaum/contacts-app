@@ -176,12 +176,10 @@ SOCKET.io.on("connection", (socket) => {
     socket.emit('update', APPINFO);
 
     socket.on("info-ping", () => {
-        console.log("INFO ping requested");
-        // copy APPINFO and remove media_tree
+        // console.log("INFO ping requested");
         let info = Object.assign({}, APPINFO);
         delete info.media_tree;
         socket.emit('update', info);
-        console.log("INFO pong sent");
     })
 })
 
