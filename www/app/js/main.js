@@ -287,3 +287,8 @@ document.SOCKETIO.on("pong", (data) => {
     lastAnswer = Date.now()
     console.log("pong", data)
 })
+
+// ASK for update every 60s
+setInterval(() => {
+    document.SOCKETIO.emit("info-ping")
+}, 60000)
