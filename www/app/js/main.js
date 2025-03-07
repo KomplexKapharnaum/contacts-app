@@ -292,3 +292,6 @@ document.SOCKETIO.on("pong", (data) => {
 setInterval(() => {
     document.SOCKETIO.emit("info-ping")
 }, 60000)
+document.SOCKETIO.on("update", (data) => {
+    console.log("update", data)
+})
