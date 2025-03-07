@@ -254,11 +254,11 @@ SOCKET.io.on('connection', (socket) => {
     //   socket.emit("notification-validation", true);
     // });
 
-    socket.on("gen-avatar", async (data) => {
-      if (!features.getState("vote_avatars")) return;
-      if (!socket.rooms.has("user")) return;
-      comfygen.add(socket.userID, data);
-    })
+    // socket.on("gen-avatar", async (data) => {
+    //   if (!features.getState("vote_avatars")) return;
+    //   if (!socket.rooms.has("user")) return;
+    //   comfygen.add(socket.userID, data);
+    // })
 
     
 });

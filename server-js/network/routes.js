@@ -129,7 +129,7 @@ app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), 
         res.status(400).send("User not found");
         return;
     }
-    comfygen.add(user.id, files);
+    comfygen.add(user.id, files, user.tribe_id);
 
     res.status(200).send("Avatar saved");
 });

@@ -303,14 +303,25 @@ export class ComfyUIClient {
     }
   }
 
+  async saveImage(blob, outputDir, filename) {
+    const arrayBuffer = await blob.arrayBuffer()
+    const outputPath = join(outputDir, filename)
+    await writeFile(outputPath, Buffer.from(arrayBuffer))
+  }
+
   getImages(response, filename) {
     const images = {}
     let i=0
     if (!response || !response.outputs) return images
     for (const nodeId of Object.keys(response.outputs)) {
-      for (const img of response.outputs[nodeId]) {
-        images[`${filename}_${i}.png`] = img.blob
-        i++
+      if (Array.isArray(response.outputs[nodeId])) {
+        for (const img of response.outputs[nodeId]) {
+          if (img.blob) {
+            images[`${filename}_${i}.png`] = img.blob
+            console.log(`${filename}_${i}.png`)
+            i++
+          }
+        }
       }
     }
     return images

@@ -86,7 +86,7 @@ function rewardUserTrophy(trophyID) {
         
         const clone = tem_trophy_item.cloneNode(true).content
         const item = clone.querySelector(".trophy-reward-item")
-        item.querySelector("img").src = `${document.BASEPATH}/img/trophies/${trophyInfo.img}.png`
+        item.querySelector("img").src = `${document.BASEPATH}/img/trophies/${trophyID}.png`
         item.querySelector(".trophy-reward-name").innerText = trophyInfo.name
         item.querySelector(".trophy-reward-desc").innerText = trophyInfo.desc
         item.addEventListener("click", () => {
@@ -306,6 +306,7 @@ video_avatar_retry.addEventListener("click", () => {
 const btns_paint = document.getElementById("paint-buttons")
 const cnv_paint = document.getElementById("canvas-paint")
 const ctx_paint = cnv_paint.getContext("2d")
+let canvas_painted = false
 
 ctx_paint.lineCap = "round"
 
@@ -337,6 +338,7 @@ function draw(x, y, e) {
     }
     paint_data.prevX = x;
     paint_data.prevY = y;
+    canvas_painted = true
 }
 
 function setActiveColor(btn) {
@@ -400,6 +402,7 @@ cnv_paint.addEventListener("touchmove", (e) => {
 
 document.getElementById("btn-avatar-draw-clear").addEventListener("click", () => {
     ctx_paint.clearRect(0, 0, cnv_paint.width, cnv_paint.height)
+    canvas_painted = false
 })
 
 function setBrushSize(size) {
@@ -422,9 +425,14 @@ avatar_creation_next.addEventListener("click", () => {
             open_avatar_subpage(1)
             document.getElementById("canvas-paint").style.backgroundImage = `url(${avatar_creation_data.photo})`
             document.getElementById("canvas-paint").getContext("2d").clearRect(0, 0, AVATAR_SIZE, AVATAR_SIZE);
+            canvas_painted = false
             avatar_creation_state=1;
             break;
         case 1:
+            if (!canvas_painted) {
+                alert("Veuillez dessiner sur votre avatar !")
+                return;
+            }
             avatar_creation_data.paint = cnv_paint.toDataURL();
             open_avatar_subpage(2)
             avatar_creation_state=2
@@ -467,7 +475,7 @@ function genNewAvatar(userID, data) {
     })
     .then((res) => {
         if (res.ok) {
-            alert("Data sent !")
+            alert("Avatar en cours de création !")
         } else {
             console.error("Error sending data")
         }
