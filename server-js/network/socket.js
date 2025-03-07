@@ -63,6 +63,10 @@ SOCKET.io.on('connection', (socket) => {
         clearInterval(socket.stayInterval);
     });
 
+    socket.on('ping', () => {
+        socket.emit('pong');
+    });
+
     socket.on('user-auth', async (uuid) => {
         if (util.userExists(uuid)) {
             socket.join("user");
@@ -255,6 +259,8 @@ SOCKET.io.on('connection', (socket) => {
       if (!socket.rooms.has("user")) return;
       comfygen.add(socket.userID, data);
     })
+
+    
 });
 
 export { SOCKET };

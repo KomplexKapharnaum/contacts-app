@@ -271,3 +271,19 @@ function gotoButtons() {
     })
 }
 gotoButtons()
+
+// PING PONG keep alivve
+// Ask info every 5s, if no answer for 20s reload page
+var lastAnswer = Date.now()
+setInterval(() => {
+    if (Date.now() - lastAnswer > 20000) {
+        console.log("INFO pong not received for 20s, reloading")
+        location.reload()
+    }
+    console.log("ping")
+    document.SOCKETIO.emit("ping")
+}, 5000)
+document.SOCKETIO.on("pong", (data) => {
+    lastAnswer = Date.now()
+    console.log("pong", data)
+})
