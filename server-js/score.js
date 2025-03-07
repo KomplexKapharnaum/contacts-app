@@ -22,14 +22,6 @@ SCORE.leaderBoard = {};
 SCORE.lastUpdated = 0;
 
 SCORE.getLeaderBoard = async () => {
-    const now = Date.now();
-    const HALF_HOUR = 1000 * 60 * 30;
-
-    if (now - SCORE.lastUpdated > HALF_HOUR) {
-        SCORE.lastUpdated = now;
-        await SCORE.updateLeaderBoard();
-    }
-
     return SCORE.leaderBoard;
 }
 
@@ -54,5 +46,9 @@ SCORE.updateLeaderBoard = async () => {
         
     }
 }
+
+const HALF_HOUR = 1000 * 60 * 30;
+SCORE.interval = setInterval(()=>SCORE.updateLeaderBoard(), HALF_HOUR);
+SCORE.updateLeaderBoard();
 
 export default SCORE

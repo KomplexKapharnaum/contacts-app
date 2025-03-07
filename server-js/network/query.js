@@ -285,13 +285,8 @@ query.add("leaderboard", async (params) => {
 
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
-
-    const tribeID = params.get("tribe_id");
-    let data = await score.getLeaderBoard()
-
-    for (let [key, value] of Object.entries(data)) {
-        if (key != tribeID) delete data[key].players;
-    }
+    
+    let data = await score.getLeaderBoard();
 
     return [true, data];
 })

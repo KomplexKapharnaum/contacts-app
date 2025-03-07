@@ -77,8 +77,8 @@ QUERY.updateName = async (name) => {
     });
 }
 
-QUERY.getLeaderBoard = async (tribeID) => {
-    return await QUERY.process("leaderboard", {uuid: userData.uuid, tribe_id: tribeID});
+QUERY.getLeaderBoard = async () => {
+    return await QUERY.process("leaderboard", {uuid: userData.uuid});
 }
 
 QUERY.getTribes = async () => {
