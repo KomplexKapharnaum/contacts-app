@@ -158,49 +158,50 @@ if (!document.CONFIG) {
 
 // Function to download an image to device storage
 function downloadImage(imageUrl, fileName) {
-    // Check if we're running on a device (not in browser)
-    if (!window.cordova) {
-        console.error("This function needs to be run on a device with Cordova");
-        return;
-    }
+    alert("Fonctionnalité non disponible pour l'instant.")
+    // // Check if we're running on a device (not in browser)
+    // if (!window.cordova) {
+    //     console.error("This function needs to be run on a device with Cordova");
+    //     return;
+    // }
 
-    // Get the appropriate directory for saving files
-    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dirEntry) {
-        // Create the file in the directory
-        dirEntry.getFile(fileName, { create: true, exclusive: false }, function(fileEntry) {
+    // // Get the appropriate directory for saving files
+    // window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dirEntry) {
+    //     // Create the file in the directory
+    //     dirEntry.getFile(fileName, { create: true, exclusive: false }, function(fileEntry) {
             
-            // Get a download link
-            var fileTransfer = new FileTransfer();
+    //         // Get a download link
+    //         var fileTransfer = new FileTransfer();
             
-            // Download the file
-            fileTransfer.download(
-                imageUrl,
-                fileEntry.toURL(),
-                function(entry) {
-                    // Success callback
-                    console.log("Download complete: " + entry.toURL());
-                    alert("Image downloaded successfully!");
-                },
-                function(error) {
-                    // Error callback
-                    console.error("download error source " + error.source);
-                    console.error("download error target " + error.target);
-                    console.error("download error code " + error.code);
-                    alert("Download failed: " + error.code);
-                },
-                false,  // trustAllHosts, set to false for security
-                {
-                    headers: {
-                        // Optional: Add headers if needed for authorization, etc.
-                    }
-                }
-            );
-        }, function(error) {
-            console.error("Error creating file: " + error.code);
-            alert("Error creating file: " + error.code);
-        });
-    }, function(error) {
-        console.error("Error accessing filesystem: " + error.code);
-        alert("Error accessing filesystem: " + error.code);
-    });
+    //         // Download the file
+    //         fileTransfer.download(
+    //             imageUrl,
+    //             fileEntry.toURL(),
+    //             function(entry) {
+    //                 // Success callback
+    //                 console.log("Download complete: " + entry.toURL());
+    //                 alert("Image downloaded successfully!");
+    //             },
+    //             function(error) {
+    //                 // Error callback
+    //                 console.error("download error source " + error.source);
+    //                 console.error("download error target " + error.target);
+    //                 console.error("download error code " + error.code);
+    //                 alert("Download failed: " + error.code);
+    //             },
+    //             false,  // trustAllHosts, set to false for security
+    //             {
+    //                 headers: {
+    //                     // Optional: Add headers if needed for authorization, etc.
+    //                 }
+    //             }
+    //         );
+    //     }, function(error) {
+    //         console.error("Error creating file: " + error.code);
+    //         alert("Error creating file: " + error.code);
+    //     });
+    // }, function(error) {
+    //     console.error("Error accessing filesystem: " + error.code);
+    //     alert("Error accessing filesystem: " + error.code);
+    // });
 }
