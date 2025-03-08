@@ -420,7 +420,7 @@
   "39": {
     "inputs": {
       "image": [
-        "50",
+        "35",
         0
       ]
     },
@@ -476,24 +476,6 @@
       "title": "LayerUtility: ImageBlend"
     }
   },
-  "50": {
-    "inputs": {
-      "width": 1024,
-      "height": 1024,
-      "interpolation": "bicubic",
-      "method": "fill / crop",
-      "condition": "always",
-      "multiple_of": 0,
-      "image": [
-        "35",
-        0
-      ]
-    },
-    "class_type": "ImageResize+",
-    "_meta": {
-      "title": "🔧 Image Resize"
-    }
-  },
   "58": {
     "inputs": {
       "color": "#0392c1",
@@ -514,45 +496,13 @@
         0
       ],
       "layer_image": [
-        "69",
+        "11",
         0
       ]
     },
     "class_type": "LayerUtility: ImageBlend",
     "_meta": {
       "title": "LayerUtility: ImageBlend"
-    }
-  },
-  "61": {
-    "inputs": {
-      "width": 1024,
-      "height": 1024,
-      "interpolation": "bicubic",
-      "method": "fill / crop",
-      "condition": "always",
-      "multiple_of": 0,
-      "image": [
-        "11",
-        0
-      ]
-    },
-    "class_type": "ImageResize+",
-    "_meta": {
-      "title": "🔧 Image Resize"
-    }
-  },
-  "69": {
-    "inputs": {
-      "threshold": 0.5,
-      "torchscript_jit": "default",
-      "image": [
-        "61",
-        0
-      ]
-    },
-    "class_type": "InspyrenetRembgAdvanced",
-    "_meta": {
-      "title": "Inspyrenet Rembg Advanced"
     }
   },
   "71": {
@@ -767,7 +717,7 @@
         "84",
         0
       ],
-      "seed": 127191783897433
+      "seed": 466711977911612
     },
     "class_type": "Text Random Line",
     "_meta": {
@@ -780,7 +730,7 @@
         "112",
         0
       ],
-      "text2": "a photo of crazy hybrid human-bot, cogwheels, neonlight eyes, 8k, close-up,highly detailled by Ava Ex Machina"
+      "text2": "a photo of crazy hybrid human-bot, cogwheels, neonlight eyes, 8k, close-up,highly detailled by Diane Arbus"
     },
     "class_type": "ShowText|pysssss",
     "_meta": {
