@@ -82,9 +82,13 @@ async function getUserInfo(uuid) {
 
     const userAvatarID = user.selected_avatar;
     
-    let avatar;
-    if (userAvatarID) avatar = await db('avatars').where('id', userAvatarID).first().select('filename');
-    if (avatar) user.avatar = avatar.filename;
+    if (userAvatarID) {
+        let avatar = await db('avatars').where('id', userAvatarID).first();
+        if (avatar) {
+            const status = avatar.status;
+            user.avatar = status=="done" ? avatar.filename : status;
+        }
+    }
 
     return user;
 }

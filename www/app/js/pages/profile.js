@@ -541,7 +541,19 @@ function updateProfilePicture() {
     if (!userData) return;
 
     if (userData.avatar) {
-        document.getElementById("profile-avatar").src = "/avatars/" + userData.avatar
+        document.getElementById("profile-avatar-btns").classList.remove("disabled")
+        switch (userData.avatar) {
+            case "pending":
+                document.getElementById("profile-avatar").src = document.BASEPATH + "/img/gen_loading.png"
+                document.getElementById("profile-avatar-btns").classList.add("disabled")
+                break;
+            case "error":
+                document.getElementById("profile-avatar").src = document.BASEPATH + "/img/avatar_default.png"
+                break;
+            default:
+                document.getElementById("profile-avatar").src = document.WEBAPP_URL + "/avatars/" + userData.avatar
+                break;
+        }
     }
 }
 
