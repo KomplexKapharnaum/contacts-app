@@ -491,7 +491,7 @@ const avatar_vote_no = document.getElementById("avatar-vote-no")
 
 function newAvatarVote(user_id, avatar_path) {
     return new Promise((resolve, reject) => {
-        avatar_vote_image.src = document.BASEPATH + "/avatars/" +avatar_path
+        avatar_vote_image.src = document.WEBAPP_URL + "/avatars/" + avatar_path
         avatar_vote_image.alt = user_id
 
         const vote_yes = () => {

@@ -45,7 +45,7 @@ async function loadLeaderBoard() {
                     const tem = document.getElementById("tem-leaderboard-top10").cloneNode(true).content
                     tem.querySelector(".rank").innerText = i+1
                     tem.querySelector(".username").innerText = ply.name
-                    tem.querySelector(".score span").innerText = ply.scor
+                    tem.querySelector(".score span").innerText = ply.score
                     if (ply.avatar) tem.querySelector("img").src = document.WEBAPP_URL + "/avatars/" + ply.avatar
                     tribe_top10.appendChild(tem)
                 }
