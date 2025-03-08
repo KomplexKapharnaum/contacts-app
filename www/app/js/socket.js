@@ -24,6 +24,12 @@ document.SOCKETIO.on("comfygen_done", (path) => {
     updateProfilePicture()
 })
 
+document.SOCKETIO.on("update_avatar", (path) => {
+    console.log("update_avatar", path)
+    userData.avatar = path
+    updateProfilePicture()
+})
+
 document.SOCKETIO.on("rate-limited", (timeRemaining) => {
     alert("You are being rate limited, please wait " + Math.ceil(timeRemaining) + " seconds before sending another message.");
 })

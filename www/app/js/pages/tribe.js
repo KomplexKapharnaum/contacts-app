@@ -12,13 +12,13 @@ async function loadLeaderBoard() {
 
     if (!tribeID) return
 
-    const data = await QUERY.getLeaderBoard(tribeID)
+    const data = await QUERY.getLeaderBoard();
+
     if (!data) return
     if (!data.status) return
     const header = document.getElementById("tribe-rank")
     const header_suffix = document.getElementById("tribe-rank-suffix")
     const score = document.getElementById("tribe-score")
-    // const info = document.getElementById("rank-phrase")
 
     const tribe_rank = Object.values(data.data).sort((a, b) => b.general - a.general).findIndex(obj => obj.id === tribeID) + 1
 
@@ -29,7 +29,6 @@ async function loadLeaderBoard() {
 
     const leaderboard_players = data.data[tribeID].players
     
-
     if (leaderboard_players)
         for (let i=0;  i<10 ; i++) {
             if (i >= leaderboard_players.length) break

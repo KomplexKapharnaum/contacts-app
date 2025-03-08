@@ -71,7 +71,7 @@ const ONE_HOUR = 1000 * 60 * 60;
 setInterval(SCORE.updateLeaderBoard, ONE_HOUR/2);
 SCORE.updateLeaderBoard();
 
-comfygen.run();
+comfygen.start();
 features.start();
 
 // Send forceupdate to all clients after 10s

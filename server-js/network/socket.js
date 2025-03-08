@@ -215,11 +215,21 @@ SOCKET.io.on('connection', (socket) => {
 
     /* Avatar vote */
 
-    socket.on("vote-avatar", async (userID) => {
-      if (!features.getState("vote_avatars")) return;
+    socket.on("vote-avatar", async (data) => {
+      const userID = socket.userID;
+      const voted_userID = data.user_id;
+      const voteState = data.vote;
 
-      if (socket.rooms.has("user")) {
-        stats.addToUser(userID, "avatar_score", 1)
+      if (!features.getState("vote_avatars")) return;
+      
+      if (!stats.canVote(userID)) return [false, "user cannot vote"];
+      if (stats.get(userID, "avatars_voted_today") >= 10) return [false, "user has already voted 10 avatars today"];
+
+      stats.addToUser(userID, "avatars_voted_today", 1)
+      stats.addToUser(userID, "avatars_voted", 1)
+
+      if (voteState) {
+        stats.addToUser(voted_userID, "avatar_score", 1)
       }
     })
 

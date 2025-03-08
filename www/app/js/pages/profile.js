@@ -491,19 +491,19 @@ const avatar_vote_no = document.getElementById("avatar-vote-no")
 
 function newAvatarVote(user_id, avatar_path) {
     return new Promise((resolve, reject) => {
-        avatar_vote_image.src = avatar_path
+        avatar_vote_image.src = document.BASEPATH + "/avatars/" +avatar_path
         avatar_vote_image.alt = user_id
 
         const vote_yes = () => {
             avatar_vote_yes.removeEventListener("click", vote_yes)
             avatar_vote_no.removeEventListener("click", vote_no)
-            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "yes"})
+            document.SOCKETIO.emit("vote-avatar", {user_id, vote: true})
             resolve("yes")
         }
         const vote_no = () => {
             avatar_vote_yes.removeEventListener("click", vote_yes)
             avatar_vote_no.removeEventListener("click", vote_no)
-            // socket.emit("avatar-vote", {avatar_id: avatar_id, action: "no"})
+            document.SOCKETIO.emit("vote-avatar", {user_id, vote: false})
             resolve("no")
         }
 
@@ -513,16 +513,47 @@ function newAvatarVote(user_id, avatar_path) {
 }
 
 async function processAvatarVotes(avatar_data) {
-    avatar_data.forEach(async avatar => {
-        await newAvatarVote(avatar.user_id, avatar.avatar_path)
+    return new Promise(async (resolve, reject) => {
+        for (let avatar of avatar_data) {
+            await newAvatarVote(avatar.user_id, avatar.avatar_path)
+        }
+        resolve()
     })
+}
+
+function startAvatarVotes() {
+    PAGES.goto("loading")
+    QUERY.process("random_avatars", {uuid: userData.uuid}).then((res) => {
+        console.log(res)
+      if (res.status) {
+        PAGES.goto("avatar-vote")
+        processAvatarVotes(res.data).then(() => {
+            PAGES.goto("profile")
+        })
+      } else {
+        alert("une erreur est survenue.")
+        PAGES.goto("profile")
+      }
+    });
 }
 
 function updateProfilePicture() {
     if (!userData) return;
 
     if (userData.avatar) {
-        document.getElementById("profile-avatar").src = "/avatars/" + userData.avatar
+        document.getElementById("profile-avatar-btns").classList.remove("disabled")
+        switch (userData.avatar) {
+            case "pending":
+                document.getElementById("profile-avatar").src = document.BASEPATH + "/img/gen_loading.png"
+                document.getElementById("profile-avatar-btns").classList.add("disabled")
+                break;
+            case "error":
+                document.getElementById("profile-avatar").src = document.BASEPATH + "/img/avatar_default.png"
+                break;
+            default:
+                document.getElementById("profile-avatar").src = document.WEBAPP_URL + "/avatars/" + userData.avatar
+                break;
+        }
     }
 }
 

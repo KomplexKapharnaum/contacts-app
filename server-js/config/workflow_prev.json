@@ -162,7 +162,7 @@
   },
   "17": {
     "inputs": {
-      "provider": "CUDA"
+      "provider": "CPU"
     },
     "class_type": "InstantIDFaceAnalysis",
     "_meta": {
@@ -504,6 +504,18 @@
       "title": "COLOR BG"
     }
   },
+  "59": {
+    "inputs": {
+      "images": [
+        "60",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
   "60": {
     "inputs": {
       "invert_mask": true,
@@ -785,19 +797,6 @@
     "class_type": "ShowText|pysssss",
     "_meta": {
       "title": "Show Text 🐍"
-    }
-  },
-  "116": {
-    "inputs": {
-      "filename_prefix": "avatar/subject/a_",
-      "images": [
-        "60",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Save Image"
     }
   }
 }

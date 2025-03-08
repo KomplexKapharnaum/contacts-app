@@ -13,6 +13,7 @@ import bodyParser from 'body-parser';
 import multer from 'multer';
 
 import comfygen from '../comfygen.js';
+import { SOCKET } from './socket.js';
 
 app.use('/static', express.static('www'));
 
@@ -130,6 +131,8 @@ app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), 
         return;
     }
     comfygen.add(user.id, files, user.tribe_id);
+
+    SOCKET.toClient(user.id, "update_avatar", "pending");
 
     res.status(200).send("Avatar saved");
 });

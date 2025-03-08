@@ -48,36 +48,42 @@ comfygen.gen = async (avatarID, data, tribeID) => {
     // Tribe
     workflow_clone["83"]["inputs"]["value"] = tribeList[parseInt(tribeID)];
 
-    const result = await client.runPrompt(workflow_clone); // run
-
-    console.log(result.outputs);
-
-    const result_blob = result.outputs["21"][0].blob;
-
-    const outputDir = 'gen_output';
-
-    const filename = "static_"+avatarID+".png";
-    await client.saveImage(result_blob, outputDir, filename);
-
-    await client.disconnect();
-
     const avatar = await db("avatars").where("id", avatarID).first();
     const user = await db("users").where("id", avatar.user_id).first();
     const userID = user.id;
 
-    await db("avatars").where("id", avatarID).update({status: "done", filename: filename});
-    await db("users").where("id", userID).update({selected_avatar: avatarID});
-    SOCKET.toClient(userID, "comfygen_done", filename);
-    
-    trophies.reward(userID, 'avatar');
+    try {
+        const result = await client.runPrompt(workflow_clone); // run
 
-    return filename;
+        const result_blob = result.outputs["21"][0].blob;
+
+        const outputDir = 'gen_output';
+
+        const filename = "static_"+avatarID+".png";
+        await client.saveImage(result_blob, outputDir, filename);
+
+        await client.disconnect();
+
+        await db("avatars").where("id", avatarID).update({status: "done", filename: filename});
+        SOCKET.toClient(userID, "comfygen_done", filename);
+        
+        trophies.reward(userID, 'avatar');
+
+        return filename;
+    } catch (error) {
+        console.log("-------------------- COMFYGEN ERROR --------------------")
+        console.log(error);
+        await db("avatars").where("id", avatarID).update({status: "error"});
+        SOCKET.toClient(userID, "update_avatar", "error");
+        return false;
+    }
 }
 
 comfygen.queue = [];
 
 comfygen.newAvatar = async (userID) => {
     const avatarID = await db("avatars").insert({user_id: userID});
+    await db("users").where("id", userID).update({selected_avatar: avatarID[0]});
     return avatarID[0];
 }
 
@@ -88,6 +94,24 @@ comfygen.add = async (userID, data, tribeID) => {
 }
 
 comfygen.sleep = async (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+comfygen.start = async () => {
+    const pending_avatars = await db("avatars").where("status", "pending").select("id", "user_id");
+    for (const avatar of pending_avatars) {
+        const userID = avatar.user_id;
+        const avatarID = avatar.id;
+        const data = await db("users").where("id", userID).first();
+
+        if (avatarID != data.selected_avatar) {
+            await db("avatars").where("id", avatarID).update({status: "error"});
+            continue;
+        }
+        
+        const tribeID = data.tribe_id;
+        await comfygen.add(userID, data, tribeID);
+    }
+    comfygen.run();
+}
 
 comfygen.run = async () => {
     if (comfygen.queue.length > 0) {

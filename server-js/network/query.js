@@ -82,9 +82,13 @@ async function getUserInfo(uuid) {
 
     const userAvatarID = user.selected_avatar;
     
-    let avatar;
-    if (userAvatarID) avatar = await db('avatars').where('id', userAvatarID).first().select('filename');
-    if (avatar) user.avatar = avatar.filename;
+    if (userAvatarID) {
+        let avatar = await db('avatars').where('id', userAvatarID).first();
+        if (avatar) {
+            const status = avatar.status;
+            user.avatar = status=="done" ? avatar.filename : status;
+        }
+    }
 
     return user;
 }
@@ -285,13 +289,8 @@ query.add("leaderboard", async (params) => {
 
     const uuid = params.get("uuid");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
-
-    const tribeID = params.get("tribe_id");
-    let data = await score.getLeaderBoard()
-
-    for (let [key, value] of Object.entries(data)) {
-        if (key != tribeID) delete data[key].players;
-    }
+    
+    let data = await score.getLeaderBoard();
 
     return [true, data];
 })
@@ -319,6 +318,36 @@ query.add("send_feedback", async (params) => {
     return [true, res];
 })
 
+query.add("random_avatars", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    const user = await db('users').where('uuid', uuid).first();
+
+    if (!stats.canVote(user.id)) return [false, "user cannot vote"];
+
+    const tribeID = user.tribe_id;
+    const randomUsers = await db('users')
+    .where('tribe_id', tribeID)
+    .whereNot('id', user.id)
+    .whereNot('selected_avatar', null)
+    .orderByRaw('RANDOM()')
+    .limit(10)
+    .select('id', 'selected_avatar')
+
+    stats.setToUser(user.id, "avatars_voted_today", 0);
+    stats.updateLastTimeVoted(user.id);
+
+    const processedRandomUsers = await Promise.all(randomUsers.map(async user => {
+        const avatar = await db('avatars').where('id', user.selected_avatar).first();
+        return {
+            userid: user.id,
+            avatar_path: avatar.filename
+        }
+    }))
+
+    return [true, processedRandomUsers];
+})
 
 // Regie query
 

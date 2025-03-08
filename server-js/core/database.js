@@ -138,6 +138,16 @@ async function initDB() {
         await db.createSession("Marseille", new Date('2025-03-03').toISOString(), new Date('2025-03-15').toISOString());
 
         // await db("users").insert({name: "Admin", uuid: "uuid-8906-8155-0f7b-7086-430d", public_id: "admin", firebase_id: "admin", admin: true, tribe_id: 3});
+        
+        // for (let i = 0; i < 10; i++) {
+        //     const names = ["Pierre", "Marie", "Jean", "Paul", "Léa", "Léo", "Alice", "Max", "Emma", "Théo"];
+        //     const name = names[Math.floor(Math.random() * names.length)];
+        //     const uuid = `uuid-${i}`;
+        //     const public_id = `user-${i}`;
+        //     const selected_avatar = Math.random() < 0.5 ? "static_1.png" : "static_2.png";
+        //     const avatarID = await db('avatars').insert({filename: selected_avatar, user_id: null}, 'id');
+        //     await db("users").insert({name, uuid, public_id, selected_avatar: avatarID[0].id, tribe_id: 3});
+        // }
 }
 
 // Send feedback
