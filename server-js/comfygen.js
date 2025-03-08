@@ -82,6 +82,7 @@ comfygen.newAvatar = async (userID) => {
 }
 
 comfygen.add = async (userID, data, tribeID) => {
+    console.log("Adding AVATAR to queue");
     const avatarID = await comfygen.newAvatar(userID);
     comfygen.queue.push({avatarID, data, tribeID})
 }

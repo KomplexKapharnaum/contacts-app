@@ -162,7 +162,7 @@
   },
   "17": {
     "inputs": {
-      "provider": "CPU"
+      "provider": "CUDA"
     },
     "class_type": "InstantIDFaceAnalysis",
     "_meta": {
