@@ -37,13 +37,16 @@ SCORE.updateLeaderBoard = async () => {
 
         const players = await database('users').where('tribe_id', t.id).select();
         players.sort((a, b) => b.score - a.score);
-        SCORE.leaderBoard[t.id].players = players.slice(0, 10).map(player => ({
-            id: player.id,
-            avatar: player.selected_avatar,
-            name: player.name,
-            score: player.score
+        const playersWithAvatar = await Promise.all(players.slice(0, 10).map(async player => {
+            const avatar = await database('avatars').where('id', player.selected_avatar).first();
+            return {
+                id: player.id,
+                avatar: avatar ? avatar.filename : null,
+                name: player.name,
+                score: player.score
+            }
         }));
-        
+        SCORE.leaderBoard[t.id].players = playersWithAvatar;
     }
 }
 

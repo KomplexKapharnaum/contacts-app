@@ -98,17 +98,19 @@ comfygen.sleep = async (ms) => new Promise(resolve => setTimeout(resolve, ms));
 comfygen.start = async () => {
     const pending_avatars = await db("avatars").where("status", "pending").select("id", "user_id");
     for (const avatar of pending_avatars) {
-        const userID = avatar.user_id;
-        const avatarID = avatar.id;
-        const data = await db("users").where("id", userID).first();
+        await db("avatars").where("id", avatar.id).update({status: "error"});
 
-        if (avatarID != data.selected_avatar) {
-            await db("avatars").where("id", avatarID).update({status: "error"});
-            continue;
-        }
+        // const userID = avatar.user_id;
+        // const avatarID = avatar.id;
+        // const user = await db("users").where("id", userID).first();
+
+        // if (avatarID != user.selected_avatar) {
+        //     await db("avatars").where("id", avatarID).update({status: "error"});
+        //     continue;
+        // }
         
-        const tribeID = data.tribe_id;
-        await comfygen.add(userID, data, tribeID);
+        // const tribeID = user.tribe_id;
+        // await comfygen.add(userID, user, tribeID);
     }
     comfygen.run();
 }

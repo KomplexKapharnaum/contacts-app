@@ -38,13 +38,15 @@ async function loadLeaderBoard() {
                     const elms = document.querySelectorAll(".podium-item.pod-"+ (i+1))
                     elms.forEach(elm => {
                         elm.querySelector(".score").innerText = ply.score + " "
-                        elm.querySelector(".username").innerText = ply.name        
+                        elm.querySelector(".username").innerText = ply.name
+                        if (ply.avatar) elm.querySelector("img").src = document.WEBAPP_URL + "/avatars/" + ply.avatar
                     })
                 } else {
                     const tem = document.getElementById("tem-leaderboard-top10").cloneNode(true).content
                     tem.querySelector(".rank").innerText = i+1
                     tem.querySelector(".username").innerText = ply.name
-                    tem.querySelector(".score span").innerText = ply.score
+                    tem.querySelector(".score span").innerText = ply.scor
+                    if (ply.avatar) tem.querySelector("img").src = document.WEBAPP_URL + "/avatars/" + ply.avatar
                     tribe_top10.appendChild(tem)
                 }
             }
