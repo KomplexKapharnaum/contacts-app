@@ -285,7 +285,7 @@ setInterval(() => {
 }, 5000)
 document.SOCKETIO.on("pong", (data) => {
     lastAnswer = Date.now()
-    // console.log("pong")  
+    // console.log("pong")     
 })
 
 // ASK for update every 60s

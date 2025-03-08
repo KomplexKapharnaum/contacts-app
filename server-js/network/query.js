@@ -452,7 +452,7 @@ query.add("admin_send_notification", async (params) => {
             date: Date.now(),
             admin: true,
             public_id: false,
-            id: id[0],
+            id: id[0], 
             tribeID: 0,
             message: text,
             name: "Notification"

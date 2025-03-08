@@ -469,7 +469,7 @@ function genNewAvatar(userID, data) {
     form.append("selfie", base64ToBlob(data.photo));
     form.append("paint", base64ToBlob(data.paint));
 
-    fetch("/gen_avatar", {
+    fetch(document.WEBAPP_URL+"/gen_avatar", {
         method: "POST",
         body: form
     })
