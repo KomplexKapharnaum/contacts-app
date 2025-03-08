@@ -9,7 +9,10 @@ STATS.config = [
     "daily_app_open",
     "events_participated",
     "time_spent",
-    "avatar_score"
+    "avatar_score",
+    
+    "avatars_voted_today",
+    "last_time_voted"
 ]
 
 STATS.cache = {}
@@ -29,6 +32,12 @@ STATS.loadUser = (user) => {
     }
 }
 
+STATS.setToUser = (userID, key, amount) => {
+    if (!features.getState("profile_stats")) return;
+    STATS.cache[userID].data[key] = amount
+    return STATS.cache[userID].data[key]
+}
+
 STATS.addToUser = (userID, key, amount) => {
     if (!features.getState("profile_stats")) return;
     STATS.cache[userID].data[key] += amount
@@ -43,6 +52,19 @@ STATS.save = async (userID) => {
     if (!STATS.cache[userID]) return
     if (!STATS.cache[userID].updated) return
     await db('users').where('id', userID).update({stats: JSON.stringify(STATS.cache[userID].data)})
+}
+
+STATS.canVote = (userID) => {
+    if (!features.getState("profile_stats")) return false;
+    const ONE_DAY = 24 * 60 * 60 * 1000
+    const lastTimeVoted = STATS.cache[userID].data["last_time_voted"];
+    const timeSinceLastVote = new Date().setHours(0,0,0,0) - lastTimeVoted;
+    return timeSinceLastVote > ONE_DAY;
+}
+
+STATS.updateLastTimeVoted = (userID) => {
+    if (!features.getState("profile_stats")) return;
+    STATS.cache[userID].data["last_time_voted"] = new Date().setHours(0,0,0,0);
 }
 
 export default STATS

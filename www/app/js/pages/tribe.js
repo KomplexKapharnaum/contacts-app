@@ -13,7 +13,6 @@ async function loadLeaderBoard() {
     if (!tribeID) return
 
     const data = await QUERY.getLeaderBoard();
-    console.log(data)
 
     if (!data) return
     if (!data.status) return
