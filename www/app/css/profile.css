@@ -375,3 +375,35 @@
     font-weight: bold;
     width: max-content;
 }
+
+#avatar-vote-container {
+    width: 100%;
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: var(--color-background);
+    border: solid 2px var(--vote-container-color);
+    border-radius: 8px;
+}
+
+#avatar-vote-container:not(.disabled) {--vote-container-color: var(--color-secondary-3);}
+#avatar-vote-container.disabled {--vote-container-color: var(--color-secondary-4);}
+
+#avatar-vote-text {
+    font-size: var(--fontSize-small);
+    text-align: center;
+}
+
+#avatar-vote-btn {
+    background-color: var(--vote-container-color);
+    font-size: var(--fontSize-small);
+    padding: 8px 16px;
+}
+
+#avatar-vote-container.disabled button {
+    opacity: 0.5;
+    pointer-events: none;
+}

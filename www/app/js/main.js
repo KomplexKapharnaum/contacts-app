@@ -83,6 +83,7 @@ async function after_user_load(uuid) {
     await loadLeaderBoard()
     await updateTrophies()
     await updateProfilePicture()
+    setProfileAvatarVoteStateFromUserData()
 
     if (userData.tribe_id) {
         const tribes = await QUERY.getTribes()
@@ -236,6 +237,7 @@ const featurestates_elements = {
     gen_avatar: document.getElementById("avatar-container"),
     profile_desc: document.getElementById("profile-description-container"),
     tribe_cry: document.getElementById("tribe-cry"),
+    vote_avatar: document.getElementById("avatar-vote-container")
 }
 
 function feature_hide(featureElement) {
@@ -260,6 +262,7 @@ async function loadFeatureStates() {
     setFeatureState("gen_avatar", FEATURES.profile_avatar)
     setFeatureState("profile_desc", FEATURES.profile_description)
     setFeatureState("tribe_cry", FEATURES.tribe_cry)
+    setFeatureState("vote_avatar", FEATURES.tribe_avatar_vote)
 }
 
 function gotoButtons() {

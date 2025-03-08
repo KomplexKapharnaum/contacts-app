@@ -483,6 +483,14 @@ function genNewAvatar(userID, data) {
 
 }
 
+document.getElementById("profile-save-avatar").addEventListener("click", () => {
+    const avatar = document.getElementById("profile-avatar");
+    const link = document.createElement("a");
+    link.href = avatar.src;
+    link.download = "avatar.png";
+    link.click();
+})
+
 /* Avatar votes */
 
 const avatar_vote_image = document.getElementById("avatar-vote-image")
@@ -564,4 +572,38 @@ btn_profile_desc.addEventListener("click", () => {
     QUERY.updateDescription(input_profile_desc.value).then(() => {
         alert("Description mise à jour !")
     })
+})
+
+const profile_avatarvote_container = document.getElementById("avatar-vote-container")
+const profile_avatarvote_text = document.getElementById("avatar-vote-text")
+const profile_avatarvote_btn = document.getElementById("avatar-vote-btn")
+
+function setProfileAvatarVoteStateFromUserData() {
+    if (userData) {
+        const last_time_voted = userData.stats.last_time_voted
+        if (last_time_voted) {
+            const today = new Date().setHours(0, 0, 0, 0)
+            const last_time_voted_today = new Date(last_time_voted).setHours(0, 0, 0, 0)
+            if (today === last_time_voted_today) {
+                setProfileAvatarVoteState(false)
+            }
+        }
+    }
+}
+
+function setProfileAvatarVoteState(state) {
+    if (state) {
+        profile_avatarvote_container.classList.remove("disabled")
+        profile_avatarvote_text.innerText = "Votre vote journalier d’avatars vous attend !"
+        profile_avatarvote_btn.innerText = "Commencer le vote"
+    } else {
+        profile_avatarvote_container.classList.add("disabled")
+        profile_avatarvote_text.innerText = "Vous avez déjà voté aujourd’hui !"
+        profile_avatarvote_btn.innerText = "Revenez demain !"
+    }
+}
+
+profile_avatarvote_btn.addEventListener("click", () => {
+    startAvatarVotes()
+    setProfileAvatarVoteState(false)
 })
