@@ -484,11 +484,12 @@ function genNewAvatar(userID, data) {
 }
 
 document.getElementById("profile-save-avatar").addEventListener("click", () => {
-    const avatar = document.getElementById("profile-avatar");
-    const link = document.createElement("a");
-    link.href = avatar.src;
-    link.download = "avatar.png";
-    link.click();
+    // const avatar = document.getElementById("profile-avatar");
+    // const link = document.createElement("a");
+    // link.href = avatar.src;
+    // link.download = "avatar.png";
+    // link.click();
+    downloadImage(document.getElementById("profile-avatar").src, "avatar.png")
 })
 
 /* Avatar votes */

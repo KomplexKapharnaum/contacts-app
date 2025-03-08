@@ -155,3 +155,65 @@ if (!document.CONFIG) {
 //         document.documentElement.style.setProperty('--offset', `0px`)
 //     })
 // }
+
+function downloadImage(imageUrl, fileName) {
+    // Check if we're running on a device (not in browser)
+    if (!window.cordova) {
+        console.error("This function needs to be run on a device with Cordova");
+        return;
+    }
+
+    // Show a loading indicator
+    navigator.notification.activityStart("Downloading", "Please wait...");
+
+    // Get the appropriate directory for saving files
+    window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dirEntry) {
+        // Create the file in the directory
+        dirEntry.getFile(fileName, { create: true, exclusive: false }, function(fileEntry) {
+            
+            // Get a download link
+            var fileTransfer = new FileTransfer();
+            
+            // Download the file
+            fileTransfer.download(
+                imageUrl,
+                fileEntry.toURL(),
+                function(entry) {
+                    // Success callback
+                    navigator.notification.activityStop();
+                    navigator.notification.alert(
+                        "Image downloaded successfully to: " + entry.toURL(),
+                        null,
+                        "Download Complete",
+                        "OK"
+                    );
+                },
+                function(error) {
+                    // Error callback
+                    navigator.notification.activityStop();
+                    navigator.notification.alert(
+                        "Download failed: " + error.code,
+                        null,
+                        "Download Error",
+                        "OK"
+                    );
+                    console.error("download error source " + error.source);
+                    console.error("download error target " + error.target);
+                    console.error("download error code " + error.code);
+                },
+                false,  // trustAllHosts, set to false for security
+                {
+                    headers: {
+                        // Optional: Add headers if needed for authorization, etc.
+                    }
+                }
+            );
+        }, function(error) {
+            navigator.notification.activityStop();
+            console.error("Error creating file: " + error.code);
+        });
+    }, function(error) {
+        navigator.notification.activityStop();
+        console.error("Error accessing filesystem: " + error.code);
+    });
+}
