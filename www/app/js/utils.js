@@ -156,15 +156,13 @@ if (!document.CONFIG) {
 //     })
 // }
 
+// Function to download an image to device storage
 function downloadImage(imageUrl, fileName) {
     // Check if we're running on a device (not in browser)
     if (!window.cordova) {
         console.error("This function needs to be run on a device with Cordova");
         return;
     }
-
-    // Show a loading indicator
-    navigator.notification.activityStart("Downloading", "Please wait...");
 
     // Get the appropriate directory for saving files
     window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dirEntry) {
@@ -180,26 +178,15 @@ function downloadImage(imageUrl, fileName) {
                 fileEntry.toURL(),
                 function(entry) {
                     // Success callback
-                    navigator.notification.activityStop();
-                    navigator.notification.alert(
-                        "Image downloaded successfully to: " + entry.toURL(),
-                        null,
-                        "Download Complete",
-                        "OK"
-                    );
+                    console.log("Download complete: " + entry.toURL());
+                    alert("Image downloaded successfully!");
                 },
                 function(error) {
                     // Error callback
-                    navigator.notification.activityStop();
-                    navigator.notification.alert(
-                        "Download failed: " + error.code,
-                        null,
-                        "Download Error",
-                        "OK"
-                    );
                     console.error("download error source " + error.source);
                     console.error("download error target " + error.target);
                     console.error("download error code " + error.code);
+                    alert("Download failed: " + error.code);
                 },
                 false,  // trustAllHosts, set to false for security
                 {
@@ -209,11 +196,11 @@ function downloadImage(imageUrl, fileName) {
                 }
             );
         }, function(error) {
-            navigator.notification.activityStop();
             console.error("Error creating file: " + error.code);
+            alert("Error creating file: " + error.code);
         });
     }, function(error) {
-        navigator.notification.activityStop();
         console.error("Error accessing filesystem: " + error.code);
+        alert("Error accessing filesystem: " + error.code);
     });
 }
