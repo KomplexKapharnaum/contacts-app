@@ -93,13 +93,17 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     const tribeID = user.tribe_id;
 
-    const uploadPath = path.join(__dirname, 'cry_upload', `${tribeID}-${user.id}.mp3`);
+    const audio_name = `${tribeID}-${user.id}.mp3`
+
+    const uploadPath = path.join(__dirname, 'cry_upload', audio_name);
     fs.renameSync(file.path, uploadPath);
 
-    await db('users').where('uuid', uuid).update({ audio: `${tribeID}-${user.id}.mp3` });
+    await db('users').where('uuid', uuid).update({ audio: audio_name});
 
-    res.status(200).send("Audio uploaded");
+    res.status(200).send(audio_name);
 });
+
+app.use('/tribe_audio', express.static('cry_upload'));
 
 app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), async function(req, res) {
     if (!features.getState("profile_avatar")) {

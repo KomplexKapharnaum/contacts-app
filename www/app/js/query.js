@@ -108,3 +108,7 @@ QUERY.getFeatures = async () => {
 QUERY.setTribe = async (tribeID) => {
     return await QUERY.process("set_tribe", {uuid: userData.uuid, tribe_id: tribeID});
 }
+
+QUERY.getMashup = async () => {
+    return await QUERY.process("tribe_mashup", {uuid: userData.uuid});
+}

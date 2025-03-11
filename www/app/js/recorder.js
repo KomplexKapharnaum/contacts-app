@@ -22,7 +22,8 @@ class Recorder {
         })
     }
 
-    start() {
+    record(recordCallback) {
+        this.chunks = [];
         return new Promise(async (resolve, reject) => {
             this.stream = await this.getStream();
             if (this.stream) {
@@ -43,6 +44,8 @@ class Recorder {
                 setTimeout(() => {
                     mediaRecorder.stop();
                 }, 5000);
+
+                recordCallback();
             } else {
                 resolve(false);
             }
@@ -50,53 +53,52 @@ class Recorder {
     }
 
     upload() {
-        // const urlEncoded = new URLSearchParams({
-        //     audio: this.blob,
-        //     uuid: userData.uuid,
-        // }).toString();
-        const form = new FormData();
+        return new Promise((resolve, reject) => {
+            const form = new FormData();
 
-        const audioFile = new File([this.blob], `recording-${Date.now()}.webm`, {
-            contentType: 'audio/webm',
-        });
+            const audioFile = new File([this.blob], `recording-${Date.now()}.webm`, {
+                contentType: 'audio/webm',
+            });
 
-        form.append("audio", audioFile);
-        form.append("uuid", userData.uuid);
+            form.append("audio", audioFile);
+            form.append("uuid", userData.uuid);
 
-        fetch("/tribe_audio_upload", {
-            method: "POST",
-            body: form
-        })
-        .then((res) => {
-            if (res.ok) {
-                console.log("Audio uploaded")
-            } else {
-                console.error("Error uploading audio")
-            }
-        })
-        .catch((err) => {
-            console.error("Error uploading audio", err)
+            fetch("/tribe_audio_upload", {
+                method: "POST",
+                body: form
+            })
+            .then((res) => {
+                if (res.ok) {
+                    resolve(res.text());
+                    console.log("Audio uploaded")
+                } else {
+                    console.error("Error uploading audio")
+                }
+            })
+            .catch((err) => {
+                console.error("Error uploading audio", err)
+            })
         })
     }
 }
 
-const recorder = new Recorder();
+// const recorder = new Recorder();
 
-const recordbtnStates = ["Appuyez pour enregistrer", "Enregistrement en cours...", ]
-const record_btn = document.getElementById("btn-cry-record")
-const cry_preview = document.getElementById("audio-cry")
+// const recordbtnStates = ["Appuyez pour enregistrer", "Enregistrement en cours...", ]
+// const record_btn = document.getElementById("btn-cry-record")
+// const cry_preview = document.getElementById("audio-cry")
 
-let is_recording = false;
-record_btn.addEventListener("click", async () => {
-    if (!is_recording) {
-        is_recording = true;
-        record_btn.innerHTML = recordbtnStates[1]
-        const data = await recorder.start();
-        if (data) {
-            record_btn.innerHTML = recordbtnStates[0]
-            cry_preview.src = URL.createObjectURL(data);
-            cry_preview.load();
-        }
-        recorder.upload();
-    }
-})
+// let is_recording = false;
+// record_btn.addEventListener("click", async () => {
+//     if (!is_recording) {
+//         is_recording = true;
+//         record_btn.innerHTML = recordbtnStates[1]
+//         const data = await recorder.start();
+//         if (data) {
+//             record_btn.innerHTML = recordbtnStates[0]
+//             cry_preview.src = URL.createObjectURL(data);
+//             cry_preview.load();
+//         }
+//         recorder.upload();
+//     }
+// })

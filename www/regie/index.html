@@ -191,6 +191,30 @@
             <button id="btn-video-send">Send video event</button>
         </div>
 
+        <!-- Questionnaire -->
+        <div class="page" data-page-id="questions">
+            <div class="input_field">
+                <input type="text" name="text" id="input-question-text" placeholder="Enter your question...">
+                <button id="btn-question-add">
+                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12.5H19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 5.5V19.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <hr>
+            <div id="box-question-items"></div>
+            <div class="space"></div>
+
+            <button id="btn-question-preset" class="preset">Save as preset...</button>
+            <button id="btn-question-send">Send questions event</button>
+        </div>
+
+        <!-- Live upload -->
+        <div class="page" data-page-id="upload">
+            <button id="btn-upload-send">Send live upload event</button>
+        </div>
+
         <!-- Presets -->
         <div class="page" data-page-id="preset">
             <select name="select-preset" id="select-preset"></select>
@@ -278,18 +302,24 @@
                     <path d="M21.6667 14.9999L18.5807 11.9139C18.2056 11.539 17.697 11.3284 17.1667 11.3284C16.6363 11.3284 16.1277 11.539 15.7527 11.9139L6.66666 20.9999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <div class="nav-btn goto-page" data-page-id="info">
+            <!-- <div class="nav-btn goto-page" data-page-id="info">
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.8889 22C18.4117 22 22.8889 17.5228 22.8889 12C22.8889 6.47715 18.4117 2 12.8889 2C7.36604 2 2.88889 6.47715 2.88889 12C2.88889 17.5228 7.36604 22 12.8889 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M12.8889 16V12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M12.8889 8H12.8989" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-            </div>
+            </div> -->
             <div class="nav-btn goto-page" data-page-id="video">
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16.1111 13L21.3341 16.482C21.4094 16.5321 21.4969 16.5609 21.5872 16.5652C21.6776 16.5695 21.7674 16.5493 21.8471 16.5066C21.9268 16.4639 21.9935 16.4004 22.04 16.3228C22.0865 16.2452 22.1111 16.1565 22.1111 16.066V7.87002C22.1111 7.78204 22.088 7.69562 22.0439 7.61947C21.9998 7.54332 21.9365 7.48014 21.8602 7.43632C21.7839 7.3925 21.6974 7.36958 21.6094 7.36988C21.5214 7.37017 21.4351 7.39368 21.3591 7.43802L16.1111 10.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M14.1111 6H4.11111C3.00654 6 2.11111 6.89543 2.11111 8V16C2.11111 17.1046 3.00654 18 4.11111 18H14.1111C15.2157 18 16.1111 17.1046 16.1111 16V8C16.1111 6.89543 15.2157 6 14.1111 6Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="questions">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-question"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            </div>
+            <div class="nav-btn goto-page" data-page-id="upload">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
             </div>
             <div class="nav-btn goto-page" data-page-id="preset">
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
