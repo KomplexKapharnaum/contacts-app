@@ -1,5 +1,6 @@
 import database from './core/database.js';
 import features from './features.js'
+import { SOCKET } from './network/socket.js';
 
 let SCORE = {};
 
@@ -9,6 +10,7 @@ SCORE.addToPlayer = async (id, amount) => {
     if (!player) return false;
     const newScore = player.score + amount;
     await database('users').where('id', id).update({score: newScore});
+    SOCKET.toClient(id, "send-xp", amount);
     
     const tribeID = player.tribe_id;
     const tribe = await database('tribes').where('id', tribeID).first();

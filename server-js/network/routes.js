@@ -140,3 +140,29 @@ app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), 
 
     res.status(200).send("Avatar saved");
 });
+
+
+app.post('/live_file_upload', upload.single('image'), async function(req, res) {
+    const file = req.file;
+    const uuid = req.body.uuid;
+    
+    if (!file) {
+        return res.status(400).send("No image file");
+    }
+    
+    if (await util.userExists(uuid) === false) {
+        return res.status(400).send("User not found");
+    }
+
+    const file_extension = file.originalname.split('.').pop();
+    const randomName = Array(16).fill(0).map(_ => Math.floor(Math.random() * 36).toString(36)).join('');
+    const newFileName = `${randomName}.${file_extension}`;
+
+    const filepath = path.join(__basepath, 'live_upload', newFileName);
+    fs.writeFileSync(filepath, file.buffer);
+    fs.unlinkSync(file.path);
+
+    SOCKET.io.to("display").emit("live-file-uploaded", newFileName);
+    
+    res.status(200).send("File uploaded successfully");
+});

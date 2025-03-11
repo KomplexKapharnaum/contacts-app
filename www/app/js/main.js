@@ -299,3 +299,15 @@ document.SOCKETIO.on("pong", (data) => {
 setInterval(() => {
     document.SOCKETIO.emit("info-ping")
 }, 60000)
+
+function showGainedXP(amount) {
+    const elm = document.createElement("div")
+    elm.innerText = "+" + amount + " POINTS"
+    elm.classList.add("xp-gained")
+    document.body.appendChild(elm)
+    setTimeout(() => elm.remove(), 3000)
+}
+
+document.SOCKETIO.on("send-xp", (amount) => {
+    showGainedXP(amount)
+})

@@ -53,13 +53,11 @@ STATS.save = async (userID) => {
     if (!STATS.cache[userID].updated) return
     await db('users').where('id', userID).update({stats: JSON.stringify(STATS.cache[userID].data)})
 }
-
 STATS.canVote = (userID) => {
     if (!features.getState("profile_stats")) return false;
-    const ONE_DAY = 24 * 60 * 60 * 1000
-    const lastTimeVoted = STATS.cache[userID].data["last_time_voted"];
-    const timeSinceLastVote = new Date().setHours(0,0,0,0) - lastTimeVoted;
-    return timeSinceLastVote > ONE_DAY;
+    const today = new Date().setHours(0, 0, 0, 0);
+    const lastTimeVoted = new Date(STATS.cache[userID].data["last_time_voted"]).setHours(0, 0, 0, 0);
+    return lastTimeVoted < today;
 }
 
 STATS.updateLastTimeVoted = (userID) => {

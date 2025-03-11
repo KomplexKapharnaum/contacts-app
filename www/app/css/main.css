@@ -419,3 +419,38 @@ button.back {
 #debug-input-preview img {
     width: 100%;
 }
+
+/* Misc */
+
+@keyframes xp-show {
+    0% {
+        transform: translate(-50%, -50%) scale(0) rotate(45deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(-5deg);
+    }
+}
+
+.xp-gained {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+
+    opacity: 0.8;
+    font-size: var(--font-big);
+    z-index: 10;
+
+    transform: translate(-50%, -50%) scale(1) rotate(-5deg);
+    animation: xp-show 0.5s ease-in-out;
+}
+
+.small {
+    font-size: var(--fontSize-small);
+    color: var(--color-text-secondary);
+}

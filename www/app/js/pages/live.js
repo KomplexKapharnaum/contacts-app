@@ -146,11 +146,12 @@ USEREVENT.processQuestions = function(questions) {
         answer.focus();
 
         const event = () => {
-
             const packet = {
                 question: msg,
                 answer: answer.value
             }
+
+            document.SOCKETIO.emit("live-question", packet);
 
             if (questions.length>0) {
                 nextQuestion();
@@ -176,15 +177,17 @@ btn_live_upload.addEventListener("click", () => {
     input.accept = "image/*";
     input.addEventListener("change", (event) => {
         const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const data = event.target.result;
-            const packet = {
-                image: data
-            }
-            console.log(packet);
-        }
-        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("uuid", userData.uuid);
+        fetch("/live_file_upload", {
+            method: "POST",
+            body: formData
+        }).then((res) => {
+            alert("Image envoyée !")
+        }).catch((err) => {
+            console.error(err);
+        });
     });
     input.click();
 });

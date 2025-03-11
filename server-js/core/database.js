@@ -129,6 +129,14 @@ async function initDB() {
             table.string("name");
             table.string('description');
             table.boolean("enabled").defaultTo(false);
+        })
+
+        .createTable('live-answers', (table) => {
+            table.increments('id');
+            table.integer('user_id').unsigned().references('users.id');
+            table.string('question');
+            table.string('answer');
+            table.string('date');
         });
 
         await db.createTribe("Machines", ["#EEFE04", "#F8A539", "#8EEFFE"]);

@@ -220,6 +220,20 @@ SOCKET.io.on('connection', (socket) => {
       }
     });
 
+    socket.on("live-question", async(data) => {
+      const { question, answer } = data;
+      if (socket.rooms.has("user")) {
+        if (answer.length > 500) return;
+        if (answer.length < 5) return;
+        await db('live-answers').insert({
+          user_id: socket.userID,
+          question,
+          answer,
+          date: new Date().toISOString()
+        });
+      }
+    })
+
     /* Avatar vote */
 
     socket.on("vote-avatar", async (data) => {
