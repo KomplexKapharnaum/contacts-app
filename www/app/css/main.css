@@ -22,6 +22,11 @@
 
 * {
     box-sizing: border-box;
+    user-select: none;
+}
+
+input[type="text"], input[type="password"], input[type="number"], textarea {
+    user-select: text;
 }
 
 html {

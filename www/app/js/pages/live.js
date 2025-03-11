@@ -133,6 +133,40 @@ video_overlay_media.addEventListener("loadeddata", () => {
     video_overlay_media.play();
 });
 
+USEREVENT.processQuestions = function(questions) {
+    PAGES.goto("live-questions");
+    const question = document.getElementById("live-questions-message");
+    const answer = document.getElementById("live-questions-input");
+    const next = document.getElementById("live-questions-send");
+
+    const nextQuestion = () => {
+        const msg = questions.shift();
+        question.innerHTML = msg;
+        answer.value = "";
+        answer.focus();
+
+        const event = () => {
+
+            const packet = {
+                question: msg,
+                answer: answer.value
+            }
+
+            if (questions.length>0) {
+                nextQuestion();
+            } else {
+                PAGES.goto("live-info");
+                document.getElementById("live-info-message").innerHTML = "Vous avez fini la série de questions !";
+            }
+            next.removeEventListener("click", event);
+        }
+
+        next.addEventListener("click", event);
+    }
+
+    nextQuestion();
+}
+
 
 receiveSessionEvent = function (event) {
 
@@ -162,6 +196,12 @@ receiveSessionEvent = function (event) {
             break;
         case "video":
             USEREVENT.showVideo(event.args.url);
+            break;
+        case "question":
+            USEREVENT.processQuestions(event.args.questions);
+            break;
+        case "upload":
+            PAGES.goto("live-upload");
             break;
     }
 }

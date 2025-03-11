@@ -349,6 +349,28 @@ query.add("random_avatars", async (params) => {
     return [true, processedRandomUsers];
 })
 
+query.add("tribe_mashup", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+
+    const user = await db('users').where('uuid', uuid).first();
+
+    if (!user.audio) return [false, "user has no audio"];
+
+    const tribeID = user.tribe_id;
+    const randomUsers = await db('users')
+    .where('tribe_id', tribeID)
+    .whereNot('id', user.id)
+    .whereNot('audio', null)
+    .orderByRaw('RANDOM()')
+    .limit(5)
+    .select('audio')
+
+    const audioPaths = randomUsers.map(x => x.audio);
+
+    return [true, audioPaths];
+})
+
 // Regie query
 
 query.add("r_eventlist", async (params) => {

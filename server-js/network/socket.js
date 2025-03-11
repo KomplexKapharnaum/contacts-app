@@ -6,8 +6,10 @@ import police from '../core/police.js';
 import db from '../core/database.js';
 
 import stats from '../stats.js';
+import score from '../score.js';
 import trophies from '../trophies.js';
 import features from '../features.js'
+
 
 import firebase from './firebase.js';
 import rateLimiter from './ratelimiter.js';
@@ -230,6 +232,7 @@ SOCKET.io.on('connection', (socket) => {
 
       if (voteState) {
         stats.addToUser(voted_userID, "avatar_score", 1)
+        score.addToPlayer(voted_userID, 10);
       }
     })
 

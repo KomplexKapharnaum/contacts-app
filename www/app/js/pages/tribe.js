@@ -1,9 +1,3 @@
-const rank_phrases = [
-    "Continuez pour ne pas perdre votre prestigieux rang !",
-    "Ne lachez rien, vous y êtes presque !",
-    "Rien n'est terminé, continuez de vous combattre !"
-]
-
 const tribe_top10 = document.getElementById("top10-container")
 
 async function loadLeaderBoard() {
@@ -25,7 +19,6 @@ async function loadLeaderBoard() {
     header.innerText = tribe_rank + 1
     header_suffix.innerText = tribe_rank>0 ? "eme" : "er"
     score.innerText = data.data[tribeID].global
-    // info.innerText = rank_phrases[tribe_rank]
 
     const leaderboard_players = data.data[tribeID].players
     
@@ -54,10 +47,6 @@ async function loadLeaderBoard() {
 }
 
 /* Tribe questions */
-
-
-
-/* Onboarding questions */
 
 let obform_data = {};
 
@@ -286,3 +275,120 @@ async function obform_process() {
         loadLeaderBoard()
     }
 }
+
+/* Tribe cry recorder */
+
+const recorder = new Recorder()
+const cry_btns_container = document.getElementById("tribe-cry-buttons")
+const cryBtns = {
+    record: document.getElementById("btn-cry-record"),
+    timer: document.getElementById("btn-cry-timer"),
+    play: document.getElementById("btn-cry-play"),
+    restart: document.getElementById("btn-cry-restart")
+}
+
+function showCryBtns(name) {
+    cry_btns_container.querySelectorAll("div[data-state]").forEach(div => {
+        if (div.dataset.state === name) {
+            div.classList.add("active")
+        } else {
+            div.classList.remove("active")
+        }
+    })
+}
+
+function updateCryContainer(label, state, colorID) {
+    document.querySelector("#tribe-cry-container .text").innerText = label
+    showCryBtns(state)
+    document.documentElement.style.setProperty('--color-state', "var(--color-secondary-"+colorID+")")
+}
+
+updateCryContainer("Enregistre un cri de 5 secondes pour ta tribu !", "no-audio", 1)
+
+cryBtns.record.addEventListener("click", () => {
+    recorder.record(() => {
+        let i=5
+        const update = () => {
+            const str = "00:00:0" + Math.max(i, 0)
+            cryBtns.timer.innerText = str
+        }
+        const interval = setInterval(() =>  i--<0 ? clearInterval(interval) : update(), 1000);
+    })
+    .then(() => {
+        recorder.upload().then((filepath) => {
+            updateCryContainer("Mon cri de tribu", "done", 4)
+            userData.audio = filepath
+            updateCryMashupState()
+        })
+    })
+    updateCryContainer("Enregistrement en cours...", "recording", 3)
+})
+
+cryBtns.play.addEventListener("click", () => {
+    if (userData.audio) {
+        cryBtns.play.classList.add("disabled")
+        const audio = document.createElement("audio")
+        audio.src = document.WEBAPP_URL + "/tribe_audio/" + userData.audio
+        audio.load()
+        audio.play()
+        audio.onended = () => {
+            cryBtns.play.classList.remove("disabled")
+        }
+    }
+})
+
+cryBtns.restart.addEventListener("click", () => {
+    updateCryContainer("Enregistre un cri de 5 secondes pour ta tribu !", "no-audio", 1)
+});
+
+function initCryBoxState() {
+    if (userData.audio) updateCryContainer("Mon cri de tribu", "done", 4)
+}
+
+// Tribe cry mashup
+
+const mashupBtn = document.getElementById("btn-cry-tribe-mashup")
+function updateCryMashupState() {
+    if (userData.audio) {
+        mashupBtn.classList.remove("hide")
+    } else {
+        mashupBtn.classList.add("hide")
+    }
+}
+
+mashupBtn.addEventListener("click", () => {
+    QUERY.getMashup().then(res => {
+        if (res.status) {
+            mashupBtn.classList.add("disabled");
+
+            const audioFiles = [];
+            let currentIndex = 0;
+            
+            const loadAllAudio = () => {
+                for (let i = 0; i < res.data.length; i++) {
+                    const audio = new Audio(document.WEBAPP_URL + "/tribe_audio/" + res.data[i]);
+                    audioFiles.push(audio);
+                }
+                
+                for (let i = 0; i < audioFiles.length - 1; i++) {
+                    audioFiles[i].onended = () => {
+                        currentIndex++;
+                        audioFiles[currentIndex].play();
+                    };
+                }
+                
+                if (audioFiles.length > 0) {
+                    audioFiles[audioFiles.length - 1].onended = () => {
+                        mashupBtn.classList.remove("disabled");
+                    };
+                    
+                    audioFiles[0].play();
+                } else {
+                    mashupBtn.classList.remove("disabled");
+                }
+            };
+            
+            loadAllAudio();
+        }
+    })
+});

@@ -475,6 +475,63 @@ function load_preset_video(data) {
     video_preview.load();
 }
 
+/* Questions */
+/* */
+
+const question_input = document.getElementById("input-question-text")
+const questions_container = document.getElementById("box-question-items")
+
+function add_question(txt) {
+    const tem = tem_textitem.cloneNode(true).content.querySelector(".input_field")
+    tem.querySelector("input").value = txt
+    tem.querySelector("button").addEventListener("click", () => {
+        tem.remove()
+    })
+    questions_container.appendChild(tem)
+}
+
+click("question-add", () => {
+    add_question(question_input.value)
+})
+
+click("question-send", () => {
+    const questions = [...questions_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
+    const args = {
+        questions,
+        params: getParams("questions")
+    }
+    ctrl("question", args)
+})
+
+click("question-preset", () => {
+    if (!confirm("Save as preset ?")) return;
+    const name = prompt("Preset name", "preset-question")
+
+    const questions = [...questions_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
+    const args = {
+        texts : questions,
+        params : getParams("question")
+    }
+    
+    saveAsPresset("question", args, name)
+})
+
+function load_preset_question(data) {
+    data = data.args
+    questions_container.innerHTML = ""
+    data.texts.forEach(txt => {
+        add_question(txt)
+    })
+}
+
+/* Live upload */
+/* */
+
+click("upload-send", () => {
+    const args = {params : {}}
+    ctrl("upload", args)
+})
+
 /* Presets */
 /* */
 

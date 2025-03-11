@@ -293,3 +293,53 @@
     font-size: var(--fontSize-medium);
     color: var(--color-text-primary);
 }
+
+/* Tribe cry */
+
+#tribe-cry-container {
+    width: 100%;
+    padding: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    border: solid 2px var(--color-state);
+    border-radius: 8px;
+    background-color: var(--color-background);
+}
+
+#tribe-cry-container .text {
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+#tribe-cry-buttons>div {
+    display: none;
+    gap: 8px;
+    align-items: center;
+}
+
+#tribe-cry-buttons>div.active {
+    display: flex;
+}
+
+#tribe-cry-buttons button {
+    display: flex;
+    gap: 8px;
+    padding: 4px 8px;
+    font-size: var(--fontSize-small);
+}
+
+#btn-cry-tribe-mashup {
+    width: 100%;
+    background-color: var(--color-background);
+    border: solid 2px var(--color-secondary-4);
+    color: var(--color-secondary-4);
+    margin-top: 8px;
+}
+
+#btn-cry-tribe-mashup.hide {
+    display: none !important;
+}
