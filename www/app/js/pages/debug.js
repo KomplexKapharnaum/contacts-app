@@ -33,3 +33,28 @@ debugInputFile.addEventListener("change", (e) => {
     };
     reader.readAsDataURL(file);
 });
+
+const btn_debug_upload = document.getElementById("input-debug-image")
+btn_debug_upload.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const data = event.target.result;
+            const packet = {
+                image: data
+            }
+            const img = new Image();
+            img.onload = () => {
+                debugInputPreview.innerHTML = "";
+                debugInputPreview.appendChild(img);
+            };
+            img.src = data;
+        }
+        reader.readAsDataURL(file);
+    });
+    input.click();
+});

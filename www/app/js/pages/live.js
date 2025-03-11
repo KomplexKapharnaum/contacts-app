@@ -167,6 +167,27 @@ USEREVENT.processQuestions = function(questions) {
     nextQuestion();
 }
 
+/* File upload */
+
+const btn_live_upload = document.getElementById("live-upload-button")
+btn_live_upload.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const data = event.target.result;
+            const packet = {
+                image: data
+            }
+            console.log(packet);
+        }
+        reader.readAsDataURL(file);
+    });
+    input.click();
+});
 
 receiveSessionEvent = function (event) {
 
