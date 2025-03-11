@@ -4,7 +4,7 @@ import fs from 'fs';
 import { SOCKET } from './network/socket.js';
 import db from './core/database.js';
 import trophies from './trophies.js';
-import { parse } from 'path';
+import firebase from './network/firebase.js';
 
 const workflow = JSON.parse(fs.readFileSync('./server-js/config/workflow.json', 'utf8'))
 
@@ -66,6 +66,7 @@ comfygen.gen = async (avatarID, data, tribeID) => {
 
         await db("avatars").where("id", avatarID).update({status: "done", filename: filename});
         SOCKET.toClient(userID, "comfygen_done", filename);
+        firebase.toUser(userID, "Créateur d'avatar", "Ton avatar viens tout juste d'être généré, il est disponible dès maintenant sur ton profil !");
         
         trophies.reward(userID, 'avatar');
 

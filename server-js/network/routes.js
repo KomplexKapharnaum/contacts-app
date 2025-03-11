@@ -60,6 +60,9 @@ app.get('/download', function (req, res) {
     res.sendFile(__dirname + '/www/download.html');
 });
 
+// Serve live feed page
+app.use('/livefeed', express.static('www/livefeed'));
+
 // Tribe cry upload
  
 const upload = multer({ dest: '_tmp/' });
@@ -142,14 +145,15 @@ app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), 
 });
 
 
+app.use('/live_upload', express.static('live_upload'));
 app.post('/live_file_upload', upload.single('image'), async function(req, res) {
     const file = req.file;
     const uuid = req.body.uuid;
-    
+   
     if (!file) {
         return res.status(400).send("No image file");
     }
-    
+   
     if (await util.userExists(uuid) === false) {
         return res.status(400).send("User not found");
     }
@@ -157,12 +161,28 @@ app.post('/live_file_upload', upload.single('image'), async function(req, res) {
     const file_extension = file.originalname.split('.').pop();
     const randomName = Array(16).fill(0).map(_ => Math.floor(Math.random() * 36).toString(36)).join('');
     const newFileName = `${randomName}.${file_extension}`;
-
-    const filepath = path.join(__basepath, 'live_upload', newFileName);
-    fs.writeFileSync(filepath, file.buffer);
-    fs.unlinkSync(file.path);
-
-    SOCKET.io.to("display").emit("live-file-uploaded", newFileName);
+    const filepath = path.join(__dirname, 'live_upload', newFileName);
     
+    // Fix: Use file.buffer if available, otherwise read from file.path
+    if (file.buffer) {
+        fs.writeFileSync(filepath, file.buffer);
+    } else {
+        // Make sure the directory exists
+        const uploadDir = path.join(__dirname, 'live_upload');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        // Copy the file from the temporary location to the target location
+        fs.copyFileSync(file.path, filepath);
+    }
+    
+    // Only try to unlink if file.path exists
+    if (file.path && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+    }
+    
+    SOCKET.io.to("display").emit("live-file-uploaded", newFileName);
+   
     res.status(200).send("File uploaded successfully");
 });

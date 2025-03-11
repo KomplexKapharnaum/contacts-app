@@ -292,7 +292,11 @@ SOCKET.io.on('connection', (socket) => {
     //   comfygen.add(socket.userID, data);
     // })
 
-    
+    /* Display */
+
+    socket.on("display", async() => {
+      socket.join("display");
+    })
 });
 
 export { SOCKET };

@@ -453,4 +453,6 @@ button.back {
 .small {
     font-size: var(--fontSize-small);
     color: var(--color-text-secondary);
+    text-align: center;
+    opacity: 0.5;
 }

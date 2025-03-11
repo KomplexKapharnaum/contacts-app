@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./socketio.min.js"></script>
+</head>
+<body>
+    
+    <template id="template-column">
+        <div class="column"></div>
+    </template>
+    <template id="template-cell">
+        <div class="cell">
+            <div class="user"><img class="pp" src="./assets/smile.png" alt="p"><span class="username">Hello world</span></div>
+            <div class="image"></div>
+            <div class="buttons">
+                <img src="./assets/like.svg" alt="like">
+                <img src="./assets/comment.svg" alt="comment">
+                <img src="./assets/share.svg" alt="share">
+            </div>
+        </div>
+    </template>
+
+    <main>
+    </main>
+
+    <div id="roots"></div>
+    <script src="./perlin.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

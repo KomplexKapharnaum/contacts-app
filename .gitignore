@@ -6,6 +6,7 @@ database.json
 data.db
 media/
 upload/
+live_upload/*
 
 # Firebase 
 firebase-sdk-admin.json
