@@ -564,4 +564,11 @@ query.add("admin_delete", async (params) => {
     return [true, {id: id}];
 })
 
+query.add("admin_download_questions", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const questions = await db('live-answers').select();
+    const questionsText = questions.map(q => `${q.question}\n${q.answer}`).join('\n\n');
+    return [true, questionsText];
+})
+
 export { query };

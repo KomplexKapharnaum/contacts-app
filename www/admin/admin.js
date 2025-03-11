@@ -287,3 +287,30 @@ const structure_notification = [
 ]
 const box_notifications = document.getElementById("box-notifcations")
 loadTable("notifications", box_notifications, structure_notification)
+
+const loadEventMessages = async () => {
+    const list = await sendCommand("admin_getall", {table: "live-answers"});
+    if (!list.status) return;
+
+    const template = document.getElementById("chat-livemsg-template");
+    const container = document.getElementById("live-msgs-container");
+    list.data.forEach(element => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector(".question").textContent = element.question;
+        clone.querySelector(".answer").textContent = element.answer;
+        container.appendChild(clone);
+    });
+}
+loadEventMessages();
+
+document.getElementById("download-all-live-questions").addEventListener("click", async () => {
+    const msgs = await sendCommand("admin_download_questions", {});
+    if (!msgs.status) return;
+    const blob = new Blob([msgs.data], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'messages.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+})

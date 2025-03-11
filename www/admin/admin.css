@@ -162,3 +162,24 @@ option:hover {
 .form > * {
     height: 32px !important;
 }
+
+.question::before {
+    content: "Q: ";
+    color: #ff9e0c;
+}
+
+.answer::before {
+    content: "A: ";
+    color: #fbff0c;
+}
+
+.livemsg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 4px;
+    border-radius: 4px;
+
+    border: solid 1px var(--col-main);
+}
