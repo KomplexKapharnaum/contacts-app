@@ -208,8 +208,6 @@ receiveSessionEvent = function (event) {
 
 let lastevent_id = null;
 document.SOCKETIO.on('start-event', (data_pack) => {
-
-    console.log(data_pack)
     
     // const userGroup = userData.groups[0].name
     const data = data_pack[/*userGroup*/0]
@@ -228,3 +226,12 @@ endEvent = function() {
     USEREVENT.showVideo(false);
     PAGES.goto("live-idle");
 }
+
+document.querySelectorAll(".btn-live-close").forEach(el => {
+    el.addEventListener("click", () => {
+        lastevent_id=null
+        socketEventLive(userData.uuid, false)
+        showNavbar(true)
+        PAGES.goto("cyberspace")
+    })
+});

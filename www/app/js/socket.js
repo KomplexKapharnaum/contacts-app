@@ -39,8 +39,8 @@ function socketAuth(uuid) {
     document.SOCKETIO.emit('user-auth', uuid);
 }
 
-function socketEventLive(uuid) {
-    document.SOCKETIO.emit('event-live', uuid);
+function socketEventLive(uuid, join) {
+    document.SOCKETIO.emit('event-live', {uuid, join});
 }
 
 // Monkey patch (missing launcher events)

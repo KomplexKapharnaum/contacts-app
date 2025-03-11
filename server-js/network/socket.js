@@ -106,10 +106,15 @@ SOCKET.io.on('connection', (socket) => {
         }
     });
 
-    socket.on('event-live', (uuid) => {
+    socket.on('event-live', (data) => {
+        const {uuid, join} = data;
         if (util.userExists(uuid)) {
+          if (join) {
             socket.join("event");
             socket.emit('start-event', SOCKET.lastEvent);
+          } else {
+            socket.leave("event");
+          }
         }
     });
 

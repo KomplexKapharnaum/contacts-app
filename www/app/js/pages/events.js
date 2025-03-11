@@ -37,21 +37,21 @@ async function loadEvents() {
                         now
                     )
 
-                    const liveEventHandler = () => {
-                        if (eventLive) return
-                        if (isEventLive(event_data.start_date)) {
-                            socketEventLive(userData.uuid)
-                            PAGES.goto("live-idle")
-                            eventLive = true
-                            showNavbar(false)
-                        }
-                    }
-                    liveEventHandler();
+                    // const liveEventHandler = () => {
+                    //     if (eventLive) return
+                    //     if (isEventLive(event_data.start_date)) {
+                    //         socketEventLive(userData.uuid)
+                    //         PAGES.goto("live-idle")
+                    //         eventLive = true
+                    //         showNavbar(false)
+                    //     }
+                    // }
+                    // liveEventHandler();
 
                     clock.add("cyberspace", () => {
                         now = new Date().getTime() > new Date(event_data.start_date).getTime()
                         el.querySelector(".date").innerHTML = now ? "En cours" : formateDate(event_date)
-                        liveEventHandler();
+                        // liveEventHandler();
                     })
 
                     el.addEventListener("click", () => {
@@ -78,12 +78,22 @@ function isIncoming(date) {
     return incomingDate - now < ONE_HOUR
 }
 
+function isNow(date) {
+    const now = new Date().getTime()
+    const eventDate = new Date(date).getTime()
+    return eventDate - now < 0
+}
+
 const countdown_days = document.getElementById("countdown-days")
 const countdown_hours = document.getElementById("countdown-hours")
 const countdown_minutes = document.getElementById("countdown-minutes")
 
 function goto_event(eventData) {
-    if (isIncoming(eventData.start_date)) {
+    if (isNow(eventData.start_date)) {
+        PAGES.goto("live-idle")
+        socketEventLive(userData.uuid, true)
+        showNavbar(false)
+    } else if (isIncoming(eventData.start_date)) {
         openEventMap(eventData)
     } else {
         PAGES.goto("event-countdown")

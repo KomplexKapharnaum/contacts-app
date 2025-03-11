@@ -162,3 +162,17 @@
 #live-questions-send {
     margin-top: 16px;
 }
+
+.btn-live-close {
+    position: fixed;
+    z-index: 10;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    font-size: var(--fontSize-small);
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
+    border: solid 2px var(--color-text-primary);
+    gap: 4px;
+}
