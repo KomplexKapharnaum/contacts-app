@@ -409,3 +409,13 @@ button.back {
     left: 0;
     top: 0;
 }
+
+/* debug page */
+
+#debug-input-preview {
+    width: 100%;
+}
+
+#debug-input-preview img {
+    width: 100%;
+}
