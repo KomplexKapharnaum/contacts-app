@@ -2,11 +2,21 @@ var QUERY = {};
 
 QUERY.process = async (name, params) => {
     const queryString = new URLSearchParams(params).toString();
-    const response = await fetch(document.WEBAPP_URL+`/query?queryname=${name}&${queryString}`)
-    const res = await response.json()
-    return {
-        status: response.status===200,
-        data: res
+    let query = document.WEBAPP_URL+`/query?queryname=${name}&${queryString}`
+    try {
+        const response = await fetch(query)
+        const res = await response.json()
+        return {
+            status: response.status===200,
+            data: res
+        }
+    }
+    catch (e) {
+        console.error(query, e)
+        return {
+            status: false,  
+            data: null
+        }
     }
 }
 

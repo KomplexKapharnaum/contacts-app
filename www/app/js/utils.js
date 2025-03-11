@@ -158,7 +158,26 @@ if (!document.CONFIG) {
 
 // Function to download an image to device storage
 function downloadImage(imageUrl, fileName) {
-    alert("Fonctionnalité non disponible pour l'instant.")
+    try {
+        navigator.share({
+            title: "KXKM Avatar",
+            text: "Partagez votre avatar",
+            url: imageUrl
+        }).then((packageNames) => {
+            if (packageNames.length > 0) {
+                console.log("Shared successfully with activity", packageNames[0]);
+            } else {
+                console.log("Share was aborted");
+            }
+        }).catch((err) => {
+            console.error("Share failed:", err.message);
+        });
+    }
+    catch (e) {
+        console.error("Share failed:", e);
+        alert("Fonctionnalité non disponible pour l'instant.")
+    }
+
     // // Check if we're running on a device (not in browser)
     // if (!window.cordova) {
     //     console.error("This function needs to be run on a device with Cordova");

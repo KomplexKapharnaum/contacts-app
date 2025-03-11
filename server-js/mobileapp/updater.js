@@ -151,7 +151,7 @@ fs.watch(APPDATA_DIR, { recursive: true }, (eventType, filename) => {
         console.log(`\nAPPDATA changed: ${eventType} ${filename}`);
         bundleAppData()
             .then(() => {
-                console.log("APPDATA updated");
+                console.log("APPDATA updated"); 
                 SOCKET.io.emit('update', APPINFO);
             });
     }, watcherWait);
