@@ -73,6 +73,7 @@ class Recorder {
 
             function startRecording() {
                 console.log("Starting recording...");
+                recordCallback();
 
                 window.removeEventListener( "audioinput", onAudioInput, false );
                 window.removeEventListener( "audioinputerror", onAudioInputError, false );
@@ -113,7 +114,7 @@ class Recorder {
                 }
             });
 
-            recordCallback();
+            
         })
     }
 

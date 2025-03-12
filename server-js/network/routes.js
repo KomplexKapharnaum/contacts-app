@@ -68,6 +68,8 @@ app.use('/livefeed', express.static('www/livefeed'));
 const upload = multer({ dest: '_tmp/' });
 
 app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
+    console.log("tribe_audio_upload", features.getState("tribe_cry"));
+
     if (!features.getState("tribe_cry")) {
         res.status(400).send("Feature disabled");
         return;
@@ -79,17 +81,20 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
     const file = req.file;
 
     if (!file) {
+        console.log("No audio file");
         res.status(400).send("No audio file");
         return;
     }
 
     if (await util.userExists(uuid) == false) {
+        console.log("User not found");
         res.status(400).send("User not found");
         return;
     };
 
     const user = await db('users').where('uuid', uuid).first();
     if (!user) {
+        console.log("User not found");
         res.status(400).send("User not found");
         return;
     }
@@ -100,6 +105,7 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     const uploadPath = path.join(__dirname, 'cry_upload', audio_name);
     fs.renameSync(file.path, uploadPath);
+    console.log("Audio uploaded");
 
     await db('users').where('uuid', uuid).update({ audio: audio_name});
 
