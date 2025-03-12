@@ -552,7 +552,7 @@ query.add("admin_update", async (params) => {
     const data = JSON.parse(params.get("data"));
     const id = params.get("id");
 
-    await db(table).where('id', id).update(data);
+    const res = await db(table).where('id', id).update(data);
     return [true, {id: id, data: data}];
 })
 

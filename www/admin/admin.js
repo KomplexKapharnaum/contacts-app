@@ -213,13 +213,13 @@ function createForm(structure, parent, tablename, data) {
     btn_update.textContent = "Update"
     btn_update.addEventListener("click", async () => {
         if (!confirm("Update ?")) return
-        const data = {}
+        const formdata = {}
         structure.forEach(element => {
-            data[element.key] = holder.querySelector(`input[name=${element.key}]`).value
+            formdata[element.key] = holder.querySelector(`input[name=${element.key}]`).value
         });
         const req = {
             table: tablename,
-            data: JSON.stringify(data),
+            data: JSON.stringify(formdata),
             id: data.id
         }
         const res = await sendCommand("admin_update", req);
