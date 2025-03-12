@@ -75,7 +75,6 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     const body = req.body;
     const uuid = body.uuid;
-
     const file = req.file;
 
     if (!file) {
@@ -99,9 +98,15 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     const tribeID = user.tribe_id;
 
-    const audio_name = `${tribeID}-${user.id}.mp3`
+    const audio_name = `${tribeID}-${user.id}.webm`
 
-    const uploadPath = path.join(__dirname, 'cry_upload', audio_name);
+    // Make sure the directory exists
+    const uploadDir = path.join(__dirname, 'upload', 'cry_upload');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const uploadPath = path.join(uploadDir, audio_name);
     fs.renameSync(file.path, uploadPath);
     console.log("Audio uploaded");
 
@@ -149,7 +154,7 @@ app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), 
 });
 
 
-app.use('/live_upload', express.static('live_upload'));
+app.use('/live_upload', express.static('upload/live_upload'));
 app.post('/live_file_upload', upload.single('image'), async function(req, res) {
     const file = req.file;
     const uuid = req.body.uuid;
@@ -165,20 +170,21 @@ app.post('/live_file_upload', upload.single('image'), async function(req, res) {
     const file_extension = file.originalname.split('.').pop();
     const randomName = Array(16).fill(0).map(_ => Math.floor(Math.random() * 36).toString(36)).join('');
     const newFileName = `${randomName}.${file_extension}`;
-    const filepath = path.join(__dirname, 'live_upload', newFileName);
+
+    // Make sure the directory exists
+    const uploadDir = path.join(__dirname, 'upload', 'live_upload');
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const filepath = path.join(uploadDir, newFileName);
     
     // Fix: Use file.buffer if available, otherwise read from file.path
     if (file.buffer) {
         fs.writeFileSync(filepath, file.buffer);
     } else {
-        // Make sure the directory exists
-        const uploadDir = path.join(__dirname, 'live_upload');
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-        
         // Copy the file from the temporary location to the target location
-        fs.copyFileSync(file.path, filepath);
+        fs.renameSync(file.path, filepath);
     }
     
     // Only try to unlink if file.path exists
