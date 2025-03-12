@@ -248,7 +248,7 @@ function feature_hide(featureElement) {
 }
 
 function feature_show(featureElement) {
-    featurestates_elements[featureElement].style.display = "block"
+    featurestates_elements[featureElement].style.removeProperty("display")
 }
 
 function setFeatureState(featureElement, state) {

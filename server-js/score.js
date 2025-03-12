@@ -32,12 +32,15 @@ SCORE.updateLeaderBoard = async () => {
     for (let i = 0; i < tribes.length; i++) {
 
         const t = tribes[i]
+
+        const players = await database('users').where('tribe_id', t.id).select();
+        const totalScore = players.reduce((a, b) => a + b.score, 0);
+
         SCORE.leaderBoard[t.id] = {
-            global: t.score,
+            global: totalScore,
             players: []
         }
 
-        const players = await database('users').where('tribe_id', t.id).select();
         players.sort((a, b) => b.score - a.score);
         const playersWithAvatar = await Promise.all(players.slice(0, 10).map(async player => {
             const avatar = await database('avatars').where('id', player.selected_avatar).first();

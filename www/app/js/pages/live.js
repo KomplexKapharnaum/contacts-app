@@ -170,58 +170,62 @@ USEREVENT.processQuestions = function(questions) {
 
 /* File upload */
 
+const btn_debug_upload = document.getElementById("input-debug-image")
 const btn_live_upload = document.getElementById("live-upload-button");
-btn_live_upload.addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        const img = new Image();
-        img.onload = () => {
-            let width = img.width;
-            let height = img.height;
-            
-            if (width > height) {
-                if (width > 512) {
-                    height = Math.round((height * 512) / width);
-                    width = 512;
-                }
-            } else {
-                if (height > 512) {
-                    width = Math.round((width * 512) / height);
-                    height = 512;
-                }
-            }
-            
-            const canvas = document.createElement("canvas");
-            canvas.width = width;
-            canvas.height = height;
-            
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            canvas.toBlob((blob) => {
-                const formData = new FormData();
-                formData.append("image", blob, "image.jpg");
-                formData.append("uuid", userData.uuid);
+
+[btn_live_upload, btn_debug_upload].forEach(elm => {
+    elm.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            const img = new Image();
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
                 
-                fetch("/live_file_upload", {
-                    method: "POST",
-                    body: formData
-                }).then((res) => {
-                    alert("Image envoyée !");
-                }).catch((err) => {
-                    console.error(err);
-                });
-            }, "image/jpeg", 0.85);
+                if (width > height) {
+                    if (width > 512) {
+                        height = Math.round((height * 512) / width);
+                        width = 512;
+                    }
+                } else {
+                    if (height > 512) {
+                        width = Math.round((width * 512) / height);
+                        height = 512;
+                    }
+                }
+                
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                canvas.toBlob((blob) => {
+                    const formData = new FormData();
+                    formData.append("image", blob, "image.jpg");
+                    formData.append("uuid", userData.uuid);
+                    
+                    fetch("/live_file_upload", {
+                        method: "POST",
+                        body: formData
+                    }).then((res) => {
+                        alert("Image envoyée !");
+                    }).catch((err) => {
+                        console.error(err);
+                    });
+                }, "image/jpeg", 0.85);
+                
+            };
             
-        };
-        
-        // Create object URL from the selected file
-        img.src = URL.createObjectURL(file);
+            // Create object URL from the selected file
+            img.src = URL.createObjectURL(file);
+        });
+        input.click();
     });
-    input.click();
 });
 
 receiveSessionEvent = function (event) {

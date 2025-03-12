@@ -248,10 +248,11 @@ SOCKET.io.on('connection', (socket) => {
 
       stats.addToUser(userID, "avatars_voted_today", 1)
       stats.addToUser(userID, "avatars_voted", 1)
+      score.addToPlayer(userID, 5);
 
       if (voteState) {
         stats.addToUser(voted_userID, "avatar_score", 1)
-        score.addToPlayer(voted_userID, 10);
+        score.addToPlayer(voted_userID, 15);
       }
     })
 

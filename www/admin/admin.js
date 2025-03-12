@@ -341,3 +341,9 @@ const load_feedbacks = async () => {
 }
 load_feedbacks();
 
+// Paramètres
+
+document.getElementById("password-reset").addEventListener("click", () => {
+    cookies.remove("pass")
+    location.reload();
+})

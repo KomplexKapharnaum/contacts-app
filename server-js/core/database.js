@@ -49,7 +49,7 @@ async function initDB() {
             table.increments('id');
             table.string('name');
             table.json('colors').defaultTo('[]');
-            table.integer('score').defaultTo(0);
+            // table.integer('score').defaultTo(0);
         })
 
         .createTable('session', (table) => {

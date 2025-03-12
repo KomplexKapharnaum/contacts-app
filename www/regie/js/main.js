@@ -169,6 +169,13 @@ function load_events() {
 
     query("r_eventlist")
     .then((events) => {
+
+        if (events.data == "wrong password") {
+            document.CONFIG.remove('pass')
+            location.reload();
+        }
+
+        if (!events.status) return;
         events = events.data
         events = events.filter(event => event.ended==false);
         events.forEach(event => {
@@ -565,6 +572,7 @@ function loadPresets() {
     presets_container.innerHTML = "";
     presetGroups = {};
     query("r_get_presets").then((res) => {
+        if (!res.status) return;
         const data = res.data
         const groups = data.reduce((acc, elem) => {
             if (!acc[elem.group]) {
@@ -723,6 +731,7 @@ function fill_select_usergroup() {
     select_usergroup.appendChild(opt)
 
     query("r_tribelist").then((res) => {
+        if (!res.status) return;
         res.data.forEach((g) => {
             const opt = document.createElement("option")
             opt.value = g.name
