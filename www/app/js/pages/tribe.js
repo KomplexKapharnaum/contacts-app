@@ -321,6 +321,9 @@ cryBtns.record.addEventListener("click", () => {
             updateCryMashupState()
         })
     })
+    .catch((err) => {
+        console.log(err)
+    });
     updateCryContainer("Enregistrement en cours...", "recording", 3)
 })
 

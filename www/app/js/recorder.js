@@ -47,7 +47,7 @@ class Recorder {
 
                 recordCallback();
             } else {
-                resolve(false);
+                reject("no stream");
             }
         })
     }
@@ -63,7 +63,7 @@ class Recorder {
             form.append("audio", audioFile);
             form.append("uuid", userData.uuid);
 
-            fetch("/tribe_audio_upload", {
+            fetch(document.WEBAPP_URL + "/tribe_audio_upload", {
                 method: "POST",
                 body: form
             })
