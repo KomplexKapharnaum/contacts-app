@@ -303,7 +303,7 @@ SOCKET.io.on('connection', (socket) => {
 
     socket.on("live-get-files", async () => {
       try {
-          const folderPath = "./live_upload";
+          const folderPath = "./upload/live_upload";
           const files = fs.readdirSync(folderPath);
           const jpgFiles = files.filter(file => file.endsWith(".jpg"));
           const shuffled = jpgFiles.sort(() => 0.5 - Math.random());

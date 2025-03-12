@@ -37,7 +37,7 @@ class Recorder {
                     }
 
                     mediaRecorder.onstop = () => {
-                        const blob = new Blob(this.chunks);
+                        const blob = new Blob(this.chunks, { type: 'audio/webm' });
                         this.blob = blob;
                         resolve(this.blob);
                     }
@@ -87,7 +87,7 @@ class Recorder {
 
                 setTimeout(() => {
                     audioinput.stop();
-                    const blob = new Blob(that.chunks);
+                    const blob = new Blob(that.chunks, { type: 'audio/webm' });
                     that.blob = blob;
                     resolve(that.blob);
                 }, 5000);
@@ -130,11 +130,7 @@ class Recorder {
         return new Promise((resolve, reject) => {
             const form = new FormData();
 
-            const audioFile = new File([this.blob], `recording-${Date.now()}.webm`, {
-                contentType: 'audio/webm',
-            });
-
-            form.append("audio", audioFile, `recording-${Date.now()}.webm`);
+            form.append("audio", this.blob, `recording-${Date.now()}.webm`);
             form.append("uuid", userData.uuid);
 
             fetch(document.WEBAPP_URL + "/tribe_audio_upload", {

@@ -158,25 +158,79 @@ if (!document.CONFIG) {
 
 // Function to download an image to device storage
 function downloadImage(imageUrl, fileName) {
-    try {
-        navigator.share({
-            title: "KXKM Avatar",
-            text: "Partagez votre avatar",
-            url: imageUrl
-        }).then((packageNames) => {
-            if (packageNames.length > 0) {
-                console.log("Shared successfully with activity", packageNames[0]);
-            } else {
-                console.log("Share was aborted");
-            }
-        }).catch((err) => {
-            console.error("Share failed:", err.message);
-        });
-    }
-    catch (e) {
-        console.error("Share failed:", e);
-        alert("Fonctionnalité non disponible pour l'instant.")
-    }
+
+        // Get PNG from imageUrl as base64 using fetch,
+        // convert it to JPG and save it to device storage
+        fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                // Create a new blob object
+                const newBlob = new Blob([blob], { type: "image/png" });
+
+                // get base64 image data
+                const reader = new FileReader();
+                reader.readAsDataURL(newBlob);
+                reader.onloadend = function() {
+                    const base64data = reader.result;
+
+                    var params = {data: base64data, prefix: 'kxkm_', format: 'JPG', quality: 80, mediaScanner: true};
+                    window.imageSaver.saveBase64Image(params,
+                        function (filePath) {
+                        console.log('File saved on ' + filePath);
+                        },
+                        function (msg) {
+                        console.error(msg);
+                        }
+                    );
+                };
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Fonctionnalité non disponible pour votre téléphone. Essayez de mettre à jour l'application..")
+            })
+
+
+        // fetch(imageUrl)
+        //     .then(response => response.blob())
+        //     .then(blob => {
+        //         // Create a new blob object
+        //         const newBlob = new Blob([blob], { type: "image/png" });
+
+        //         // get base64 image data
+        //         const reader = new FileReader();
+        //         reader.readAsDataURL(newBlob);
+        //         reader.onloadend = function() {
+        //             const base64data = reader.result;
+
+        //             var params = {data: base64data, prefix: 'kxkm_', format: 'JPG', quality: 80, mediaScanner: true};
+        //             window.imageSaver.saveBase64Image(params,
+        //                 function (filePath) {
+        //                 console.log('File saved on ' + filePath);
+        //                 },
+        //                 function (msg) {
+        //                 console.error(msg);
+        //                 }
+        //             );
+        //         };
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //         alert("Fonctionnalité non disponible pour votre téléphone. Essayez de mettre à jour l'application..")
+        //     })
+
+        // navigator.share({
+        //     title: "KXKM Avatar",
+        //     text: "Partagez votre avatar",
+        //     url: imageUrl
+        // }).then((packageNames) => {
+        //     if (packageNames.length > 0) {
+        //         console.log("Shared successfully with activity", packageNames[0]);
+        //     } else {
+        //         console.log("Share was aborted");
+        //     }
+        // }).catch((err) => {
+        //     console.error("Share failed:", err.message);
+        // });
 
     // // Check if we're running on a device (not in browser)
     // if (!window.cordova) {
