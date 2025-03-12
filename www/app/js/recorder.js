@@ -62,7 +62,7 @@ class Recorder {
 
             function onAudioInput(data) {
                 console.log("Audio data received: " + data.length + " bytes");
-                this.chunks.push(data);
+                that.chunks.push(data);
             }
 
             function onAudioInputError(error) {
