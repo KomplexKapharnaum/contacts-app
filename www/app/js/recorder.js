@@ -14,10 +14,11 @@ class Recorder {
                 .then((stream) => {
                     resolve(stream);
                 })
-                .catch((err) => {console.error(`The following getUserMedia error occurred: ${err}`); resolve(false)});
+                .catch((err) => {
+                    reject(`The following getUserMedia error occurred: ${err}`)}
+                );
             } else {
-                console.log("getUserMedia not supported on your browser!");
-                resolve(false)
+                reject("getUserMedia not supported on your browser!")
             }
         })
     }
@@ -25,30 +26,32 @@ class Recorder {
     recordWEB(recordCallback) {
         this.chunks = [];
         return new Promise(async (resolve, reject) => {
-            this.stream = await this.getStream();
-            if (this.stream) {
-                const mediaRecorder = new MediaRecorder(this.stream);
-                mediaRecorder.start();
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) {
-                        this.chunks.push(e.data);
+            this.getStream().then((stream) => {
+                if (this.stream) {
+                    const mediaRecorder = new MediaRecorder(this.stream);
+                    mediaRecorder.start();
+                    mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) {
+                            this.chunks.push(e.data);
+                        }
                     }
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(this.chunks);
+                        this.blob = blob;
+                        resolve(this.blob);
+                    }
+
+                    setTimeout(() => {
+                        mediaRecorder.stop();
+                    }, 5000);
+
+                    recordCallback();
+                } else {
+                    reject("no stream");
                 }
-
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(this.chunks);
-                    this.blob = blob;
-                    resolve(this.blob);
-                }
-
-                setTimeout(() => {
-                    mediaRecorder.stop();
-                }, 5000);
-
-                recordCallback();
-            } else {
-                resolve(false);
-            }
+            })
+            .catch((err) => reject(err))
         })
     }
 
@@ -91,7 +94,7 @@ class Recorder {
             form.append("audio", audioFile);
             form.append("uuid", userData.uuid);
 
-            fetch("/tribe_audio_upload", {
+            fetch(document.WEBAPP_URL + "/tribe_audio_upload", {
                 method: "POST",
                 body: form
             })
