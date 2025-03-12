@@ -183,3 +183,9 @@ option:hover {
 
     border: solid 1px var(--col-main);
 }
+
+.feedback-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

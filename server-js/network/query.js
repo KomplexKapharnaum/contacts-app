@@ -416,19 +416,19 @@ query.add("r_get_presets", async (params) => {
     return [true, presets];
 })
 
-// query.add("r_getfeedbacks", async (params) => {
-//     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-//     const feedbacks = await db('feedback').select();
-//     return [true, feedbacks];
-// })
+query.add("admin_getfeedbacks", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const feedbacks = await db('feedback').select();
+    return [true, feedbacks];
+})
 
-// query.add("r_updatefeedback", async (params) => {
-//     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-//     const id = params.get("id");
-//     const status = params.get("status");
-//     await db('feedback').where('id', id).update({status: status});
-//     return [true, {id: id, status: status}];
-// });
+query.add("admin_updatefeedback", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const id = params.get("id");
+    const status = params.get("status");
+    await db('feedback').where('id', id).update({status: status});
+    return [true, {id: id, status: status}];
+});
 
 // query.add("r_updatefeature", async (params) => {
 //     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];

@@ -314,3 +314,30 @@ document.getElementById("download-all-live-questions").addEventListener("click",
     link.click();
     document.body.removeChild(link);
 })
+
+const feedbacks_container = document.getElementById("feedback-container")
+
+const load_feedbacks = async () => {
+    feedbacks_container.innerHTML = "";
+    const res = await sendCommand("admin_getfeedbacks", {});
+    res.data.forEach(f => {
+        const el = document.getElementById("tem-feedback").cloneNode(true).content;
+        el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`;
+        const item = el.querySelector(".feedback-item");
+        item.style.order = f.status;
+
+        const checkbox = el.querySelector("input");
+        checkbox.checked = f.status;
+        checkbox.addEventListener("click", async () => {
+            const newStatus = checkbox.checked ? 1 : 0;
+            await sendCommand("admin_updatefeedback", {
+                id: f.id,
+                status: newStatus
+            });
+            item.style.order = newStatus;
+        });
+        feedbacks_container.appendChild(el);
+    });
+}
+load_feedbacks();
+
