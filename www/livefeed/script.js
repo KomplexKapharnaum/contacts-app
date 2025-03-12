@@ -4,6 +4,7 @@ const socket = io();
 
 socket.on('hello', () => {
     socket.emit('display');
+    socket.once('display-ok', requestFiles)
 });
 
 socket.on("live-file-uploaded", (filename) => {
@@ -13,18 +14,26 @@ socket.on("live-file-uploaded", (filename) => {
     });
 })
 
-// const newImg = async () => {
-//     const url = selectCustomImage(); // "https://picsum.photos/seed/"+seed+"/300/300";
-//     getImage(url).then(image => {
-//         imageQueue.unshift(image);
-//     });
-// }
+function requestFiles() {
+    socket.emit("live-get-files")
+    socket.once("live-receive-files", (filenames) => {
+        const promises = filenames.map((file) => {
+            const url = "/live_upload/"+file;
+            return new Promise((res, rej) => {
+                getImage(url).then(image => {
+                    res(image)
+                });
+            })
+        })
 
-// function selectCustomImage() {
-//     customImageListIndex++;
-//     if (customImageListIndex >= customImageList.length) customImageListIndex = 0;
-//     return "./imgs/"+customImageList[customImageListIndex];
-// }
+        Promise.all(promises).then(images => {
+            console.log(images)
+            imageQueue = imageQueue.concat(images)
+            floodImages();
+        })
+
+    })
+}
 
 const template_column = document.querySelector('#template-column');
 const template_cell = document.querySelector('#template-cell');
@@ -68,13 +77,13 @@ function animateOverlay() {
 }
 animateOverlay()
 
-function createGrid(columns, rows) {
-    document.documentElement.style.setProperty('--columns', columns-1);
+function createGrid(rows, columns) {
+    document.documentElement.style.setProperty('--rows', rows-1);
     const main = document.querySelector('main');
     const allCells = [];
-    for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < columns; i++) {
         const column = createColumn();
-        for (let j = 0; j < columns; j++) {
+        for (let j = 0; j < rows; j++) {
             const cell = createCell();
             cell.querySelector(".image").style.backgroundColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
             allCells.push({
@@ -91,6 +100,8 @@ function createGrid(columns, rows) {
 createGrid(4, 2);
 
 function scrollColumn(column) {
+
+    if (!column) return;
 
     column.classList.add('scroll');
     const lastCell = column.lastElementChild;
@@ -110,7 +121,7 @@ function scrollColumn(column) {
 }
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-const columns = document.querySelectorAll('.column');
+var dom_columns;
 
 function imageAvailable() {
     return new Promise(resolve => {
@@ -128,11 +139,10 @@ function imageAvailable() {
 function startImageClock() {
     let index = 0;
     const run = async () => {
-        // newImg();
         await imageAvailable();
-        scrollColumn(columns[index]);
+        scrollColumn(dom_columns[index]);
         index++;
-        if (index >= columns.length) index = 0;
+        if (index >= dom_columns.length) index = 0;
         await sleep(MIN_TIME);
         run();
     }
@@ -148,5 +158,74 @@ async function getImage(url) {
 }
 
 function shiftArray() {
-    return imageQueue.shift();
+    const first = imageQueue.shift();
+    imageQueue.push(first);
+    return first;
 }
+
+function purgeGrid() {
+    document.querySelector('main').innerHTML = "";
+}
+
+function getColsFromRows(rows, windowWidth, windowHeight) {
+    if (rows <= 0) return 1; // Edge case: No rows should at least return 1 column.
+
+    let cols = 1;
+    let bestCols = 1;
+    let bestAspectRatioDiff = Infinity;
+
+    rows--;
+
+    while (true) {
+        let cellWidth = windowWidth / cols;
+        let cellHeight = windowHeight / rows;
+        let aspectRatio = cellWidth / cellHeight;
+        let aspectRatioDiff = Math.abs(aspectRatio - 1); // How close to 1:1 ratio
+
+        if (aspectRatioDiff < bestAspectRatioDiff) {
+            bestAspectRatioDiff = aspectRatioDiff;
+            bestCols = cols;
+        } else {
+            break;
+        }
+
+        cols++;
+    }
+
+    return bestCols;
+}
+
+
+const GRID_ROWS = 4;
+let currentColumns;
+
+function purgeGrid() {
+    document.querySelector('main').innerHTML = "";
+}
+
+function floodImages() {
+    const cells = document.querySelectorAll(".image");
+    cells.forEach((cell) => {
+        const img = shiftArray();
+        cell.style.backgroundImage = `url(${img})`
+    })
+}
+
+function update(columns) {
+    if (currentColumns !== columns) {
+        currentColumns = columns;
+        purgeGrid();
+        createGrid(GRID_ROWS, currentColumns);
+        dom_columns = document.querySelectorAll('.column');
+        if (imageQueue.length>0) floodImages()
+    }
+}
+
+function updateGrid() {
+    const cols = getColsFromRows(GRID_ROWS, window.innerWidth, window.innerHeight);
+    update(cols);
+}
+
+window.addEventListener('resize', updateGrid);
+window.addEventListener('load', updateGrid);
+setInterval(updateGrid, 1000);

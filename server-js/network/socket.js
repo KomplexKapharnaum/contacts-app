@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { app, server } from '../core/server.js';
 import { Server as IoServer } from "socket.io";
 import { env } from '../core/env.js';
@@ -297,7 +298,21 @@ SOCKET.io.on('connection', (socket) => {
 
     socket.on("display", async() => {
       socket.join("display");
+      socket.emit("display-ok")
     })
+
+    socket.on("live-get-files", async () => {
+      try {
+          const folderPath = "./live_upload";
+          const files = fs.readdirSync(folderPath);
+          const jpgFiles = files.filter(file => file.endsWith(".jpg"));
+          const shuffled = jpgFiles.sort(() => 0.5 - Math.random());
+          const selectedFiles = shuffled.slice(0, 25);
+          socket.emit("live-receive-files", selectedFiles);
+      } catch (error) {
+          console.error("Error reading files:", error);
+      }
+  });
 });
 
 export { SOCKET };

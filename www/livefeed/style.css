@@ -1,5 +1,5 @@
 :root {
-    --columns: 4;
+    --rows: 4;
 }
 
 * {
@@ -47,11 +47,11 @@ main {
 
 .column.scroll {
     transition: transform 1s ease-in-out;
-    transform: translateY(calc(-100% / var(--columns)));
+    transform: translateY(calc(-100% / var(--rows)));
 }
 
 .cell {
-    height: calc(100% / var(--columns));
+    height: calc(100% / var(--rows));
     /*outline: solid 1px #fff;*/
     padding: 16px;
     display: flex;
