@@ -215,15 +215,17 @@ const btn_live_upload = document.getElementById("live-upload-button");
                     }).then((res) => {
                         alert("Image envoyée !");
                     }).catch((err) => {
-                        alert(err);
                         console.error(err);
                     });
                 }, "image/jpeg", 0.85);
                 
             };
             
-            // Create object URL from the selected file
-            img.src = URL.createObjectURL(file);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
         });
         input.click();
     });
