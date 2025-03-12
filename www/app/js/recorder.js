@@ -58,25 +58,35 @@ class Recorder {
     recordAPP(recordCallback) {
         return new Promise(async (resolve, reject) => 
         {
-            // capture callback
-            var captureSuccess = function(mediaFiles) {
-                var i, path, len;
-                for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-                    path = mediaFiles[i].fullPath;
-                    // do something interesting with the file
-                    console.log('REC:', mediaFiles[i].fullPath);
-                }
-                // get blob from path
+            function startCapture() {
+                audioinput.start({
+                    streamToWebAudio: true
+                });
+                
+                // Connect the audioinput to the device speakers in order to hear the captured sound.
+                audioinput.connect(audioinput.getAudioContext().destination);
                 resolve();
-            };
-
-            // capture error callback
-            var captureError = function(error) {
-                reject('REC: Error ' + error.code, null, 'Capture Error');
-            };
-
-            // start audio capture
-            navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:1, duration:5});
+            }
+            
+            // First check whether we already have permission to access the microphone.
+            window.audioinput.checkMicrophonePermission(function(hasPermission) {
+                if (hasPermission) {
+                    console.log("We already have permission to record.");
+                    startCapture();
+                } 
+                else {	        
+                    // Ask the user for permission to access the microphone
+                    window.audioinput.getMicrophonePermission(function(hasPermission, message) {
+                        if (hasPermission) {
+                            console.log("User granted us permission to record.");
+                            startCapture();
+                        } else {
+                            console.warn("User denied permission to record.");
+                            reject("User denied permission to record.");
+                        }
+                    });
+                }
+            });
 
             recordCallback();
         })
