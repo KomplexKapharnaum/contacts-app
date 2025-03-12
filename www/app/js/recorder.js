@@ -57,29 +57,54 @@ class Recorder {
 
     recordAPP(recordCallback) {
         return new Promise(async (resolve, reject) => 
-        {
-            function startCapture() {
-                audioinput.start({
-                    streamToWebAudio: true
-                });
-                
-                // Connect the audioinput to the device speakers in order to hear the captured sound.
-                audioinput.connect(audioinput.getAudioContext().destination);
-                resolve();
+        {   
+            
+
+            function onAudioInput(data) {
+                console.log("Audio data received: " + data.length + " bytes");
+                this.chunks.push(data);
             }
+
+            function onAudioInputError(error) {
+                console.error("An error occurred: " + error);
+                audioinput.stop();
+                reject(error);
+            }
+
+            function startRecording() {
+                console.log("Starting recording...");
+
+                window.removeEventListener( "audioinput", onAudioInput, false );
+                window.removeEventListener( "audioinputerror", onAudioInputError, false );
+
+                window.addEventListener( "audioinput", onAudioInput, false );
+                window.addEventListener( "audioinputerror", onAudioInputError, false );
+
+                this.chunks = [];
+
+                audioinput.start({ bufferSize: 8192 });
+
+                setTimeout(() => {
+                    audioinput.stop();
+                    const blob = new Blob(this.chunks);
+                    this.blob = blob;
+                    resolve(this.blob);
+                }, 5000);
+            }
+
             
             // First check whether we already have permission to access the microphone.
             window.audioinput.checkMicrophonePermission(function(hasPermission) {
                 if (hasPermission) {
                     console.log("We already have permission to record.");
-                    startCapture();
+                    startRecording();
                 } 
                 else {	        
                     // Ask the user for permission to access the microphone
                     window.audioinput.getMicrophonePermission(function(hasPermission, message) {
                         if (hasPermission) {
                             console.log("User granted us permission to record.");
-                            startCapture();
+                            startRecording();
                         } else {
                             console.warn("User denied permission to record.");
                             reject("User denied permission to record.");
