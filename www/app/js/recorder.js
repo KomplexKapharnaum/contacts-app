@@ -58,7 +58,7 @@ class Recorder {
     recordAPP(recordCallback) {
         return new Promise(async (resolve, reject) => 
         {   
-            
+            var that = this;
 
             function onAudioInput(data) {
                 console.log("Audio data received: " + data.length + " bytes");
@@ -80,15 +80,15 @@ class Recorder {
                 window.addEventListener( "audioinput", onAudioInput, false );
                 window.addEventListener( "audioinputerror", onAudioInputError, false );
 
-                this.chunks = [];
+                that.chunks = [];
 
                 audioinput.start({ bufferSize: 8192 });
 
                 setTimeout(() => {
                     audioinput.stop();
-                    const blob = new Blob(this.chunks);
-                    this.blob = blob;
-                    resolve(this.blob);
+                    const blob = new Blob(that.chunks);
+                    that.blob = blob;
+                    resolve(that.blob);
                 }, 5000);
             }
 
