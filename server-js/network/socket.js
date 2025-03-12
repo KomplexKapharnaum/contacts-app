@@ -305,7 +305,7 @@ SOCKET.io.on('connection', (socket) => {
       try {
           const folderPath = "./live_upload";
           const files = fs.readdirSync(folderPath);
-          const jpgFiles = files.filter(file => file.endsWith(".jpg"));
+          const jpgFiles = files.filter(file => file.endsWith(".jpg") || file.endsWith(".png"));
           const shuffled = jpgFiles.sort(() => 0.5 - Math.random());
           const selectedFiles = shuffled.slice(0, 25);
           socket.emit("live-receive-files", selectedFiles);
