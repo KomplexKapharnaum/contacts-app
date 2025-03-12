@@ -26,7 +26,7 @@ class Recorder {
     recordWEB(recordCallback) {
         this.chunks = [];
         return new Promise(async (resolve, reject) => {
-            this.getStream().then((stream) => {
+            this.getStreamWEB().then((stream) => {
                 if (this.stream) {
                     const mediaRecorder = new MediaRecorder(this.stream);
                     mediaRecorder.start();
@@ -56,23 +56,30 @@ class Recorder {
     }
 
     recordAPP(recordCallback) {
-        // capture callback
-        var captureSuccess = function(mediaFiles) {
-            var i, path, len;
-            for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-                path = mediaFiles[i].fullPath;
-                // do something interesting with the file
-                console.log('REC:', mediaFiles[i].fullPath);
-            }
-        };
+        return new Promise(async (resolve, reject) => 
+        {
+            // capture callback
+            var captureSuccess = function(mediaFiles) {
+                var i, path, len;
+                for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+                    path = mediaFiles[i].fullPath;
+                    // do something interesting with the file
+                    console.log('REC:', mediaFiles[i].fullPath);
+                }
+                // get blob from path
+                resolve();
+            };
 
-        // capture error callback
-        var captureError = function(error) {
-            navigator.notification.alert('REC: Error ' + error.code, null, 'Capture Error');
-        };
+            // capture error callback
+            var captureError = function(error) {
+                reject('REC: Error ' + error.code, null, 'Capture Error');
+            };
 
-        // start audio capture
-        navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:1, duration:5});
+            // start audio capture
+            navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:1, duration:5});
+
+            recordCallback();
+        })
     }
 
     record(recordCallback) {
