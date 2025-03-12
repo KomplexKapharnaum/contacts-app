@@ -134,7 +134,7 @@ class Recorder {
                 contentType: 'audio/webm',
             });
 
-            form.append("audio", audioFile);
+            form.append("audio", audioFile, `recording-${Date.now()}.webm`);
             form.append("uuid", userData.uuid);
 
             fetch(document.WEBAPP_URL + "/tribe_audio_upload", {

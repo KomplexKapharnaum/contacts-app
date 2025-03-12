@@ -68,8 +68,6 @@ app.use('/livefeed', express.static('www/livefeed'));
 const upload = multer({ dest: '_tmp/' });
 
 app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
-    console.log("tribe_audio_upload", features.getState("tribe_cry"));
-
     if (!features.getState("tribe_cry")) {
         res.status(400).send("Feature disabled");
         return;
