@@ -209,7 +209,7 @@ const btn_live_upload = document.getElementById("live-upload-button");
                     formData.append("image", blob, "image.jpg");
                     formData.append("uuid", userData.uuid);
                     
-                    fetch("/live_file_upload", {
+                    fetch(document.WEBAPP_URL + "/live_file_upload", {
                         method: "POST",
                         body: formData
                     }).then((res) => {
