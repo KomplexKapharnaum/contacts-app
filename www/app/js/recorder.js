@@ -5,7 +5,7 @@ class Recorder {
         this.blob = false;
     }
 
-    getStream() {
+    getStreamWEB() {
         return new Promise((resolve, reject) => {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 console.log("getUserMedia supported.");
@@ -23,7 +23,7 @@ class Recorder {
         })
     }
 
-    record(recordCallback) {
+    recordWEB(recordCallback) {
         this.chunks = [];
         return new Promise(async (resolve, reject) => {
             this.getStream().then((stream) => {
@@ -53,6 +53,34 @@ class Recorder {
             })
             .catch((err) => reject(err))
         })
+    }
+
+    recordAPP(recordCallback) {
+        // capture callback
+        var captureSuccess = function(mediaFiles) {
+            var i, path, len;
+            for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+                path = mediaFiles[i].fullPath;
+                // do something interesting with the file
+                console.log('REC:', mediaFiles[i].fullPath);
+            }
+        };
+
+        // capture error callback
+        var captureError = function(error) {
+            navigator.notification.alert('REC: Error ' + error.code, null, 'Capture Error');
+        };
+
+        // start audio capture
+        navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:1, duration:5});
+    }
+
+    record(recordCallback) {
+        if (document.APPSTATE) {
+            return this.recordAPP(recordCallback);
+        } else {
+            return this.recordWEB(recordCallback);
+        }
     }
 
     upload() {
