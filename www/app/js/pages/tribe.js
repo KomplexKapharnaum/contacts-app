@@ -322,7 +322,8 @@ cryBtns.record.addEventListener("click", () => {
         })
     })
     .catch((err) => {
-        console.log(err)
+        alert(err)
+        updateCryContainer("Enregistre un cri de 5 secondes pour ta tribu !", "no-audio", 1)
     });
     updateCryContainer("Enregistrement en cours...", "recording", 3)
 })
