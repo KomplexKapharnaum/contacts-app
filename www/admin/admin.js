@@ -204,7 +204,11 @@ function createForm(structure, parent, tablename, data) {
             });
         }
 
-        input.value = data[element.key]
+        if (element.type == "checkbox") {
+            input.checked = data[element.key]
+        } else {
+            input.value = data[element.key]
+        }
 
         holder.appendChild(input)
     });
@@ -215,7 +219,11 @@ function createForm(structure, parent, tablename, data) {
         if (!confirm("Update ?")) return
         const formdata = {}
         structure.forEach(element => {
-            formdata[element.key] = holder.querySelector(`input[name=${element.key}]`).value
+            if (element.type == "checkbox") {
+                formdata[element.key] = holder.querySelector(`input[name=${element.key}]`).checked
+            } else {
+                formdata[element.key] = holder.querySelector(`input[name=${element.key}]`).value
+            }
         });
         const req = {
             table: tablename,
@@ -268,6 +276,10 @@ const structure_event = [
         key: "name",
         type: "text",
         placeholder: "Event name"
+    },
+    {
+        key: "priority",
+        type: "checkbox"
     }
 ]
 const box_events = document.getElementById("box-events")

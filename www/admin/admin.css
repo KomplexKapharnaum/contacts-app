@@ -189,3 +189,11 @@ option:hover {
     align-items: center;
     gap: 8px;
 }
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    #boxes-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}

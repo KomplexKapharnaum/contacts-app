@@ -2,7 +2,7 @@
 /* */
 
 const config = {
-    base_colors: ["#F00", "#0F0", "#00F", "#FF0", "#0FF", "#F0F", "#FFF"]
+    base_colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#FFFFFF"]
 }
 
 /* Config */
@@ -265,6 +265,11 @@ function add_color(color) {
     return div
 }
 
+click("color-add", () => {
+    const val = document.getElementById("input-color-addcolor").value;
+    add_color(val);
+})
+
 config.base_colors.forEach(col => {
     add_color(col)
 })
@@ -291,8 +296,26 @@ click("color-preset", () => {
     saveAsPresset("color", args, name)
 })
 
+function rgbToHex(rgb) {
+    if (rgb.startsWith("#")) return rgb;
+    const [r, g, b] = rgb.replace("rgb(", "").replace(")", "").split(",").map(x => parseInt(x));
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
 function load_preset_colors(data) {
+
     data=data.args
+
+    colors_container.innerHTML = ""
+    config.base_colors.forEach(col => {
+        add_color(col)
+    })
+
+    data.colors.forEach(col => {
+        const hex = rgbToHex(col);
+        if (!config.base_colors.includes(hex.toUpperCase())) add_color(hex.toUpperCase())
+    })
+    
     const cols = colors_container.querySelectorAll("div")
     cols.forEach(e => {e.classList.remove("selected")})
 
@@ -517,13 +540,14 @@ click("question-preset", () => {
     const questions = [...questions_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
     const args = {
         texts : questions,
-        params : getParams("question")
+        params : getParams("questions")
     }
     
-    saveAsPresset("question", args, name)
+    saveAsPresset("questions", args, name)
 })
 
 function load_preset_question(data) {
+    console.log(data)
     data = data.args
     questions_container.innerHTML = ""
     data.texts.forEach(txt => {
@@ -660,6 +684,9 @@ function load_preset(data) {
         case "video":
             load_preset_video(data)
             break;
+        case "questions":
+            load_preset_question(data)
+            break;
     }
 
     if (data.args.params.tribe) {
@@ -734,7 +761,7 @@ function fill_select_usergroup() {
         if (!res.status) return;
         res.data.forEach((g) => {
             const opt = document.createElement("option")
-            opt.value = g.name
+            opt.value = g.id
             opt.innerHTML = g.name
             select_usergroup.appendChild(opt)
         })

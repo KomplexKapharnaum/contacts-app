@@ -5,7 +5,7 @@ document.getElementById("profile-delete").addEventListener("click", () => {
         if (res) {
             PAGES.goto("loading")
             QUERY.process("remove_user", {uuid: userData.uuid}).then(() => {
-                userData = {}
+                userData = false
                 document.CONFIG.remove("uuid")
                 hasEventsLoaded = false
                 loadUser()

@@ -69,6 +69,7 @@ async function initDB() {
             table.string('description');
             table.json('location_coords').defaultTo('{lat: 0, lon: 0}');
             table.string('location_name');
+            table.boolean('priority').defaultTo(false);
         })
 
         .createTable('users', (table) => {
@@ -204,14 +205,15 @@ db.freezeSession = async (id) => {
 // Event related
 // 
 
-db.createEvent = async (session_id, start_date, name, description, location_coords, location_name) => {
+db.createEvent = async (session_id, start_date, name, description, location_coords, location_name, priority) => {
     const event = await db('event').insert({
         session_id: session_id, 
         start_date: new Date(start_date).toISOString(), 
         name: name, 
         description: description, 
         location_coords: location_coords, 
-        location_name: location_name
+        location_name: location_name,
+        priority: priority
     });
     return event;
 }

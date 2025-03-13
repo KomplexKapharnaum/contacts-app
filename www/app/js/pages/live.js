@@ -233,8 +233,6 @@ const btn_live_upload = document.getElementById("live-upload-button");
 
 receiveSessionEvent = function (event) {
 
-    console.log(event)
-
     if (event.name=="reload") location.reload();
     if (event.name=="end") endEvent();
 
@@ -271,9 +269,10 @@ receiveSessionEvent = function (event) {
 
 let lastevent_id = null;
 document.SOCKETIO.on('start-event', (data_pack) => {
-    
-    // const userGroup = userData.groups[0].name
-    const data = data_pack[/*userGroup*/0]
+    if (!userData) return;
+
+    const userGroup = userData.tribe_id
+    const data = data_pack[userGroup]
     if (!data) {endEvent(); return}
 
     if (lastevent_id != data.id) receiveSessionEvent(data)
@@ -281,6 +280,7 @@ document.SOCKETIO.on('start-event', (data_pack) => {
 });
 
 document.SOCKETIO.on("reload", () => {
+    if (!userData) return
     location.reload();
 })
 

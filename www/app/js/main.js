@@ -26,7 +26,7 @@ if ("virtualKeyboard" in navigator) {
     navigator.virtualKeyboard.overlaysContent = true;
 }
 
-var userData = {}
+var userData = false;
 const cookie_uuid = document.CONFIG.get("uuid")
 console.log("USER UUID: ", cookie_uuid)
 

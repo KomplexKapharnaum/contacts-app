@@ -37,16 +37,17 @@ async function loadEvents() {
                         now
                     )
 
-                    // const liveEventHandler = () => {
-                    //     if (eventLive) return
-                    //     if (isEventLive(event_data.start_date)) {
-                    //         socketEventLive(userData.uuid)
-                    //         PAGES.goto("live-idle")
-                    //         eventLive = true
-                    //         showNavbar(false)
-                    //     }
-                    // }
-                    // liveEventHandler();
+                    const liveEventHandler = () => {
+                        if (!event_data.priority) return
+                        if (eventLive) return
+                        if (isEventLive(event_data.start_date)) {
+                            socketEventLive(userData.uuid)
+                            PAGES.goto("live-idle")
+                            eventLive = true
+                            showNavbar(false)
+                        }
+                    }
+                    liveEventHandler();
 
                     clock.add("cyberspace", () => {
                         now = new Date().getTime() > new Date(event_data.start_date).getTime()
