@@ -76,6 +76,37 @@ sendNotificationButton.addEventListener("click", async (e) => {
     notificationAddToChatCheckbox.checked = false;
 });
 
+const notifications_texts_presets = [
+    {
+        name: "Test 1",
+        text: "Texte de preset 1"
+    },
+    {
+        name: "Test 2",
+        text: "Texte de preset 2"
+    }
+]
+
+const notif_presets_container = document.getElementById("select-notifs-presets");
+
+const placeholderOption = document.createElement("option");
+placeholderOption.value = "";
+placeholderOption.textContent = "Select a preset";
+placeholderOption.disabled = true;
+placeholderOption.selected = true;
+notif_presets_container.appendChild(placeholderOption);
+
+notifications_texts_presets.forEach(obj => {
+    const option = document.createElement("option");
+    option.value = obj.text;
+    option.textContent = obj.name;
+    notif_presets_container.appendChild(option);
+});
+
+notif_presets_container.addEventListener("change", (e) => {
+    notificationTextInput.value = e.target.value;
+});
+
 /* === Evenements === */
 const createEventButton = document.getElementById("btn-event-create");
 const eventStartDateInput = document.getElementById("input-event-start-date");
