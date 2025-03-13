@@ -38,7 +38,7 @@ async function loadEvents() {
                     )
 
                     const liveEventHandler = () => {
-                        if (!event_data.priority) return
+                        // if (!event_data.priority) return /* ADD THIS BACK LATER */
                         if (eventLive) return
                         if (isEventLive(event_data.start_date)) {
                             socketEventLive(userData.uuid)
