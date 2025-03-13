@@ -277,10 +277,10 @@ const structure_event = [
         type: "text",
         placeholder: "Event name"
     },
-    {
-        key: "priority",
-        type: "checkbox"
-    }
+    // {
+    //     key: "priority",
+    //     type: "checkbox"
+    // }
 ]
 const box_events = document.getElementById("box-events")
 loadTable("event", box_events, structure_event)
