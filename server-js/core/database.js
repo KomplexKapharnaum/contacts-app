@@ -69,7 +69,9 @@ async function initDB() {
             table.string('description');
             table.json('location_coords').defaultTo('{lat: 0, lon: 0}');
             table.string('location_name');
+            
             table.boolean('priority').defaultTo(false);
+            table.integer('tribe_id').unsigned().defaultTo(0);
         })
 
         .createTable('users', (table) => {
@@ -229,9 +231,14 @@ if (!fs.existsSync(dataPath)) {
     initDB()
     log('Database initialized');
 } else {
-    await db('tribes').where('id', 1).update({name: 'Machines', colors: JSON.stringify(["#EEFE04", "#F8A539", "#8EEFFE"])});
-    await db('tribes').where('id', 2).update({name: 'Animaux', colors: JSON.stringify(["#0391BF", "#F34D17", "#FF6FFE"])});
-    await db('tribes').where('id', 3).update({name: 'Végétaux', colors: JSON.stringify(["#FC03CF", "#08F6F1", "#16D605"])});
+    // await db('tribes').where('id', 1).update({name: 'Machines', colors: JSON.stringify(["#EEFE04", "#F8A539", "#8EEFFE"])});
+    // await db('tribes').where('id', 2).update({name: 'Animaux', colors: JSON.stringify(["#0391BF", "#F34D17", "#FF6FFE"])});
+    // await db('tribes').where('id', 3).update({name: 'Végétaux', colors: JSON.stringify(["#FC03CF", "#08F6F1", "#16D605"])});
+
+    await db.schema.alterTable('event', (table) => {
+        table.boolean('priority').defaultTo(false);
+        table.integer('tribe').unsigned().defaultTo(0);
+    });
 }
 
 log('Database ready '+dataPath);

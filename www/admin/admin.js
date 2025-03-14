@@ -113,14 +113,32 @@ const eventStartDateInput = document.getElementById("input-event-start-date");
 const eventLocationCoordsInput = document.getElementById("input-event-location-coords");
 const eventLocationNameInput = document.getElementById("input-event-location-name");
 const eventNameInput = document.getElementById("input-event-name");
+const eventTribeSelect = document.getElementById("input-event-tribe");
+
+async function addTribes() {
+    const tribes = await sendCommand("tribelist", {});
+    if (!tribes.status) throw new Error("Can't load tribes");
+
+    const tribesOptions = tribes.data.map(tribe => {
+        const option = document.createElement("option");
+        option.value = tribe.id;
+        option.textContent = tribe.name;
+        return option;
+    });
+    tribesOptions.forEach(option => eventTribeSelect.appendChild(option));
+}
+
+addTribes();
 
 createEventButton.addEventListener("click", async (e) => {
     e.preventDefault();
+    console.log("value :", eventTribeSelect.value)
     const eventData = {
         start_date: eventStartDateInput.value,
         location_coords: eventLocationCoordsInput.value,
         location_name: eventLocationNameInput.value,
-        name: eventNameInput.value
+        name: eventNameInput.value,
+        tribe_id: parseInt(eventTribeSelect.value)
     };
 
     const res = await sendCommand("admin_create_event", eventData);
@@ -308,6 +326,11 @@ const structure_event = [
         type: "text",
         placeholder: "Event name"
     },
+    {
+        key: "tribe_id",
+        type: "number",
+        placeholder: "tribe_id"
+    }
     // {
     //     key: "priority",
     //     type: "checkbox"

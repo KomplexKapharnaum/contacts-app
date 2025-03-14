@@ -38,7 +38,7 @@ async function loadEvents() {
                     )
 
                     const liveEventHandler = () => {
-                        // if (!event_data.priority) return /* ADD THIS BACK LATER */
+                        if (!event_data.priority) return
                         if (eventLive) return
                         if (isEventLive(event_data.start_date)) {
                             socketEventLive(userData.uuid)
@@ -52,7 +52,7 @@ async function loadEvents() {
                     clock.add("cyberspace", () => {
                         now = new Date().getTime() > new Date(event_data.start_date).getTime()
                         el.querySelector(".date").innerHTML = now ? "En cours" : formateDate(event_date)
-                        // liveEventHandler();
+                        liveEventHandler();
                     })
 
                     el.addEventListener("click", () => {

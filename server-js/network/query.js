@@ -201,9 +201,23 @@ query.add("session_events", async (params) => {
     const subscribed_session = await db('users').where('uuid', uuid).select('subscribed_session').first();
     if (!subscribed_session) return [false, "user does not have a subscribed session"];
 
+    const user = await db('users').where('uuid', uuid).first();
+    if (!user) return [false, "user does not exist"];
+
     const session = await db('session').where('id', subscribed_session.subscribed_session).first();
     if (!session) return [false, "session does not exist"];
-    const events = await db('event').where('session_id', session.id).andWhere('ended', false).select();
+
+    const events = await db('event')
+    .where('session_id', session.id)
+    .andWhere('ended', false)
+    .andWhere(function() {
+      this.where('tribe_id', 0)
+      if (user.tribe_id !== null) {
+        this.orWhere('tribe_id', user.tribe_id)
+      }
+    })
+    .select();
+
     events.forEach(event => {
         delete event.location_coords;
         delete event.location_name;
@@ -492,6 +506,7 @@ query.add("admin_create_event", async (params) => {
     const location_coords = params.get("location_coords");
     const location_name = params.get("location_name");
     const name = params.get("name");
+    const tribe_id = params.get("tribe_id");
 
     const current_session = await db('session').first();
     if (!current_session) return [false, "no session exists"];
@@ -501,6 +516,7 @@ query.add("admin_create_event", async (params) => {
         location_coords,
         location_name,
         name,
+        tribe_id,
         session_id: current_session.id
     };
 
