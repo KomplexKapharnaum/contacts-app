@@ -78,12 +78,20 @@ sendNotificationButton.addEventListener("click", async (e) => {
 
 const notifications_texts_presets = [
     {
-        name: "Test 1",
-        text: "Texte de preset 1"
+        name: "Envoyez vos photos",
+        text: "Ouvrez votre application et envoyez vos photos !"
     },
     {
-        name: "Test 2",
-        text: "Texte de preset 2"
+        name: "Restez en contact",
+        text: "N'oubliez pas, le carnaval se passe aussi sur votre portable ! Gardez-le proche de vous pour interragir avec le spectacle !"
+    },
+    {
+        name: "Citation",
+        text: "Je préfère ma nouvelle condition de monstre à celle d'homme ou de femme, car cette condition est comme un pied qui avance dans le vide en indiquant la voie vers un autre monde. \"Paul B. Preciado\""
+    },
+    {
+        name: "The future is us.",
+        text: "The future is us."
     }
 ]
 
