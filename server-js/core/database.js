@@ -235,10 +235,10 @@ if (!fs.existsSync(dataPath)) {
     // await db('tribes').where('id', 2).update({name: 'Animaux', colors: JSON.stringify(["#0391BF", "#F34D17", "#FF6FFE"])});
     // await db('tribes').where('id', 3).update({name: 'Végétaux', colors: JSON.stringify(["#FC03CF", "#08F6F1", "#16D605"])});
 
-    await db.schema.alterTable('event', (table) => {
-        table.boolean('priority').defaultTo(false);
-        table.integer('tribe_id').unsigned().defaultTo(0);
-    });
+    // await db.schema.alterTable('event', (table) => {
+    //     table.boolean('priority').defaultTo(false);
+    //     table.integer('tribe_id').unsigned().defaultTo(0);
+    // });
 }
 
 log('Database ready '+dataPath);

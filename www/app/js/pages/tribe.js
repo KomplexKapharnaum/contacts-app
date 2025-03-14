@@ -267,12 +267,15 @@ async function obform_process() {
             });
         }
 
+        PAGES.goto("loading")
+        const someting_happened = await loadEvents()
+
         feature_show("tribe")
         PAGES.goto("tribe")
 
-        BUD.setCurrentDialogue(BUD_DIALS.tribe, true)
         showNavbar(true)
         loadLeaderBoard()
+        if (!someting_happened) BUD.setCurrentDialogue(BUD_DIALS.tribe, true)
     }
 }
 

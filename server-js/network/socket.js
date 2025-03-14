@@ -113,8 +113,10 @@ SOCKET.io.on('connection', (socket) => {
           if (join) {
             socket.join("event");
             socket.emit('start-event', SOCKET.lastEvent);
+            console.log("JOINED !!!!!!!!!!!!!!!!!!")
           } else {
             socket.leave("event");
+            console.log("LEAVED !!!!!!!!!!!!!!!!!!")
           }
         }
     });

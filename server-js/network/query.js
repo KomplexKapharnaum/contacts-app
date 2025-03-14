@@ -507,6 +507,7 @@ query.add("admin_create_event", async (params) => {
     const location_name = params.get("location_name");
     const name = params.get("name");
     const tribe_id = params.get("tribe_id");
+    const priority = params.get("priority");
 
     const current_session = await db('session').first();
     if (!current_session) return [false, "no session exists"];
@@ -517,7 +518,8 @@ query.add("admin_create_event", async (params) => {
         location_name,
         name,
         tribe_id,
-        session_id: current_session.id
+        session_id: current_session.id,
+        priority
     };
 
     await db('event').insert(eventData);

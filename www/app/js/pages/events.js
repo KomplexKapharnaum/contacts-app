@@ -19,13 +19,16 @@ function formateDate(date) {
 var hasEventsLoaded = false;
 
 async function loadEvents() {
+    if (FEATURES.tribe_page && !userData.tribe_id) return;
     return new Promise((resolve, reject) => {
         clock.clear("events-list")
         let eventLive = false;
         if (hasEventsLoaded) return
         QUERY.getEvents().then(res => {
             if (res.status && res.data) {    
-                event_list_container.innerHTML = ""        
+                event_list_container.innerHTML = ""
+                let mapTriggered = false;
+                let liveTriggered = false;
                 res.data.forEach(event_data => {
                     const event_name = event_data.name
                     // const event_countdown = parseCountDown(event_data.start_date, true)
@@ -38,13 +41,20 @@ async function loadEvents() {
                     )
 
                     const liveEventHandler = () => {
-                        if (!event_data.priority) return
-                        if (eventLive) return
+                        // if (!event_data.priority) return
                         if (isEventLive(event_data.start_date)) {
-                            socketEventLive(userData.uuid)
+                            if (liveTriggered) return
+                            liveTriggered = true
+                            socketEventLive(userData.uuid, true)
                             PAGES.goto("live-idle")
-                            eventLive = true
                             showNavbar(false)
+                            resolve(true)
+                        } else if (isIncoming(event_data.start_date)) {
+                            if (mapTriggered) return
+                            mapTriggered = true
+                            openEventMap(event_data)
+                            showNavbar(true)
+                            resolve(true)
                         }
                     }
                     liveEventHandler();
@@ -62,11 +72,11 @@ async function loadEvents() {
                     event_list_container.appendChild(el)
                 });
                 hasloaded = true
-                if (!eventLive) {
+                if (!mapTriggered && !liveTriggered) {
                     PAGES.goto("cyberspace")
                     showNavbar(true)
                 }
-                resolve()
+                resolve(false)
             }
         })
     })
