@@ -237,7 +237,7 @@ if (!fs.existsSync(dataPath)) {
 
     await db.schema.alterTable('event', (table) => {
         table.boolean('priority').defaultTo(false);
-        table.integer('tribe').unsigned().defaultTo(0);
+        table.integer('tribe_id').unsigned().defaultTo(0);
     });
 }
 
