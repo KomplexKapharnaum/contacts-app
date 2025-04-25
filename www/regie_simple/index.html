@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regie simple</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./iro.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Body -->
+    
+    <div id="event-info"></div>
+    
+    <div id="box-event-logs"></div>
+    
+    <select name="select-group" id="select-group"></select>
+
+    <main>
+
+      <div class="page" data-page-id="home">
+        <div id="categories" class="w100">
+          <h1>Evenements</h1>
+        </div>
+        <div id="groups" class="w100">
+          <h1>Actions</h1>
+          <button id="back">Retour</button>
+        </div>
+      </div>
+
+      <div class="page" data-page-id="perso">
+        <h1>Commandes perso</h1>
+        <button class="goto-page" data-page-id="color">Couleur</button>
+      </div>
+
+      <div class="page" data-page-id="color">
+        <h1>Couleur personnalisé</h1>
+        <div id="picker"></div>
+        <button id="send-custom-color">Envoyer</button>
+      </div>
+
+    </main>
+    <nav>
+      <button class="goto-page" data-page-id="home">Events</button>
+      <button class="goto-page" data-page-id="perso">Perso</button>
+    </nav>
+    <script src="./pages.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

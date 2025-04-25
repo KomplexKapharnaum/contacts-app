@@ -22,9 +22,10 @@ SOCKET.io = new IoServer(server);
 SOCKET.lastEvent = {0:{}};
 SOCKET.startEvent = function (name, args) {
 
-  const group = args.params.tribe
+  let group = args.params.tribe
 
   if (group != '') {
+    group = parseInt(group);
     // Update last event for a specific group
     SOCKET.lastEvent[group] = name=="end" ? false : {
       name: name,

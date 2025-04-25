@@ -43,6 +43,8 @@ app.get('/query', async function (req, res) {
 // Admin routes
 app.use('/admin', express.static('www/admin'));
 app.use('/regie', express.static('www/regie'));
+app.use('/regie2', express.static('www/regie_simple'));
+
 
 app.use('/avatars', express.static('gen_output'));
 

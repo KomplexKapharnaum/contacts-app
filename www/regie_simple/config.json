@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Carnaval",
+        "description": "Carnaval principal de CONTACTS",
+        "actions" : [
+            {
+                "name": "Rouge, vert, bleu",
+                "ctrl": {
+                    "name": "color",
+                    "args": {
+                        "colors": [ "rgb(255, 0, 0)", "rgb(0, 255, 0)", "rgb(0, 0, 255)" ],
+                        "params": { "flash": false, "loop": false, "random": false, "tribe": "" }
+                    }
+                }
+            },
+            {
+                "name": "Questions",
+                "ctrl": {
+                    "name": "question",
+                    "args": {
+                        "questions": [ "Hello world", "Question 2" ],
+                        "params": { "tribe": "" }
+                    }
+                }
+            }
+        ]
+    }
+]
+
