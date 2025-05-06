@@ -27,8 +27,9 @@ class Recorder {
         this.chunks = [];
         return new Promise(async (resolve, reject) => {
             this.getStreamWEB().then((stream) => {
-                if (this.stream) {
-                    const mediaRecorder = new MediaRecorder(this.stream);
+                if (stream) {
+                    this.stream = stream;
+                    const mediaRecorder = new MediaRecorder(stream);
                     mediaRecorder.start();
                     mediaRecorder.ondataavailable = (e) => {
                         if (e.data.size > 0) {
