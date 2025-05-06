@@ -19,7 +19,7 @@ function formateDate(date) {
 var hasEventsLoaded = false;
 
 async function loadEvents() {
-    if (FEATURES.tribe_page && !userData.tribe_id) return;
+    if (FEATURES.tribe_page && (!('tribe_id' in userData) || !userData.tribe_id)) return;
     return new Promise((resolve, reject) => {
         clock.clear("events-list")
         let eventLive = false;

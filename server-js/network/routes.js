@@ -109,6 +109,13 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
     }
 
     const uploadPath = path.join(uploadDir, audio_name);
+
+    // If the file already exists, delete it
+    if (fs.existsSync(uploadPath)) {
+        fs.unlinkSync(uploadPath);
+        console.log("Deleted existing audio file");
+    }
+
     fs.renameSync(file.path, uploadPath);
     console.log("Audio uploaded");
 
@@ -117,7 +124,7 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
     res.status(200).send(audio_name);
 });
 
-app.use('/tribe_audio', express.static('cry_upload'));
+app.use('/tribe_audio', express.static(path.join(__dirname, 'upload', 'cry_upload')));
 
 app.post('/gen_avatar', upload.fields([{ name: 'selfie' }, { name: 'paint' }]), async function(req, res) {
     if (!features.getState("profile_avatar")) {
