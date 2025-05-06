@@ -9,7 +9,7 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 })
 
-FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
+FIREBASE.messagePayload = (title, body, topic=null, token=null) => ({
     notification: {
         title: title,
         body: body,
@@ -17,6 +17,14 @@ FIREBASE.messagePayload = (title, body, topic=null, data={}) => ({
     // data,
     topic: topic
 });
+
+FIREBASE.toDevicePayload = (title, body, token) => ({
+    notification: {
+        title: title,
+        body: body,
+    },
+    token
+})
 
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
     if (env.DISABLE_FIREBASE) return false;
@@ -50,10 +58,10 @@ FIREBASE.toUser = async (userID, title, body, data={}) => {
     if (!user) return false;
     const token = user.firebase_id;
     
-    const payload = FIREBASE.messagePayload(title, body, null, data);
+    const message = FIREBASE.toDevicePayload(title, body, token);
 
     try {
-        const res = await admin.messaging().sendToDevice(token, payload);
+        const res = await admin.messaging().send(message);
         console.log('Successfully sent message:', res);
     } catch (error) {
         console.error('Error sending message:', error);

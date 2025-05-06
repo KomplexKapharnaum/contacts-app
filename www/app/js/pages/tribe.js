@@ -383,6 +383,11 @@ mashupBtn.addEventListener("click", () => {
                         currentIndex++;
                         audioFiles[currentIndex].play();
                     };
+                    audioFiles[i].onerror = () => {
+                        console.error("Error loading audio", res.data[i]);
+                        currentIndex++;
+                        audioFiles[currentIndex].play();
+                    };
                 }
                 
                 if (audioFiles.length > 0) {
