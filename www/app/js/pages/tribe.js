@@ -373,6 +373,7 @@ mashupBtn.addEventListener("click", () => {
             
             const loadAllAudio = () => {
                 for (let i = 0; i < res.data.length; i++) {
+                    console.log("Loading audio", res.data[i])
                     const audio = new Audio(document.WEBAPP_URL + "/tribe_audio/" + res.data[i]);
                     audioFiles.push(audio);
                 }
