@@ -90,6 +90,7 @@ async function initDB() {
             table.integer('score').defaultTo(0);
             table.string('description').defaultTo('');
             table.string('audio').nullable().defaultTo(null);
+            table.dateTime('last_seen').defaultTo(null);
         })
 
         .createTable('messages', (table) => {
@@ -114,6 +115,7 @@ async function initDB() {
 
         .createTable('notifications', (table) => {
             table.increments('id');
+            table.dateTime("created_at");
             table.string("message");
             table.string("color").defaultTo("cyberspace");
             table.integer("tribeID").defaultTo(0);
@@ -185,7 +187,7 @@ db.createMessage = async (admin, name, date, uuid, public_id, message, tribeID) 
 }
 
 db.createNotification = async(message, color, tribeID=0) => {
-    const msg = await db('notifications').insert({message, tribeID, color});
+    const msg = await db('notifications').insert({message, tribeID, color, created_at: new Date()});
     return msg;
 }
 

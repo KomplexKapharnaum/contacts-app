@@ -315,6 +315,13 @@
 
 /* Profile avatar */
 
+.user-info {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
 #avatar-container {
     width: 100%;
     aspect-ratio: 1/1;

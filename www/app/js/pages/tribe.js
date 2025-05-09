@@ -39,7 +39,13 @@ async function loadLeaderBoard() {
                     tem.querySelector(".rank").innerText = i+1
                     tem.querySelector(".username").innerText = ply.name
                     tem.querySelector(".score span").innerText = ply.score
-                    if (ply.avatar) tem.querySelector("img").src = document.WEBAPP_URL + "/avatars/" + ply.avatar
+                    if (ply.avatar) {
+                        const path = document.WEBAPP_URL + "/avatars/" + ply.avatar
+                        tem.querySelector("img").src = path
+                        tem.querySelector("img").addEventListener("click", () => {
+                            imgPreviewShow(path)
+                        })
+                    }
                     tribe_top10.appendChild(tem)
                 }
             }
@@ -268,12 +274,14 @@ async function obform_process() {
         }
 
         PAGES.goto("loading")
+
+        showNavbar(true)
+
         const someting_happened = await loadEvents()
 
         feature_show("tribe")
         PAGES.goto("tribe")
-
-        showNavbar(true)
+        
         loadLeaderBoard()
         if (!someting_happened) BUD.setCurrentDialogue(BUD_DIALS.tribe, true)
     }
@@ -405,3 +413,28 @@ mashupBtn.addEventListener("click", () => {
         }
     })
 });
+
+/* Leaderboard image view */
+
+const imgPreviewOverlay = document.getElementById("image-preview-overlay");
+imgPreviewOverlay.addEventListener("click", () => {
+    imgPreviewOverlay.classList.remove("active");
+})
+
+function imgPreviewShow(imgPath) {
+    imgPreviewOverlay.classList.add("active");
+    imgPreviewOverlay.querySelector("img").src = imgPath
+}
+
+const leaderboardImages = document.querySelectorAll(".podium-item img");
+
+function lb_images_event(imgs) {
+    imgs.forEach((img) => {
+        img.addEventListener("click", () => {
+            console.log("img clicked", img.src)
+            imgPreviewShow(img.src)
+        });
+    });
+}
+
+lb_images_event(leaderboardImages)

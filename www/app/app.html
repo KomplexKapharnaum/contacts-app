@@ -157,8 +157,8 @@
 
     <div class="page" data-page-id="onboarding-questions-dish">
         <div class="question-container">
-            <div class="label-top">Question n°3</div>
-            <div class="label-bottom">Quel plat veux-tu manger ?</div>
+            <!-- <div class="label-top">Tribu</div> -->
+            <div class="label-bottom">Choisis ton énergie</div>
         </div>
         <div id="dishes">
 
@@ -442,6 +442,10 @@
 
         <section>
             <div id="avatar-container">
+                <div class="user-info" id="profile-edit-username">
+                    <div id="user-username">Hello world</div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                </div>
                 <img src="$BASEPATH$/img/avatar_default.png" alt="avatar" id="profile-avatar">
                 <div class="avatar-btns" id="profile-avatar-btns">
                     <button id="profile-save-avatar" class="btn-icon c4">
@@ -497,7 +501,7 @@
         <section>
             <h2>Paramètres</h2>
             <div class="buttons-sm">
-                <button id="profile-edit-username" class="c3">Changer de pseudo</button>
+                <!-- <button id="profile-edit-username" class="c3">Changer de pseudo</button> -->
                 <button id="profile-delete" class="c1">Supprimer mon compte</button>
             </div>
         </section>
@@ -947,9 +951,18 @@
     </nav>
 
     <!-- Overlay -->
+    <div id="notification-overlay">
+        <div class="notification-title">Nouvelle notification</div>
+        <div id="notification-message"></div>
+        <button id="notification-close" class="btn-outline c3">Fermer</button>
+    </div>
+
+    <div id="image-preview-overlay">
+        <img src="" alt="">
+    </div>
     <div id="noise-overlay"></div>
     <div id="overlay"></div>
-    <div id="video-overlay"><video src="" loop muted playsinline></video></div>
+    <div id="video-overlay"><video src="" loop playsinline></video></div>
 
     <!-- Buddy -->
     <div id="buddy-icon"></div>

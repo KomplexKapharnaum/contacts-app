@@ -22,12 +22,12 @@ SOCKET.io = new IoServer(server);
 SOCKET.lastEvent = {0:{}};
 SOCKET.startEvent = function (name, args) {
 
-  let group = args.params.tribe
+  let tribeID = args.params.tribe
 
-  if (group != '') {
-    group = parseInt(group);
+  if (tribeID != '') {
+    tribeID = parseInt(tribeID);
     // Update last event for a specific group
-    SOCKET.lastEvent[group] = name=="end" ? false : {
+    SOCKET.lastEvent[tribeID] = name=="end" ? false : {
       name: name,
       args: args,
       id: Math.floor(Math.random() * 1000000000)
@@ -48,6 +48,15 @@ SOCKET.startEvent = function (name, args) {
 
 
 SOCKET.connectedUsers = {};
+
+SOCKET.tribeNames = {};
+async function loadTribeNames() {
+  const tribes = await db('tribes').select();
+  tribes.forEach(tribe => {
+    SOCKET.tribeNames[tribe.id] = tribe.name
+  })
+}
+loadTribeNames();
 
 SOCKET.toClient = (userID, event, data) => {
     if (SOCKET.connectedUsers[userID]) {
@@ -130,7 +139,7 @@ SOCKET.io.on('connection', (socket) => {
         }
     })
 
-    socket.on('ctrl', (data) => {
+    socket.on('ctrl', async (data) => {
       
       console.log('ctrl', data);
       if (!socket.rooms.has("admin")) return;
@@ -138,8 +147,10 @@ SOCKET.io.on('connection', (socket) => {
       if (data.name == "reload") SOCKET.io.emit('reload')
       else SOCKET.startEvent(data.name, data.args);
 
-      const grp = data.args.params.grpChoice || '';
-      SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${grp===''?'everyone':grp.toLowerCase()}` );
+      const tribeID = data.args.params.tribe || '';
+      const tribeName = tribeID == '' ? 'everyone' : SOCKET.tribeNames[tribeID]
+
+      SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${tribeName}` );
     });
 
     socket.on('setEventState', (data) => {

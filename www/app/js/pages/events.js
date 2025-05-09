@@ -47,6 +47,7 @@ async function loadEvents() {
                             liveTriggered = true
                             socketEventLive(userData.uuid, true)
                             PAGES.goto("live-idle")
+                            setEventCloseButtonsState(!event_data.priority)
                             showNavbar(false)
                             resolve(true)
                         } else if (isIncoming(event_data.start_date)) {
@@ -102,6 +103,7 @@ const countdown_minutes = document.getElementById("countdown-minutes")
 function goto_event(eventData) {
     if (isNow(eventData.start_date)) {
         PAGES.goto("live-idle")
+        setEventCloseButtonsState(!eventData.priority)
         socketEventLive(userData.uuid, true)
         showNavbar(false)
     } else if (isIncoming(eventData.start_date)) {

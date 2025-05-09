@@ -119,6 +119,14 @@ QUERY.setTribe = async (tribeID) => {
     return await QUERY.process("set_tribe", {uuid: userData.uuid, tribe_id: tribeID});
 }
 
-QUERY.getMashup = async () => {
-    return await QUERY.process("tribe_mashup", {uuid: userData.uuid});
+QUERY.getMashup = async (count=false) => {
+    return await QUERY.process("tribe_mashup", {uuid: userData.uuid, count: count});
+}
+
+QUERY.loadNotifications = async () => {
+    return await QUERY.process("read_notifications", {uuid: userData.uuid});
+}
+
+QUERY.updateLastSeen = async () => {
+    return await QUERY.process("update_last_seen", {uuid: userData.uuid});
 }

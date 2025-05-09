@@ -154,17 +154,17 @@ class ChatBox {
 
         const report = clone.querySelector(".report")
         if (data.admin) {
-            this.msg_container.querySelectorAll(".admin").forEach((msg) => {
-                msg.classList.add("adminsoft")
-                msg.classList.remove("admin")
-            })
+            // this.msg_container.querySelectorAll(".admin").forEach((msg) => {
+            //     msg.classList.add("adminsoft")
+            //     msg.classList.remove("admin")
+            // })
             report.remove()
             clone.classList.add("admin")
             // unstick message on click
-            clone.addEventListener("click", () => {
-                clone.classList.remove("admin")
-                clone.classList.add("adminsoft")
-            })
+            // clone.addEventListener("click", () => {
+            //     clone.classList.remove("admin")
+            //     clone.classList.add("adminsoft")
+            // })
         } else {
             report.addEventListener("click", () => {
                 app_confirm("Vous êtes sur le point de signaler ce message : " + data.message).then((res) => {

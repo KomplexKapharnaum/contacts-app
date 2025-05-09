@@ -93,10 +93,10 @@ document.SOCKETIO.on('hello', () => {
 
 function ctrl(name, args = {params:{}}) {
 
-    if (!current_event_state) {
-        log(log_time() + " Event not live, aborting.")
-        return;
-    }
+    // if (!current_event_state) {
+    //     log(log_time() + " Event not live, aborting.")
+    //     return;
+    // }
 
     var resid = Math.random().toString(36).substring(2);
 
@@ -116,11 +116,11 @@ function ctrl(name, args = {params:{}}) {
     })
 }
 
-let current_event_state = false
-document.SOCKETIO.on("adminEventState", (eventState) => {
-    current_event_state = eventState
-    setEventBtnState(eventState)
-})
+// let current_event_state = false
+// document.SOCKETIO.on("adminEventState", (eventState) => {
+//     current_event_state = eventState
+//     setEventBtnState(eventState)
+// })
 
 /*
 query = function (name, ...args) {
@@ -563,6 +563,12 @@ click("upload-send", () => {
     ctrl("upload", args)
 })
 
+/* Tribe cry */
+click("cry-send", () => {
+    const args = {params : {}}
+    ctrl("cry", args)
+})
+
 /* Presets */
 /* */
 
@@ -727,23 +733,23 @@ document.addEventListener("touchstart", () => {
 
 // setEventState
 
-click("set-event-state", () => {
-    if (!confirm("Update event state ?")) return
-    current_event_state = !current_event_state
-    // setEventBtnState(current_event_state)
-    document.SOCKETIO.emit('setEventState', current_event_state)
-});
+// click("set-event-state", () => {
+//     if (!confirm("Update event state ?")) return
+//     current_event_state = !current_event_state
+//     // setEventBtnState(current_event_state)
+//     document.SOCKETIO.emit('setEventState', current_event_state)
+// });
 
-document.SOCKETIO.on("getEventState", (state)=> {
-    setEventBtnState(state)
-    log(`${log_time()} [EVENT STATE] : ${state}`)
-})
+// document.SOCKETIO.on("getEventState", (state)=> {
+//     setEventBtnState(state)
+//     log(`${log_time()} [EVENT STATE] : ${state}`)
+// })
 
-function setEventBtnState(state) {
-    current_event_state = state
-    const btn = document.getElementById("btn-set-event-state")
-    btn.innerHTML = state ? "STOP EVENT" : "START EVENT"
-}
+// function setEventBtnState(state) {
+//     current_event_state = state
+//     const btn = document.getElementById("btn-set-event-state")
+//     btn.innerHTML = state ? "STOP EVENT" : "START EVENT"
+// }
 
 /* Select group */
 

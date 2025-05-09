@@ -23,6 +23,7 @@ document.getElementById("profile-edit-username").addEventListener("click", () =>
         if (res) {
             PAGES.goto("loading")
             QUERY.updateName(res).then(() => {
+                updateProfileUsername(res)
                 PAGES.goto("profile")
                 showNavbar(true)
             })
@@ -608,3 +609,7 @@ profile_avatarvote_btn.addEventListener("click", () => {
     startAvatarVotes()
     setProfileAvatarVoteState(false)
 })
+
+function updateProfileUsername(name) {
+    document.getElementById("user-username").innerText = name
+}

@@ -1,8 +1,9 @@
-showOverlay = function(bool, color, message, image = false, flashing = false) {
+function showOverlay(bool, color, message, image = false, flashing = false) {
     const overlay = document.getElementById("overlay");
     overlay.classList.remove("flashing");
     if (bool) {
         overlay.classList.add("active");
+        
         if (flashing) overlay.classList.add("flashing");
         overlay.style.backgroundColor = color;
         overlay.innerHTML = message;
@@ -59,6 +60,7 @@ USEREVENT.promptImages = function(images, flashing) {
     });
 }
 
+USEREVENT.interval;
 USEREVENT.setOverlay = function(type, args, params) {
 
     const flashing = params.flash || false;
@@ -108,11 +110,16 @@ USEREVENT.setOverlay = function(type, args, params) {
         show(shuffledArgs[0]);
     }
 
+    clearInterval(USEREVENT.interval);
+
+    const loopShow = () => {
+        id = (id + 1) % shuffledArgs.length;
+        show(shuffledArgs[id]);
+    }
+
     if (switchonclick) {
-        document.getElementById("overlay").onclick = function() {
-            id = (id + 1) % shuffledArgs.length;
-            show(shuffledArgs[id]);
-        };
+        USEREVENT.interval = setInterval(loopShow, 500);
+        loopShow();
     }
 }
 
@@ -231,6 +238,46 @@ const btn_live_upload = document.getElementById("live-upload-button");
     });
 });
 
+/* Tribe cry */
+USEREVENT.cryActive = false;
+USEREVENT.startCry = function() {
+    console.log("startCry")
+    USEREVENT.cryActive = true;
+    QUERY.getMashup().then(res => {
+        if (res.status) {
+
+            let cache = {};
+            const loadAudio = async (name) => {
+                console.log("loadAudio", name)
+                return new Promise((resolve, reject) => {
+                    if (cache[name]) {
+                        resolve(cache[name]);
+                    } else {
+                        const audio = document.createElement("audio");
+                        audio.src = document.WEBAPP_URL + "/tribe_audio/" + name;
+                        audio.load();
+                        cache[name] = audio;
+                        audio.oncanplaythrough = () => resolve(audio);
+                    }
+                })
+            }
+            
+            let currentIndex = 0;
+            const next = async () => {
+                if (!USEREVENT.cryActive) return;
+                currentIndex = (currentIndex + 1) % res.data.length;
+                const audio = await loadAudio(res.data[currentIndex]);
+                loadAudio(res.data[(currentIndex + 1) % res.data.length]);
+                audio.play();
+                audio.addEventListener("error", next);
+                audio.addEventListener("ended", next);
+            }
+            
+            next();
+        }
+    });
+}
+
 receiveSessionEvent = function (event) {
 
     if (event.name=="reload") location.reload();
@@ -264,15 +311,19 @@ receiveSessionEvent = function (event) {
         case "upload":
             PAGES.goto("live-upload");
             break;
+        case "cry":
+            USEREVENT.startCry();
+            break;
     }
 }
 
 let lastevent_id = null;
 document.SOCKETIO.on('start-event', (data_pack) => {
+    console.log("start-event", data_pack);
     if (!userData) return;
 
     const userGroup = userData.tribe_id
-    const data = data_pack[userGroup]
+    const data = data_pack[userGroup] ? data_pack[userGroup] : data_pack[0];
     if (!data) {endEvent(); return}
 
     if (lastevent_id != data.id) receiveSessionEvent(data)
@@ -284,10 +335,15 @@ document.SOCKETIO.on("reload", () => {
     location.reload();
 })
 
-endEvent = function() {
-    showOverlay(false);
+endEvent = function(nogoto=false) {
+    clearInterval(USEREVENT.interval);
+    USEREVENT.cryActive = false;
+    console.log("endEvent")
     USEREVENT.showVideo(false);
-    PAGES.goto("live-idle");
+    if (!nogoto) {
+        showOverlay(false);
+        PAGES.goto("live-idle")
+    };
 }
 
 document.querySelectorAll(".btn-live-close").forEach(el => {
@@ -296,5 +352,12 @@ document.querySelectorAll(".btn-live-close").forEach(el => {
         socketEventLive(userData.uuid, false)
         showNavbar(true)
         PAGES.goto("cyberspace")
+        endEvent(true)
     })
 });
+
+function setEventCloseButtonsState(state) {
+    document.querySelectorAll(".btn-live-close").forEach(el => {
+        el.classList.toggle("hidden", !state)
+    })
+}

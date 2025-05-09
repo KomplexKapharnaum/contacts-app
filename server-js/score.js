@@ -12,11 +12,11 @@ SCORE.addToPlayer = async (id, amount) => {
     await database('users').where('id', id).update({score: newScore});
     SOCKET.toClient(id, "send-xp", amount);
     
-    const tribeID = player.tribe_id;
-    const tribe = await database('tribes').where('id', tribeID).first();
-    if (!tribe) return false;
-    const newTribeScore = tribe.score + amount;
-    await database('tribes').where('id', tribeID).update({score: newTribeScore});
+    // const tribeID = player.tribe_id;
+    // const tribe = await database('tribes').where('id', tribeID).first();
+    // if (!tribe) return false;
+    // const newTribeScore = tribe.score + amount;
+    // await database('tribes').where('id', tribeID).update({score: newTribeScore});
     return true;
 }
 
@@ -56,7 +56,8 @@ SCORE.updateLeaderBoard = async () => {
 }
 
 const HALF_HOUR = 1000 * 60 * 30;
-SCORE.interval = setInterval(()=>SCORE.updateLeaderBoard(), HALF_HOUR);
+const FIVE_MINUTES = 1000 * 60 * 5;
+SCORE.interval = setInterval(()=>SCORE.updateLeaderBoard(), FIVE_MINUTES);
 SCORE.updateLeaderBoard();
 
 export default SCORE

@@ -456,3 +456,35 @@ button.back {
     text-align: center;
     opacity: 0.5;
 }
+
+#notification-overlay {
+    display: none;
+    /* display: flex; */
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background-color: #000000DD;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+}
+
+#notification-overlay.active {
+    display: flex;
+    z-index: 80;
+}
+ 
+#notification-message {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.notification-title {
+    width: 100%;
+    color: var(--color-secondary-3);
+    text-align: center;
+}

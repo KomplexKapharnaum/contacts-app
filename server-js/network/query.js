@@ -365,11 +365,12 @@ query.add("random_avatars", async (params) => {
 
 query.add("tribe_mashup", async (params) => {
     const uuid = params.get("uuid");
+    const count = params.get("count");
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
 
     const user = await db('users').where('uuid', uuid).first();
 
-    if (!user.audio) return [false, "user has no audio"];
+    // if (!user.audio) return [false, "user has no audio"];
 
     const tribeID = user.tribe_id;
     const randomUsers = await db('users')
@@ -377,12 +378,28 @@ query.add("tribe_mashup", async (params) => {
     .whereNot('id', user.id)
     .whereNot('audio', null)
     .orderByRaw('RANDOM()')
-    .limit(5)
+    .limit(count?Math.min(25, count):5)
     .select('audio')
 
     const audioPaths = randomUsers.map(x => x.audio);
 
     return [true, audioPaths];
+})
+
+query.add("update_last_seen", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+    await db('users').where('uuid', uuid).update({last_seen: new Date()});
+    return [true, {uuid: uuid}];
+})
+
+query.add("read_notifications", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+    const user = await db('users').where('uuid', uuid).first();
+    const last_seen = user.last_seen ? user.last_seen : 0;
+    const notifications = await db('notifications').where('created_at', '>', last_seen).select();
+    return [true, notifications];
 })
 
 // Regie query

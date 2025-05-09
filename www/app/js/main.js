@@ -76,6 +76,8 @@ async function after_user_load(uuid) {
         console.log("FIREBASE: Error subscribing to all: ", e)
     }
 
+    await loadNotifications()
+
     socketAuth(uuid)
     loadFeatureStates()
     await loadEvents()
@@ -96,13 +98,30 @@ async function after_user_load(uuid) {
         }
     } else {
         if (FEATURES.tribe_page) {
-            PAGES.goto("onboarding-questions-fingerprint")
-            BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
+            // PAGES.goto("onboarding-questions-fingerprint")
+            PAGES.goto("onboarding-questions-dish")
+            // BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
             showNavbar(false)
         }
     }
 
     input_profile_desc.value = userData.description
+    updateProfileUsername(userData.name)
+}
+
+async function loadNotifications() {
+    return new Promise((resolve, reject) => {
+        QUERY.loadNotifications().then(async res => {
+            if (res.status) {
+                const notifications = res.data
+                if (notifications.length > 0) {
+                    for (let i=0 ; i < notifications.length; i++) await showNotificationOverlay(notifications[i].message)
+                    QUERY.updateLastSeen()
+                } 
+            }
+            resolve()
+        })
+    })
 }
 
 function subscribeToSession(uuid) {
@@ -311,3 +330,20 @@ function showGainedXP(amount) {
 document.SOCKETIO.on("send-xp", (amount) => {
     showGainedXP(amount)
 })
+
+const notification_overlay = document.getElementById("notification-overlay")
+const notification_overlay_message = document.getElementById("notification-message")
+const notification_close = document.getElementById("notification-close")
+
+function showNotificationOverlay(message) {
+    return new Promise((resolve, reject) => {
+        notification_overlay.classList.add("active")
+        notification_overlay_message.innerText = message
+        const resEvent = () => {
+            notification_overlay.classList.remove("active")
+            resolve(true)
+            notification_close.removeEventListener("click", resEvent)
+        }
+        notification_close.addEventListener("click", resEvent)
+    })
+}

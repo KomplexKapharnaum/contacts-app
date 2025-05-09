@@ -122,6 +122,7 @@ const eventLocationCoordsInput = document.getElementById("input-event-location-c
 const eventLocationNameInput = document.getElementById("input-event-location-name");
 const eventNameInput = document.getElementById("input-event-name");
 const eventTribeSelect = document.getElementById("input-event-tribe");
+const eventPriorityCheckbox = document.getElementById("input-event-priority");
 
 async function addTribes() {
     const tribes = await sendCommand("tribelist", {});
@@ -146,7 +147,8 @@ createEventButton.addEventListener("click", async (e) => {
         location_coords: eventLocationCoordsInput.value,
         location_name: eventLocationNameInput.value,
         name: eventNameInput.value,
-        tribe_id: parseInt(eventTribeSelect.value)
+        tribe_id: parseInt(eventTribeSelect.value),
+        priority: eventPriorityCheckbox.checked
     };
 
     const res = await sendCommand("admin_create_event", eventData);
@@ -338,7 +340,7 @@ const structure_event = [
         key: "tribe_id",
         type: "number",
         placeholder: "tribe_id"
-    }
+    }// ,
     // {
     //     key: "priority",
     //     type: "checkbox"
