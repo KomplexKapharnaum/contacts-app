@@ -205,3 +205,5 @@ app.post('/live_file_upload', upload.single('image'), async function(req, res) {
    
     res.status(200).send("File uploaded successfully");
 });
+
+app.use('/media', express.static(path.join(__dirname, 'media')));

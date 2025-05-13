@@ -36,6 +36,14 @@ html {
     transition: top 0.3s ease-in-out, transform 0.3s cubic-bezier(0.5, 0, 0.2, 1.5);;
 }
 
+@media (pointer: fine) {
+    #buddy-container {
+        max-width: var(--max-app-width);
+        left: calc(50% - var(--max-app-width) / 2 );
+    }
+}
+
+
 #buddy-container.shown {
     top: 64px;
     transform: none;
