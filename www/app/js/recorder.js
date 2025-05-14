@@ -57,67 +57,121 @@ class Recorder {
     }
 
     recordAPP(recordCallback) {
-        return new Promise(async (resolve, reject) => 
-        {   
-            var that = this;
-
-            function onAudioInput(evt) {
-                console.log("Audio data received: " + evt.data.length + " bytes");
-                that.chunks.push(evt.data);
-            }
-
-            function onAudioInputError(error) {
-                console.error("An error occurred: " + error);
-                audioinput.stop();
-                reject(error);
-            }
-
-            function startRecording() {
-                console.log("Starting recording...");
-                recordCallback();
-
-                window.removeEventListener( "audioinput", onAudioInput, false );
-                window.removeEventListener( "audioinputerror", onAudioInputError, false );
-
-                window.addEventListener( "audioinput", onAudioInput, false );
-                window.addEventListener( "audioinputerror", onAudioInputError, false );
-
-                that.chunks = [];
-
-                audioinput.start({ bufferSize: 8192 });
-
-                setTimeout(() => {
-                    audioinput.stop();
-                    const blob = new Blob(that.chunks, { type: 'audio/webm' });
-                    that.blob = blob;
-                    resolve(that.blob);
-                }, 5000);
-            }
-
-            
-            // First check whether we already have permission to access the microphone.
-            window.audioinput.checkMicrophonePermission(function(hasPermission) {
-                if (hasPermission) {
-                    console.log("We already have permission to record.");
-                    startRecording();
-                } 
-                else {	        
-                    // Ask the user for permission to access the microphone
-                    window.audioinput.getMicrophonePermission(function(hasPermission, message) {
-                        if (hasPermission) {
-                            console.log("User granted us permission to record.");
-                            startRecording();
-                        } else {
-                            console.warn("User denied permission to record.");
-                            reject("User denied permission to record.");
-                        }
-                    });
+        this.chunks = [];
+        return new Promise((resolve, reject) => {
+            // Generate a unique filename per recording
+            const fileName = `recording-${Date.now()}.webm`;
+            // Use the appropriate directory for each platform
+            const dir = (cordova.file && cordova.file.cacheDirectory) ? cordova.file.cacheDirectory : '';
+            const filePath = dir + fileName;
+    
+            // Create Media object
+            const mediaRec = new Media(filePath,
+                // Success callback
+                () => {
+                    // Success on media object creation, not recording
+                },
+                // Error callback
+                (err) => {
+                    reject('Media error: ' + JSON.stringify(err));
                 }
-            });
+            );
+    
+            // Start recording
+            mediaRec.startRecord();
+    
+            // Call the provided callback (for UI updates, etc)
+            if (typeof recordCallback === 'function') {
+                recordCallback();
+            }
+    
+            // Stop after 5 seconds (to match your web version)
+            setTimeout(() => {
+                mediaRec.stopRecord();
+    
+                // Wait a bit to ensure file is written
+                setTimeout(() => {
+                    // Now read the file as a Blob for upload
+                    window.resolveLocalFileSystemURL(filePath, (fileEntry) => {
+                        fileEntry.file((file) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                // The result is an ArrayBuffer, wrap it as a Blob
+                                this.blob = new Blob([reader.result], { type: 'audio/webm' });
+                                resolve(this.blob);
+                            };
+                            reader.onerror = (e) => reject('File read error: ' + e.target.error);
+                            reader.readAsArrayBuffer(file);
+                        }, (err) => reject('FileEntry error: ' + JSON.stringify(err)));
+                    }, (err) => reject('resolveLocalFileSystemURL error: ' + JSON.stringify(err)));
+                }, 300); // Small delay to ensure file is finalized
+            }, 5000);
+        });
+    }
+    
+
+    // recordAPP(recordCallback) {
+    //     return new Promise(async (resolve, reject) => 
+    //     {   
+    //         var that = this;
+
+    //         function onAudioInput(evt) {
+    //             console.log("Audio data received: " + evt.data.length + " bytes");
+    //             that.chunks.push(evt.data);
+    //         }
+
+    //         function onAudioInputError(error) {
+    //             console.error("An error occurred: " + error);
+    //             audioinput.stop();
+    //             reject(error);
+    //         }
+
+    //         function startRecording() {
+    //             console.log("Starting recording...");
+    //             recordCallback();
+
+    //             window.removeEventListener( "audioinput", onAudioInput, false );
+    //             window.removeEventListener( "audioinputerror", onAudioInputError, false );
+
+    //             window.addEventListener( "audioinput", onAudioInput, false );
+    //             window.addEventListener( "audioinputerror", onAudioInputError, false );
+
+    //             that.chunks = [];
+
+    //             audioinput.start({ bufferSize: 8192 });
+
+    //             setTimeout(() => {
+    //                 audioinput.stop();
+    //                 const blob = new Blob(that.chunks, { type: 'audio/webm' });
+    //                 that.blob = blob;
+    //                 resolve(that.blob);
+    //             }, 5000);
+    //         }
 
             
-        })
-    }
+    //         // First check whether we already have permission to access the microphone.
+    //         window.audioinput.checkMicrophonePermission(function(hasPermission) {
+    //             if (hasPermission) {
+    //                 console.log("We already have permission to record.");
+    //                 startRecording();
+    //             } 
+    //             else {	        
+    //                 // Ask the user for permission to access the microphone
+    //                 window.audioinput.getMicrophonePermission(function(hasPermission, message) {
+    //                     if (hasPermission) {
+    //                         console.log("User granted us permission to record.");
+    //                         startRecording();
+    //                     } else {
+    //                         console.warn("User denied permission to record.");
+    //                         reject("User denied permission to record.");
+    //                     }
+    //                 });
+    //             }
+    //         });
+
+            
+    //     })
+    // }
 
     record(recordCallback) {
         if (document.APPSTATE) {
