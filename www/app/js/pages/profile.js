@@ -272,7 +272,13 @@ function process_snapshot(img)
         sx = 0;
         sy = (img.height - sHeight) / 2;
     }
-    context.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvasWidth, canvasHeight);
+
+    // mirror the image
+    context.save();
+    context.scale(-1, 1);
+    context.drawImage(img, sx, sy, sWidth, sHeight, -canvasWidth, 0, canvasWidth, canvasHeight);
+    context.restore(); 
+
     avatar_creation_data.photo = video_avatar_canvas.toDataURL();
 }
 
@@ -323,7 +329,7 @@ let paint_data = {
     erasing: false
 }
 
-function draw(x, y, e) {
+function draw(x, y) {
     ctx_paint.beginPath();
     ctx_paint.lineCap = "round";
     if (paint_data.erasing) {
@@ -382,24 +388,48 @@ function addButtons() {
     btns_paint.appendChild(erase_button)
 }
 
-cnv_paint.addEventListener("touchstart", (e) => {
-    const bounds = cnv_paint.getBoundingClientRect()
-    const x = (e.touches[0].clientX - bounds.left) * (cnv_paint.width / bounds.width)
-    const y = (e.touches[0].clientY - bounds.top) * (cnv_paint.height / bounds.height)
+function getCanvasCoords(canvas, event) {
+    const bounds = canvas.getBoundingClientRect();
+    if (event.touches) { // Touch event
+      return {
+        x: (event.touches[0].clientX - bounds.left) * (canvas.width / bounds.width),
+        y: (event.touches[0].clientY - bounds.top) * (canvas.height / bounds.height)
+      };
+    } else { // Mouse event
+      return {
+        x: (event.clientX - bounds.left) * (canvas.width / bounds.width),
+        y: (event.clientY - bounds.top) * (canvas.height / bounds.height)
+      };
+    }
+}
+
+
+function paint_handleStart(event) {
+    event.preventDefault(); // Prevent scrolling on touch
+    const { x, y } = getCanvasCoords(cnv_paint, event);
     paint_data.down = true
     paint_data.prevX = x
     paint_data.prevY = y
-})
-cnv_paint.addEventListener("touchend", () => {paint_data.down = false})
+}
 
-cnv_paint.addEventListener("touchmove", (e) => {
-    const bounds = cnv_paint.getBoundingClientRect()
-    const x = (e.touches[0].clientX - bounds.left) * (cnv_paint.width / bounds.width)
-    const y = (e.touches[0].clientY - bounds.top) * (cnv_paint.height / bounds.height)
-    if (paint_data.down) {
-        draw(x, y)
-    }
-})
+function paint_handleMove(event) {
+    if (!paint_data.down) return;
+    const { x, y } = getCanvasCoords(cnv_paint, event);
+    draw(x, y)
+}
+
+function paint_handleEnd(event) {
+  event.preventDefault();
+  paint_data.down = false
+}
+
+
+cnv_paint.addEventListener('mousedown', paint_handleStart);
+cnv_paint.addEventListener('mousemove', paint_handleMove);
+cnv_paint.addEventListener('mouseup', paint_handleEnd);
+cnv_paint.addEventListener('touchstart', paint_handleStart);
+cnv_paint.addEventListener('touchmove', paint_handleMove);
+cnv_paint.addEventListener('touchend', paint_handleEnd);
 
 document.getElementById("btn-avatar-draw-clear").addEventListener("click", () => {
     ctx_paint.clearRect(0, 0, cnv_paint.width, cnv_paint.height)
