@@ -506,7 +506,9 @@ function genNewAvatar(userID, data) {
     })
     .then((res) => {
         if (res.ok) {
-            alert("Avatar en cours de création !")
+            // alert("Avatar en cours de création !")
+            avatar_creation_state=0;
+            PAGES.goto("profile")
         } else {
             console.error("Error sending data")
         }

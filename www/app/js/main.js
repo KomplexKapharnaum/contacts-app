@@ -233,6 +233,15 @@ if (virtualKeyboardSupported) {
     });
 }
 
+window.addEventListener('keyboardDidShow', function (ev) {
+    // alert("!! Keyboard is open"+ ev.keyboardHeight);
+    document.documentElement.style.setProperty('--offset', `-${ev.keyboardHeight}px`)
+});
+  
+window.addEventListener('keyboardDidHide', function (ev) {
+    document.documentElement.style.setProperty('--offset', `0px`)
+});
+
 // Feedback
 
 document.getElementById("send-feedback-button").addEventListener("click", ()=>PAGES.goto("send-feedback"))
