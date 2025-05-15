@@ -10,12 +10,13 @@ admin.initializeApp({
 })
 
 FIREBASE.messagePayload = (title, body, topic=null, token=null) => ({
+    // collapse key is the current date + hour (but not the minute)
     notification: {
         title: title,
         body: body,
     },
     // data,
-    topic: topic
+    topic: topic,
 });
 
 FIREBASE.toDevicePayload = (title, body, token) => ({

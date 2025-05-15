@@ -150,6 +150,16 @@ SOCKET.io.on('connection', (socket) => {
       const tribeID = data.args.params.tribe || '';
       const tribeName = tribeID == '' ? 'everyone' : SOCKET.tribeNames[tribeID]
 
+      // Send notification to tribe / all
+      if (data.name != "end") {
+        if (tribeID == '') {
+          firebase.broadcastMessage("Contacts Live", "Il se passe quelque chose dans l'appli !");
+        }
+        else {
+          firebase.toTribe(tribeID, "Contacts Live", "Il se passe quelque chose dans l'appli !");
+        }
+      }
+
       SOCKET.io.emit("event-ok-" + data.resid, `${new Date().getHours()}:${new Date().getMinutes()} → ${data.name} event sent to @${tribeName}` );
     });
 

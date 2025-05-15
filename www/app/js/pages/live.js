@@ -133,6 +133,7 @@ USEREVENT.showVideo = function(show) {
        video_overlay_media.load();
     } else {
        overlay.classList.remove("active");
+       video_overlay_media.pause();
     }
 }
 
@@ -254,6 +255,8 @@ USEREVENT.startCry = function() {
                         resolve(cache[name]);
                     } else {
                         const audio = document.createElement("audio");
+                        // add class cry-audio
+                        audio.classList.add("cry-audio");
                         audio.src = document.WEBAPP_URL + "/tribe_audio/" + name;
                         audio.load();
                         cache[name] = audio;
@@ -275,6 +278,15 @@ USEREVENT.startCry = function() {
             
             next();
         }
+    });
+}
+USEREVENT.stopCry = function() {
+    console.log("stopCry")
+    USEREVENT.cryActive = false;
+    const audios = document.querySelectorAll(".cry-audio");
+    audios.forEach(audio => {
+        audio.pause();
+        audio.remove();
     });
 }
 
@@ -312,6 +324,7 @@ receiveSessionEvent = function (event) {
             PAGES.goto("live-upload");
             break;
         case "cry":
+            USEREVENT.showVideo('zzz');
             USEREVENT.startCry();
             break;
     }
@@ -337,7 +350,7 @@ document.SOCKETIO.on("reload", () => {
 
 endEvent = function(nogoto=false) {
     clearInterval(USEREVENT.interval);
-    USEREVENT.cryActive = false;
+    USEREVENT.stopCry();
     console.log("endEvent")
     USEREVENT.showVideo(false);
     if (!nogoto) {
