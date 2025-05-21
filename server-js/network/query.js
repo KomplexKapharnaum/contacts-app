@@ -447,6 +447,15 @@ query.add("r_get_presets", async (params) => {
     return [true, presets];
 })
 
+query.add("r_delete_preset", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const id = params.get("id");
+    const preset = await db('presets').where('id', id).first();
+    if (!preset) return [false, "preset does not exist"];
+    await db('presets').where('id', id).delete();
+    return [true, {id: id}];
+})
+
 query.add("admin_getfeedbacks", async (params) => {
     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
     const feedbacks = await db('feedback').select();

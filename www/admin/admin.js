@@ -396,6 +396,11 @@ const feedbacks_container = document.getElementById("feedback-container")
 const load_feedbacks = async () => {
     feedbacks_container.innerHTML = "";
     const res = await sendCommand("admin_getfeedbacks", {});
+    // check if res.data is an array
+    if (!Array.isArray(res.data)) {
+        console.warn("Feedbacks data is not an array");
+        return;
+    }    
     res.data.forEach(f => {
         const el = document.getElementById("tem-feedback").cloneNode(true).content;
         el.querySelector("label").innerHTML = `[${f.username}] ${f.message}`;

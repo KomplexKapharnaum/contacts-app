@@ -286,6 +286,7 @@ click("color-send", () => {
 click("color-preset", () => {
     if (!confirm("Save as preset ?")) return;
     const name = prompt("Preset name", "preset-color")
+    if (!name) return;
 
     const colors = [...colors_container.querySelectorAll(".selected")].map(e => e.style.backgroundColor);
     const args = {
@@ -656,12 +657,23 @@ function loadGroup(name) {
         // Copy button
         const copyBtn = document.createElement("button")
         copyBtn.innerHTML = "Copy"
-
         copyBtn.addEventListener("click", () => {
             load_preset(data)
         })
-
         container.appendChild(copyBtn)
+
+        // Delete button
+        const deleteBtn = document.createElement("button")
+        deleteBtn.innerHTML = "Delete"
+        deleteBtn.addEventListener("click", () => {
+            if (!confirm("Delete preset " + elem.name + " ?")) return;
+            query("r_delete_preset", {
+                id: elem.id
+            }).then(() => {
+                loadPresets()
+            })
+        })
+        container.appendChild(deleteBtn)
 
         presets_container.appendChild(container)
     })
