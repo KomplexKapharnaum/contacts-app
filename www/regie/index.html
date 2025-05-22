@@ -50,6 +50,7 @@
     <!-- Choose group -->
     <div class="input_field">
         <select name="select-group" id="select-group"></select>
+        <h3 id="presets-title">P R E S E T S</h3>
     </div>
 
     <hr>
@@ -268,6 +269,7 @@
 
     <!-- Regie navigation bar -->
     <nav>
+
         <!-- <div class="nav-line">
 
             <div class="nav-btn goto-page" data-page-id="features">
@@ -283,7 +285,31 @@
             </div>
         </div> -->
 
+        
+
         <div class="nav-line">
+
+            <div class="nav-btn goto-page" data-page-id="preset">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.3333 8V4H8.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.3333 8H6.33334C5.22877 8 4.33334 8.89543 4.33334 10V18C4.33334 19.1046 5.22877 20 6.33334 20H18.3333C19.4379 20 20.3333 19.1046 20.3333 18V10C20.3333 8.89543 19.4379 8 18.3333 8Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2.33334 14H4.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.3333 14H22.3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.3333 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.33334 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <div class="nav-btn" id="btn-end-current-event">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.7778 22C18.3006 22 22.7778 17.5228 22.7778 12C22.7778 6.47715 18.3006 2 12.7778 2C7.25495 2 2.7778 6.47715 2.7778 12C2.7778 17.5228 7.25495 22 12.7778 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.7778 9L9.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9.7778 9L15.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <div class="vertical-separator"></div>
+
             <div class="nav-btn goto-page" data-page-id="console">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -333,26 +359,9 @@
             <div class="nav-btn goto-page" data-page-id="upload">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
             </div>
-            <div class="nav-btn goto-page" data-page-id="preset">
-                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.3333 8V4H8.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.3333 8H6.33334C5.22877 8 4.33334 8.89543 4.33334 10V18C4.33334 19.1046 5.22877 20 6.33334 20H18.3333C19.4379 20 20.3333 19.1046 20.3333 18V10C20.3333 8.89543 19.4379 8 18.3333 8Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2.33334 14H4.33334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M20.3333 14H22.3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M15.3333 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9.33334 13V15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
             
             <div class="vertical-separator"></div>
 
-            <div class="nav-btn" id="btn-end-current-event">
-                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.7778 22C18.3006 22 22.7778 17.5228 22.7778 12C22.7778 6.47715 18.3006 2 12.7778 2C7.25495 2 2.7778 6.47715 2.7778 12C2.7778 17.5228 7.25495 22 12.7778 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M15.7778 9L9.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9.7778 9L15.7778 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
             <div class="nav-btn" id="btn-reload-event">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 12C21 9.61305 20.0518 7.32387 18.364 5.63604C16.6762 3.94821 14.387 3 12 3C9.48398 3.00947 7.069 3.99122 5.26003 5.74L3.00003 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -366,7 +375,7 @@
     </nav>
 
     <!-- Scripts -->
-    <script src="./js/utils.js"></script>
+    <!-- <script src="./js/utils.js"></script> -->
     <script src="./js/icon.js"></script>
     <script src="./js/pages.js"></script>
     <script src="./js/main.js"></script>

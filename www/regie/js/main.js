@@ -637,11 +637,14 @@ function loadGroup(name) {
         const container = document.createElement("div")
         container.classList.add("input_field")
 
+        // args
+        const data = JSON.parse(elem.data)
+
         // Preset button
         const btn = document.createElement("button")
         btn.classList.add("preset-btn")
-
-        const data = JSON.parse(elem.data)
+        if (data.args.params.tribe) 
+            btn.classList.add("tribe-" + data.args.params.tribe)
 
         const icon = document.querySelector("[data-page-id=" + data.name + "]:not(.page)").querySelector("svg").cloneNode(true)
 
@@ -664,7 +667,7 @@ function loadGroup(name) {
 
         // Delete button
         const deleteBtn = document.createElement("button")
-        deleteBtn.innerHTML = "Delete"
+        deleteBtn.innerHTML = "X"
         deleteBtn.addEventListener("click", () => {
             if (!confirm("Delete preset " + elem.name + " ?")) return;
             query("r_delete_preset", {
@@ -718,6 +721,7 @@ function load_preset(data) {
         if (el) el.checked = data.args.params[i]
     }
 }
+
 
 /* Additional inputs */
 
