@@ -235,11 +235,21 @@ if (virtualKeyboardSupported) {
 
 window.addEventListener('keyboardDidShow', function (ev) {
     // alert("!! Keyboard is open"+ ev.keyboardHeight);
-    document.documentElement.style.setProperty('--offset', `-${ev.keyboardHeight}px`)
+    if (cordova && cordova.platformId == 'android') 
+        document.documentElement.style.setProperty('--offset', `-${ev.keyboardHeight}px`)
+
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+        const scrollTo = activePage.scrollHeight;
+        activePage.scrollTo({ top: scrollTo, behavior: 'instant' });
+    }
+
 });
   
 window.addEventListener('keyboardDidHide', function (ev) {
+    if (cordova && cordova.platformId == 'android') 
     document.documentElement.style.setProperty('--offset', `0px`)
+
 });
 
 // Feedback
