@@ -15,6 +15,15 @@ import multer from 'multer';
 import comfygen from '../comfygen.js';
 import { SOCKET } from './socket.js';
 
+// Load environment variables from .env file
+import dotenv from 'dotenv';
+dotenv.config();
+
+const TEMP_DIR = process.env.TEMP_DIR || "upload/_tmp";
+if (!fs.existsSync(TEMP_DIR)) {
+    fs.mkdirSync(TEMP_DIR, { recursive: true });
+}
+
 app.use('/static', express.static('www'));
 
 app.set('trust proxy', 1 /* number of proxies between user and server */)
@@ -67,7 +76,7 @@ app.use('/livefeed', express.static('www/livefeed'));
 
 // Tribe cry upload
  
-const upload = multer({ dest: '_tmp/' });
+const upload = multer({ dest: TEMP_DIR });
 
 app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
     if (!features.getState("tribe_cry")) {

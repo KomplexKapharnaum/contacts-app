@@ -6,7 +6,17 @@ import db from './core/database.js';
 import trophies from './trophies.js';
 import firebase from './network/firebase.js';
 
+// Load environment variables from .env file
+import dotenv from 'dotenv';
+dotenv.config();
+
+const GEN_DIR = process.env.GEN_DIR || "upload/gen_output";
+if (!fs.existsSync(GEN_DIR)) {
+    fs.mkdirSync(GEN_DIR, { recursive: true });
+}
+
 const workflow = JSON.parse(fs.readFileSync('./server-js/config/workflow.json', 'utf8'))
+
 
 let comfygen = {};
 
@@ -57,7 +67,7 @@ comfygen.gen = async (avatarID, data, tribeID) => {
 
         const result_blob = result.outputs["21"][0].blob;
 
-        const outputDir = 'gen_output';
+        const outputDir = GEN_DIR;
 
         const filename = "static_"+avatarID+".png";
         await client.saveImage(result_blob, outputDir, filename);
