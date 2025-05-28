@@ -101,8 +101,7 @@ function rewardUserTrophy(trophyID) {
 const notif_container = document.getElementById("notifications-container")
 const tem_notification = document.getElementById("tem-notification")
 function showNotification(text, color, priority, button_label=false, onlcick=false) {
-    const clone = tem_notification.cloneNode(true).content
-    .querySelector(".notification")
+    const clone = tem_notification.cloneNode(true).content.querySelector(".notification")
 
     clone.querySelector("span").innerText = text
     clone.classList.add(color)
@@ -118,22 +117,22 @@ function showNotification(text, color, priority, button_label=false, onlcick=fal
     notif_container.appendChild(clone)
 }
 
-function loadNotifications()  {
-    notif_container.innerHTML = ""
-    QUERY.getNotifications().then(res => {
-        console.log(res)
-        if (res.status) {
-            notifications_loaded = true
-            for (let notif of res.data) {
-                showNotification(notif.message, notif.color, 0)
-            }
-        }
-    })
-}
-
 let notifications_loaded = false;
 PAGES.addCallback("notifications", () => {
-    if (!notifications_loaded) loadNotifications()
+
+    // load notifications
+    if (!notifications_loaded) {
+        notif_container.innerHTML = ""
+        QUERY.getNotifications().then(res => {
+            console.log(res)
+            if (res.status) {
+                notifications_loaded = true
+                for (let notif of res.data) {
+                    showNotification(notif.message, notif.color, 0)
+                }
+            }
+        })
+    }
 })
 
 // showNotification("test", "cyberspace", 0, "test", () => {alert(1)})
@@ -633,7 +632,7 @@ function setProfileAvatarVoteState(state) {
     } else {
         profile_avatarvote_container.classList.add("disabled")
         profile_avatarvote_text.innerText = "Vous avez déjà voté aujourd’hui !"
-        profile_avatarvote_btn.innerText = "Revenez demain !"
+        profile_avatarvote_btn.innerText = "Revenez demain"
     }
 }
 

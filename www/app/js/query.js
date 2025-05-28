@@ -96,6 +96,7 @@ QUERY.getTribes = async () => {
 }
 
 QUERY.getNotifications = async () => {
+    console.log("Loading notifications", {uuid: userData.uuid, tribe_id: userData.tribe_id});
     return await QUERY.process("notifications", {uuid: userData.uuid, tribe_id: userData.tribe_id});
 }
 

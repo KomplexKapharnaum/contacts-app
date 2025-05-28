@@ -33,6 +33,17 @@ PAGES.goto = function(pageID, init=false) {
     page.classList.add("active");
     setActiveButton(document.querySelector(".goto-page[data-page-id='" + pageID + "']"));
     PAGES.callback(pageID);
+
+    // TODO: less HACKY 
+    // hide div id  "select-group" if pageID is preset
+    if (pageID == "preset") {
+        document.getElementById("select-group").style.display = "none";
+        document.getElementById("presets-title").style.display = "block";
+    }
+    else {
+        document.getElementById("select-group").style.display = "block";
+        document.getElementById("presets-title").style.display = "none";
+    }
 }
 
 const pages_btns = document.querySelectorAll(".goto-page");
@@ -50,4 +61,4 @@ pages_btns.forEach((btn) => {
     })
 })
 
-PAGES.goto("console", true)
+PAGES.goto("preset", true)

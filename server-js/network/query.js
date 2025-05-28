@@ -314,8 +314,9 @@ query.add("notifications", async (params) => {
     if (await util.userExists(uuid) == false) return [false, "user does not exist"];
     const tribeID = params.get("tribe_id");
 
-    const notifications = await db('notifications')
-    .where('tribeID', 'in', [tribeID, 0])
+    console.log("loading notification for", tribeID)
+
+    const notifications = await db('notifications').where('tribeID', 'in', [tribeID, 0])
 
     return [true, notifications];
 })

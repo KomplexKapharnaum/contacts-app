@@ -109,7 +109,7 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     const tribeID = user.tribe_id;
 
-    const audio_name = `${tribeID}-${user.id}.webm`
+    const audio_name = `${tribeID}-${user.id}.m4a`
 
     // Make sure the directory exists
     const uploadDir = path.join(__dirname, 'upload', 'cry_upload');
@@ -121,8 +121,12 @@ app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res)
 
     // If the file already exists, delete it
     if (fs.existsSync(uploadPath)) {
-        fs.unlinkSync(uploadPath);
-        console.log("Deleted existing audio file");
+        // fs.unlinkSync(uploadPath);
+        // console.log("Deleted existing audio file");
+        // rename existing file to a backup with timestamp
+        const backupPath = path.join(uploadDir, `${tribeID}-${user.id}-${Date.now()}.m4a`);
+        fs.renameSync(uploadPath, backupPath);
+        console.log("Renamed existing audio file to backup");
     }
 
     fs.renameSync(file.path, uploadPath);

@@ -61,9 +61,16 @@ class Recorder {
         return new Promise((resolve, reject) => {
             // Generate a unique filename per recording
             const fileName = `recording-${Date.now()}.webm`;
+
+            var filePath = '';
+
             // Use the appropriate directory for each platform
-            const dir = (cordova.file && cordova.file.cacheDirectory) ? cordova.file.cacheDirectory : '';
-            const filePath = dir + fileName;
+            if (cordova.platformId === 'android') {
+                const dir = (cordova.file && cordova.file.cacheDirectory) ? cordova.file.cacheDirectory : '';
+                filePath = dir + fileName;
+            } else if (cordova.platformId === 'ios') {
+                filePath = 'cdvfile://localhost/temporary/recording.m4a'
+            }
     
             // Create Media object
             const mediaRec = new Media(filePath,
@@ -97,7 +104,7 @@ class Recorder {
                             const reader = new FileReader();
                             reader.onloadend = () => {
                                 // The result is an ArrayBuffer, wrap it as a Blob
-                                this.blob = new Blob([reader.result], { type: 'audio/webm' });
+                                this.blob = new Blob([reader.result], { type: 'audio/m4a' });
                                 resolve(this.blob);
                             };
                             reader.onerror = (e) => reject('File read error: ' + e.target.error);
@@ -185,7 +192,7 @@ class Recorder {
         return new Promise((resolve, reject) => {
             const form = new FormData();
 
-            form.append("audio", this.blob, `recording-${Date.now()}.webm`);
+            form.append("audio", this.blob, `recording-${Date.now()}.m4a`);
             form.append("uuid", userData.uuid);
 
             fetch(document.WEBAPP_URL + "/tribe_audio_upload", {

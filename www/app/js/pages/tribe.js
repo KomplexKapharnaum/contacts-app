@@ -317,6 +317,8 @@ function updateCryContainer(label, state, colorID) {
 updateCryContainer("Enregistre un cri de 5 secondes pour ta tribu !", "no-audio", 1)
 
 cryBtns.record.addEventListener("click", () => {
+    updateCryContainer("Enregistrement en cours...", "recording", 3)
+
     recorder.record(() => {
         let i=5
         const update = () => {
@@ -336,19 +338,43 @@ cryBtns.record.addEventListener("click", () => {
         alert(err)
         updateCryContainer("Enregistre un cri de 5 secondes pour ta tribu !", "no-audio", 1)
     });
-    updateCryContainer("Enregistrement en cours...", "recording", 3)
+    
 })
+
+const audioPlayers = [];
+
+function stopTribeAudio() {
+    while (audioPlayers.length > 0) {
+        const audio = audioPlayers.pop();
+        audio.pause();
+        audio.currentTime = 0;
+        audio.remove();
+        delete audio;
+    }
+    cryBtns.play.classList.remove("disabled")
+    mashupBtn.classList.remove("disabled");
+}
 
 cryBtns.play.addEventListener("click", () => {
     if (userData.audio) {
+        stopTribeAudio()
         cryBtns.play.classList.add("disabled")
+
         const audio = document.createElement("audio")
-        audio.src = document.WEBAPP_URL + "/tribe_audio/" + userData.audio
+        audio.classList.add("audio-cry")
+        audio.classList.add("audio-tribe")
+        audio.src = document.WEBAPP_URL + "/tribe_audio/" + userData.audio + "?t=" + Date.now()
         audio.load()
         audio.play()
         audio.onended = () => {
             cryBtns.play.classList.remove("disabled")
         }
+        audio.onerror = (err) => {
+            console.error("Error playing audio", err)
+            // alert("Erreur de lecture de l'audio",  JSON.stringify(err, ["message", "arguments", "type", "name"]))
+            cryBtns.play.classList.remove("disabled")
+        }
+        audioPlayers.push(audio)
     }
 })
 
@@ -374,41 +400,52 @@ function updateCryMashupState() {
 mashupBtn.addEventListener("click", () => {
     QUERY.getMashup().then(res => {
         if (res.status) {
-            mashupBtn.classList.add("disabled");
-
-            const audioFiles = [];
+            
             let currentIndex = 0;
             
             const loadAllAudio = () => {
-                for (let i = 0; i < res.data.length; i++) {
+                stopTribeAudio()
+                mashupBtn.classList.add("disabled");
+
+                // for (let i = 0; i < res.data.length; i++) {
+                for (let i = 0; i < 1; i++) {
                     console.log("Loading audio", res.data[i])
-                    const audio = new Audio(document.WEBAPP_URL + "/tribe_audio/" + res.data[i]);
-                    audioFiles.push(audio);
+                    const audio = new Audio(document.WEBAPP_URL + "/tribe_audio/" + res.data[i] + "?t=" + Date.now());
+                    audio.classList.add("audio-mashup")
+                    audio.classList.add("audio-tribe")
+                    audio.pause();
+                    audioPlayers.push(audio);
                 }
                 
-                for (let i = 0; i < audioFiles.length - 1; i++) {
-                    audioFiles[i].onended = () => {
+                for (let i = 0; i < audioPlayers.length - 1; i++) {
+                    audioPlayers[i].onended = () => {
                         currentIndex++;
-                        audioFiles[currentIndex].play();
+                        audioPlayers[currentIndex].play();
                     };
-                    audioFiles[i].onerror = () => {
-                        console.error("Error loading audio", res.data[i]);
+                    audioPlayers[i].onerror = (err) => {
+                        // alert("Erreur de lecture de l'audio " + JSON.stringify(err, ["message", "arguments", "type", "name"]));
                         currentIndex++;
-                        audioFiles[currentIndex].play();
+                        audioPlayers[currentIndex].play();
                     };
                 }
                 
-                if (audioFiles.length > 0) {
-                    audioFiles[audioFiles.length - 1].onended = () => {
+                if (audioPlayers.length > 0) {
+                    audioPlayers[audioPlayers.length - 1].onended = () => {
                         mashupBtn.classList.remove("disabled");
                     };
-                    
-                    audioFiles[0].play();
+                    audioPlayers[0].play();
                 } else {
                     mashupBtn.classList.remove("disabled");
                 }
             };
-            
+
+            // stop other audio
+            const otherAudio = document.querySelector("audio")
+            if (otherAudio) {
+                otherAudio.pause()
+                otherAudio.currentTime = 0
+            }
+
             loadAllAudio();
         }
     })
