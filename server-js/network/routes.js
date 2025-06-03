@@ -15,6 +15,19 @@ import multer from 'multer';
 import comfygen from '../comfygen.js';
 import { SOCKET } from './socket.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+const tmpDir = process.env.TEMP_DIR || 'upload/_tmp';
+if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir, { recursive: true });
+}
+
+const genDir = process.env.GEN_DIR || 'upload/gen_output';
+if (!fs.existsSync(genDir)) {
+    fs.mkdirSync(genDir, { recursive: true });
+}
+
 app.use('/static', express.static('www'));
 
 app.set('trust proxy', 1 /* number of proxies between user and server */)
@@ -46,7 +59,7 @@ app.use('/regie', express.static('www/regie'));
 app.use('/regie2', express.static('www/regie_simple'));
 
 
-app.use('/avatars', express.static('gen_output'));
+app.use('/avatars', express.static(genDir));
 
 app.get('/features', function (req, res) {
     res.json(features.cache);
