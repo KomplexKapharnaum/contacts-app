@@ -21,7 +21,7 @@ function error(msg) {
 
 const APPDATA_DIR   = process.env.APPDATA_DIR   || "www/app";
 const MEDIA_DIR     = process.env.MEDIA_DIR     || "www/media";
-const TEMP_DIR      = process.env.TEMP_DIR      || "_tmp";
+const TEMP_DIR      = process.env.TEMP_DIR      || "upload/_tmp";
 const ZIP_FILENAME  = process.env.ZIP_FILENAME  || "app.zip";
 
 var APPINFO = {
