@@ -58,6 +58,7 @@ app.use('/admin', express.static('www/admin'));
 app.use('/regie', express.static('www/regie'));
 app.use('/regie2', express.static('www/regie_simple'));
 
+app.use('/regiekxkm', express.static('www/regie_carnaval'));
 
 app.use('/avatars', express.static(genDir));
 
