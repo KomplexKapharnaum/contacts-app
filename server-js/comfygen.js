@@ -66,8 +66,6 @@ comfygen.gen = async (avatarID, data, tribeID) => {
 
         const result_blob = result.outputs["21"][0].blob;
 
-        const outputDir = GEN_DIR;
-
         const filename = "static_"+avatarID+".png";
         await client.saveImage(result_blob, outputDir, filename);
 
