@@ -49,5 +49,6 @@ button {
     color: var(--color);
     border-radius: 2px;
     font-size: 22px;
+    height: 64px;
     padding: 8px;
 }
