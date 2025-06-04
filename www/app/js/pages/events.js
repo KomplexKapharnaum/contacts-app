@@ -342,7 +342,7 @@ function leafletMap(parent) {
     
         this.map.setView([lat, lon], zoom);
     
-        this.map.eachLayer(function (layer) {
+        this.map.eachLayer((layer) => {
             if (layer instanceof L.Marker) {
                 this.map.removeLayer(layer);
             }
