@@ -107,7 +107,7 @@ function getEvents() {
 
         for (const cmd in commands) {
             const btn = document.createElement("button")
-            btn.innerHTML = commands[cmd].name
+            btn.innerHTML = commands[cmd].name.replace(/_/g, ' ')
             btn.style.setProperty("--color", "white")
             btn.addEventListener("click", () => {
                 ctrl(commands[cmd].json.name, commands[cmd].json.args)
