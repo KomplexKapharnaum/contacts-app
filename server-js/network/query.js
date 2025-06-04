@@ -438,7 +438,12 @@ query.add("r_new_preset", async (params) => {
     const name = params.get("name");
     const group = params.get("group");
     const data = params.get("data");
-    await db('presets').insert({name: name, group: group, data: data});
+    const exists = await db('presets').where('name', name).first();
+    if (exists) {
+        await db('presets').where('name', name).update({group: group, data: data});
+    } else {
+        await db('presets').insert({name: name, group: group, data: data});
+    }
     return [true, {name: name, group: group, data: data}];
 })
 
@@ -546,7 +551,7 @@ query.add("admin_create_event", async (params) => {
         name,
         tribe_id,
         session_id: current_session.id,
-        priority
+        priority: priority==='true'
     };
 
     await db('event').insert(eventData);

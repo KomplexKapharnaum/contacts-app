@@ -284,8 +284,17 @@ click("color-send", () => {
 })
 
 click("color-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-color")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-color")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-color")
+    }
     if (!name) return;
 
     const colors = [...colors_container.querySelectorAll(".selected")].map(e => e.style.backgroundColor);
@@ -358,8 +367,18 @@ click("text-send", () => {
 })
 
 click("text-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-text")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-text")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-text")
+    }
+    if (!name) return;
 
     const texts = [...texts_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
     const args = {
@@ -404,8 +423,18 @@ click("image-send", () => {
 })
 
 click("image-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-text")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-image")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-image")
+    }
+    if (!name) return;
 
     const images = [...images_container.querySelectorAll("img")].map(e => e.src)
     const args = {
@@ -443,8 +472,18 @@ click("info-send", () => {
 })
 
 click("info-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-text")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-info")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-info")
+    }
+    if (!name) return;
 
     const val = document.getElementById("textarea-info").value
     const args = {
@@ -487,8 +526,18 @@ click("video-send", () => {
 })
 
 click("video-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-video")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-video")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-video")
+    }
+    if (!name) return;
 
     const url = video_input.value
     const args = {
@@ -535,8 +584,18 @@ click("question-send", () => {
 })
 
 click("question-preset", () => {
-    if (!confirm("Save as preset ?")) return;
-    const name = prompt("Preset name", "preset-question")
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-question")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-question")
+    }
+    if (!name) return;
 
     const questions = [...questions_container.querySelectorAll(".input_field")].map(e => e.querySelector("input").value);
     const args = {
@@ -630,10 +689,13 @@ function loadPresets() {
 }
 loadPresets();
 
+let updateName = false
 function loadGroup(name) {
     const group = presetGroups[name]
 
-    group.forEach((elem) => {
+    const ordered = group.sort((a, b) => a.name.localeCompare(b.name))
+
+    ordered.forEach((elem) => {
         const container = document.createElement("div")
         container.classList.add("input_field")
 
@@ -646,9 +708,8 @@ function loadGroup(name) {
         if (data.args.params.tribe) 
             btn.classList.add("tribe-" + data.args.params.tribe)
 
-        const icon = document.querySelector("[data-page-id=" + data.name + "]:not(.page)").querySelector("svg").cloneNode(true)
-
-        btn.appendChild(icon)
+        const icon = document.querySelector("[data-page-id=" + data.name + "]:not(.page)")
+        if (icon) btn.appendChild(icon.querySelector("svg").cloneNode(true))
         btn.innerHTML += elem.name
 
         btn.addEventListener("click", () => {
@@ -659,9 +720,10 @@ function loadGroup(name) {
 
         // Copy button
         const copyBtn = document.createElement("button")
-        copyBtn.innerHTML = "Copy"
+        copyBtn.innerHTML = "Update"
         copyBtn.addEventListener("click", () => {
             load_preset(data)
+            updateName = elem.name
         })
         container.appendChild(copyBtn)
 
@@ -906,3 +968,56 @@ fill_select_usergroup()
     
 // }
 // load_features()
+
+/* Other presets */
+
+click("upload-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-upload")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-upload")
+    }
+    if (!name) return;
+
+    saveAsPresset("upload", {params:{}}, name)
+})
+
+click("cry-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-cry")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-cry")
+    }
+    if (!name) return;
+
+    saveAsPresset("cry", {params:{}}, name)
+})
+
+click("stop-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-end")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-end")
+    }
+    if (!name) return;
+
+    saveAsPresset("end", {params:{}}, name)
+})

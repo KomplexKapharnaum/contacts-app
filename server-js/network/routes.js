@@ -80,7 +80,7 @@ app.use('/livefeed', express.static('www/livefeed'));
 
 // Tribe cry upload
  
-const upload = multer({ dest: TEMP_DIR });
+const upload = multer({ dest: tmpDir });
 
 app.post('/tribe_audio_upload', upload.single('audio'), async function(req, res) {
     if (!features.getState("tribe_cry")) {

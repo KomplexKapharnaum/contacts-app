@@ -263,15 +263,22 @@
         <button class="back" data-gotopage="cyberspace"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg> Retour</button>
         <div class="event-location-container">
             <div id="event-location-map"></div>
-            <div id="event-location-txt"></div>
+            <!-- <div id="event-location-txt"></div> -->
+             <div id="event-location-info">
+                <div class="name"></div>
+                <div class="date"></div>
+                <div class="tribe"></div>
+             </div>
             <a id="event-location-goto" class="button c3">Aller sur la carte</a>
         </div>
     </div>
 
     <!-- Live event -->
 
-    <div class="page" data-page-id="live-idle">        
-        <div class="input-container">
+    <div class="page" data-page-id="live-idle">
+        <h3>évènement en cours</h3>
+        <div id="live-idle-map"></div>    
+        <!-- <div class="input-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-vibrate"><path d="m2 8 2 2-2 2 2 2-2 2"/><path d="m22 8-2 2 2 2-2 2 2 2"/><rect width="8" height="14" x="8" y="5" rx="1"/></svg>
             <h2>évènement en cours</h2>
             <div class="txt">
@@ -283,11 +290,7 @@
             <div class="txt">
                 Profitez du carnaval pirate !
             </div>
-        </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
+        </div> -->
     </div>
 
     <div class="page" data-page-id="live-flashlight">
@@ -303,10 +306,6 @@
                 <img class="illustration" src="$BASEPATH$/img/sun.png" alt="image test">
             </div> -->
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
     
     <div class="page" data-page-id="live-color">
@@ -324,10 +323,6 @@
             </div>
 
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
 
     <div class="page" data-page-id="live-image">
@@ -343,10 +338,6 @@
             </div>
 
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
     
     <div class="page" data-page-id="live-text">
@@ -366,10 +357,6 @@
             </div>
 
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
 
     <div class="page" data-page-id="live-info">
@@ -382,10 +369,6 @@
                 Profitez du carnaval pirate !
             </div>
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
 
     <div class="page" data-page-id="live-questions">
@@ -401,10 +384,6 @@
             </div>
 
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
 
     <div class="page" data-page-id="live-upload">
@@ -418,10 +397,6 @@
                 <span>Choisir une image</span>
             </div>
         </div>
-        <button class="btn-live-close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Quitter l'évènement
-        </button>
     </div>
 
     <!-- Profile page -->
@@ -600,7 +575,6 @@
         
         <section>
             <div id="tribe-header">
-                <div class="small">Le classement met à jour toutes les 30 minutes</div>
                 <div class="top">
                     <div id="tribe-name"></div>
                     <div><span id="tribe-rank">3</span><span id="tribe-rank-suffix">eme</span></div>
@@ -978,6 +952,11 @@
         <img src="$BASEPATH$/img/buddy/eyes.png" id="buddy-eyes" alt="buddy-eyes">
         <div id="buddy-text">Hello, user !</div>
     </div>
+
+    <button class="btn-live-close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        Fermer la page
+    </button>
 
     <!-- Trophy reward overlay -->
 

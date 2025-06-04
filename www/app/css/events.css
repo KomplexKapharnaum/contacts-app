@@ -97,10 +97,47 @@
     pointer-events: all;
 }
 
-#event-location-txt {
+#live-idle-map {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    pointer-events: all;
+}
+
+/* #event-location-txt {
     background-color: var(--color-background);
     padding: 8px;
     border-radius: 8px;
+} */
+
+#event-location-info {
+    background-color: var(--color-background);
+    padding: 8px;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    font-family: var(--font-primary);
+}
+
+#event-location-info .name {
+    color: var(--color-text-primary);
+    font-size: var(--fontSize-medium);
+}
+
+#event-location-info .date {
+    color: var(--color-text-secondary);
+    font-size: var(--fontSize-small);
+}
+
+#event-location-info .tribe {
+    color: var(--color-secondary-3);
+    font-size: var(--fontSize-small);
 }
 
 #event-location-goto {

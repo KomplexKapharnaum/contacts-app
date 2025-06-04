@@ -115,9 +115,14 @@ async function loadNotifications() {
             if (res.status) {
                 const notifications = res.data
                 if (notifications.length > 0) {
-                    for (let i=0 ; i < notifications.length; i++) await showNotificationOverlay(notifications[i].message)
+                    const lastNotification = notifications[0]
+                    showNotificationOverlay(lastNotification.message)
                     QUERY.updateLastSeen()
-                } 
+                }
+                // if (notifications.length > 0) {
+                //     for (let i=0 ; i < notifications.length; i++) await showNotificationOverlay(notifications[i].message)
+                //     QUERY.updateLastSeen()
+                // } 
             }
             resolve()
         })

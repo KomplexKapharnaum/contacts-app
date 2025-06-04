@@ -211,13 +211,13 @@ db.freezeSession = async (id) => {
 
 db.createEvent = async (session_id, start_date, name, description, location_coords, location_name, priority) => {
     const event = await db('event').insert({
-        session_id: session_id, 
+        session_id, 
         start_date: new Date(start_date).toISOString(), 
-        name: name, 
-        description: description, 
-        location_coords: location_coords, 
-        location_name: location_name,
-        priority: priority
+        name, 
+        description, 
+        location_coords, 
+        location_name,
+        priority
     });
     return event;
 }

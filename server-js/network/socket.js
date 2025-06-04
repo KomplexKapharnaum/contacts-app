@@ -117,19 +117,23 @@ SOCKET.io.on('connection', (socket) => {
         }
     });
 
-    socket.on('event-live', (data) => {
-        const {uuid, join} = data;
-        if (util.userExists(uuid)) {
-          if (join) {
-            socket.join("event");
-            socket.emit('start-event', SOCKET.lastEvent);
-            console.log("JOINED !!!!!!!!!!!!!!!!!!")
-          } else {
-            socket.leave("event");
-            console.log("LEAVED !!!!!!!!!!!!!!!!!!")
-          }
-        }
-    });
+    socket.on('live-uptodate', (uuid) => {
+      if (util.userExists(uuid)) {
+        socket.emit('start-event', SOCKET.lastEvent);
+      }
+    })
+
+    // socket.on('event-live', (data) => {
+    //     const {uuid, join} = data;
+    //     if (util.userExists(uuid)) {
+    //       if (join) {
+    //         socket.join("event");
+    //         socket.emit('start-event', SOCKET.lastEvent);
+    //       } else {
+    //         socket.leave("event");
+    //       }
+    //     }
+    // });
 
     socket.on('admin-auth', (password) => {
         if (password == env.ADMIN_PASS) {

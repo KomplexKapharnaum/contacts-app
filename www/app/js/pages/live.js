@@ -281,7 +281,7 @@ USEREVENT.startCry = function() {
     });
 }
 USEREVENT.stopCry = function() {
-    console.log("stopCry")
+    // console.log("stopCry")
     USEREVENT.cryActive = false;
     const audios = document.querySelectorAll(".cry-audio");
     audios.forEach(audio => {
@@ -290,16 +290,24 @@ USEREVENT.stopCry = function() {
     });
 }
 
+USEREVENT.lastEvent = null;
 receiveSessionEvent = function (event) {
+    if (event.name=="reload") {
+        location.reload()
+    } else {
+        USEREVENT.lastEvent = event
+    }
 
-    if (event.name=="reload") location.reload();
-    if (event.name=="end") endEvent();
+    if (USEREVENT.shouldShowEvent()) return;
+
+    if (event.name=="end" || !event) endEvent();
+
+    showNavbar(false);
+    setEventCloseButtonsState(true);
 
     document.getElementById("overlay").onclick = null;
-    if (!isEventLive) return;
     showOverlay(false);
     USEREVENT.showVideo(false);
-    let container;
     switch (event.name) {
         case "color":
             USEREVENT.setOverlay(event.name, event.args.colors, event.args.params);
@@ -331,15 +339,15 @@ receiveSessionEvent = function (event) {
 }
 
 let lastevent_id = null;
+
 document.SOCKETIO.on('start-event', (data_pack) => {
-    console.log("start-event", data_pack);
-    if (!userData) return;
+    if (!userData) return
 
     const userGroup = userData.tribe_id
-    const data = data_pack[userGroup] ? data_pack[userGroup] : data_pack[0];
+    const data = data_pack[userGroup] ? data_pack[userGroup] : data_pack[0]
     if (!data) {endEvent(); return}
 
-    if (lastevent_id != data.id) receiveSessionEvent(data)
+    if (lastevent_id != data.id) LIVE.newCommandReceived(data)
     lastevent_id = data.id
 });
 
@@ -351,21 +359,24 @@ document.SOCKETIO.on("reload", () => {
 endEvent = function(nogoto=false) {
     clearInterval(USEREVENT.interval);
     USEREVENT.stopCry();
-    console.log("endEvent")
     USEREVENT.showVideo(false);
-    if (!nogoto) {
-        showOverlay(false);
+    showOverlay(false);
+    if (!nogoto && LIVE.insideEvent) {
         PAGES.goto("live-idle")
+        const current = LIVE.anyEventLive()
+        if (current) map_idle.updateMap(current);
     };
 }
 
 document.querySelectorAll(".btn-live-close").forEach(el => {
     el.addEventListener("click", () => {
-        lastevent_id=null
-        socketEventLive(userData.uuid, false)
+        lastevent_id = null
+        LIVE.insideEvent = false
+        setEventCloseButtonsState(false)
         showNavbar(true)
         PAGES.goto("cyberspace")
         endEvent(true)
+        LIVE.insideEvent = false
     })
 });
 
@@ -373,4 +384,13 @@ function setEventCloseButtonsState(state) {
     document.querySelectorAll(".btn-live-close").forEach(el => {
         el.classList.toggle("hidden", !state)
     })
+}
+setEventCloseButtonsState(false);
+
+
+USEREVENT.priority = false;
+USEREVENT.isInEvent = false;
+
+USEREVENT.shouldShowEvent = function() {
+    return USEREVENT.isInEvent || USEREVENT.priority
 }
