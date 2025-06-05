@@ -335,6 +335,9 @@ receiveSessionEvent = function (event) {
             USEREVENT.showVideo('zzz');
             USEREVENT.startCry();
             break;
+        default: 
+            PAGES.goto("live-idle")
+            break;
     }
 }
 

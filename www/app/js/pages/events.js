@@ -71,6 +71,11 @@ LIVE.eventInit = async (event_data, force=false) => {
     }
 }
 
+PAGES.addCallback("live-idle", () => {
+    const lastevent = LIVE.anyEventLive()
+    map_idle.updateMap(lastevent)
+})
+
 LIVE.eventClicked = (event_data) => {
     if (isNow(event_data.start_date)) {
         LIVE.eventInit(event_data, true)
