@@ -403,6 +403,13 @@ query.add("read_notifications", async (params) => {
     return [true, notifications];
 })
 
+query.add("reset_my_tribe", async (params) => {
+    const uuid = params.get("uuid");
+    if (await util.userExists(uuid) == false) return [false, "user does not exist"];
+    await db('users').where('uuid', uuid).update({tribe_id: null});
+    return [true, {uuid: uuid}];
+})
+
 // Regie query
 
 query.add("r_eventlist", async (params) => {

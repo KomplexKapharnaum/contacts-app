@@ -1,17 +1,20 @@
 const debugTrigger = document.getElementById("debug-trigger")
-
 let debugPressTimer;
-
 let debugPressCount = 0;
-
 let debugPressTimeOut;
-debugTrigger.addEventListener("touchstart", () => {
-    console.log("debug trigger");
-    debugPressCount++;
-    console.log(debugPressCount);
 
+debugTrigger.addEventListener("touchstart", () => {
+    debugPressCount++;
     if (debugPressCount === 10) {
-        PAGES.goto("debug");
+        if (confirm("changer de tribu ?")) {
+            QUERY.process("reset_my_tribe", {uuid: userData.uuid})
+            .then(res => {
+                if (res.status) {
+                    alert("tribu reset")
+                    location.reload();
+                }
+            })
+        }
     }
     clearTimeout(debugPressTimeOut)
     debugPressTimeOut = setTimeout(() => { debugPressCount = 0; }, 500);
