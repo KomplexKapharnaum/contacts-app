@@ -115,7 +115,7 @@ async function loadNotifications() {
             if (res.status) {
                 const notifications = res.data
                 if (notifications.length > 0) {
-                    const lastNotification = notifications[0]
+                    const lastNotification = notifications[notifications.length-1]
                     showNotificationOverlay(lastNotification.message)
                     QUERY.updateLastSeen()
                 }
