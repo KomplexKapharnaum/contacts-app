@@ -55,12 +55,14 @@ LIVE.getCommandFromPack = (data_pack) => {
     return data
 }
 
+let lastSelectedEvent = false;
 LIVE.eventInit = async (event_data, force=false) => {
     if (!userData) return
     const lastCommand = await LIVE.getLastCommand(userData.uuid)
     if (event_data.priority || force) {
         setEventCloseButtonsState(true)
         LIVE.insideEvent = true
+        lastSelectedEvent = event_data
         if (lastCommand) {
             const cmd = LIVE.getCommandFromPack(lastCommand)
             receiveSessionEvent(cmd)
@@ -71,10 +73,10 @@ LIVE.eventInit = async (event_data, force=false) => {
     }
 }
 
-PAGES.addCallback("live-idle", () => {
-    const lastevent = LIVE.anyEventLive()
-    map_idle.updateMap(lastevent)
-})
+// PAGES.addCallback("live-idle", () => {
+//     const lastevent = LIVE.anyEventLive()
+//     map_idle.updateMap(lastevent)
+// })
 
 LIVE.eventClicked = (event_data) => {
     if (isNow(event_data.start_date)) {

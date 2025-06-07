@@ -366,8 +366,12 @@ endEvent = function(nogoto=false) {
     showOverlay(false);
     if (!nogoto && LIVE.insideEvent) {
         PAGES.goto("live-idle")
-        const current = LIVE.anyEventLive()
-        if (current) map_idle.updateMap(current);
+        if (lastSelectedEvent) {
+            map_idle.updateMap(lastSelectedEvent);
+        } else {
+            const current = LIVE.anyEventLive()
+            if (current) map_idle.updateMap(current);
+        }
     };
 }
 
