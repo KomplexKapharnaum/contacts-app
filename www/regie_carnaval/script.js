@@ -77,18 +77,11 @@ async function query(name, params={}) {
     }
 }
 
-function getTribeName() {
-    query("tribelist").then((res) => {
-        if (!res.status) return
-        const data = res.data
-        const urlParams = new URLSearchParams(window.location.search)
-        const tribe = urlParams.get('tribe')
-        const tribeName = data[tribe-1].name
-        document.getElementById('tribe-name').innerHTML = tribeName
-    })
-}
-
-getTribeName();
+const tribeColors = [
+    "#FF0",
+    "#F00",
+    "#0F0"
+]
 
 function getEvents() {
     query("r_get_presets").then((res) => {
@@ -108,7 +101,8 @@ function getEvents() {
             for (const cmd in commands) {
                 const btn = document.createElement("button")
                 btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ')
-                btn.style.setProperty("--color", "white")
+                const col = tribe=="" ? "white" : tribeColors[tribe-1]
+                btn.style.setProperty("--color", col)
                 btn.addEventListener("click", () => {
                     ctrl(commands[cmd].json.name, commands[cmd].json.args)
                 })
@@ -118,13 +112,17 @@ function getEvents() {
 
         const filter = urlParams.get("filter");
         if (filter) {
-            const commands = data.filter(elem => elem.name.includes(filter))
+            const commands = data.filter(elem => elem.group == filter)
             for (const cmd in commands) {
                 const btn = document.createElement("button")
                 btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ').replace(filter, '')
-                btn.style.setProperty("--color", "white")
+                
+                const tribe = JSON.parse(commands[cmd].data).args.params.tribe
+                
+                const col = tribe=="" ? "white" : tribeColors[tribe-1]
+                btn.style.setProperty("--color", col)
                 btn.addEventListener("click", () => {
-                    ctrl(commands[cmd].name)
+                    ctrl(commands[cmd].name, JSON.parse(commands[cmd].data).args)
                 })
                 document.getElementById('commands').appendChild(btn)           
             }
@@ -132,4 +130,20 @@ function getEvents() {
     })
 }
 
-getEvents();
+let tribes = [];
+function getTribes() {
+    query("tribelist").then((res) => {
+        if (!res.status) return
+        tribes = res.data;
+        const data = res.data
+        const urlParams = new URLSearchParams(window.location.search)
+        const tribe = urlParams.get('tribe')
+        if (tribe) {
+            const tribeName = data[tribe-1].name
+            document.getElementById('tribe-name').innerHTML = tribeName
+        }
+        getEvents()
+    })
+}
+
+getTribes();
