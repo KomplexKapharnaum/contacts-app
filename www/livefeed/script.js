@@ -196,7 +196,7 @@ function getColsFromRows(rows, windowWidth, windowHeight) {
 }
 
 
-const GRID_ROWS = 4;
+const GRID_ROWS = 3;
 let currentColumns;
 
 function purgeGrid() {

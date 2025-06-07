@@ -97,22 +97,37 @@ function getEvents() {
         
         const urlParams = new URLSearchParams(window.location.search)
         const tribe = urlParams.get('tribe')
-        
-        const commands = data.reduce((acc, elem) => {
-            const json = JSON.parse(elem.data)
-            const tribeID = json.args.params.tribe
-            if (parseInt(tribeID)==parseInt(tribe)) acc.push({name: elem.name, json: json})
-            return acc
-        }, [])
+        if (tribe) {
+            const commands = data.reduce((acc, elem) => {
+                const json = JSON.parse(elem.data)
+                const tribeID = json.args.params.tribe
+                if (parseInt(tribeID)==parseInt(tribe)) acc.push({name: elem.name, json: json})
+                return acc
+            }, [])
 
-        for (const cmd in commands) {
-            const btn = document.createElement("button")
-            btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ')
-            btn.style.setProperty("--color", "white")
-            btn.addEventListener("click", () => {
-                ctrl(commands[cmd].json.name, commands[cmd].json.args)
-            })
-            document.getElementById('commands').appendChild(btn)           
+            for (const cmd in commands) {
+                const btn = document.createElement("button")
+                btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ')
+                btn.style.setProperty("--color", "white")
+                btn.addEventListener("click", () => {
+                    ctrl(commands[cmd].json.name, commands[cmd].json.args)
+                })
+                document.getElementById('commands').appendChild(btn)           
+            }
+        }
+
+        const filter = urlParams.get("filter");
+        if (filter) {
+            const commands = data.filter(elem => elem.name.includes(filter))
+            for (const cmd in commands) {
+                const btn = document.createElement("button")
+                btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ').replace(filter, '')
+                btn.style.setProperty("--color", "white")
+                btn.addEventListener("click", () => {
+                    ctrl(commands[cmd].name)
+                })
+                document.getElementById('commands').appendChild(btn)           
+            }
         }
     })
 }

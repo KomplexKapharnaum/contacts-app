@@ -328,7 +328,7 @@ option:hover {
 
 #select-preset,
 #text-preset-savegroup {
-    display: none;
+    /* display: none; */
 }
 
 /* Feedback list */
