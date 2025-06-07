@@ -90,8 +90,10 @@ LIVE.eventClicked = (event_data) => {
 
 LIVE.anyEventLive = () => {
     if (!loadedEvents) return false;
-    for (let event of loadedEvents) {
+    const sortedEvents = loadedEvents.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+    for (let event of sortedEvents) {
         if (isNow(event.start_date)) {
+            console.log(event)
             return event;
         }
     }
@@ -135,7 +137,9 @@ async function loadEvents() {
     }
 
     // Load events and create dom elements
-    query_events.data.forEach(event_data => {
+    const sortedEvents = query_events.data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+    sortedEvents.forEach(event_data => {
         const event_name = event_data.name
         let now = new Date().getTime() > new Date(event_data.start_date).getTime()
         const event_date = new Date(event_data.start_date)

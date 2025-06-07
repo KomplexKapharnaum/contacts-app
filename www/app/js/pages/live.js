@@ -337,6 +337,12 @@ receiveSessionEvent = function (event) {
             break;
         default: 
             PAGES.goto("live-idle")
+            if (lastSelectedEvent) {
+                map_idle.updateMap(lastSelectedEvent);
+            } else {
+                const current = LIVE.anyEventLive()
+                if (current) map_idle.updateMap(current);
+            }
             break;
     }
 }
