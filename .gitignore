@@ -3,10 +3,12 @@ uploads/*
 outputs/*
 database.json
 *.sqlite*
-data.db
+database/*.db
 media/
 upload/
 live_upload/*
+
+db_archive/*.db
 
 # Firebase 
 firebase-sdk-admin.json
