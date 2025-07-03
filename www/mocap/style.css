@@ -1,0 +1,62 @@
+body {
+  background: black;
+  color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  position: absolute;
+  width: 1024px;
+  height: 768px;
+  display: inline-block;
+  top: 50px;
+  left: 50px;
+}
+
+h3 {
+  position: absolute;
+  top: 1px;
+  left: 550px;
+  color: #f0f0f0;
+  font-size: 24px;
+  text-align: center;
+}
+
+#preview, #canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1024px;
+  height: 768px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+/* .handsfree-video {
+  display: none !important;
+} */
+
+#preview {
+  z-index: 5;
+  object-fit: cover;      /* Fills and crops as needed */
+  object-position: center;/* Keeps video centered */
+  opacity: 0.3; /* Dim the video for better visibility of overlays */
+}
+
+#canvas {
+  z-index: 10;
+  pointer-events: none; /* Allows mouse events to pass through to the video */
+  background: transparent;
+}
+
+#mini-canvas {
+  position:fixed; top:0; left:0; z-index:10;
+  border: 1px solid yellow;
+}
+
+/* .handsfree-debug, .handsfree-pointer, .handsfree-cursor, .handsfree-gesture {
+  display: none !important;
+} */
+

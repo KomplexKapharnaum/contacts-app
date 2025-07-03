@@ -57,10 +57,15 @@ app.get('/query', async function (req, res) {
 app.use('/admin', express.static('www/admin'));
 app.use('/regie', express.static('www/regie'));
 app.use('/regie2', express.static('www/regie_simple'));
-
 app.use('/regiekxkm', express.static('www/regie_carnaval'));
-
 app.use('/avatars', express.static(genDir));
+
+// Other routes
+app.use('/mocap', express.static('www/mocap'));
+app.get('/mocap', function (req, res) {
+    res.sendFile(path.join(__dirname, 'www/mocap/index.html'));
+});
+
 
 app.get('/features', function (req, res) {
     res.json(features.cache);
