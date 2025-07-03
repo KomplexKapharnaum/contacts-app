@@ -428,3 +428,26 @@ document.getElementById("password-reset").addEventListener("click", () => {
     cookies.remove("pass")
     location.reload();
 })
+
+// Database
+
+const btn_reset_database = document.getElementById("reset-database")
+btn_reset_database.addEventListener("click", async () => {
+    if (prompt("Pour confirmer, écrivez 'CONFIRM'") != "CONFIRM") return
+    const res = await sendCommand("admin_reset_database", {});
+    if (!res.status) return;
+    alert("Database reset");
+})
+
+// Stats
+const stats_container = document.getElementById("stats-container")
+const load_stats = async () => {
+    const res = await sendCommand("admin_stats", {});
+    if (!res.status) return;
+    console.log(res.data)
+    document.getElementById("stats-users-count").textContent = res.data.users.i;
+    document.getElementById("stats-avatar-count").textContent = res.data.avatars.i;
+    document.getElementById("stats-cry-count").textContent = res.data.crys.i;
+    document.getElementById("stats-message-count").textContent = res.data.msgs;
+}
+load_stats();

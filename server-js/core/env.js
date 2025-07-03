@@ -15,6 +15,7 @@ const env = {
     DESTROY_DB_ON_START: processEnv(process.env.DESTROY_DB_ON_START) || false,
     COMFY_API_URL: processEnv(process.env.COMFY_API_URL) || "http://localhost:5000",
     DBFILE: processEnv(process.env.DBFILE) || 'data.db',
+    DBFILE_STATIC: processEnv(process.env.DBFILE_STATIC) || 'data_static.db',
     DISABLE_FIREBASE: processEnv(process.env.DISABLE_FIREBASE) || false
 }
 

@@ -1,5 +1,6 @@
 import { env } from '../core/env.js';
 import db from '../core/database.js';
+import db_static from '../core/database_static.js';
 import util from '../utils.js';
 import { app } from '../core/server.js';
 import { rateLimit } from 'express-rate-limit'
@@ -280,7 +281,7 @@ query.add("get_messages", async (params) => {
 query.add("tribelist", async (params) => {
     // if (!features.getState("page_tribe")) return [false, "feature disabled"];
 
-    const tribes = await db('tribes').select();
+    const tribes = await db_static('tribes').select();
     return [true, tribes];
 })
 
@@ -436,7 +437,7 @@ query.add("r_endevent", async (params) => {
 query.add("r_tribelist", async (params) => {
     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
 
-    const tribes = await db('tribes').select();
+    const tribes = await db_static('tribes').select();
     return [true, tribes];
 })
 
@@ -445,27 +446,27 @@ query.add("r_new_preset", async (params) => {
     const name = params.get("name");
     const group = params.get("group");
     const data = params.get("data");
-    const exists = await db('presets').where('name', name).first();
+    const exists = await db_static('presets').where('name', name).first();
     if (exists) {
-        await db('presets').where('name', name).update({group: group, data: data});
+        await db_static('presets').where('name', name).update({group: group, data: data});
     } else {
-        await db('presets').insert({name: name, group: group, data: data});
+        await db_static('presets').insert({name: name, group: group, data: data});
     }
     return [true, {name: name, group: group, data: data}];
 })
 
 query.add("r_get_presets", async (params) => {
     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
-    const presets = await db('presets').select();
+    const presets = await db_static('presets').select();
     return [true, presets];
 })
 
 query.add("r_delete_preset", async (params) => {
     if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
     const id = params.get("id");
-    const preset = await db('presets').where('id', id).first();
+    const preset = await db_static('presets').where('id', id).first();
     if (!preset) return [false, "preset does not exist"];
-    await db('presets').where('id', id).delete();
+    await db_static('presets').where('id', id).delete();
     return [true, {id: id}];
 })
 
@@ -626,6 +627,27 @@ query.add("admin_download_questions", async (params) => {
     const questions = await db('live-answers').select();
     const questionsText = questions.map(q => `${q.question}\n${q.answer}`).join('\n\n');
     return [true, questionsText];
+})
+
+// admin_reset_database
+query.add("admin_reset_database", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    db.archive();
+    return [true, "database reset"];
+})
+
+query.add("admin_stats", async (params) => {
+    if (params.get("pass") != env.ADMIN_PASS) return [false, "wrong password"];
+    const stats = {
+        users: await db('users').count('id as i').first(),
+        avatars: await db('users').whereNotNull('selected_avatar').count('id as i').first(),
+        crys: await db('users').whereNotNull('audio').count('id as i').first(),
+        msgs: (await db('messages').select()).reduce((arr, msg) => {
+            if (!arr.includes(msg.uuid)) arr.push(msg.uuid)
+            return arr;
+        }, []).length,
+    }
+    return [true, stats];
 })
 
 export { query };

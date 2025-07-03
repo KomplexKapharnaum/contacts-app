@@ -45,12 +45,12 @@ async function initDB() {
             table.string('filename');
         })
 
-        .createTable('tribes', (table) => {
-            table.increments('id');
-            table.string('name');
-            table.json('colors').defaultTo('[]');
-            // table.integer('score').defaultTo(0);
-        })
+        // .createTable('tribes', (table) => {
+        //     table.increments('id');
+        //     table.string('name');
+        //     table.json('colors').defaultTo('[]');
+        //     // table.integer('score').defaultTo(0);
+        // })
 
         .createTable('session', (table) => {
             table.increments('id');
@@ -81,7 +81,7 @@ async function initDB() {
             table.string('name');
             table.json('avatars').defaultTo('[]');
             table.integer('selected_avatar').unsigned().references('avatars.id');
-            table.integer('tribe_id').unsigned().references('tribes.id').nullable().defaultTo(null);
+            table.integer('tribe_id').unsigned().nullable().defaultTo(null);
             table.integer('subscribed_session').unsigned().references('session.id');
             table.string('firebase_id');
             table.boolean('admin').defaultTo(false);
@@ -106,12 +106,12 @@ async function initDB() {
             table.integer("tribeID").defaultTo(0);
         })
 
-        .createTable('presets', (table) => {
-            table.increments('id');
-            table.string("group");
-            table.string("name");
-            table.json("data");
-        })
+        // .createTable('presets', (table) => {
+        //     table.increments('id');
+        //     table.string("group");
+        //     table.string("name");
+        //     table.json("data");
+        // })
 
         .createTable('notifications', (table) => {
             table.increments('id');
@@ -144,23 +144,11 @@ async function initDB() {
             table.string('date');
         });
 
-        await db.createTribe("Machines", ["#EEFE04", "#F8A539", "#8EEFFE"]);
-        await db.createTribe("Animaux", ["#0391BF", "#F34D17", "#FF6FFE"]);
-        await db.createTribe("Végétaux", ["#FC03CF", "#08F6F1", "#16D605"]);
+        // await db.createTribe("Machines", ["#EEFE04", "#F8A539", "#8EEFFE"]);
+        // await db.createTribe("Animaux", ["#0391BF", "#F34D17", "#FF6FFE"]);
+        // await db.createTribe("Végétaux", ["#FC03CF", "#08F6F1", "#16D605"]);
 
-        await db.createSession("Marseille", new Date('2025-03-03').toISOString(), new Date('2025-03-15').toISOString());
-
-        // await db("users").insert({name: "Admin", uuid: "uuid-8906-8155-0f7b-7086-430d", public_id: "admin", firebase_id: "admin", admin: true, tribe_id: 3});
-        
-        // for (let i = 0; i < 10; i++) {
-        //     const names = ["Pierre", "Marie", "Jean", "Paul", "Léa", "Léo", "Alice", "Max", "Emma", "Théo"];
-        //     const name = names[Math.floor(Math.random() * names.length)];
-        //     const uuid = `uuid-${i}`;
-        //     const public_id = `user-${i}`;
-        //     const selected_avatar = Math.random() < 0.5 ? "static_1.png" : "static_2.png";
-        //     const avatarID = await db('avatars').insert({filename: selected_avatar, user_id: null}, 'id');
-        //     await db("users").insert({name, uuid, public_id, selected_avatar: avatarID[0].id, tribe_id: 3});
-        // }
+        await db.createSession("current", new Date(), new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) );
 }
 
 // Send feedback
@@ -168,14 +156,6 @@ async function initDB() {
 db.sendFeedBack = async (username, message) => {
     const feedback = await db('feedback').insert({username, message, date: new Date().toISOString(), status: 0});
     return feedback;
-}
-
-// Tribe related
-//
-
-db.createTribe = async (name, colors) => {
-    const tribe = await db('tribes').insert({name: name, colors: JSON.stringify(colors)});
-    return tribe;
 }
 
 // Message related
@@ -227,20 +207,26 @@ db.endEvent = async (id) => {
     return event;
 }
 
+// Archive & reset
+//
+
+db.archive = async () => {
+    if (fs.existsSync(dataPath)) {
+        await db.client.destroy();
+        const archiveName = `db-${new Date().toISOString().slice(0, 10)}.db`;
+        const archivePath = path.join(__dirname, 'db_archive', archiveName);
+        fs.renameSync(dataPath, archivePath);
+    }
+    initDB();
+}
+
+// db.new = async() => initDB();
+
 // INIT DB
 //
 if (!fs.existsSync(dataPath)) {
-    initDB()
+    initDB();
     log('Database initialized');
-} else {
-    // await db('tribes').where('id', 1).update({name: 'Machines', colors: JSON.stringify(["#EEFE04", "#F8A539", "#8EEFFE"])});
-    // await db('tribes').where('id', 2).update({name: 'Animaux', colors: JSON.stringify(["#0391BF", "#F34D17", "#FF6FFE"])});
-    // await db('tribes').where('id', 3).update({name: 'Végétaux', colors: JSON.stringify(["#FC03CF", "#08F6F1", "#16D605"])});
-
-    // await db.schema.alterTable('event', (table) => {
-    //     table.boolean('priority').defaultTo(false);
-    //     table.integer('tribe_id').unsigned().defaultTo(0);
-    // });
 }
 
 log('Database ready '+dataPath);

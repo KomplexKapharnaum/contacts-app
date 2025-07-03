@@ -1,4 +1,5 @@
 import database from './core/database.js';
+import db_static from './core/database_static.js';
 import features from './features.js'
 import { SOCKET } from './network/socket.js';
 
@@ -13,10 +14,10 @@ SCORE.addToPlayer = async (id, amount) => {
     SOCKET.toClient(id, "send-xp", amount);
     
     // const tribeID = player.tribe_id;
-    // const tribe = await database('tribes').where('id', tribeID).first();
+    // const tribe = await db_static('tribes').where('id', tribeID).first();
     // if (!tribe) return false;
     // const newTribeScore = tribe.score + amount;
-    // await database('tribes').where('id', tribeID).update({score: newTribeScore});
+    // await db_static('tribes').where('id', tribeID).update({score: newTribeScore});
     return true;
 }
 
@@ -28,7 +29,7 @@ SCORE.getLeaderBoard = async () => {
 }
 
 SCORE.updateLeaderBoard = async () => {
-    const tribes = await database('tribes').select();
+    const tribes = await db_static('tribes').select();
     for (let i = 0; i < tribes.length; i++) {
 
         const t = tribes[i]

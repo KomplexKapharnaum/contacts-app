@@ -5,6 +5,7 @@ import { env } from '../core/env.js';
 import util from '../utils.js';
 import police from '../core/police.js';
 import db from '../core/database.js';
+import db_static from '../core/database_static.js';
 
 import stats from '../stats.js';
 import score from '../score.js';
@@ -51,7 +52,7 @@ SOCKET.connectedUsers = {};
 
 SOCKET.tribeNames = {};
 async function loadTribeNames() {
-  const tribes = await db('tribes').select();
+  const tribes = await db_static('tribes').select();
   tribes.forEach(tribe => {
     SOCKET.tribeNames[tribe.id] = tribe.name
   })
