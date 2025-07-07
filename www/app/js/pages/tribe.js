@@ -280,7 +280,7 @@ async function obform_process() {
         const someting_happened = await loadEvents()
 
         feature_show("tribe")
-        PAGES.goto("tribe")
+        PAGES.goto("profile")
         
         loadLeaderBoard()
         if (!someting_happened) BUD.setCurrentDialogue(BUD_DIALS.tribe, true)

@@ -55,6 +55,7 @@
     <link rel="stylesheet" href="$BASEPATH$/css/main.css">
     <link rel="stylesheet" href="$BASEPATH$/css/pages.css">
 
+    <link rel="stylesheet" href="$BASEPATH$/css/intro.css">
     <link rel="stylesheet" href="$BASEPATH$/css/events.css">
     <link rel="stylesheet" href="$BASEPATH$/css/live.css">
     <link rel="stylesheet" href="$BASEPATH$/css/chat.css">
@@ -891,6 +892,19 @@
         <button id="input-debug-image">Upload an image file</button>
     </div>
 
+    <div class="page" data-page-id="intro">
+        <div id="intro-buddy-container">
+            <img src="$BASEPATH$/img/buddy/4.png" alt="buddy" id="intro-buddy">
+            <div id="intro-textbox">
+                Hello world !
+            </div>
+        </div>
+        <div class="answers">
+            <button id="intro-answer-1">Oui</button>
+            <button id="intro-answer-2">Non</button>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav>
         <button id="nav-profile">
@@ -1062,6 +1076,7 @@
     <script src="$BASEPATH$/js/recorder.js"></script>
 
     <!-- Pages -->
+     <script src="$BASEPATH$/js/pages/intro.js"></script>
     <script src="$BASEPATH$/js/pages/onboarding.js"></script>
     <script src="$BASEPATH$/js/pages/events.js"></script>
     <script src="$BASEPATH$/js/pages/live.js"></script>
