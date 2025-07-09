@@ -21,6 +21,9 @@ setInterval(() => {
 
 const THICKNESS = 1.0; 
 
+const SHOWNUMS = false; // Show numbers on keypoints
+const SHOWKEYPOINTS = false; // Show keypoints on pose and hands
+
 const POSECOLORS = [
     '255,255,0', // yellow
     '255,0,255', // magenta
@@ -43,7 +46,7 @@ const handsfree = new Handsfree({
         enabled: true,
         smoothLandmarks: true,
         minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
+        minTrackingConfidence: 0.4
     },
     facemesh: {
         enabled: false,
@@ -324,6 +327,19 @@ const POSE_CONNECTIONS = [
     // [7, 9], // Left elbow to left wrist
     // [6, 8], // Right shoulder to right elbow
     // [8, 10], // Right elbow to right wrist
+
+    //hands
+    [18, 20],
+    [22, 20],
+    [18, 22], 
+    [22, 16],
+    [18, 16],
+
+    [17, 19],
+    [21, 19],
+    [17, 21], 
+    [21, 15],
+    [17, 15],
 
     [11, 12], // Shoulders
     [11, 13],
@@ -645,21 +661,27 @@ handsfree.use('drawAll', ({
             // });
 
             // // Draw keypoints (excluding face and hand indices)
-            // const ignoredIndices = []//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22];
-            // pose.poseLandmarks.forEach(({
-            //     x,
-            //     y
-            // }, i) => {
-            //     if (!ignoredIndices.includes(i)) {
-            //         ctx.beginPath();
-            //         ctx.arc(x * canvasWidth, y * canvasHeight, 4, 0, 2 * Math.PI);
-            //         // ctx.arc(x * canvasWidth, y * canvasHeight, 1.5, 0, 2 * Math.PI);
-            //         ctx.font = '12px Arial';
-            //         ctx.fillStyle = '#00ff00';
-            //         ctx.fillText(`(${i})`, x * canvasWidth + 5, y * canvasHeight + 15);
-            //         ctx.stroke();
-            //     }
-            // });
+            
+            if (SHOWKEYPOINTS) {
+                const ignoredIndices = []//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22];
+                pose.poseLandmarks.forEach(({
+                    x,
+                    y
+                }, i) => {
+                    if (!ignoredIndices.includes(i)) {
+                        ctx.beginPath();
+                        ctx.arc(x * canvasWidth, y * canvasHeight, 4, 0, 2 * Math.PI);
+                        // ctx.arc(x * canvasWidth, y * canvasHeight, 1.5, 0, 2 * Math.PI);
+                        
+                        if (SHOWNUMS) {
+                            ctx.font = '12px Arial';
+                            ctx.fillStyle = '#00ff00';
+                            ctx.fillText(`(${i})`, x * canvasWidth + 5, y * canvasHeight + 15);
+                        }
+                        ctx.stroke();
+                    }
+                });
+            }
         }
     }
 
