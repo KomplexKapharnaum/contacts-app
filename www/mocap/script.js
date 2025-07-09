@@ -14,10 +14,26 @@ const FLAGS = {
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
-setInterval(() => {
-    FLAGS.head = Math.floor(Math.random() * 4);
-    FLAGS.hands = Math.floor(Math.random() * 3);
-}, 5000);
+FLAGS.hands = 2
+
+// setInterval(() => {
+//     FLAGS.head = Math.floor(Math.random() * 4);
+//     FLAGS.hands = Math.floor(Math.random() * 3);
+// }, 5000);
+
+const POSECOLORS = [
+    '255,0,0', // red
+    '0,255,0', // green
+    '0,0,255', // blue 
+    '255,255,0', // yellow
+    '255,0,255', // magenta
+    '0,255,255', // cyan
+    '255,128,0', // orange
+    '128,0,255', // purple 
+    '0,128,255', // light blue
+    '128,255,0', // lime
+    '255,0,128', // pink
+]
 
 // Initialize Handsfree.js with optimized settings (using our video element)
 const handsfree = new Handsfree({
@@ -25,15 +41,20 @@ const handsfree = new Handsfree({
     hands: {
         enabled: true,
         gesture: false,
-        minDetectionConfidence: 0.7
+        minDetectionConfidence: 0.6
     },
     pose: {
         enabled: true,
         smoothLandmarks: true,
-        minDetectionConfidence: 0.7,
+        minDetectionConfidence: 0.4,
         minTrackingConfidence: 0.7
     },
-    facemesh: true,
+    facemesh: {
+        enabled: false,
+        smoothLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    },
     setup: {
         video: {
             $el: document.getElementById('preview')
@@ -190,10 +211,10 @@ preview.addEventListener('loadedmetadata', () => {
     };
 
     // Apply mirroring transform
-    const mirrorTransform = 'scaleX(-1)';
-    preview.style.transform = mirrorTransform;
-    mainCanvas.style.transform = mirrorTransform;
-    miniCanvas.style.transform = mirrorTransform;
+    // const mirrorTransform = 'scaleX(-1)';
+    // preview.style.transform = mirrorTransform;
+    // mainCanvas.style.transform = mirrorTransform;
+    // miniCanvas.style.transform = mirrorTransform;
 
     // Start Handsfree.js after video is ready
     handsfree.start();
@@ -290,6 +311,24 @@ const HAND_CONNECTIONS = [
 
 // Define pose connections (MediaPipe Pose format)
 const POSE_CONNECTIONS = [
+    [0, 1],
+    [1, 2],
+    [1, 3],
+    [0, 4], 
+    [4, 6],
+    [3, 7], 
+    [6, 8], 
+    [9, 10],
+
+    // [1, 3], // Left eye to left ear
+    // [2, 4], // Right eye to right ear
+    // [0, 5], // Nose to left shoulder
+    // [0, 6], // Nose to right shoulder
+    // [5, 7], // Left shoulder to left elbow
+    // [7, 9], // Left elbow to left wrist
+    // [6, 8], // Right shoulder to right elbow
+    // [8, 10], // Right elbow to right wrist
+
     [11, 12], // Shoulders
     [11, 13],
     [13, 15], // Left arm
@@ -519,7 +558,8 @@ handsfree.use('drawAll', ({
                         y,
                     }) => {
                         ctx.beginPath();
-                        ctx.arc(x * canvasWidth, y * canvasHeight, 3 + j, 0, 2 * Math.PI);
+                        // ctx.arc(x * canvasWidth, y * canvasHeight, 3 + j, 0, 2 * Math.PI);
+                        ctx.arc(x * canvasWidth, y * canvasHeight, 4, 0, 2 * Math.PI);
                         ctx.stroke();
                     });
                 });
@@ -533,7 +573,8 @@ handsfree.use('drawAll', ({
                         const x = lerp(s.x, e.x, i);
                         const y = lerp(s.y, e.y, i);
                         const index = Math.floor((i*5 + j*5 + Math.floor(performance.now() / 250)) % list.length);
-                        ctx.font = '22px serif'
+                        // ctx.font = '22px serif'
+                        ctx.font = '12px serif'
                         ctx.textAlign = "center"; 
                         ctx.textBaseline = "middle"; 
                         const text = list[index];
@@ -557,7 +598,9 @@ handsfree.use('drawAll', ({
                     ctx.save();
                     ctx.translate(x * canvasWidth, y * canvasHeight);
                     ctx.rotate( ang );
-                    ctx.strokeRect(-w/2, -h/2, w, h);
+                    // ctx.strokeRect(-w/2, -h/2, w, h);
+                    // ctx.strokeRect(-w/2, -h/2, w, h);
+                    ctx.strokeRect(-w/3, -h/3, w/3, h/3);
                     ctx.restore();
                 });
             }
@@ -570,18 +613,21 @@ handsfree.use('drawAll', ({
             ctx.strokeStyle = '#ff00ff';
             ctx.lineWidth = 2;
 
+            const MAX_SHADOW = 5
+
             body_prev.push(pose.poseLandmarks);
-            if (body_prev.length > 10) body_prev.shift();
+            if (body_prev.length > MAX_SHADOW) body_prev.shift();
 
             body_prev.forEach((l, j) => {
                 POSE_CONNECTIONS.forEach(([start, end]) => {
                     const s = l[start];
                     const e = l[end];
-                    const thickness = 10 - j + 1;
-                    const opacity = j / 10;
+                    const thickness = (MAX_SHADOW - j + 1) * 2; // Increase thickness with shadow depth
+                    const opacity = j / MAX_SHADOW;
                     if (s && e) {
                         ctx.lineWidth = thickness;
-                        ctx.strokeStyle = `rgba(255, 0, 255, ${opacity})`;
+                        let c = POSECOLORS[Math.floor(Math.random() * POSECOLORS.length)];
+                        ctx.strokeStyle = `rgba(${c}, ${opacity})`;
                         ctx.beginPath();
                         ctx.moveTo(s.x * canvasWidth, s.y * canvasHeight);
                         ctx.lineTo(e.x * canvasWidth, e.y * canvasHeight);
@@ -603,7 +649,7 @@ handsfree.use('drawAll', ({
             // });
 
             // // Draw keypoints (excluding face and hand indices)
-            // const ignoredIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22];
+            // const ignoredIndices = []//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 20, 21, 22];
             // pose.poseLandmarks.forEach(({
             //     x,
             //     y
@@ -611,6 +657,10 @@ handsfree.use('drawAll', ({
             //     if (!ignoredIndices.includes(i)) {
             //         ctx.beginPath();
             //         ctx.arc(x * canvasWidth, y * canvasHeight, 4, 0, 2 * Math.PI);
+            //         // ctx.arc(x * canvasWidth, y * canvasHeight, 1.5, 0, 2 * Math.PI);
+            //         ctx.font = '12px Arial';
+            //         ctx.fillStyle = '#00ff00';
+            //         ctx.fillText(`(${i})`, x * canvasWidth + 5, y * canvasHeight + 15);
             //         ctx.stroke();
             //     }
             // });
