@@ -25,13 +25,14 @@ const SHOWNUMS = false; // Show numbers on keypoints
 const SHOWKEYPOINTS = false; // Show keypoints on pose and hands
 
 const POSECOLORS = [
-    '255,255,0', // yellow
+    // '255,255,0', // yellow
     '255,0,255', // magenta
-    '0,255,255', // cyan
+    // '0,255,255', // cyan
+    // '0,255,0', // green
     '255,128,0', // orange
     // '128,0,255', // purple 
     '0,128,255', // light blue
-    '255,0,128', // pink
+    // '255,0,128', // pink
 ]
 
 // Initialize Handsfree.js with optimized settings (using our video element)
