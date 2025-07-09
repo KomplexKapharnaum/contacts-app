@@ -14,24 +14,20 @@ const FLAGS = {
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
-FLAGS.hands = 2
+setInterval(() => {
+    FLAGS.head = Math.floor(Math.random() * 4);
+    FLAGS.hands = Math.floor(Math.random() * 3);
+}, 5000);
 
-// setInterval(() => {
-//     FLAGS.head = Math.floor(Math.random() * 4);
-//     FLAGS.hands = Math.floor(Math.random() * 3);
-// }, 5000);
+const THICKNESS = 1.0; 
 
 const POSECOLORS = [
-    '255,0,0', // red
-    '0,255,0', // green
-    '0,0,255', // blue 
     '255,255,0', // yellow
     '255,0,255', // magenta
     '0,255,255', // cyan
     '255,128,0', // orange
-    '128,0,255', // purple 
+    // '128,0,255', // purple 
     '0,128,255', // light blue
-    '128,255,0', // lime
     '255,0,128', // pink
 ]
 
@@ -39,15 +35,15 @@ const POSECOLORS = [
 const handsfree = new Handsfree({
     showDebug: false,
     hands: {
-        enabled: true,
+        enabled: false,
         gesture: false,
         minDetectionConfidence: 0.6
     },
     pose: {
         enabled: true,
         smoothLandmarks: true,
-        minDetectionConfidence: 0.4,
-        minTrackingConfidence: 0.7
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
     },
     facemesh: {
         enabled: false,
@@ -362,7 +358,7 @@ function drawMiniCanvas() {
     miniCtx.clearRect(0, 0, miniCanvas.width, miniCanvas.height);
 
     // Draw video background
-    miniCtx.globalAlpha = 0.3;
+    miniCtx.globalAlpha = 0.1;
     miniCtx.drawImage(
         preview,
         videoCropData.x, videoCropData.y, videoCropData.width, videoCropData.height,
@@ -622,7 +618,7 @@ handsfree.use('drawAll', ({
                 POSE_CONNECTIONS.forEach(([start, end]) => {
                     const s = l[start];
                     const e = l[end];
-                    const thickness = (MAX_SHADOW - j + 1) * 2; // Increase thickness with shadow depth
+                    const thickness = (MAX_SHADOW - j + 1) * THICKNESS; // Increase thickness with shadow depth
                     const opacity = j / MAX_SHADOW;
                     if (s && e) {
                         ctx.lineWidth = thickness;
