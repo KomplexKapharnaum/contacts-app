@@ -76,8 +76,6 @@ async function after_user_load(uuid) {
         console.log("FIREBASE: Error subscribing to all: ", e)
     }
 
-    await loadNotifications()
-
     socketAuth(uuid)
     loadFeatureStates()
     await loadEvents()
@@ -96,10 +94,13 @@ async function after_user_load(uuid) {
             DATA_TRIBES = tribes.data
             document.getElementById("tribe-name").innerText = tribes.data[userData.tribe_id-1].name
         }
+
+        await loadNotifications()
     } else {
         if (FEATURES.tribe_page) {
             // PAGES.goto("onboarding-questions-fingerprint")
-            PAGES.goto("onboarding-questions-dish")
+            intro_start()
+            // PAGES.goto("onboarding-questions-dish")
             // BUD.setCurrentDialogue(BUD_DIALS.tribe_join, true)
             showNavbar(false)
         }

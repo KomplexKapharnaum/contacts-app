@@ -35,7 +35,7 @@ function onboarding_create_user(username) {
             if (res.data.uuid) {
                 userData = res.data
                 document.CONFIG.set("uuid", res.data.uuid)
-                BUD.setCurrentDialogue(BUD_DIALS.welcome, true)
+                // BUD.setCurrentDialogue(BUD_DIALS.welcome, true)
                 subscribeToSession(res.data.uuid)
 
                 if (document.APPSTATE) {

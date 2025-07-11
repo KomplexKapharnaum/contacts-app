@@ -44,16 +44,12 @@ INTRO.question = async(text, answer1, answer2) => {
 }
 
 async function intro_start() {
-    let tribe_weights = {
-        machine: 0,
-        vegetable: 0,
-        animal: 0
-    }
     PAGES.goto("intro")
     showNavbar(false)
-    await INTRO.showtext("Nous vivons la fin de l’antropocène et l’humain doit renoncer à sa position dominante. Pour s’adapter à cette mutation, il doit s’hybrider avec d’autres formes du vivant et créer des nouvelles tribus.")
+    await INTRO.showtext("Nous vivons la fin de l’antropocène et l’humain doit renoncer à sa position dominante. Pour s’adapter à cette mutation, il doit s’hybrider avec d’autres formes du vivant et créer des nouvelles tribus.\nAppuyez pour continuer")
     await INTRO.waitForPress()
     const q1 = await INTRO.question("Choisis le degré de mutation pour laquelle tu te sens prêt·e", "Totale", "Partielle")
     const q2 = await INTRO.question("Choisis le caractère de la tribu que tu souhaites intégrer", "forte et solitaire", "douce et ouverte")
     const q3 = await INTRO.question("Choisis le chemin que tu veux emprunter pour ta mutation", "rapide et ardu", "lent et serein")
+    PAGES.goto("onboarding-questions-dish")
 }
