@@ -60,10 +60,16 @@ app.use('/regie2', express.static('www/regie_simple'));
 app.use('/regiekxkm', express.static('www/regie_carnaval'));
 app.use('/avatars', express.static(genDir));
 
-// Other routes
+// Mocap
 app.use('/mocap', express.static('www/mocap'));
 app.get('/mocap', function (req, res) {
     res.sendFile(path.join(__dirname, 'www/mocap/index.html'));
+});
+
+// Kpad
+app.use('/kpad', express.static('www/kpad'));
+app.get('/kpad', function (req, res) {
+    res.sendFile(path.join(__dirname, 'www/kpad/index.html'));
 });
 
 
