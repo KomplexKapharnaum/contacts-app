@@ -11,6 +11,7 @@ let statusDiv = document.getElementById('status');
 
 // SYNTH
 const synth = new Tone.Synth();
+synth.oscillator.type = 'square';
 
 // DISTO
 const distortion = new Tone.Distortion(1).toDestination();
