@@ -7,8 +7,14 @@ let touchpad = document.getElementById('touchpad');
 let controls = document.getElementById('controls');
 let statusDiv = document.getElementById('status');
 
-// SYNTHESIS: simple square wave synth
-let synth = new Tone.Synth().toDestination();
+
+
+// SYNTH
+const synth = new Tone.Synth();
+
+// DISTO
+const distortion = new Tone.Distortion(1).toDestination();
+synth.connect(distortion);
 
 // LFO for vibrato
 const lfo = new Tone.LFO({type: "sawtooth"}).start();
