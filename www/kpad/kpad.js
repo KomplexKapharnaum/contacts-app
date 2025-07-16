@@ -13,14 +13,12 @@ let statusDiv = document.getElementById('status');
 const synth = new Tone.Synth();
 synth.oscillator.type = 'sine';
 
-// DISTO
+// OUT->DISTO
 const distortion = new Tone.Distortion(1).toDestination();
 synth.connect(distortion);
 
-// LFO for vibrato
+// IN->LFO for vibrato
 const lfo = new Tone.LFO({type: "sawtooth"}).start();
-
-// Connect LFO to synth's detune
 lfo.connect(synth.detune);
 
 // Play the synth sound
