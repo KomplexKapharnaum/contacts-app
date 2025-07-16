@@ -24,9 +24,10 @@ var webhookHandler = GithubWebHook({ path: '/webhook', secret: GITHOOK_SECRET })
 webhookHandler.on('*', function (event, repo, data) {
     // log('hook', event, repo, data);
     if (event === 'push') {
-      // git stash then git pull && pm2 restart contacts
       log('processing push event (Pull / Restart)');
-      exec('git pull && npm i', (err, stdout, stderr) => {
+
+      // cd to the project directory and run git pull and npm install
+      exec(`cd ${process.cwd()} && git pull && npm install`, (err, stdout, stderr) => {
         if (err) {
           console.error(err);
           return; 
