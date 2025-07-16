@@ -76,5 +76,5 @@
 - Live :
     = playback cri-mix
     = pop barbie image
-
+ 
 
