@@ -15,10 +15,19 @@ import features from '../features.js'
 
 import firebase from './firebase.js';
 import rateLimiter from './ratelimiter.js';
+import knex from 'knex';
 
 var SOCKET = {};
 
 SOCKET.io = new IoServer(server);
+
+SOCKET.isAnyEventLive = async () => {
+  const event = await db('event')
+    .where('start_date', '<', db.fn.now())
+    .andWhere('ended', '=', false)
+    .first();
+  return !!event;
+}
 
 SOCKET.lastEvent = {0:{}};
 SOCKET.startEvent = function (name, args) {
@@ -156,12 +165,14 @@ SOCKET.io.on('connection', (socket) => {
       const tribeName = tribeID == '' ? 'everyone' : SOCKET.tribeNames[tribeID]
 
       // Send notification to tribe / all
-      if (data.name != "end") {
-        if (tribeID == '') {
-          firebase.broadcastMessage("Contacts Live", "Il se passe quelque chose dans l'appli !");
-        }
-        else {
-          firebase.toTribe(tribeID, "Contacts Live", "Il se passe quelque chose dans l'appli !");
+      if (SOCKET.isAnyEventLive()) {
+        if (data.name != "end") {
+          if (tribeID == '') {
+            firebase.broadcastMessage("Contacts Live", "Il se passe quelque chose dans l'appli !");
+          }
+          else {
+            firebase.toTribe(tribeID, "Contacts Live", "Il se passe quelque chose dans l'appli !");
+          }
         }
       }
 
