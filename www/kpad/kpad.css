@@ -1,4 +1,8 @@
 
+:root {
+    --main: #EAE441;
+}
+
 body {
     background: black;
     color: #f0f0f0;
@@ -17,27 +21,38 @@ html, body {
 }
 
 #container {
+    box-sizing: border-box;
     position: absolute;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     top: 0px;
     left: 0px;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    padding: 32px;
+    align-items: center;
+    justify-content: center;
 }
 
 #touchpad {
+    position: relative;
     max-width: 300px;
     max-height: 300px;
     border: 1px solid #f0f0f0;
     background: rgba(255, 255, 255, 0.1);
     height: 100%;
     width: 100%;
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     cursor: crosshair;
+    overflow: hidden;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+#touchpad.active {
+    box-shadow: 0 0 16px white;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 #controls {
@@ -60,10 +75,38 @@ html, body {
 }
 
 #status {
-    position: absolute;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
     color: #f0f0f0;
     font-size: 14px;
+}
+
+#kpad-pointer {
+    position: absolute;
+    width: 64px;
+    height: 64px;   
+    background-color: var(--main);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+}
+
+#guide-vertical, #guide-horizontal {
+    position: absolute;
+    background-color: var(--main);
+    pointer-events: none;
+    box-shadow: 0 0 10px var(--main);
+}
+
+#guide-vertical {
+    top: 0;
+    height: 100%;
+    left: 50%;
+    width: 1px;
+}
+
+#guide-horizontal {
+    left: 0;
+    height: 1px;
+    top: 50%;
+    width: 100%;
 }

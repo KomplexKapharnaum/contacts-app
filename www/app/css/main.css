@@ -139,6 +139,7 @@ nav button * {
 #nav-profile {--btn-color: var(--color-secondary-1);}
 #nav-tribe {--btn-color: var(--color-secondary-3);}
 #nav-cyberspace {--btn-color: var(--color-secondary-2);}
+#nav-games {--btn-color: white;}
 #nav-notifications {
     --btn-color: var(--color-secondary-4);
     width: fit-content;

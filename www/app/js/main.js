@@ -77,7 +77,7 @@ async function after_user_load(uuid) {
     }
 
     socketAuth(uuid)
-    loadFeatureStates()
+    await loadFeatureStates()
     await loadEvents()
     await loadChats(userData.tribe_id)
     await loadLeaderBoard()
@@ -170,7 +170,7 @@ PAGES.addCallback("home", () => {
 
 var FEATURES
 window.addEventListener("DOMContentLoaded", async () => {
-    loadFeatureStates()
+    await loadFeatureStates()
     loadUser()
 })
 
@@ -201,6 +201,8 @@ nav_goto("nav-profile", "profile")
 nav_goto("nav-tribe", "tribe")
 nav_goto("nav-cyberspace", "cyberspace")
 nav_goto("nav-notifications", "notifications")
+nav_goto("nav-games", "games")
+
 
 PAGES.setPageColor("profile", "var(--color-secondary-1)")
 PAGES.setPageColor("tribe", "var(--color-secondary-3)")
