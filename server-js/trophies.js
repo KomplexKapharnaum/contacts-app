@@ -72,29 +72,29 @@ TROPHIES.config = {
         awards: {
             xp: 150
         }
-    },
-
-    event1: {
-        name: "Participant",
-        desc: "J'ai participé à 1 évènement !",
-        awards: {
-            xp: 100
-        }
-    },
-    event2: {
-        name: "Adepte",
-        desc: "J'ai participé à 2 évènements !",
-        awards: {
-            xp: 300
-        }
-    },
-    event3: {
-        name: "L'intégrale",
-        desc: "J'ai participé à tous les évènements !",
-        awards: {
-            xp: 500
-        }
     }
+
+    // event1: {
+    //     name: "Participant",
+    //     desc: "J'ai participé à 1 évènement !",
+    //     awards: {
+    //         xp: 100
+    //     }
+    // },
+    // event2: {
+    //     name: "Adepte",
+    //     desc: "J'ai participé à 2 évènements !",
+    //     awards: {
+    //         xp: 300
+    //     }
+    // },
+    // event3: {
+    //     name: "L'intégrale",
+    //     desc: "J'ai participé à tous les évènements !",
+    //     awards: {
+    //         xp: 500
+    //     }
+    // }
 }
 
 TROPHIES.cache = {}
