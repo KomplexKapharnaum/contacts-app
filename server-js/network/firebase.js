@@ -30,25 +30,25 @@ FIREBASE.toDevicePayload = (title, body, token) => ({
 FIREBASE.broadcastMessage = async (title, body, data={}) => {
     if (env.DISABLE_FIREBASE) return false;
     
-    const message = FIREBASE.messagePayload(title, body, 'all', data); 
-    console.log('FIREBASE: prep message:', message); 
     try {
+        const message = FIREBASE.messagePayload(title, body, 'all', data); 
+        console.log('FIREBASE: prep message:', message); 
         const res = await admin.messaging().send(message);
-        console.log('FIREBASE: Successfully sent message:', res);
+        console.log('FIREBASE: Successfully sent notification:', res);
     } catch (error) {
-        console.error('FIREBASE: Error sending message:', error);
+        console.warn('FIREBASE: Error sending notification:', error);
     }
 }
 
 FIREBASE.toTribe = async (tribeID, title, body, data={}) => {
     if (env.DISABLE_FIREBASE) return false;
     
-    const message = FIREBASE.messagePayload(title, body, 'tribe-'+tribeID, data);
     try {
+        const message = FIREBASE.messagePayload(title, body, 'tribe-'+tribeID, data);
         const res = await admin.messaging().send(message);
-        console.log('Successfully sent message:', res);
+        console.log('Successfully sent notification:', res);
     } catch (error) {
-        console.error('Error sending message:', error);
+        console.warn('Error sending notification:', error);
     }
 }
 
@@ -59,13 +59,12 @@ FIREBASE.toUser = async (userID, title, body, data={}) => {
     if (!user) return false;
     const token = user.firebase_id;
     
-    const message = FIREBASE.toDevicePayload(title, body, token);
-
     try {
+        const message = FIREBASE.toDevicePayload(title, body, token);
         const res = await admin.messaging().send(message);
-        console.log('Successfully sent message:', res);
+        console.log('Successfully sent notification:', res);
     } catch (error) {
-        console.error('Error sending message:', error);
+        console.warn('Error sending notification:', error);
     }
 }
 
