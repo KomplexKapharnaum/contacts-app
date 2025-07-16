@@ -37,3 +37,12 @@
 .game-leave.show {
     display: block;
 }
+
+#game-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+}

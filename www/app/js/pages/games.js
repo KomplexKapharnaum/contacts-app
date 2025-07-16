@@ -1,10 +1,18 @@
 const GAMES = {}
+
+GAMES.list = {
+    kpad: "https://contacts.kxkm.net/kpad/"
+}
+
 GAMES.container = document.getElementById("games-container")
+GAMES.iframe = document.getElementById("game-iframe")
+
 
 GAMES.initQuitButtons = function() {
     document.querySelectorAll('.game-leave').forEach(btn => {
         btn.addEventListener("click", ()=>{
-            GAMES.goto("games")
+            PAGES.goto("games")
+            GAMES.iframe.src = ""
             showNavbar(true)
         })
     })
@@ -20,8 +28,14 @@ GAMES.showReturnButton = function(show) {
     })
 }
 
-GAMES.goto = function(pageId, fromMenu=false) {
-    PAGES.goto(pageId)
+GAMES.loadGame = function(gameID) {
+    const url = GAMES.list[gameID]
+    GAMES.iframe.src = url
+}
+
+GAMES.goto = function(gameID, fromMenu=false) {
+    GAMES.loadGame(gameID)
+    PAGES.goto("game-iframe")
     GAMES.showReturnButton(fromMenu)
     showNavbar(false)
 }
