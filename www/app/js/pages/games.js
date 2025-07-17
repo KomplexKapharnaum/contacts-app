@@ -4,7 +4,8 @@ GAMES.list = {
     kpad: ()=> "https://contacts.kxkm.net/kpad/",
     tribe_color: ()=> "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
     images: ()=> "/games/image_picker/",
-    videoloop: ()=> "/games/videoloop/?tribe=" + userData.tribe_id
+    videoloop: ()=> "/games/videoloop/?tribe=" + userData.tribe_id,
+    garden: ()=> "/games/garden/"
 }
 
 GAMES.container = document.getElementById("games-container")
