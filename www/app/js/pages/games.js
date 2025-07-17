@@ -5,7 +5,8 @@ GAMES.list = {
     tribe_color: ()=> "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
     images: ()=> "/games/image_picker/",
     videoloop: ()=> "/games/videoloop/?tribe=" + userData.tribe_id,
-    garden: ()=> "/games/garden/"
+    garden: ()=> "/games/garden/",
+    farm: ()=> "/games/farm/"
 }
 
 GAMES.container = document.getElementById("games-container")
