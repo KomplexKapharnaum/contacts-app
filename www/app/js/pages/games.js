@@ -1,12 +1,12 @@
 const GAMES = {}
 
 GAMES.list = {
-    kpad: ()=> "https://contacts.kxkm.net/kpad/",
-    tribe_color: ()=> "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
-    images: ()=> "/games/image_picker/",
-    videoloop: ()=> "/games/videoloop/?tribe=" + userData.tribe_id,
-    garden: ()=> "/games/garden/",
-    farm: ()=> "/games/farm/"
+    kpad: ()=> document.WEBAPP_URL + "/kpad/",
+    tribe_color: ()=> document.WEBAPP_URL + "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
+    images: ()=> document.WEBAPP_URL + "/games/image_picker/",
+    videoloop: ()=> document.WEBAPP_URL + "/games/videoloop/?tribe=" + userData.tribe_id,
+    garden: ()=> document.WEBAPP_URL + "/games/garden/",
+    farm: ()=> document.WEBAPP_URL + "/games/farm/"
 }
 
 GAMES.container = document.getElementById("games-container")
@@ -54,3 +54,17 @@ GAMES.init = function() {
 
 GAMES.initQuitButtons()
 GAMES.init()
+
+const tribeNoiseGames = {
+    1: "kpad",
+    2: "farm",
+    3: "garden"
+}
+
+GAMES.setTribeNoiseGame = () => {
+    if (userData.tribe_id) {
+        document.getElementById("tribe-noise-game").dataset.gameId = tribeNoiseGames[parseInt(userData.tribe_id)]
+    }
+}
+// GAMES.setTribeNoiseGame
+PAGES.addCallback("games", ()=>GAMES.setTribeNoiseGame())
