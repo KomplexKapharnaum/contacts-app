@@ -77,6 +77,9 @@ app.get('/kpad', function (req, res) {
 });
 
 
+// Kpad
+app.use('/games', express.static('www/games'));
+
 app.get('/features', function (req, res) {
     res.json(features.cache);
 });

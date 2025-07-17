@@ -1,7 +1,10 @@
 const GAMES = {}
 
 GAMES.list = {
-    kpad: "https://contacts.kxkm.net/kpad/"
+    kpad: ()=> "https://contacts.kxkm.net/kpad/",
+    tribe_color: ()=> "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
+    images: ()=> "/games/image_picker/",
+    videoloop: ()=> "/games/videoloop/?tribe=" + userData.tribe_id
 }
 
 GAMES.container = document.getElementById("games-container")
@@ -29,7 +32,7 @@ GAMES.showReturnButton = function(show) {
 }
 
 GAMES.loadGame = function(gameID) {
-    const url = GAMES.list[gameID]
+    let url = GAMES.list[gameID]()
     GAMES.iframe.src = url
 }
 
