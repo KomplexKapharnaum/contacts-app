@@ -37,6 +37,10 @@ app.get('/', function (req, res) {
     res.redirect('/app');
 });
 
+// app.get('/restart', function (req, res) {
+//     process.exit(1);
+// });
+
 app.use('/static', express.static('www'));
 app.use('/app', express.static(__dirname + '/www/app'));
 
