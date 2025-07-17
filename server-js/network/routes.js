@@ -65,15 +65,15 @@ app.use('/regiekxkm', express.static('www/regie_carnaval'));
 app.use('/avatars', express.static(genDir));
 
 // Mocap
-app.use('/mocap', express.static('www/mocap'));
+app.use('/mocap', express.static('www/games/mocap'));
 app.get('/mocap', function (req, res) {
-    res.sendFile(path.join(__dirname, 'www/mocap/index.html'));
+    res.sendFile(path.join(__dirname, 'www/games/mocap/index.html'));
 });
 
 // Kpad
-app.use('/kpad', express.static('www/kpad'));
+app.use('/kpad', express.static('www/games/kpad'));
 app.get('/kpad', function (req, res) {
-    res.sendFile(path.join(__dirname, 'www/kpad/index.html'));
+    res.sendFile(path.join(__dirname, 'www/games/kpad/index.html'));
 });
 
 

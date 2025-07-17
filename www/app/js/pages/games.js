@@ -7,12 +7,12 @@ const customTribeColors = {
 }
 
 GAMES.list = {
-    kpad: ()=> document.WEBAPP_URL + "/kpad/",
-    tribe_color: ()=> document.WEBAPP_URL + "/games/tribe_color/?color=" + encodeURIComponent(customTribeColors[parseInt(userData.tribe_id)]),
-    images: ()=> document.WEBAPP_URL + "/games/image_picker/",
-    videoloop: ()=> document.WEBAPP_URL + "/games/videoloop/?tribe=" + userData.tribe_id,
-    garden: ()=> document.WEBAPP_URL + "/games/garden/",
-    farm: ()=> document.WEBAPP_URL + "/games/farm/"
+    vocolor:   ()=> ({ type: "page", value: "game-vocolor" }),
+    kpad:      ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/kpad/" }),
+    images:    ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/image_picker/" }),
+    videoloop: ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/videoloop/?tribe=" + userData.tribe_id }),
+    garden:    ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/garden/" }),
+    farm:      ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/farm/" })
 }
 
 GAMES.container = document.getElementById("games-container")
@@ -44,13 +44,20 @@ GAMES.stopGame = function() {
 }
 
 GAMES.loadGame = function(gameID) {
-    let url = GAMES.list[gameID]()
-    GAMES.iframe.src = url
-}
+    const entry = GAMES.list[gameID]();
+    if (!entry) return;
+
+    if (entry.type === "iframe") {
+        GAMES.iframe.src = entry.value;
+        PAGES.goto("game-iframe")
+    } else if (entry.type === "page") {
+        GAMES.iframe.src = "";
+        PAGES.goto(entry.value);
+    }
+};
 
 GAMES.goto = function(gameID, fromMenu=false) {
     GAMES.loadGame(gameID)
-    PAGES.goto("game-iframe")
     GAMES.showReturnButton(fromMenu)
     showNavbar(false)
 }
@@ -58,7 +65,7 @@ GAMES.goto = function(gameID, fromMenu=false) {
 GAMES.init = function() {
     const list = GAMES.getButtons()
     list.forEach(button => {
-        button.addEventListener("click", ()=>GAMES.goto(button.dataset.gameId, true))
+        button.addEventListener("click", () => GAMES.goto(button.dataset.gameId, true))
     });
 }
 
