@@ -33,7 +33,7 @@ webhookHandler.on('*', function (event, repo, data) {
           return; 
         }
         log(stdout);
-        process.exit();
+        process.exit(1);
       });
     }
   });
