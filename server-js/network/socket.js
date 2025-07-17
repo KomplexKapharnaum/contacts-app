@@ -59,6 +59,22 @@ SOCKET.startEvent = function (name, args) {
 
 SOCKET.connectedUsers = {};
 
+SOCKET.storeNumberOfConnectedUsers = () => {
+  const count = Object.keys(SOCKET.connectedUsers).length;
+  // Store date with hour and minute and seconds
+  const date = new Date();
+  const dateString = date.toISOString().split('T')[0] + ' ' +date.toTimeString().split(' ')[0]; // YYYY-MM-DD HH:MM:SS
+  db('stats_visitors').insert({
+    date: dateString,
+    count: count
+  }).onConflict('date').merge().then(() => {
+    console.log(`Stored number of connected users: ${count} at ${dateString}`);
+  }).catch(err => {
+    console.error('Error storing number of connected users:', err);
+  });
+}
+
+
 SOCKET.tribeNames = {};
 async function loadTribeNames() {
   const tribes = await db_static('tribes').select();
@@ -79,10 +95,12 @@ SOCKET.io.on('connection', (socket) => {
     socket.emit('hello');
 
     socket.on('disconnect', () => {
-        if (SOCKET.connectedUsers[socket.userID]) delete SOCKET.connectedUsers[socket.userID];
+        if (SOCKET.connectedUsers[socket.userID]) {
+          delete SOCKET.connectedUsers[socket.userID];
+          SOCKET.storeNumberOfConnectedUsers();
+        }
         stats.save(socket.userID);
         trophies.save(socket.userID);
-
         clearInterval(socket.stayInterval);
     });
 
@@ -106,6 +124,7 @@ SOCKET.io.on('connection', (socket) => {
 
             const userID = user.id;
             SOCKET.connectedUsers[userID] = socket;
+            SOCKET.storeNumberOfConnectedUsers();
 
             stats.loadUser(user);
             trophies.loadUser(user);

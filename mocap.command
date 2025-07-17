@@ -26,7 +26,7 @@ trap "echo 'Stopping server...'; kill $SERVER_PID" EXIT
 sleep 1
 
 # Open Chrome with the local page
-open -a "Google Chrome" "http://localhost:$PORT"
+open -a "Google Chrome" "http://localhost:$PORT?w=512&h=512"
 
 # Wait for the server process
 wait $SERVER_PID

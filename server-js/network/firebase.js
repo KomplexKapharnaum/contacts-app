@@ -4,7 +4,9 @@ import { env } from '../core/env.js';
 
 const FIREBASE = {};
 
-import serviceAccount from '../../firebase-sdk-admin.json' assert { type: 'json' };
+import serviceAccount from '../../firebase-sdk-admin.json' with { type: 'json' };
+//     import serviceAccount from '../../firebase-sdk-admin.json' assert { type: 'json' };
+
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 })

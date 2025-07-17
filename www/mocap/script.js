@@ -19,7 +19,7 @@ setInterval(() => {
     FLAGS.hands = Math.floor(Math.random() * 3);
 }, 5000);
 
-const THICKNESS = 1.0; 
+const THICKNESS = 2.0; 
 
 const SHOWNUMS = false; // Show numbers on keypoints
 const SHOWKEYPOINTS = false; // Show keypoints on pose and hands
@@ -211,10 +211,11 @@ preview.addEventListener('loadedmetadata', () => {
     };
 
     // Apply mirroring transform
-    // const mirrorTransform = 'scaleX(-1)';
-    // preview.style.transform = mirrorTransform;
-    // mainCanvas.style.transform = mirrorTransform;
-    // miniCanvas.style.transform = mirrorTransform;
+    const mirrorTransform = 'scaleY(-1)';
+    preview.style.transform = mirrorTransform;
+    mainCanvas.style.transform = mirrorTransform;
+    miniCanvas.style.transform = mirrorTransform;
+    console.log('Video scale transform:', mirrorTransform);
 
     // Start Handsfree.js after video is ready
     handsfree.start();
@@ -375,13 +376,17 @@ function drawMiniCanvas() {
     miniCtx.clearRect(0, 0, miniCanvas.width, miniCanvas.height);
 
     // Draw video background
-    miniCtx.globalAlpha = 0.1;
-    miniCtx.drawImage(
-        preview,
-        videoCropData.x, videoCropData.y, videoCropData.width, videoCropData.height,
-        0, 0, miniCanvas.width, miniCanvas.height
-    );
-    miniCtx.globalAlpha = 1.0;
+    // miniCtx.globalAlpha = 0.1;
+    // miniCtx.drawImage(
+    //     preview,
+    //     videoCropData.x, videoCropData.y, videoCropData.width, videoCropData.height,
+    //     0, 0, miniCanvas.width, miniCanvas.height
+    // );
+    // miniCtx.globalAlpha = 1.0;
+    
+    // draw background color
+    // miniCtx.fillStyle = '#333';
+    // miniCtx.fillRect(0, 0, miniCanvas.width, miniCanvas.height);
 
     // Draw overlay from main canvas - always draw as 1:2 ratio, then compress to canvas size
     // This ensures we get the 1:2 image compressed to whatever dimensions are specified

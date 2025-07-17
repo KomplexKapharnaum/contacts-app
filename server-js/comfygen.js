@@ -20,13 +20,14 @@ const workflow = JSON.parse(fs.readFileSync('./server-js/config/workflow.json', 
 let comfygen = {};
 
 comfygen.serverAddress = env.COMFY_API_URL
+comfygen.useSSL = env.COMFY_API_SSL || false;
 
 comfygen.gen = async (avatarID, data, tribeID) => {
 
     const image_selfie = data.selfie[0];
     const image_paint = data.paint[0];
 
-    const client = new ComfyUIClient(comfygen.serverAddress);
+    const client = new ComfyUIClient(comfygen.serverAddress, comfygen.useSSL, "webapp", "info");
     await client.connect(); 
     
     const selfie_uploaded = await client.uploadImage(image_selfie.path, "selfie-"+avatarID+".png");

@@ -111,7 +111,7 @@ class Buddy {
                     resolve();
                 }
                 img.onerror = reject;
-                img.src = `${document.BASEPATH}/img/buddy/${i}.png`;
+                img.src = `${document.BASEPATH}/img/buddy/bud-${i}.png`; 
             }));
         }
         return Promise.all(promises);
