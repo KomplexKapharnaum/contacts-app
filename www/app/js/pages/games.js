@@ -1,8 +1,14 @@
 const GAMES = {}
 
+const customTribeColors = {
+    1: "#FF0",
+    2: "#F00",
+    3: "#0F0"
+}
+
 GAMES.list = {
     kpad: ()=> document.WEBAPP_URL + "/kpad/",
-    tribe_color: ()=> document.WEBAPP_URL + "/games/tribe_color/?color=" + encodeURIComponent(JSON.parse(DATA_TRIBES[userData.tribe_id].colors)[0]),
+    tribe_color: ()=> document.WEBAPP_URL + "/games/tribe_color/?color=" + encodeURIComponent(customTribeColors[parseInt(userData.tribe_id)]),
     images: ()=> document.WEBAPP_URL + "/games/image_picker/",
     videoloop: ()=> document.WEBAPP_URL + "/games/videoloop/?tribe=" + userData.tribe_id,
     garden: ()=> document.WEBAPP_URL + "/games/garden/",
