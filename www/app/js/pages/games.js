@@ -17,7 +17,7 @@ GAMES.initQuitButtons = function() {
     document.querySelectorAll('.game-leave').forEach(btn => {
         btn.addEventListener("click", ()=>{
             PAGES.goto("games")
-            GAMES.iframe.src = ""
+            GAMES.stopGame();
             showNavbar(true)
         })
     })
@@ -31,6 +31,10 @@ GAMES.showReturnButton = function(show) {
     document.querySelectorAll('.game-leave').forEach(btn => {
         btn.classList.toggle("show", show)
     })
+}
+
+GAMES.stopGame = function() {
+    GAMES.iframe.src = ""
 }
 
 GAMES.loadGame = function(gameID) {

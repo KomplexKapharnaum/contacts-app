@@ -308,6 +308,9 @@ receiveSessionEvent = function (event) {
     document.getElementById("overlay").onclick = null;
     showOverlay(false);
     USEREVENT.showVideo(false);
+
+    GAMES.stopGame();
+
     switch (event.name) {
         case "color":
             USEREVENT.setOverlay(event.name, event.args.colors, event.args.params);
@@ -392,6 +395,7 @@ document.querySelectorAll(".btn-live-close").forEach(el => {
         setEventCloseButtonsState(false)
         showNavbar(true)
         PAGES.goto("cyberspace")
+        GAMES.stopGame()
         endEvent(true)
         LIVE.insideEvent = false
     })
