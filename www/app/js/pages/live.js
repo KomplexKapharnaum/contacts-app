@@ -335,6 +335,10 @@ receiveSessionEvent = function (event) {
             USEREVENT.showVideo('zzz');
             USEREVENT.startCry();
             break;
+        case "game":
+            console.log(event.args)
+            GAMES.goto(event.args.gameid, false);
+            break;
         default: 
             PAGES.goto("live-idle")
             if (lastSelectedEvent) {

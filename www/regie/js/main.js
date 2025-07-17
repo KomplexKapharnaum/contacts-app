@@ -629,6 +629,57 @@ click("cry-send", () => {
     ctrl("cry", args)
 })
 
+/* Games */
+const gameList = [
+    {name: "Kpad", id: "kpad"},
+    {name: "Couleur tribu", id: "tribe_color"},
+    {name: "Sélecteur d'images", id: "images"},
+    {name: "Vidéo boucle tribu", id: "videoloop"}
+]
+
+const game_select_input = document.getElementById("input-games-select")
+function loadGameList() {
+    gameList.forEach(game => {
+        const option = document.createElement("option")
+        option.value = game.id
+        option.innerHTML = game.name
+        game_select_input.appendChild(option)
+    })
+}
+loadGameList()
+
+click("game-send", () => {
+    const game = game_select_input.value
+    const args = {params : {}, gameid: game}
+    ctrl("game", args)
+})
+
+click("game-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-game")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-game")
+    }
+    if (!name) return;
+
+    const game = game_select_input.value
+    const args = {params : {}, gameid: game}
+    
+    saveAsPresset("game", args, name)
+})
+
+function load_preset_game(data) {
+    console.log(data)
+    data = data.args
+    game_select_input.value = data.gameid
+}
+
 /* Presets */
 /* */
 
