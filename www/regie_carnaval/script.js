@@ -124,12 +124,18 @@ function getEvents() {
                 const btn = document.createElement("button")
                 btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ').replace(filter, '')
                 
+                console.log(commands[cmd])
+
                 const tribe = JSON.parse(commands[cmd].data).args.params.tribe
                 
                 const col = tribe=="" ? "white" : tribeColors[tribe-1]
                 btn.style.setProperty("--color", col)
+                
+                const data = JSON.parse(commands[cmd].data)
+                console.log(data)
+                
                 btn.addEventListener("click", () => {
-                    ctrl(commands[cmd].json.name, commands[cmd].json.args)
+                    ctrl(data.name, data.args)
                 })
                 document.getElementById('commands').appendChild(btn)           
             }
