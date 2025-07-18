@@ -26,7 +26,7 @@ GAMES.initQuitButtons = function() {
             GAMES.stopGame();
             showNavbar(true)
         })
-    })
+    }) 
 }
 
 GAMES.getButtons = function() {

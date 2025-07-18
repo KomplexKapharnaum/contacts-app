@@ -16,6 +16,7 @@ class Vocolor {
         if (typeof color !== 'string' || !/^#[0-9A-F]{3,6}$/i.test(color)) {
             color = "#00F";
         }
+
         this.setColor(color);
 
         // Audio FX chain for web (Tone.js)
@@ -47,6 +48,8 @@ class Vocolor {
     async start() {
         if (this.RUNNING) return;
         this.RUNNING = true;
+
+        if (userData.tribe_id) this.setColor(customTribeColors[userData.tribe_id])
 
         if (typeof window.cordova !== 'undefined' && typeof window.audioinput !== 'undefined') {
             // Cordova: PCM-based metering, visual FX only
