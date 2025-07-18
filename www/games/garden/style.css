@@ -27,4 +27,6 @@ body {
 
 .desc {
     text-align: center;
+    pointer-events: none;
+    opacity: 0.5;
 }

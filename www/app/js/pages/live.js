@@ -176,6 +176,24 @@ USEREVENT.processQuestions = function(questions) {
     nextQuestion();
 }
 
+USEREVENT.flashRunning = false;
+USEREVENT.setFlashLight = (bool) => {
+    const update = async (state) => {
+        if (!USEREVENT.flashRunning) return;
+        showOverlay(true, state?"white":"black", "");
+        if (window.plugins && window.plugins.flashlight) window.plugins.flashlight.toggle()
+        await new Promise(resolve => setTimeout(resolve, 100));
+        update(!state);
+    }
+    if (bool && !USEREVENT.flashRunning) {
+        USEREVENT.flashRunning = true;
+        update(true);
+    }
+    if (!bool) {
+        USEREVENT.flashRunning = false;
+    }
+}
+
 /* File upload */
 
 const btn_debug_upload = document.getElementById("input-debug-image")
@@ -308,6 +326,7 @@ receiveSessionEvent = function (event) {
     document.getElementById("overlay").onclick = null;
     showOverlay(false);
     USEREVENT.showVideo(false);
+    USEREVENT.setFlashLight(false);
 
     GAMES.stopGame();
 
@@ -341,6 +360,9 @@ receiveSessionEvent = function (event) {
         case "game":
             console.log(event.args)
             GAMES.goto(event.args.gameid, false);
+            break;
+        case "flashlight":
+            USEREVENT.setFlashLight(true);
             break;
         default: 
             PAGES.goto("live-idle")
@@ -376,7 +398,14 @@ endEvent = function(nogoto=false) {
     clearInterval(USEREVENT.interval);
     USEREVENT.stopCry();
     USEREVENT.showVideo(false);
+    USEREVENT.setFlashLight(false);
     showOverlay(false);
+    if (!LIVE.insideEvent) {
+        setEventCloseButtonsState(false);
+        showNavbar(true);
+        GAMES.stopGame();
+        PAGES.goto("cyberspace");
+    };
     if (!nogoto && LIVE.insideEvent) {
         PAGES.goto("live-idle")
         if (lastSelectedEvent) {
@@ -397,6 +426,7 @@ document.querySelectorAll(".btn-live-close").forEach(el => {
         PAGES.goto("cyberspace")
         GAMES.stopGame()
         endEvent(true)
+        USEREVENT.setFlashLight(false);
         LIVE.insideEvent = false
     })
 });

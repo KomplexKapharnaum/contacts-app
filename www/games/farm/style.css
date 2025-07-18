@@ -9,6 +9,8 @@ body {
 .desc {
     text-align: center;
     pointer-events: none;
+    user-select: none;
+    opacity: 0.5;
 }
 
 #canvas {
