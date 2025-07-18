@@ -130,7 +130,7 @@ function getEvents() {
                 const col = tribe=="" ? "white" : tribeColors[tribe-1]
                 btn.style.setProperty("--color", col)
                 btn.addEventListener("click", () => {
-                    ctrl(commands[cmd].name, JSON.parse(commands[cmd].data).args)
+                    ctrl(commands[cmd].json.name, commands[cmd].json.args)
                 })
                 document.getElementById('commands').appendChild(btn)           
             }
