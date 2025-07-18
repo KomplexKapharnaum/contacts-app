@@ -1062,6 +1062,23 @@ click("cry-preset", () => {
     saveAsPresset("cry", {params:{}}, name)
 })
 
+click("flashlight-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-flashlight")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-flashlight")
+    }
+    if (!name) return;
+
+    saveAsPresset("flashlight", {params:{}}, name)
+})
+
 click("stop-preset", () => {
     let name;
     if (updateName) {
