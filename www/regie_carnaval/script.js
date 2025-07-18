@@ -50,11 +50,12 @@ socket.on('hello', () => {
 })
 
 socket.on('admin-auth-failed', () => {
-    log("Connexion failed with server");
+    log("Admin authentication failed");
     COOKIES.remove('pass')
-    location.reload()
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 })
-
 
 function ctrl(name, args = {params:{}}) {
 

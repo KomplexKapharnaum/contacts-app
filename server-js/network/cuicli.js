@@ -6,7 +6,7 @@ import fs from "fs"
 export class ComfyUIClient {
   constructor(serverAddress, useSSL=false, clientId="webapp", loglevel="info") {
     this.serverAddress = serverAddress
-    this.useSSL = true
+    this.useSSL = useSSL
     this.clientId = clientId
     this.loglevel = loglevel
   }
