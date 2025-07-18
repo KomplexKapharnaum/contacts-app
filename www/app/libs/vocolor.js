@@ -153,9 +153,9 @@ class Vocolor {
         this.currentEffect = this.effects[Math.floor(Math.random() * this.effects.length)]();
 
         sourceNode.connect(this.meter);
-        sourceNode.connect(this.currentEffect);
-        this.currentEffect.toDestination();
-        console.log("Applied effect:", this.currentEffect.name || this.currentEffect.constructor.name);
+        // sourceNode.connect(this.currentEffect);
+        // this.currentEffect.toDestination();
+        // console.log("Applied effect:", this.currentEffect.name || this.currentEffect.constructor.name);
 
         // Reset volume buffer/history
         this.volumeBuffer = [];
@@ -175,6 +175,15 @@ class Vocolor {
             if (scaled < 5) scaled = 0;
 
             this.setOpacity(scaled / 100);
+
+            // Flashlight logic (Cordova plugin)
+            if (window.plugins && window.plugins.flashlight) {
+                if (scaled >= this.FLASH_THRESHOLD && !this.flashOn) {
+                    window.plugins.flashlight.switchOn(() => { this.flashOn = true; }, (e) => {console.error("Flashlight error", e); });
+                } else if (scaled < this.FLASH_THRESHOLD && this.flashOn) {
+                    window.plugins.flashlight.switchOff(() => { this.flashOn = false; }, (e) => {console.error("Flashlight error", e); });
+                }
+            }
         }, 50);
     }
 

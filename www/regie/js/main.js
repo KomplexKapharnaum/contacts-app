@@ -62,8 +62,8 @@ function log_time() {
 /* */
 
 if (!document.CONFIG.get('pass')) {
-    pass = prompt("Password", "")
-    document.CONFIG.set('pass', pass, { expires: 10 })
+    password = prompt("Password", "")
+    document.CONFIG.set('pass', password, { expires: 10 })
 }
 var password = document.CONFIG.get('pass')
 
@@ -89,6 +89,14 @@ if (!document.SOCKETIO)
 document.SOCKETIO.on('hello', () => {
     log("Connexion established with server");
     document.SOCKETIO.emit('admin-auth', password);
+})
+
+document.SOCKETIO.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    document.CONFIG.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 })
 
 function ctrl(name, args = {params:{}}) {

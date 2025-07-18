@@ -49,6 +49,14 @@ socket.on('hello', () => {
     socket.emit('admin-auth', password);
 })
 
+socket.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    COOKIES.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+})
+
 function ctrl(name, args = {params:{}}) {
 
     var resid = Math.random().toString(36).substring(2)
