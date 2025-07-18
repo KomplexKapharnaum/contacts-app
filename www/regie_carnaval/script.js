@@ -49,6 +49,13 @@ socket.on('hello', () => {
     socket.emit('admin-auth', password);
 })
 
+socket.on('admin-auth-failed', () => {
+    log("Connexion failed with server");
+    COOKIES.remove('pass')
+    location.reload()
+})
+
+
 function ctrl(name, args = {params:{}}) {
 
     var resid = Math.random().toString(36).substring(2)
@@ -122,7 +129,7 @@ function getEvents() {
                 const col = tribe=="" ? "white" : tribeColors[tribe-1]
                 btn.style.setProperty("--color", col)
                 btn.addEventListener("click", () => {
-                    ctrl(commands[cmd].name, JSON.parse(commands[cmd].data).args)
+                    ctrl(commands[cmd].json.name, JSON.parse(commands[cmd].data).args)
                 })
                 document.getElementById('commands').appendChild(btn)           
             }

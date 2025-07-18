@@ -91,6 +91,12 @@ document.SOCKETIO.on('hello', () => {
     document.SOCKETIO.emit('admin-auth', password);
 })
 
+document.SOCKETIO.on('admin-auth-failed', () => {
+    log("Connexion failed with server");
+    document.CONFIG.remove('pass')
+    location.reload()
+})
+
 function ctrl(name, args = {params:{}}) {
 
     // if (!current_event_state) {

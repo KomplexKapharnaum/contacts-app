@@ -169,6 +169,8 @@ SOCKET.io.on('connection', (socket) => {
             console.log("Admin connected");
             socket.join("admin");
             socket.emit('getEventState', IS_EVENT_LIVE);
+        } else {
+          socket.emit('admin-auth-failed');
         }
     })
 
