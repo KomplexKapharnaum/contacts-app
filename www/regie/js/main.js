@@ -629,6 +629,12 @@ click("cry-send", () => {
     ctrl("cry", args)
 })
 
+/* Flashlight */
+click("flashlight-send", () => {
+    const args = {params : {}}
+    ctrl("flashlight", args)
+})
+
 /* Games */
 const gameList = [
     {name: "Kpad", id: "kpad"},
