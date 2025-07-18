@@ -77,7 +77,14 @@ class Recorder {
             } else if (cordova.platformId === 'ios') {
                 filePath = 'cdvfile://localhost/temporary/recording.m4a'
             }
-    
+            
+            // If Media is not available: alert update
+            if (!window.Media) {
+                // alert("Le plugin Media n'est pas disponible. Veuillez mettre à jour l'application dans le store !");
+                reject("Le plugin Media n'est pas disponible. Veuillez mettre à jour l'application dans le store !");
+                return;
+            }
+
             // Create Media object
             const mediaRec = new Media(filePath,
                 // Success callback
@@ -117,7 +124,7 @@ class Recorder {
                             reader.readAsArrayBuffer(file);
                         }, (err) => reject('FileEntry error: ' + JSON.stringify(err)));
                     }, (err) => reject('resolveLocalFileSystemURL error: ' + JSON.stringify(err)));
-                }, 300); // Small delay to ensure file is finalized
+                }, 500); // Small delay to ensure file is finalized
             }, 5000);
         });
     }

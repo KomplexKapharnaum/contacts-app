@@ -225,9 +225,20 @@ db.archive = async () => {
 // INIT DB
 //
 if (!fs.existsSync(dataPath)) {
-    initDB();
+    await initDB();
     log('Database initialized');
 }
+
+// Add stats_visitors table if not exists
+// columns: date, count
+await db.schema.hasTable('stats_visitors').then(async (exists) => {
+    if (!exists) {
+        await db.schema.createTable('stats_visitors', (table) => {
+            table.timestamp('date').primary();
+            table.integer('count').defaultTo(0);
+        });
+    }
+});
 
 log('Database ready '+dataPath);
 

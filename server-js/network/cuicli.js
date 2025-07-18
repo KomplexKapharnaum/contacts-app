@@ -4,8 +4,9 @@ import WebSocket from "ws"
 import fs from "fs"
 
 export class ComfyUIClient {
-  constructor(serverAddress, clientId="webapp", loglevel="info") {
+  constructor(serverAddress, useSSL=false, clientId="webapp", loglevel="info") {
     this.serverAddress = serverAddress
+    this.useSSL = true
     this.clientId = clientId
     this.loglevel = loglevel
   }
@@ -36,7 +37,7 @@ export class ComfyUIClient {
         await this.disconnect()
       }
 
-      const url = `ws://${this.serverAddress}/ws?clientId=${this.clientId}`
+      const url = `ws${this.useSSL ? 's' : ''}://${this.serverAddress}/ws?clientId=${this.clientId}`
 
       this.log('info', `Connecting to url: ${url}`)
 
@@ -76,7 +77,7 @@ export class ComfyUIClient {
   }
 
   async getEmbeddings() {
-    const res = await fetch(`http://${this.serverAddress}/embeddings`)
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/embeddings`)
 
     const json = await res.json()
 
@@ -88,7 +89,7 @@ export class ComfyUIClient {
   }
 
   async getExtensions() {
-    const res = await fetch(`http://${this.serverAddress}/extensions`)
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/extensions`)
 
     const json = await res.json()
 
@@ -100,7 +101,7 @@ export class ComfyUIClient {
   }
 
   async queuePrompt(prompt) {
-    const res = await fetch(`http://${this.serverAddress}/prompt`, {
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/prompt`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -122,7 +123,7 @@ export class ComfyUIClient {
   }
 
   async interrupt() {
-    const res = await fetch(`http://${this.serverAddress}/interrupt`, {
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/interrupt`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -138,7 +139,7 @@ export class ComfyUIClient {
   }
 
   async editHistory(params) {
-    const res = await fetch(`http://${this.serverAddress}/history`, {
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/history`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -164,13 +165,12 @@ export class ComfyUIClient {
     formData.append("image", new Blob([data]), filename)
     formData.append("overwrite", "true")
 
-    const res = await fetch(`http://${this.serverAddress}/upload/image`, {
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/upload/image`, {
       method: "POST",
       body: formData
     })
 
     const json = await res.json()
-
     if ("error" in json) {
       throw new Error(JSON.stringify(json))
     }
@@ -187,7 +187,7 @@ export class ComfyUIClient {
       formData.append("overwrite", overwrite.toString())
     }
 
-    const res = await fetch(`http://${this.serverAddress}/upload/mask`, {
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/upload/mask`, {
       method: "POST",
       body: formData
     })
@@ -203,7 +203,7 @@ export class ComfyUIClient {
 
   async getImage(filename, subfolder, type) {
     const res = await fetch(
-      `http://${this.serverAddress}/view?` +
+      `http${this.useSSL ? 's' : ''}://${this.serverAddress}/view?` +
         new URLSearchParams({
           filename,
           subfolder,
@@ -217,7 +217,7 @@ export class ComfyUIClient {
 
   async viewMetadata(folderName, filename) {
     const res = await fetch(
-      `http://${this.serverAddress}/view_metadata/${folderName}?filename=${filename}`
+      `http${this.useSSL ? 's' : ''}://${this.serverAddress}/view_metadata/${folderName}?filename=${filename}`
     )
 
     const json = await res.json()
@@ -230,7 +230,7 @@ export class ComfyUIClient {
   }
 
   async getSystemStats() {
-    const res = await fetch(`http://${this.serverAddress}/system_stats`)
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/system_stats`)
 
     const json = await res.json()
 
@@ -242,7 +242,7 @@ export class ComfyUIClient {
   }
 
   async getPrompt() {
-    const res = await fetch(`http://${this.serverAddress}/prompt`)
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/prompt`)
 
     const json = await res.json()
 
@@ -255,7 +255,7 @@ export class ComfyUIClient {
 
   async getObjectInfo(nodeClass) {
     const res = await fetch(
-      `http://${this.serverAddress}/object_info` +
+      `http${this.useSSL ? 's' : ''}://${this.serverAddress}/object_info` +
         (nodeClass ? `/${nodeClass}` : "")
     )
 
@@ -270,7 +270,7 @@ export class ComfyUIClient {
 
   async getHistory(promptId) {
     const res = await fetch(
-      `http://${this.serverAddress}/history` + (promptId ? `/${promptId}` : "")
+      `http${this.useSSL ? 's' : ''}://${this.serverAddress}/history` + (promptId ? `/${promptId}` : "")
     )
 
     const json = await res.json()
@@ -283,7 +283,7 @@ export class ComfyUIClient {
   }
 
   async getQueue() {
-    const res = await fetch(`http://${this.serverAddress}/queue`)
+    const res = await fetch(`http${this.useSSL ? 's' : ''}://${this.serverAddress}/queue`)
 
     const json = await res.json()
 

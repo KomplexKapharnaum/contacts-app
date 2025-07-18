@@ -222,6 +222,19 @@
             <button id="btn-question-send">Send questions event</button>
         </div>
 
+        <!-- Games -->
+        <div class="page" data-page-id="games">
+            <h2>Select game</h2>
+            <div class="input_field">
+                <select name="select" id="input-games-select"></select>
+            </div>
+
+            <div class="space"></div>
+
+            <button id="btn-game-preset" class="preset">Save as preset...</button>
+            <button id="btn-game-send">Send game event</button>
+        </div>
+
         <!-- Live upload -->
         <div class="page" data-page-id="upload">
             <button id="btn-upload-send">Send live upload event</button>
@@ -357,11 +370,14 @@
                     <path d="M14.1111 6H4.11111C3.00654 6 2.11111 6.89543 2.11111 8V16C2.11111 17.1046 3.00654 18 4.11111 18H14.1111C15.2157 18 16.1111 17.1046 16.1111 16V8C16.1111 6.89543 15.2157 6 14.1111 6Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <div class="nav-btn goto-page" data-page-id="questions">
+            <!-- <div class="nav-btn goto-page" data-page-id="questions">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle-question"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            </div> -->
+            <div class="nav-btn goto-page" data-page-id="games">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gamepad2-icon lucide-gamepad-2"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg>
             </div>
             <div class="nav-btn goto-page" data-page-id="upload">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-ellipsis-icon lucide-circle-ellipsis"><circle cx="12" cy="12" r="10"/><path d="M17 12h.01"/><path d="M12 12h.01"/><path d="M7 12h.01"/></svg>
             </div>
             
             <div class="vertical-separator"></div>

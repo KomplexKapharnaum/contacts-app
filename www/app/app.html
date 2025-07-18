@@ -17,6 +17,13 @@
     <link rel="stylesheet" href="$BASEPATH$/libs/leaflet.css">
     <script src="$BASEPATH$/libs/leaflet.js"></script>
 
+    <!-- Tone.js / Vocolor -->
+    <script src="$BASEPATH$/libs/Tone.js"></script>
+    <script src="$BASEPATH$/libs/vocolor.js"></script>
+    <link rel="stylesheet" href="$BASEPATH$/libs/vocolor.css">
+
+    
+
     <!-- INLINE CSS -->
     <style>
         @font-face {
@@ -894,7 +901,7 @@
 
     <div class="page" data-page-id="intro">
         <div id="intro-buddy-container">
-            <img src="$BASEPATH$/img/buddy/4.png" alt="buddy" id="intro-buddy">
+            <img src="$BASEPATH$/img/buddy/bud-4.png" alt="buddy" id="intro-buddy">
             <div id="intro-textbox">
                 Hello world !
             </div>
@@ -908,13 +915,22 @@
     <div class="page" data-page-id="games">
         <h2>Jouets</h2>
         <div id="games-container">
-            <div class="game-button" data-game-id="kpad">Kpad</div>
+            <div id="tribe-noise-game" class="game-button" data-game-id="">Boite à bruit</div>
+            <div class="game-button" data-game-id="vocolor">Vocolor</div>
+            <div class="game-button" data-game-id="images">Images</div>
+            <!-- <div class="game-button" data-game-id="garden">Jardin</div>
+            <div class="game-button" data-game-id="farm">Rugisseur</div> -->
         </div>
     </div>
 
     <div class="page" data-page-id="game-iframe">
         <iframe id="game-iframe" src="" frameborder="0"></iframe>
         <div class="game-leave">Quitter</div>
+    </div>
+
+    <div class="page" data-page-id="game-vocolor">
+        <div id="voco-color"></div>
+        <div id="voco-stop" class="game-leave">Quitter</div>
     </div>
 
     <!-- Navbar -->
@@ -1102,6 +1118,7 @@
     <script src="$BASEPATH$/js/pages/tribe.js"></script>
     <script src="$BASEPATH$/js/pages/debug.js"></script>
     <script src="$BASEPATH$/js/pages/games.js"></script>
+    <script src="$BASEPATH$/js/pages/game-vocolor.js"></script>
 
     <!-- Main -->
     <script src="$BASEPATH$/js/main.js"></script>

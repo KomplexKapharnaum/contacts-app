@@ -37,6 +37,10 @@ app.get('/', function (req, res) {
     res.redirect('/app');
 });
 
+// app.get('/restart', function (req, res) {
+//     process.exit(1);
+// });
+
 app.use('/static', express.static('www'));
 app.use('/app', express.static(__dirname + '/www/app'));
 
@@ -61,17 +65,20 @@ app.use('/regiekxkm', express.static('www/regie_carnaval'));
 app.use('/avatars', express.static(genDir));
 
 // Mocap
-app.use('/mocap', express.static('www/mocap'));
+app.use('/mocap', express.static('www/games/mocap'));
 app.get('/mocap', function (req, res) {
-    res.sendFile(path.join(__dirname, 'www/mocap/index.html'));
+    res.sendFile(path.join(__dirname, 'www/games/mocap/index.html'));
 });
 
 // Kpad
-app.use('/kpad', express.static('www/kpad'));
+app.use('/kpad', express.static('www/games/kpad'));
 app.get('/kpad', function (req, res) {
-    res.sendFile(path.join(__dirname, 'www/kpad/index.html'));
+    res.sendFile(path.join(__dirname, 'www/games/kpad/index.html'));
 });
 
+
+// Kpad
+app.use('/games', express.static('www/games'));
 
 app.get('/features', function (req, res) {
     res.json(features.cache);

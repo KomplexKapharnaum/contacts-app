@@ -308,6 +308,9 @@ receiveSessionEvent = function (event) {
     document.getElementById("overlay").onclick = null;
     showOverlay(false);
     USEREVENT.showVideo(false);
+
+    GAMES.stopGame();
+
     switch (event.name) {
         case "color":
             USEREVENT.setOverlay(event.name, event.args.colors, event.args.params);
@@ -334,6 +337,10 @@ receiveSessionEvent = function (event) {
         case "cry":
             USEREVENT.showVideo('zzz');
             USEREVENT.startCry();
+            break;
+        case "game":
+            console.log(event.args)
+            GAMES.goto(event.args.gameid, false);
             break;
         default: 
             PAGES.goto("live-idle")
@@ -388,6 +395,7 @@ document.querySelectorAll(".btn-live-close").forEach(el => {
         setEventCloseButtonsState(false)
         showNavbar(true)
         PAGES.goto("cyberspace")
+        GAMES.stopGame()
         endEvent(true)
         LIVE.insideEvent = false
     })

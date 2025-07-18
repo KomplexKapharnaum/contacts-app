@@ -24,7 +24,7 @@ class Buddy {
 
             const next = (ms) => {
                 setTimeout(() => {
-                    this.nextImage();
+                    if (this.shown) this.nextImage();
                     ms = (Math.sin(new Date().getTime() / 1000) + 1) * 250 + 50;
                     next(ms);
                 }, ms);
@@ -111,7 +111,7 @@ class Buddy {
                     resolve();
                 }
                 img.onerror = reject;
-                img.src = `${document.BASEPATH}/img/buddy/${i}.png`;
+                img.src = `${document.BASEPATH}/img/buddy/bud-${i}.png`; 
             }));
         }
         return Promise.all(promises);
