@@ -54,6 +54,14 @@ socket.on('hello', () => {
     socket.emit('admin-auth', pass);
 })
 
+socket.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    cookies.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+})
+
 /* === Notifications === */
 const sendNotificationButton = document.getElementById("btn-notificaton-send");
 const notificationTextInput = document.getElementById("input-notification-text");

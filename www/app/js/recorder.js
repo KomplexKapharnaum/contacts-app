@@ -59,6 +59,12 @@ class Recorder {
     recordAPP(recordCallback) {
         this.chunks = [];
         return new Promise((resolve, reject) => {
+            // Check if Media plugin is available
+            if (typeof Media === 'undefined') {
+                reject('Plugin Media manquant.. mettez à jour votre application !');
+                return;
+            }
+
             // Generate a unique filename per recording
             const fileName = `recording-${Date.now()}.webm`;
 

@@ -56,6 +56,14 @@ socket.on('hello', () => {
     socket.emit('admin-auth', password);
 })
 
+socket.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    COOKIES.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+})
+
 function ctrl(name, args = {params:{}}) {
 
     if (!confirm("Envoyer la commande " + name + "?")) return;

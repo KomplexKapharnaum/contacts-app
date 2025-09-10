@@ -49,6 +49,14 @@ socket.on('hello', () => {
     socket.emit('admin-auth', password);
 })
 
+socket.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    COOKIES.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+})
+
 function ctrl(name, args = {params:{}}) {
 
     var resid = Math.random().toString(36).substring(2)
@@ -117,12 +125,18 @@ function getEvents() {
                 const btn = document.createElement("button")
                 btn.innerHTML = commands[cmd].name.replace(/_/g, ' ').replace(/-/g, ' ').replace(filter, '')
                 
+                console.log(commands[cmd])
+
                 const tribe = JSON.parse(commands[cmd].data).args.params.tribe
                 
                 const col = tribe=="" ? "white" : tribeColors[tribe-1]
                 btn.style.setProperty("--color", col)
+                
+                const data = JSON.parse(commands[cmd].data)
+                console.log(data)
+                
                 btn.addEventListener("click", () => {
-                    ctrl(commands[cmd].name, JSON.parse(commands[cmd].data).args)
+                    ctrl(data.name, data.args)
                 })
                 document.getElementById('commands').appendChild(btn)           
             }

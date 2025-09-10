@@ -62,8 +62,8 @@ function log_time() {
 /* */
 
 if (!document.CONFIG.get('pass')) {
-    pass = prompt("Password", "")
-    document.CONFIG.set('pass', pass, { expires: 10 })
+    password = prompt("Password", "")
+    document.CONFIG.set('pass', password, { expires: 10 })
 }
 var password = document.CONFIG.get('pass')
 
@@ -89,6 +89,14 @@ if (!document.SOCKETIO)
 document.SOCKETIO.on('hello', () => {
     log("Connexion established with server");
     document.SOCKETIO.emit('admin-auth', password);
+})
+
+document.SOCKETIO.on('admin-auth-failed', () => {
+    log("Admin authentication failed");
+    document.CONFIG.remove('pass')
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 })
 
 function ctrl(name, args = {params:{}}) {
@@ -629,6 +637,12 @@ click("cry-send", () => {
     ctrl("cry", args)
 })
 
+/* Flashlight */
+click("flashlight-send", () => {
+    const args = {params : {}}
+    ctrl("flashlight", args)
+})
+
 /* Games */
 const gameList = [
     {name: "Kpad", id: "kpad"},
@@ -1054,6 +1068,23 @@ click("cry-preset", () => {
     if (!name) return;
 
     saveAsPresset("cry", {params:{}}, name)
+})
+
+click("flashlight-preset", () => {
+    let name;
+    if (updateName) {
+        if (confirm("update preset" + updateName + " ?")) {
+            name = updateName
+        } else {
+            name = prompt("Preset name", "preset-flashlight")
+        }
+    } else {
+        if (!confirm("Save as preset ?")) return;
+        name = prompt("Preset name", "preset-flashlight")
+    }
+    if (!name) return;
+
+    saveAsPresset("flashlight", {params:{}}, name)
 })
 
 click("stop-preset", () => {
