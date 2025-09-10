@@ -49,7 +49,7 @@ query.request = async (req, params) => {
     if (!queryname) return false;
     if (!query.list[queryname]) return false;
 
-    if (!features.getState("open_app")) return [false, "feature disabled"];
+    // if (!features.getState("open_app")) return [false, "feature disabled"];
 
     const res = await query.list[queryname](params);
     
