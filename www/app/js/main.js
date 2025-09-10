@@ -112,12 +112,17 @@ async function after_user_load(uuid) {
 
 async function loadNotifications() {
     return new Promise((resolve, reject) => {
+        console.warn('Loading notifications...')
         QUERY.loadNotifications().then(async res => {
             if (res.status) {
                 const notifications = res.data
                 if (notifications.length > 0) {
                     const lastNotification = notifications[notifications.length-1]
-                    showNotificationOverlay(lastNotification.message)
+
+                    checkForPriorityLiveEvent().then(isLive => {
+                        if (!isLive) showNotificationOverlay(lastNotification.message)
+                    })
+
                     QUERY.updateLastSeen()
                 }
                 // if (notifications.length > 0) {
@@ -164,7 +169,19 @@ function loadUser() {
 }
 
 PAGES.addCallback("home", () => {
-    BUD.setCurrentDialogue(BUD_DIALS.introduction, true);
+
+    // If a live event is ongoing, triggers auto-account creation
+    checkForPriorityLiveEvent().then(isLive => {
+        if (isLive) {
+            console.warn("Live event ongoing, triggering auto-account creation")
+            onboarding_create_random_user().then(() => {
+                // reload
+                location.reload()
+            })
+        } else {
+            BUD.setCurrentDialogue(BUD_DIALS.introduction, true);
+        }
+    });
 });
 
 

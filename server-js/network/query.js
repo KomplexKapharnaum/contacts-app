@@ -99,13 +99,18 @@ query.add("create_user", async (params) => {
     const public_id = util.createPublicID();
     const name = params.get("name");
     const firebase_id = params.get("firebase_id");
-    // const tribe_id = parseInt(params.get("tribe_id"));
+    const tribe_id = parseInt(params.get("tribe_id"));
 
     const valid = util.isUserNameValid(name)
     if (!valid[0]) return valid;
 
     let obj = {uuid, name, public_id, firebase_id};
     await db('users').insert(obj);
+
+    if (tribe_id && tribe_id > 0) {
+        await db('users').where('uuid', uuid).update({ tribe_id: tribe_id });
+        obj.tribe_id = tribe_id;
+    }
 
     const user = await getUserInfo(uuid);
     if (!user) return [false, "user does not exist"];
@@ -218,6 +223,20 @@ query.add("session_events", async (params) => {
       }
     })
     .select();
+
+    events.forEach(event => {
+        delete event.location_coords;
+        delete event.location_name;
+    });
+    return [true, events];
+})
+
+query.add("live_events_priority", async (params) => {
+    const events = await db('event')
+        .andWhere('ended', false)
+        .andWhere('tribe_id', 0)
+        .andWhere('priority', true)
+        .select();
 
     events.forEach(event => {
         delete event.location_coords;

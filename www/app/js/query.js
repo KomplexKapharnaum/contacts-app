@@ -49,6 +49,10 @@ QUERY.getEvents = async () => {
     });
 }
 
+QUERY.getPriorityLiveEvents = async () => {
+    return await QUERY.process("live_events_priority", {});
+}
+
 QUERY.getEventLocation = async (eventID) => {
     if (!userData) return;
     return await QUERY.process("event_location", {

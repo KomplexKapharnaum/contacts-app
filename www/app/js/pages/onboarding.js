@@ -28,9 +28,9 @@ onboarding_validate_username.addEventListener("click", () => {
     }
 })
 
-function onboarding_create_user(username) {
+async function onboarding_create_user(username, tribeID=0) {
     let firebasetoken = CORDOVA_INFO.token ? CORDOVA_INFO.token : false
-    QUERY.process("create_user", {name: username, firebase_id: firebasetoken}).then((res) => {
+    await QUERY.process("create_user", {name: username, firebase_id: firebasetoken, tribe_id: tribeID}).then((res) => {
         if (res.status) {
             if (res.data.uuid) {
                 userData = res.data
@@ -55,6 +55,12 @@ function onboarding_create_user(username) {
             onboarding_username_error.innerText = res.data
         }
     })
+}
+
+async function onboarding_create_random_user() {
+    const randomName = "user" + Math.floor(Math.random() * 10000)
+    const randomTribe = Math.floor(Math.random() * 3) + 1
+    await onboarding_create_user(randomName, randomTribe)
 }
 
 // const onboarding_tribes_container = document.getElementById("onboarding-tribe-selector")

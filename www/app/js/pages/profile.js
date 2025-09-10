@@ -8,7 +8,8 @@ document.getElementById("profile-delete").addEventListener("click", () => {
                 userData = false
                 document.CONFIG.remove("uuid")
                 hasEventsLoaded = false
-                loadUser()
+                // loadUser()
+                location.reload()
             })
         } else {
             PAGES.goto("profile")

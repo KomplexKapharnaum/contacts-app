@@ -178,7 +178,23 @@ async function loadEvents() {
     showNavbar(true);
 }
 
+// just asks if a priority event is live, even if no userid or tribeid
+async function checkForPriorityLiveEvent() {
+    const query_events = await QUERY.getPriorityLiveEvents();
 
+    if (query_events.status && query_events.data) {
+        loadedEvents = query_events.data;
+    }
+
+    const sortedEvents = query_events.data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+    for (let event_data of sortedEvents) {
+        if (isNow(event_data.start_date) && event_data.priority) {
+            return true;
+        }
+    }
+   return false;
+}
 
 // function liveEventHandler() {
 //     if (!loadedEvents) return;
