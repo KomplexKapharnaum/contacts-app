@@ -7,7 +7,7 @@ const customTribeColors = {
 }
 
 GAMES.list = {
-    vocolor:   ()=> ({ type: "page", value: "game-vocolor" }),
+    // vocolor:   ()=> ({ type: "page", value: "game-vocolor" }),
     kpad:      ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/kpad/" }),
     images:    ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/image_picker/" }),
     videoloop: ()=> ({ type: "iframe", value: document.WEBAPP_URL + "/games/videoloop/?tribe=" + userData.tribe_id }),
